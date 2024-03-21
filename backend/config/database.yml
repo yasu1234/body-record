@@ -83,6 +83,4 @@ test:
 #
 production:
   <<: *default
-  database: body_record_production
-  username: body_record
-  password: <%= ENV["BODY_RECORD_DATABASE_PASSWORD"] %>
+  database: <%= ENV['DATABASE_PRODUCTION_NAME'] %>
