@@ -1,3 +1,5 @@
+volumes:
+  node_modules:
 services:
   db:
     image: postgres
@@ -24,3 +26,17 @@ services:
       - "3000:3000"
     depends_on:
       - db
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        WORKDIR: $WORKDIR
+    volumes:
+      - ./frontend:/$WORKDIR:cached
+      - node_modules:/$WORKDIR/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
