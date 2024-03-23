@@ -101,6 +101,7 @@ GEM
       bcrypt (~> 3.0)
       devise (> 3.5.2, < 5)
       rails (>= 4.2.0, < 7.1)
+    dotenv (3.1.0)
     erubi (1.12.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -243,6 +244,7 @@ DEPENDENCIES
   devise
   devise-i18n
   devise_token_auth
+  dotenv
   importmap-rails
   jbuilder
   pg (~> 1.1)
