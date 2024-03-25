@@ -6,6 +6,10 @@ const router = useRouter();
 function showSignup() {
     router.push('/signup');
 };
+
+function showLogin() {
+    router.push('/login');
+};
 </script>
 
 <template>
