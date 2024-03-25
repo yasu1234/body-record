@@ -1,4 +1,11 @@
 <script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter();
+
+function showSignup() {
+    router.push('/signup');
+};
 </script>
 
 <template>
@@ -8,7 +15,7 @@
             <img src="../assets/image/home_image.jpg" alt="Logo" class= "homeLogo">
         </div>
         <div class="homeButtons">
-            <button class="commonButton" @click="showSignUp">会員登録</button>
+            <button class="commonButton" @click="showSignup">会員登録</button>
             <button class="commonButton" @click="showLogin">ログイン</button>
             <button class="guestButton" @click="guestLogin">ゲストログイン</button>
         </div>    
