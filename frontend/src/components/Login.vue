@@ -2,24 +2,16 @@
 import axios from 'axios'
 import { ref } from 'vue'
 
-defineProps({
-  msg: String,
-})
-
 const email = ref('')
 const password = ref('')
-const passwordConfirm = ref('')
-const name = ref('')
 
-const signup = async () => {
+const login = async () => {
   try {
-    const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/auth', {
+    const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/auth/sign_in', {
       email: email.value,
-      password: password.value,
-      password_confirmation: passwordConfirm.value,
-      name: name.value
+      password: password.value
     })
-    console.log(res.data)
+    console.log(res.headers)
   } catch (error) {
     console.log({ error })
   }
@@ -27,9 +19,9 @@ const signup = async () => {
 </script>
 
 <template>
-    <h1 class="signUpTitle">会員登録</h1>
+    <h1 class="signUpTitle">ログイン</h1>
     <div class="singUpInput">
-        <form class="form" @submit.prevent="signup">
+        <form class="form" @submit.prevent="login">
             <div class="item">
                 <label class="itemLabel">メールアドレス</label>
                 <input id="email" type="email" v-model="email">
@@ -38,16 +30,8 @@ const signup = async () => {
                 <label class="itemLabel" for="password">パスワード</label>
                 <input id="password" type="password" v-model="password">
             </div>
-            <div class="item">
-                <label class="itemLabel" for="passwordConfirm">パスワード(確認)</label>
-                <input id="passwordConfirm" type="password" v-model="passwordConfirm">
-            </div>
-            <div class="item">
-                <label class="itemLabel" for="name">名前</label>
-                <input id="name"  type="text" v-model="name">
-            </div>
             <div class="signUpTitle">
-                <button class="registerButton">登録</button>
+                <button class="loginButton">ログイン</button>
             </div>
         </form>
     </div>
@@ -87,10 +71,8 @@ const signup = async () => {
     font-size: 15px;
 }
 
- /* 入力欄にpadding追加 */
 .form input[type="email"],
-.form input[type="password"],
-.form input[type="text"] {
+.form input[type="password"] {
      padding: 10px;
      width: 100%;
  }
@@ -102,7 +84,7 @@ const signup = async () => {
    width: 50%;
  }
  
-.registerButton{
+.loginButton{
     background: #ffa500;
     color: white;
     font-size:16px;
