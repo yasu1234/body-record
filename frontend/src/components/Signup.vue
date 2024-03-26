@@ -11,7 +11,7 @@ const password = ref('')
 const passwordConfirm = ref('')
 const name = ref('')
 
-const submitForm = async () => {
+const signup = async () => {
   try {
     const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/auth', {
       email: email.value,
@@ -29,7 +29,7 @@ const submitForm = async () => {
 <template>
     <h1 class="signUpTitle">会員登録</h1>
     <div class="singUpInput">
-        <form class="form">
+        <form class="form" @submit.prevent="signup">
             <div class="item">
                 <label class="itemLabel">メールアドレス</label>
                 <input id="email" type="email" v-model="email">
@@ -47,7 +47,7 @@ const submitForm = async () => {
                 <input id="name"  type="text" v-model="name">
             </div>
             <div class="signUpTitle">
-                <button class="registerButton" @click="submitForm">登録</button>
+                <button class="registerButton">登録</button>
             </div>
         </form>
     </div>

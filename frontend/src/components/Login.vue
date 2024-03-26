@@ -11,9 +11,9 @@ const login = async () => {
       email: email.value,
       password: password.value
     })
-    console.log(res.data)
+    console.log(res.headers)
   } catch (error) {
-    console.log(error)
+    console.log({ error })
   }
 }
 </script>
@@ -21,7 +21,7 @@ const login = async () => {
 <template>
     <h1 class="signUpTitle">ログイン</h1>
     <div class="singUpInput">
-        <form class="form">
+        <form class="form" @submit.prevent="login">
             <div class="item">
                 <label class="itemLabel">メールアドレス</label>
                 <input id="email" type="email" v-model="email">
@@ -31,7 +31,7 @@ const login = async () => {
                 <input id="password" type="password" v-model="password">
             </div>
             <div class="signUpTitle">
-                <button class="loginButton" @click="login">ログイン</button>
+                <button class="loginButton">ログイン</button>
             </div>
         </form>
     </div>
