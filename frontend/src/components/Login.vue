@@ -1,6 +1,7 @@
 <script setup>
 import axios from 'axios'
 import { ref } from 'vue'
+import Cookies from 'js-cookie'
 
 const email = ref('')
 const password = ref('')
@@ -11,7 +12,9 @@ const login = async () => {
       email: email.value,
       password: password.value
     })
-    console.log(res.headers)
+    Cookies.set('accessToken', response.headers["access-token"])
+    Cookies.set('client', response.headers["client"])
+    Cookies.set('uid', response.headers["uid"])
   } catch (error) {
     console.log({ error })
   }

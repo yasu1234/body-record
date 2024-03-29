@@ -1,5 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import axios from 'axios'
+import Cookies from 'js-cookie'
 
 const router = useRouter();
 
@@ -10,6 +12,17 @@ function showSignup() {
 function showLogin() {
     router.push('/login');
 };
+
+const guestLogin = async () => {
+  try {
+    const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/users/guest_sign_in')
+    Cookies.set('accessToken', response.headers["access-token"])
+    Cookies.set('client', response.headers["client"])
+    Cookies.set('uid', response.headers["uid"])
+  } catch (error) {
+    console.log({ error })
+  }
+}
 </script>
 
 <template>
