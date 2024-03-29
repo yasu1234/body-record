@@ -1,6 +1,7 @@
 <script setup>
 import axios from 'axios'
 import { ref } from 'vue'
+import Cookies from 'js-cookie'
 
 defineProps({
   msg: String,
@@ -19,7 +20,9 @@ const signup = async () => {
       password_confirmation: passwordConfirm.value,
       name: name.value
     })
-    console.log(res.data)
+    Cookies.set('accessToken', response.headers["access-token"])
+    Cookies.set('client', response.headers["client"])
+    Cookies.set('uid', response.headers["uid"])
   } catch (error) {
     console.log({ error })
   }
