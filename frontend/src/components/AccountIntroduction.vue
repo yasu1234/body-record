@@ -16,9 +16,9 @@ function showLogin() {
 const guestLogin = async () => {
   try {
     const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/users/guest_sign_in')
-    Cookies.set('accessToken', response.headers["access-token"])
-    Cookies.set('client', response.headers["client"])
-    Cookies.set('uid', response.headers["uid"])
+    Cookies.set('accessToken', res.headers["access-token"])
+    Cookies.set('client', res.headers["client"])
+    Cookies.set('uid', res.headers["uid"])
   } catch (error) {
     console.log({ error })
   }
