@@ -7,10 +7,6 @@ const props = defineProps({
     currentId: Number
 })
 
-const modelValue = defineModel()
-const model = defineModel('currentId')
-const count = ref(0)
-
 </script>
 
 <template>
