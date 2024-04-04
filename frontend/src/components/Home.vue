@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 
 import TabMenu from './TabMenu.vue'
+import RecordList from './MyRecordList.vue'
 
 defineProps({
   msg: String,
@@ -12,6 +13,7 @@ const currentId = ref(1);
 
 <template>
   <TabMenu :currentId="currentId"/>
+  <RecordList/>
 </template>
 
 <style scoped>
