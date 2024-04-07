@@ -61,8 +61,6 @@ const search = async () => {
     for(let item of res.data.records){
       searchResult.push(item);
     }
-
-    console.log(res)
   } catch (error) {
     console.log({ error })
   }
@@ -76,6 +74,8 @@ function endDateChange(event) {
   endDate.value = event
 }
 
+function clickRecord(item) {
+}
 </script>
 
 <template>
@@ -98,6 +98,12 @@ function endDateChange(event) {
     </div>
     <div class="search-button-area">
         <button class="search-button" @click="targetSearch">検索</button>
+    </div>
+    <div class="my-idea-card" v-for="item of searchResult" :key="item.id" @click="clickRecord(item)">
+      <h4 class="my-idea-title"><b>{{ item.title }}</b></h4>
+      <div>
+        <p class="idea-date">{{ item.date }}</p>
+      </div>
     </div>
 </template>
 
@@ -169,5 +175,16 @@ input[type="checkbox"]:checked:before {
     color: white;
     font-size:16px;
     font-weight:bold;
+}
+.my-idea-title {
+    margin: 10px 12px 12px 10px;
+}
+.my-idea-card {
+  margin: 10px 12px 12px 12px;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+}
+.idea-date {
+  margin: 10px 0px 10px 10px;
 }
 </style>
