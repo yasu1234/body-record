@@ -18,13 +18,38 @@ onMounted(() => {
   search();
 });
 
+onBeforeRouteUpdate(async (to, from) => {
+  keyword.value = to.query.keyword;
+  startDate.value = to.query.startDate;
+  endDate.value = to.query.endDate;
+  search();
+});
+
+const targetSearch = ()=> {
+  const query = {};
+
+  if (keyword.value.trim() !== '') {
+    query.keyword = keyword.value;
+  }
+
+  if (startDate.value !== '') {
+    query.startDate = startDate.value;
+  }
+
+  if (endDate.value !== '') {
+    query.endDate = endDate.value;
+  }
+
+  router.push( {path: '/', query: query});
+}
+
 const search = async () => {
   try {
     const res = await axios.get(import.meta.env.VITE_APP_API_BASE + '/api/v1/myRecord', {
       headers: {
-        'access-token' : Cookies.get('accessToken'),           
-        'client':Cookies.get('client'),         
-        'uid': Cookies.get('uid'),         
+        'access-token' : Cookies.get('accessToken'),
+        'client':Cookies.get('client'),
+        'uid': Cookies.get('uid'),
       },
       params: {
         keyword: keyword.value,
@@ -72,7 +97,7 @@ function endDateChange(event) {
       <label for="statusSelectName">非公開記録は表示しない</label>
     </div>
     <div class="search-button-area">
-        <button class="search-button" @click="search">検索</button>
+        <button class="search-button" @click="targetSearch">検索</button>
     </div>
 </template>
 
