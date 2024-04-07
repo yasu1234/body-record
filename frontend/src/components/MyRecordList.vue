@@ -1,33 +1,75 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRouter, onBeforeRouteUpdate } from 'vue-router'
 import DatePicker from './DatePicker.vue'
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
+const router = useRouter();
 
 const keyword = ref("");
+const startDate = ref("");
+const endDate = ref("");
+const isDisplayOnlyOpen = ref(false);
+const isLogin = ref(false);
+const searchResult = ref([]);
+
+onMounted(() => {
+  search();
+});
+
+const search = async () => {
+  try {
+    const res = await axios.get(import.meta.env.VITE_APP_API_BASE + '/api/v1/myRecord', {
+      headers: {
+        'access-token' : Cookies.get('accessToken'),           
+        'client':Cookies.get('client'),         
+        'uid': Cookies.get('uid'),         
+      },
+      params: {
+        keyword: keyword.value,
+        startDate: startDate.value,             
+        endDate: endDate.value
+      }
+    })
+    
+    for(let item of res.data.records){
+      searchResult.push(item);
+    }
+
+    console.log(res)
+  } catch (error) {
+    console.log({ error })
+  }
+}
+
+function startDateChange(event) {
+  startDate.value = event
+}
+
+function endDateChange(event) {
+  endDate.value = event
+}
 
 </script>
 
 <template>
     <div class="keyword-search">
-        <input type="text" id="keyword" name="Nkeywordame" placeholder="キーワードで検索" v-model="keyword">
+        <input type="text" id="keyword" name="keywordName" placeholder="キーワードで検索" v-model="keyword">
     </div>
     <div class="time-list">
         <div class="item">
             <p class="inputTitle">開始日</p>
-            <DatePicker isStart=true  @startDateChange="startDateChange"/>
+            <DatePicker isStart=true :date= startDate @update:date="startDateChange"/>
         </div>
         <div class="item">
             <p class="inputTitle">終了日</p>
-            <DatePicker isStart=false  @endDateChange="endDateChange"/>
+            <DatePicker isStart=false :date= endDate @update:date="endDateChange"/>
         </div>
     </div>
     <div class="search-check">
-        <!-- <v-checkbox
-            v-model="isMyGoal"
-            label="非公開記録は表示しない" 
-            color="#0000ff"
-            @change="changeIsMyGoal(isMyGoal)" /> -->
-            <input type="checkbox" id="statusSelect">
-            <label for="statusSelectName">非公開記録は表示しない</label>
+      <input type="checkbox" id="statusSelect" v-model="isDisplayOnlyOpen">
+      <label for="statusSelectName">非公開記録は表示しない</label>
     </div>
     <div class="search-button-area">
         <button class="search-button" @click="search">検索</button>
