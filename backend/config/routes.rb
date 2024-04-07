@@ -8,6 +8,8 @@ Rails.application.routes.draw do
         registrations: 'api/v1/signup',
         sessions: 'api/v1/sessions'
       }
+      resources :records
+      get '/myRecord', to: 'records#searchMyRecord', defaults: { format: :json }
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
