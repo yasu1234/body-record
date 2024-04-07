@@ -76,6 +76,10 @@ function endDateChange(event) {
 
 function clickRecord(item) {
 }
+
+function addRecord() {
+  router.push('/addRecord');
+}
 </script>
 
 <template>
@@ -100,7 +104,7 @@ function clickRecord(item) {
         <button class="search-button" @click="targetSearch">検索</button>
     </div>
     <div class="add-button-area">
-        <button class="add-button" @click="targetSearch">記録を追加する</button>
+        <button class="add-button" @click="addRecord">記録を追加する</button>
     </div>
     <div class="my-idea-card" v-for="item of searchResult" :key="item.id" @click="clickRecord(item)">
       <h4 class="my-idea-title"><b>{{ item.title }}</b></h4>
