@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 import DatePicker from './DatePicker.vue'
 import DropFile from './DropFile.vue'
@@ -15,6 +16,30 @@ function dateChange(event) {
 
 function onFileChange(event) {
     files.value = [...event];
+}
+
+const registerRecord = async () => {
+  try {
+        const formData = new FormData();
+        formData.append('memo', content);
+        formData.append('date', recordDate);
+
+        for (const file of files.value) {
+            formData.append('images', file);
+        }
+
+        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/records', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        console.log({ res })
+    } catch (error) {
+        console.log({ error })
+    }
 }
 </script>
 
@@ -33,7 +58,7 @@ function onFileChange(event) {
         <DropFile @change="onFileChange"/>
     </div>
     <div class="relationImages">
-        <button class="registerButton" @click="register">登録する</button>
+        <button class="registerButton" @click="registerRecord">登録する</button>
     </div>
 </template>
 
