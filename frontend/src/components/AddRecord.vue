@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import DatePicker from './DatePicker.vue'
 import DropFile from './DropFile.vue'
 
-const content = ref("");
+const memo = ref("");
 const recordDate = ref("");
 const files = ref([]);
 
@@ -21,7 +21,7 @@ function onFileChange(event) {
 const registerRecord = async () => {
   try {
         const formData = new FormData();
-        formData.append('memo', content);
+        formData.append('memo', memo);
         formData.append('date', recordDate);
 
         for (const file of files.value) {
@@ -51,7 +51,7 @@ const registerRecord = async () => {
         </div>
     </div>
     <div class="editor">
-        <input type="text" id="Name" name="Name" placeholder="内容" v-model="content">
+        <textarea name="memo" rows="10" v-model="memo"></textarea>
     </div>
     <div class="relationImages">
         <p class="inputTitle">関連画像</p>
