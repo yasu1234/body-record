@@ -24,4 +24,16 @@ class Api::V1::RecordsController < ApplicationController
 
         render json: { records: @records, totalCount: @totalCount }, status: 200
     end
+
+    def create
+        @user = current_api_v1_user
+        @record = Record.new(record_register_params)
+        @record.user_id = @user.id
+        @record.save
+        render json: { record: @record }, status: 200
+    end
+
+    def record_register_params
+        params.permit(:memo, :date, :user_id, :images)
+    end
 end

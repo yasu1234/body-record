@@ -3,6 +3,7 @@ import Home from '/src/components/Home.vue';
 import AccountInteroduction from '/src/components/AccountIntroduction.vue';
 import Signup from '/src/components/Signup.vue';
 import Login from '/src/components/Login.vue';
+import AddRecord from '/src/components/AddRecord.vue';
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/login', 
     name: 'Login', 
     component: Login,
+  },
+  {
+    path: '/addRecord', 
+    name: 'AddRecord', 
+    component: AddRecord,
   },
 ];
 

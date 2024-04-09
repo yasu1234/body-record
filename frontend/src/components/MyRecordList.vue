@@ -76,6 +76,10 @@ function endDateChange(event) {
 
 function clickRecord(item) {
 }
+
+function addRecord() {
+  router.push('/addRecord');
+}
 </script>
 
 <template>
@@ -98,6 +102,9 @@ function clickRecord(item) {
     </div>
     <div class="search-button-area">
         <button class="search-button" @click="targetSearch">検索</button>
+    </div>
+    <div class="add-button-area">
+        <button class="add-button" @click="addRecord">記録を追加する</button>
     </div>
     <div class="my-idea-card" v-for="item of searchResult" :key="item.id" @click="clickRecord(item)">
       <h4 class="my-idea-title"><b>{{ item.title }}</b></h4>
@@ -171,13 +178,13 @@ input[type="checkbox"]:checked:before {
   text-align: center;
 }
 .search-button {
-    background: #ffa500;
-    color: white;
-    font-size:16px;
-    font-weight:bold;
+  background: #ffa500;
+  color: white;
+  font-size:16px;
+  font-weight:bold;
 }
 .my-idea-title {
-    margin: 10px 12px 12px 10px;
+  margin: 10px 12px 12px 10px;
 }
 .my-idea-card {
   margin: 10px 12px 12px 12px;
@@ -186,5 +193,16 @@ input[type="checkbox"]:checked:before {
 }
 .idea-date {
   margin: 10px 0px 10px 10px;
+}
+.add-button-area {
+  text-align: right;
+  margin-top: 20px;
+  padding-right: 40px;
+}
+.add-button {
+  background: #ffa500;
+  color: white;
+  font-size:16px;
+  font-weight:bold;
 }
 </style>
