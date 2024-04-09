@@ -4,6 +4,7 @@ import AccountInteroduction from '/src/components/AccountIntroduction.vue';
 import Signup from '/src/components/Signup.vue';
 import Login from '/src/components/Login.vue';
 import AddRecord from '/src/components/AddRecord.vue';
+import KnowledgeList from '/src/components/KnowledgeList.vue';
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/addRecord', 
     name: 'AddRecord', 
     component: AddRecord,
+  },
+  {
+    path: '/knowledge', 
+    name: 'KnowledgeList', 
+    component: KnowledgeList,
   },
 ];
 
