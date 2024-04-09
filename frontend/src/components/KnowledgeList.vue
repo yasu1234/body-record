@@ -27,9 +27,24 @@ const targetSearch = ()=> {
 }
 
 const search = async () => {
-}
-
-function clickRecord(item) {
+  try {
+    const res = await axios.get(import.meta.env.VITE_APP_API_BASE + '/api/v1/knowledges', {
+      headers: {
+        'access-token' : Cookies.get('accessToken'),
+        'client':Cookies.get('client'),
+        'uid': Cookies.get('uid'),
+      },
+      params: {
+        keyword: keyword.value
+      }
+    })
+    
+    for(let item of res.data.knowledges){
+      searchResult.push(item);
+    }
+  } catch (error) {
+    console.log({ error })
+  }
 }
 
 function clickKnowledge() {
