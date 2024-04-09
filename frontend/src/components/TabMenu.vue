@@ -11,7 +11,7 @@ const props = defineProps({
 const menuList = ref([
   { id: 1, label: "My記録" },
   { id: 2, label: "みんなの記録" },
-  { id: 3, label: "アイデア一覧" }
+  { id: 3, label: "ノウハウ一覧" }
 ]);
 </script>
 

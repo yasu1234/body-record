@@ -49,7 +49,7 @@ function clickKnowledge() {
         <button class="search-button" @click="targetSearch">検索</button>
     </div>
     <div class="add-button-area">
-        <button class="add-button" @click="addKnowledge">知識を追加する</button>
+        <button class="add-button" @click="addKnowledge">ノウハウを追加する</button>
     </div>
     <div class="knowledge-card" v-for="item of searchResult" :key="item.id" @click="clickKnowledge(item)">
       <h4 class="knowledge-title"><b>{{ item.title }}</b></h4>
