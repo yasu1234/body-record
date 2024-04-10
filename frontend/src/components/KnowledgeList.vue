@@ -50,6 +50,10 @@ const search = async () => {
 
 function clickKnowledge(item) {
 }
+
+function addKnowledge() {
+  router.push("/addKnowledge")
+}
 </script>
 
 <template>
