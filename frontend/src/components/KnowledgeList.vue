@@ -41,7 +41,7 @@ const search = async () => {
     })
     
     for(let item of res.data.knowledges){
-      searchResult.push(item);
+      searchResult.value.push(item);
     }
   } catch (error) {
     console.log({ error })
