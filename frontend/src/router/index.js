@@ -5,6 +5,7 @@ import Signup from '/src/components/Signup.vue';
 import Login from '/src/components/Login.vue';
 import AddRecord from '/src/components/AddRecord.vue';
 import KnowledgeList from '/src/components/KnowledgeList.vue';
+import AddKnowledge from '/src/components/AddKnowledge.vue';
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: '/knowledge', 
     name: 'KnowledgeList', 
     component: KnowledgeList,
+  },
+  {
+    path: '/addKnowledge', 
+    name: 'AddKnowledge', 
+    component: AddKnowledge,
   },
 ];
 
