@@ -20,6 +20,7 @@ onMounted(() => {
 });
 
 onBeforeRouteUpdate(async (to, from) => {
+  keyword.value = to.query.keyword;
   search();
 });
 
@@ -47,7 +48,7 @@ const search = async () => {
   }
 }
 
-function clickKnowledge() {
+function clickKnowledge(item) {
 }
 </script>
 
