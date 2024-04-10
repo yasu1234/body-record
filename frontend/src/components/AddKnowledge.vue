@@ -20,14 +20,14 @@ function onFileChange(event) {
 const registerRecord = async () => {
   try {
         const formData = new FormData();
-        formData.append('title', title);
-        formData.append('content', knowledge);
+        formData.append('title', title.value);
+        formData.append('content', knowledge.value);
 
         for (const file of files.value) {
             formData.append('images', file);
         }
 
-        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/records', formData, {
+        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/knowledges', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'access-token' : Cookies.get('accessToken'),
