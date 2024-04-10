@@ -17,4 +17,16 @@ class Api::V1::KnowledgesController < ApplicationController
 
         render json: { knowledges: @knowledge, totalCount: @totalCount }, status: 200
     end
+
+    def create
+        @user = current_api_v1_user
+        @knowledge = Knowledge.new(knowledge_register_params)
+        @knowledge.user_id = @user.id
+        @knowledge.save
+        render json: { knowledge: @knowledge }, status: 200
+    end
+
+    def knowledge_register_params
+        params.permit(:title, :content, :images)
+    end
 end
