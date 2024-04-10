@@ -10,6 +10,8 @@ Rails.application.routes.draw do
       }
       resources :records
       get '/myRecord', to: 'records#searchMyRecord', defaults: { format: :json }
+
+      resources :knowledges
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
