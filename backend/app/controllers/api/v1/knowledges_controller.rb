@@ -21,7 +21,7 @@ class Api::V1::KnowledgesController < ApplicationController
     def create
         @user = current_api_v1_user
         @knowledge = Knowledge.new(knowledge_register_params)
-        @knowledge.user_id = @user.id
+        @knowledge.create_user_id = @user.id
         @knowledge.save
         render json: { knowledge: @knowledge }, status: 200
     end
