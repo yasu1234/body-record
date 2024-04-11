@@ -11,6 +11,7 @@ const route = useRoute();
 const title = ref("");
 const knowledge = ref("");
 const files = ref([]);
+const imageUrls = ref([]);
 
 onMounted(() => {
     getDetail();
@@ -35,8 +36,9 @@ const getDetail = async () => {
             }
         })
         console.log({ res })
-        title.value = res.data.knowledge[0].title
-        knowledge.value = res.data.knowledge[0].knowledge
+        title.value = res.data.knowledge.title
+        knowledge.value = res.data.knowledge.knowledge
+        imageUrls.value = res.data.imageUrls
     } catch (error) {
         console.log({ error })
     }
@@ -48,6 +50,9 @@ const getDetail = async () => {
         <label class="itemLabel">タイトル</label>
         <input id="title" type="text" v-model="title">
         <textarea name="knowledge" rows="20" v-model="knowledge"></textarea>
+    </div>
+    <div class="thumbnail" v-for="item in imageUrls">
+        <img :src="item" alt="">
     </div>
     <div class="relationImages">
         <p class="inputTitle">関連画像</p>
@@ -96,5 +101,15 @@ const getDetail = async () => {
     color: white;
     font-size:16px;
     font-weight:bold;
+}
+.thumbnail {
+    display: inline-block;
+    height: 200px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    padding-left: 20px;
+}
+.thumbnail img {
+    height: 100%;
 }
 </style>
