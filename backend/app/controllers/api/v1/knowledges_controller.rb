@@ -26,6 +26,12 @@ class Api::V1::KnowledgesController < ApplicationController
         render json: { knowledge: @knowledge }, status: 200
     end
 
+    def show
+        @user = current_api_v1_user
+        @knowledge = Knowledge.where(id: params[:id].to_i)
+        render json: { knowledge: @knowledge }, status: 200
+    end
+
     def knowledge_register_params
         params.permit(:title, :content, :images)
     end
