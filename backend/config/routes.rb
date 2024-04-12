@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       get '/myRecord', to: 'records#searchMyRecord', defaults: { format: :json }
 
       resources :knowledges
+      delete '/knowledge/image', to: 'knowledges#delete_image'
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

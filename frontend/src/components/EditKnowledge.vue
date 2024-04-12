@@ -12,6 +12,7 @@ const title = ref("");
 const knowledge = ref("");
 const files = ref([]);
 const imageUrls = ref([]);
+const knowledgeId = ref(null);
 
 onMounted(() => {
     getDetail();
@@ -25,6 +26,25 @@ function onFileChange(event) {
     files.value = [...event];
 }
 
+const deleteImage = async (item) => {
+    try {
+        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + '/api/v1/knowledges/image', {
+            params: {
+                'id': knowledgeId.value,
+                'image_id': item.id
+            },
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        console.log({ res })
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
 const getDetail = async () => {
     const id = route.params.id
     try {
@@ -35,7 +55,7 @@ const getDetail = async () => {
                 'uid': Cookies.get('uid')
             }
         })
-        console.log({ res })
+        knowledgeId.value = res.data.knowledge.id
         title.value = res.data.knowledge.title
         knowledge.value = res.data.knowledge.knowledge
         imageUrls.value = res.data.imageUrls
@@ -43,6 +63,7 @@ const getDetail = async () => {
         console.log({ error })
     }
 }
+
 </script>
 
 <template>
@@ -51,15 +72,22 @@ const getDetail = async () => {
         <input id="title" type="text" v-model="title">
         <textarea name="knowledge" rows="20" v-model="knowledge"></textarea>
     </div>
+    <div class="thumbnail-container">
     <div class="thumbnail" v-for="item in imageUrls">
-        <img :src="item" alt="">
+      <div class="thumbnail-image">
+        <img :src="item.url" alt="">
+      </div>
+      <div class="thumbnail-actions">
+        <button class="delete-button" @click="deleteImage(item)">X</button>
+      </div>
     </div>
+  </div>
     <div class="relationImages">
         <p class="inputTitle">関連画像</p>
         <DropFile @change="onFileChange"/>
     </div>
     <div class="relationImages">
-        <button class="registerButton" @click="registerRecord">登録する</button>
+        <button class="registerButton" @click="edit">登録する</button>
     </div>
 </template>
 
@@ -102,7 +130,14 @@ const getDetail = async () => {
     font-size:16px;
     font-weight:bold;
 }
+.thumbnail-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 20px;
+}
 .thumbnail {
+    position: relative;
     display: inline-block;
     height: 200px;
     margin-right: 15px;
@@ -112,4 +147,28 @@ const getDetail = async () => {
 .thumbnail img {
     height: 100%;
 }
+.thumbnail-image {
+    height: 100%;
+}
+.thumbnail-image img {
+    height: 100%;
+}
+.thumbnail-actions {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+.delete-button {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    color: #000;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    border-radius: 50%
+  }
 </style>

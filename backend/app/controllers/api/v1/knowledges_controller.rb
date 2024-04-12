@@ -32,6 +32,13 @@ class Api::V1::KnowledgesController < ApplicationController
         render json: { knowledge: @knowledge, imageUrls: @knowledge.image_urls }, status: 200
     end
 
+    def delete_image
+        @knowledge = Knowledge.find(params[:id])
+        @image = @knowledge.images.find(params[:image_id])
+        @image.purge
+        render json: { knowledge: @knowledge, imageUrls: @knowledge.image_urls }, status: 200
+    end
+
     def knowledge_register_params
         params.permit(:title, :content, :images)
     end
