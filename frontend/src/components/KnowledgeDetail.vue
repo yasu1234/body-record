@@ -1,10 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
 import Cookies from 'js-cookie';
-
-import DropFile from './DropFile.vue'
+import MarkdownIt from 'markdown-it'
 
 const route = useRoute();
 
@@ -13,17 +12,16 @@ const knowledge = ref("");
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
 
+const md = new MarkdownIt()
+
+const renderedMarkdown = computed(() => {
+  return md.render(knowledge.value)
+})
+
 onMounted(() => {
     getDetail();
 });
 
-function dateChange(event) {
-    recordDate.value = event
-}
-
-function onFileChange(event) {
-    files.value = [...event];
-}
 
 const getDetail = async () => {
     const id = route.params.id
@@ -48,7 +46,7 @@ const getDetail = async () => {
 <template>
     <div class="editor">
         <p id="title" class="knowledge-title" type="text"> {{ title }} </p>
-        <p class="knowledge-content" type="text"> {{ knowledge }} </p>
+        <p class="knowledge-content" v-html="renderedMarkdown"></p>
     </div>
     <div v-if="imageUrls.length!==0">
         <p class="inputTitle">関連画像</p>
