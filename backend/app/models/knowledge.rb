@@ -1,9 +1,14 @@
 class Knowledge < ApplicationRecord
     include Rails.application.routes.url_helpers
-
     has_many_attached :images
-    
+  
     def image_urls
-        images.map { |image| "http://localhost:3000" + rails_blob_path(image, only_path: true) }
+      images.map do |image|
+        {
+          url: "http://localhost:3000" + rails_blob_path(image, only_path: true),
+          id: image.id,
+          filename: image.filename.to_s
+        }
+      end
     end
-end
+  end
