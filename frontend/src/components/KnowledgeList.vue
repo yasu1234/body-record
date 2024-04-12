@@ -35,6 +35,7 @@ const search = async () => {
         'client':Cookies.get('client'),
         'uid': Cookies.get('uid'),
       },
+
       params: {
         keyword: keyword.value
       }
@@ -49,6 +50,7 @@ const search = async () => {
 }
 
 function clickKnowledge(item) {
+  router.push({ name: 'EditKnowledge', params: { id: item.id }})
 }
 
 function addKnowledge() {

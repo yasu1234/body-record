@@ -6,6 +6,7 @@ import Login from '/src/components/Login.vue';
 import AddRecord from '/src/components/AddRecord.vue';
 import KnowledgeList from '/src/components/KnowledgeList.vue';
 import AddKnowledge from '/src/components/AddKnowledge.vue';
+import EditKnowledge from '/src/components/EditKnowledge.vue';
 
 const routes = [
   {
@@ -43,6 +44,11 @@ const routes = [
     name: 'AddKnowledge', 
     component: AddKnowledge,
   },
+  { 
+    path: '/knowledge/:id/edit',
+    name: 'EditKnowledge',
+    component: EditKnowledge 
+  }
 ];
 
 const router = createRouter({
