@@ -1,11 +1,12 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Cookies from 'js-cookie';
 import MarkdownIt from 'markdown-it'
 
 const route = useRoute();
+const router = useRouter();
 
 const title = ref("");
 const knowledge = ref("");
@@ -40,6 +41,10 @@ const getDetail = async () => {
     } catch (error) {
         console.log({ error })
     }
+}
+
+function edit() {
+    router.push({ name: 'EditKnowledge', params: { id: knowledgeId.value }})
 }
 </script>
 
