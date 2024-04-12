@@ -57,13 +57,39 @@ const getDetail = async () => {
         })
         knowledgeId.value = res.data.knowledge.id
         title.value = res.data.knowledge.title
-        knowledge.value = res.data.knowledge.knowledge
+        knowledge.value = res.data.knowledge.content
         imageUrls.value = res.data.imageUrls
     } catch (error) {
         console.log({ error })
     }
 }
 
+const edit = async () => {
+    try {
+        const formData = new FormData();
+        formData.append('title', title.value);
+        formData.append('content', knowledge.value);
+
+        for (const file of files.value) {
+            formData.append('images', file);
+        }
+
+        const res = await axios.patch(import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/${knowledgeId.value}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        knowledgeId.value = res.data.knowledge.id
+        title.value = res.data.knowledge.title
+        knowledge.value = res.data.knowledge.content
+        imageUrls.value = res.data.imageUrls
+    } catch (error) {
+        console.log({ error })
+    }
+}
 </script>
 
 <template>
