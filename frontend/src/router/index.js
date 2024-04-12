@@ -7,6 +7,7 @@ import AddRecord from '/src/components/AddRecord.vue';
 import KnowledgeList from '/src/components/KnowledgeList.vue';
 import AddKnowledge from '/src/components/AddKnowledge.vue';
 import EditKnowledge from '/src/components/EditKnowledge.vue';
+import KnowledgeDetail from '/src/components/KnowledgeDetail.vue';
 
 const routes = [
   {
@@ -48,6 +49,11 @@ const routes = [
     path: '/knowledge/:id/edit',
     name: 'EditKnowledge',
     component: EditKnowledge 
+  },
+  { 
+    path: '/knowledge/:id',
+    name: 'KnowledgeDetail',
+    component: KnowledgeDetail 
   }
 ];
 

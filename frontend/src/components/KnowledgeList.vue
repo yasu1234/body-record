@@ -50,7 +50,7 @@ const search = async () => {
 }
 
 function clickKnowledge(item) {
-  router.push({ name: 'EditKnowledge', params: { id: item.id }})
+  router.push({ name: 'KnowledgeDetail', params: { id: item.id }})
 }
 
 function addKnowledge() {
