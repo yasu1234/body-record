@@ -49,16 +49,17 @@ const targetSearch = ()=> {
 const search = async () => {
   try {
     const res = await axios.get(import.meta.env.VITE_APP_API_BASE + '/api/v1/records', {
-      headers: {
-        'access-token' : Cookies.get('accessToken'),
-        'client':Cookies.get('client'),
-        'uid': Cookies.get('uid'),
-      },
-      params: {
-        keyword: keyword.value,
-        startDate: startDate.value,             
-        endDate: endDate.value
-      }
+        headers: {
+            'access-token' : Cookies.get('accessToken'),
+            'client':Cookies.get('client'),
+            'uid': Cookies.get('uid'),
+        },
+        
+        params: {
+            keyword: keyword.value,
+            startDate: startDate.value,             
+            endDate: endDate.value
+        }
     })
     
     for(let item of res.data.records){
@@ -78,6 +79,7 @@ function endDateChange(event) {
 }
 
 function clickRecord(item) {
+    router.push({ name: 'RecordDetail', params: { id: item.id }})
 }
 </script>
 

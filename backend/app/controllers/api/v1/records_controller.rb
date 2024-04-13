@@ -52,12 +52,25 @@ class Api::V1::RecordsController < ApplicationController
         render json: { records: @records, totalCount: @totalCount }, status: 200
     end
 
+    def show
+        @user = current_api_v1_user
+        @record = Record.where(id: params[:id].to_i).first
+        render json: { record: @record, imageUrls: @record.image_urls, isMyRecord: @record.user_id == @user.id }, status: 200
+    end
+
     def create
         @user = current_api_v1_user
         @record = Record.new(record_register_params)
         @record.user_id = @user.id
         @record.save
         render json: { record: @record }, status: 200
+    end
+
+    def destroy
+        @record = Record.find(params[:id])
+        @record.images.purge
+        @record.destroy
+        render json: { success: true }, status: 200
     end
 
     def record_register_params
