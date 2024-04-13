@@ -59,7 +59,7 @@ const search = async () => {
     })
     
     for(let item of res.data.records){
-      searchResult.push(item);
+      searchResult.value.push(item);
     }
   } catch (error) {
     console.log({ error })
@@ -107,9 +107,9 @@ function addRecord() {
         <button class="add-button" @click="addRecord">記録を追加する</button>
     </div>
     <div class="my-idea-card" v-for="item of searchResult" :key="item.id" @click="clickRecord(item)">
-      <h4 class="my-idea-title"><b>{{ item.title }}</b></h4>
+      <h4 class="my-idea-title"><b>{{ item.date }}</b></h4>
       <div>
-        <p class="idea-date">{{ item.date }}</p>
+        <p class="idea-memo">{{ item.memo }}</p>
       </div>
     </div>
 </template>
@@ -191,7 +191,7 @@ input[type="checkbox"]:checked:before {
   border: 1px solid #CCC;
   border-radius: 5px;
 }
-.idea-date {
+.idea-memo {
   margin: 10px 0px 10px 10px;
 }
 .add-button-area {
