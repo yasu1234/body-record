@@ -44,6 +44,22 @@ const getDetail = async () => {
     }
 }
 
+const deleteRecord = async () => {
+    const id = recordId.value
+    try {
+        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + `/api/v1/records/${id}`, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        router.push({ name: 'Home'})
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
 function edit() {
     router.push({ name: 'EditKnowledge', params: { id: knowledgeId.value }})
 }
@@ -64,8 +80,9 @@ function edit() {
             </div>
         </div>
     </div>
-    <div class="relationImages" v-if="isMyRecord">
-        <button class="editButton" @click="edit">編集する</button>
+    <div class="record-detail-buttons" v-if="isMyRecord">
+        <button class="detail-button" @click="edit">編集する</button>
+        <button class="detail-button" @click="deleteRecord">削除する</button>
     </div>
 </template>
 
@@ -90,10 +107,15 @@ function edit() {
     font-size: 22px;
     padding-top: 20px;
 }
-.relationImages {
+.record-detail-buttons {
     padding: 20px;
+    display: flex;
+    justify-content: center;
 }
-.editButton{
+.record-detail-buttons button {
+    margin-right: 15px;
+}
+.detail-button {
     background: #ffa500;
     color: white;
     font-size:16px;

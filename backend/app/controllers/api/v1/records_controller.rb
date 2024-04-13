@@ -66,6 +66,13 @@ class Api::V1::RecordsController < ApplicationController
         render json: { record: @record }, status: 200
     end
 
+    def destroy
+        @record = Record.find(params[:id])
+        @record.images.purge
+        @record.destroy
+        render json: { success: true }, status: 200
+    end
+
     def record_register_params
         params.permit(:memo, :date, :user_id, :images)
     end
