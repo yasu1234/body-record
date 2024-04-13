@@ -9,14 +9,15 @@ const route = useRoute();
 const router = useRouter();
 
 const title = ref("");
-const knowledge = ref("");
+const memo = ref("");
 const imageUrls = ref([]);
-const knowledgeId = ref(null);
+const recordId = ref(null);
+const isMyRecord = ref(false);
 
 const md = new MarkdownIt()
 
 const renderedMarkdown = computed(() => {
-  return md.render(knowledge.value)
+  return md.render(memo.value)
 })
 
 onMounted(() => {
@@ -34,9 +35,9 @@ const getDetail = async () => {
                 'uid': Cookies.get('uid')
             }
         })
-        knowledgeId.value = res.data.knowledge.id
-        title.value = res.data.knowledge.title
-        knowledge.value = res.data.knowledge.content
+        recordId.value = res.data.record.id
+        memo.value = res.data.record.memo
+        isMyRecord.value = res.data.isMyRecord
         imageUrls.value = res.data.imageUrls
     } catch (error) {
         console.log({ error })
@@ -63,7 +64,7 @@ function edit() {
             </div>
         </div>
     </div>
-    <div class="relationImages">
+    <div class="relationImages" v-if="isMyRecord">
         <button class="editButton" @click="edit">編集する</button>
     </div>
 </template>

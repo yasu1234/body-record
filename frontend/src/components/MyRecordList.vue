@@ -75,6 +75,7 @@ function endDateChange(event) {
 }
 
 function clickRecord(item) {
+  router.push({ name: 'RecordDetail', params: { id: item.id }})
 }
 
 function addRecord() {
