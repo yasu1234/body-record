@@ -28,6 +28,22 @@ function onFileChange(event) {
 }
 
 const deleteImage = async (item) => {
+    try {
+        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + '/api/v1/record/image', {
+            params: {
+                'id': recordId.value,
+                'image_id': item.id
+            },
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        imageUrls.value = res.data.imageUrls
+    } catch (error) {
+        console.log({ error })
+    }
 }
 
 const getDetail = async () => {

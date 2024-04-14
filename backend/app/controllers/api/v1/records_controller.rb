@@ -80,6 +80,13 @@ class Api::V1::RecordsController < ApplicationController
         render json: { success: true }, status: 200
     end
 
+    def delete_image
+        @record = Record.find(params[:id])
+        @image = @record.images.find(params[:image_id])
+        @image.purge
+        render json: { imageUrls: @knowledge.image_urls }, status: 200
+    end
+
     def record_register_params
         params.permit(:memo, :date, :user_id, :images)
     end
