@@ -9,7 +9,8 @@ Rails.application.routes.draw do
         sessions: 'api/v1/sessions'
       }
       resources :records
-      get '/myRecord', to: 'records#searchMyRecord', defaults: { format: :json }
+      get '/myRecord', to: 'records#searchMyRecord'
+      delete '/record/image', to: 'records#delete_image'
 
       resources :knowledges
       delete '/knowledge/image', to: 'knowledges#delete_image'

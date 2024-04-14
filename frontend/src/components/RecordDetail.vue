@@ -61,7 +61,7 @@ const deleteRecord = async () => {
 }
 
 function edit() {
-    router.push({ name: 'EditKnowledge', params: { id: knowledgeId.value }})
+    router.push({ name: 'EditRecord', params: { id: recordId.value }})
 }
 </script>
 

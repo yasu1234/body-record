@@ -10,6 +10,7 @@ import EditKnowledge from '/src/components/EditKnowledge.vue';
 import KnowledgeDetail from '/src/components/KnowledgeDetail.vue';
 import OtherRecordList from '/src/components/OtherRecordList.vue';
 import RecordDetail from '/src/components/RecordDetail.vue';
+import EditRecord from '/src/components/EditRecord.vue';
 
 const routes = [
   {
@@ -66,7 +67,12 @@ const routes = [
     path: '/record/:id',
     name: 'RecordDetail',
     component: RecordDetail 
-  }
+  },
+  { 
+    path: '/record/:id/edit',
+    name: 'EditRecord',
+    component: EditRecord 
+  },
 ];
 
 const router = createRouter({

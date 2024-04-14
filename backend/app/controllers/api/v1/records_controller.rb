@@ -66,11 +66,25 @@ class Api::V1::RecordsController < ApplicationController
         render json: { record: @record }, status: 200
     end
 
+    def update
+        @user = current_api_v1_user
+        @record = Record.where(id: params[:id].to_i).first
+        @record.update(record_register_params)
+        render json: { record: @record }, status: 200
+    end
+
     def destroy
         @record = Record.find(params[:id])
         @record.images.purge
         @record.destroy
         render json: { success: true }, status: 200
+    end
+
+    def delete_image
+        @record = Record.find(params[:id])
+        @image = @record.images.find(params[:image_id])
+        @image.purge
+        render json: { imageUrls: @knowledge.image_urls }, status: 200
     end
 
     def record_register_params
