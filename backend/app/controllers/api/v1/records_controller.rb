@@ -66,6 +66,13 @@ class Api::V1::RecordsController < ApplicationController
         render json: { record: @record }, status: 200
     end
 
+    def update
+        @user = current_api_v1_user
+        @record = Record.where(id: params[:id].to_i).first
+        @record.update(record_register_params)
+        render json: { record: @record }, status: 200
+    end
+
     def destroy
         @record = Record.find(params[:id])
         @record.images.purge
