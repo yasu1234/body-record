@@ -1,19 +1,37 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router'
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 const router = useRouter();
 
-const props = defineProps({
-    isLogin: Boolean
-})
+const isLogin = ref(false);
+
+onMounted(() => {
+    checkLogin();
+});
 
 const menuList = ref([
   { id: 1, label: "ユーザー設定", isLogin: true },
   { id: 2, label: "設定", isLogin: false },
   { id: 3, label: "ログアウト", isLogin: true }
 ]);
+
+const checkLogin = async () => {
+  try {
+    const res = await axios.get(import.meta.env.VITE_APP_API_BASE + '/api/v1/users/check_login', {
+      headers: {
+        'access-token' : Cookies.get('accessToken'),
+        'client':Cookies.get('client'),
+        'uid': Cookies.get('uid'),
+      },
+    })
+    isLogin.value = res.data.isLogin
+  } catch (error) {
+    console.log({ error })
+  }
+}
 
 const showDropdown = ref(false);
 
@@ -40,7 +58,7 @@ function showMenu(menu) {
                 </div>                
             </div>
             <div v-if="showDropdown" class="dropdown-menu">
-                <div v-for="menu in menuList" @click="showMenu(menu)">
+                <div v-for="menu in menuList" class="menu-item" @click="showMenu(menu)">
                     {{ menu.label }}
                 </div>
             </div>
