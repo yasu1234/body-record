@@ -4,6 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 import DropFile from './DropFile.vue'
+import Header from './Header.vue'
 
 const title = ref("");
 const knowledge = ref("");
@@ -43,6 +44,7 @@ const registerRecord = async () => {
 </script>
 
 <template>
+    <Header />
     <div class="editor">
         <label class="itemLabel">タイトル</label>
         <input id="title" type="text" v-model="title">

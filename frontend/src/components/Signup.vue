@@ -3,6 +3,8 @@ import axios from 'axios'
 import { ref } from 'vue'
 import Cookies from 'js-cookie'
 
+import Header from './Header.vue'
+
 defineProps({
   msg: String,
 })
@@ -30,6 +32,7 @@ const signup = async () => {
 </script>
 
 <template>
+    <Header />
     <h1 class="signUpTitle">会員登録</h1>
     <div class="singUpInput">
         <form class="form" @submit.prevent="signup">

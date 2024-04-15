@@ -6,6 +6,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 import TabMenu from './TabMenu.vue'
+import Header from './Header.vue'
 
 const router = useRouter();
 
@@ -84,7 +85,8 @@ function clickRecord(item) {
 </script>
 
 <template>
-     <TabMenu :currentId="currentId"/>
+    <Header />
+    <TabMenu :currentId="currentId"/>
     <div class="keyword-search">
         <input type="text" id="keyword" name="keywordName" placeholder="キーワードで検索" v-model="keyword">
     </div>

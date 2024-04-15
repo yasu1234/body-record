@@ -5,6 +5,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 import TabMenu from './TabMenu.vue'
+import Header from './Header.vue'
 
 const router = useRouter();
 
@@ -59,26 +60,27 @@ function addKnowledge() {
 </script>
 
 <template>
-    <TabMenu :currentId="currentId"/>
-    <div class="keyword-search">
-        <input type="text" id="keyword" name="keywordName" placeholder="キーワードで絞り込む" v-model="keyword">
+  <Header />>
+  <TabMenu :currentId="currentId"/>
+  <div class="keyword-search">
+    <input type="text" id="keyword" name="keywordName" placeholder="キーワードで絞り込む" v-model="keyword">
+  </div>
+  <div class="search-check">
+    <input type="checkbox" id="statusSelect" v-model="isBookmark">
+    <label for="statusSelectName">ブックマークのみ絞り込む</label>
+  </div>
+  <div class="search-button-area">
+     <button class="search-button" @click="targetSearch">検索</button>
+  </div>
+  <div class="add-button-area">
+    <button class="add-button" @click="addKnowledge">ノウハウを追加する</button>
+  </div>
+  <div class="knowledge-card" v-for="item of searchResult" :key="item.id" @click="clickKnowledge(item)">
+    <h4 class="knowledge-title"><b>{{ item.title }}</b></h4>
+    <div>
+      <p class="idea-content">{{ item.content }}</p>
     </div>
-    <div class="search-check">
-      <input type="checkbox" id="statusSelect" v-model="isBookmark">
-      <label for="statusSelectName">ブックマークのみ絞り込む</label>
-    </div>
-    <div class="search-button-area">
-        <button class="search-button" @click="targetSearch">検索</button>
-    </div>
-    <div class="add-button-area">
-        <button class="add-button" @click="addKnowledge">ノウハウを追加する</button>
-    </div>
-    <div class="knowledge-card" v-for="item of searchResult" :key="item.id" @click="clickKnowledge(item)">
-      <h4 class="knowledge-title"><b>{{ item.title }}</b></h4>
-      <div>
-        <p class="idea-content">{{ item.content }}</p>
-      </div>
-    </div>
+  </div>
 </template>
 
 <style>

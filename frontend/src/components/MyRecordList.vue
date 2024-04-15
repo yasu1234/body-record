@@ -5,6 +5,8 @@ import DatePicker from './DatePicker.vue'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+import Header from './Header.vue'
+
 const router = useRouter();
 
 const keyword = ref("");
@@ -84,6 +86,7 @@ function addRecord() {
 </script>
 
 <template>
+  <Header />
     <div class="keyword-search">
         <input type="text" id="keyword" name="keywordName" placeholder="キーワードで検索" v-model="keyword">
     </div>
