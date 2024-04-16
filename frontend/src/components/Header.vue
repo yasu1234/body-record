@@ -29,7 +29,7 @@ const checkLogin = async () => {
     })
     isLogin.value = res.data.isLogin
   } catch (error) {
-    console.log({ error })
+    isLogin.value = false
   }
 }
 
@@ -44,6 +44,32 @@ function toggleDropdown() {
 }
 
 function showMenu(menu) {
+    switch(menu.id) {
+        case 3:
+            logout();
+            break
+        default:
+            break
+    }
+}
+
+const logout = async () => {
+    try {
+        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + '/api/v1/auth/sign_out', {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        Cookies.remove('accessToken')
+        Cookies.remove('client')
+        Cookies.remove('uid')
+
+        router.push({ name: 'Home'})
+    } catch (error) {
+        console.log({ error })
+    }
 }
 </script>
 
