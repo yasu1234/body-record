@@ -19,6 +19,8 @@ const guestLogin = async () => {
     Cookies.set('accessToken', res.headers["access-token"])
     Cookies.set('client', res.headers["client"])
     Cookies.set('uid', res.headers["uid"])
+
+    router.push({ name: 'Home'})
   } catch (error) {
     console.log({ error })
   }
