@@ -86,7 +86,6 @@ function addRecord() {
 </script>
 
 <template>
-  <Header />
     <div class="keyword-search">
         <input type="text" id="keyword" name="keywordName" placeholder="キーワードで検索" v-model="keyword">
     </div>

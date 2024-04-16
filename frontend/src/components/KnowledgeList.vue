@@ -60,7 +60,6 @@ function addKnowledge() {
 </script>
 
 <template>
-  <Header />>
   <TabMenu :currentId="currentId"/>
   <div class="keyword-search">
     <input type="text" id="keyword" name="keywordName" placeholder="キーワードで絞り込む" v-model="keyword">

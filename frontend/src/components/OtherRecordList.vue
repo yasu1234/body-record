@@ -85,7 +85,6 @@ function clickRecord(item) {
 </script>
 
 <template>
-    <Header />
     <TabMenu :currentId="currentId"/>
     <div class="keyword-search">
         <input type="text" id="keyword" name="keywordName" placeholder="キーワードで検索" v-model="keyword">
