@@ -13,7 +13,7 @@ onMounted(() => {
 });
 
 const menuList = ref([
-  { id: 1, label: "ユーザー設定", isLogin: true },
+  { id: 1, label: "マイページ", isLogin: true },
   { id: 2, label: "設定", isLogin: false },
   { id: 3, label: "ログアウト", isLogin: true }
 ]);
@@ -35,6 +35,9 @@ const checkLogin = async () => {
 
 const showDropdown = ref(false);
 
+function showMyPage() {
+}
+
 function showAccountIntroduction() {
     router.push({ name: 'AccountInteroduction'})
 }
@@ -45,6 +48,9 @@ function toggleDropdown() {
 
 function showMenu(menu) {
     switch(menu.id) {
+        case 1:
+            showMyPage();
+            break
         case 3:
             logout();
             break
