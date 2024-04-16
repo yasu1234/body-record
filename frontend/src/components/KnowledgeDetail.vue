@@ -5,6 +5,8 @@ import { useRoute, useRouter } from 'vue-router'
 import Cookies from 'js-cookie';
 import MarkdownIt from 'markdown-it'
 
+import Header from './Header.vue'
+
 const route = useRoute();
 const router = useRouter();
 
@@ -49,6 +51,7 @@ function edit() {
 </script>
 
 <template>
+    <Header />
     <div class="editor">
         <p id="title" class="knowledge-title" type="text"> {{ title }} </p>
         <p class="knowledge-content" v-html="renderedMarkdown"></p>

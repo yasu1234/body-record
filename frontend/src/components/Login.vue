@@ -3,6 +3,8 @@ import axios from 'axios'
 import { ref } from 'vue'
 import Cookies from 'js-cookie'
 
+import Header from './Header.vue'
+
 const email = ref('')
 const password = ref('')
 
@@ -15,6 +17,8 @@ const login = async () => {
     Cookies.set('accessToken', response.headers["access-token"])
     Cookies.set('client', response.headers["client"])
     Cookies.set('uid', response.headers["uid"])
+
+    router.push({ name: 'Home'})
   } catch (error) {
     console.log({ error })
   }
@@ -22,6 +26,7 @@ const login = async () => {
 </script>
 
 <template>
+    <Header />
     <h1 class="signUpTitle">ログイン</h1>
     <div class="singUpInput">
         <form class="form" @submit.prevent="login">

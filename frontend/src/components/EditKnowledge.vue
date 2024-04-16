@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router'
 import Cookies from 'js-cookie';
 
 import DropFile from './DropFile.vue'
+import Header from './Header.vue'
 
 const route = useRoute();
 
@@ -93,6 +94,7 @@ const edit = async () => {
 </script>
 
 <template>
+    <Header />
     <div class="editor">
         <label class="itemLabel">タイトル</label>
         <input id="title" type="text" v-model="title">

@@ -5,6 +5,8 @@ import DatePicker from './DatePicker.vue'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+import Header from './Header.vue'
+
 const router = useRouter();
 
 const keyword = ref("");

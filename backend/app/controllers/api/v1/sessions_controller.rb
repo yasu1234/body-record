@@ -9,5 +9,12 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
         @resource.save!
         render_create_success
     end
-  
+
+    def chck_login
+        if api_v1_user_signed_in?
+            render json: { isLogin: true }, status: 200
+        else
+            render json: { isLogin: false }, status: 200
+        end
+    end
 end

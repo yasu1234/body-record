@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 
 import DropFile from './DropFile.vue'
 import DatePicker from './DatePicker.vue'
+import Header from './Header.vue'
 
 const route = useRoute();
 
@@ -94,6 +95,7 @@ const edit = async () => {
 </script>
 
 <template>
+    <Header />
     <div class="edit-time">
         <p class="inputTitle">開始日</p>
         <DatePicker isStart=true :date= recordDate @update:date="dateChange"/>

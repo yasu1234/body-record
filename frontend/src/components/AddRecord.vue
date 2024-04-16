@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 
 import DatePicker from './DatePicker.vue'
 import DropFile from './DropFile.vue'
+import Header from './Header.vue'
 
 const memo = ref("");
 const recordDate = ref("");
@@ -44,6 +45,7 @@ const registerRecord = async () => {
 </script>
 
 <template>
+    <Header />
     <div class="time-list">
         <div class="item">
             <p class="inputTitle">記録日</p>
