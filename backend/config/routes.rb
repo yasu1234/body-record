@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       devise_scope :api_v1_user do
         post 'users/guest_sign_in', to: 'sessions#guest_sign_in'
-        get 'users/check_login', to: 'sessions#chck_login'
+        get 'users/check_login', to: 'sessions#check_login'
       end
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/signup',
