@@ -11,6 +11,7 @@ import KnowledgeDetail from '/src/components/KnowledgeDetail.vue';
 import OtherRecordList from '/src/components/OtherRecordList.vue';
 import RecordDetail from '/src/components/RecordDetail.vue';
 import EditRecord from '/src/components/EditRecord.vue';
+import UserProfile from '/src/components/UserProfile.vue';
 
 const routes = [
   {
@@ -72,6 +73,11 @@ const routes = [
     path: '/record/:id/edit',
     name: 'EditRecord',
     component: EditRecord 
+  },
+  { 
+    path: '/user/:id',
+    name: 'UserProfile',
+    component: UserProfile 
   },
 ];
 

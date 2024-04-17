@@ -1,12 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
 const router = useRouter();
 
 const isLogin = ref(false);
+const userId = ref(0);
 
 onMounted(() => {
     checkLogin();
@@ -28,6 +29,7 @@ const checkLogin = async () => {
       },
     })
     isLogin.value = res.data.isLogin
+    userId.value = res.data.user.id
   } catch (error) {
     isLogin.value = false
   }
@@ -36,6 +38,7 @@ const checkLogin = async () => {
 const showDropdown = ref(false);
 
 function showMyPage() {
+    router.push({ name: 'UserProfile', params: { id: userId.value }})
 }
 
 function showAccountIntroduction() {
