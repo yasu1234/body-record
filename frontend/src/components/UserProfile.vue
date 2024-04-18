@@ -12,12 +12,14 @@ const router = useRouter();
 
 const profile = ref("");
 const userName = ref("");
-const file = ref(null);
+const userThumbnail = ref(null);
+const records = ref([]);
 const isDisplayOnlyOpen = ref(false);
 const isLogin = ref(false);
 
 onMounted(() => {
     getProfile();
+    getUserRecord();
 });
 
 const getProfile = async () => {
@@ -40,6 +42,25 @@ const getProfile = async () => {
     }
 }
 
+const getUserRecord = async () => {
+    const id = route.params.id
+  
+    try {
+        const res = await axios.get(import.meta.env.VITE_APP_API_BASE + `/api/v1/records/user/${id}`, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid'),
+      
+            }
+        })
+
+        records.value = res.data.records
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
 function showProfileEdit() {
 }
 </script>
@@ -49,7 +70,7 @@ function showProfileEdit() {
   <div class="profile-card">
     <div class="profile-card__inner">
       <div class="profile-thumb">
-        <img v-if="file !== null" :src="file.url" alt="ユーザーアイコン"/>
+        <img v-if="userThumbnail !== null" :src="userThumbnail.url" alt="ユーザーアイコン"/>
         <img v-else src="../assets/image/user-placeholder.png" alt="ユーザーアイコン" />
       </div>
       <div class="profile-content">
@@ -60,6 +81,9 @@ function showProfileEdit() {
         <button class="profile-edit-button" @click="profileEdit">プロフィール編集</button>
       </div>
     </div>
+  </div>
+  <div class="record-list">
+    <span class="section-title">記録一覧</span>
   </div>
 </template>
 
@@ -108,17 +132,17 @@ function showProfileEdit() {
   padding: 15px;
 }
 
-.profile-content span{
+.profile-content span {
   display: block;
 }
 
-.profile-name{
+.profile-name {
   margin-bottom: 3px;
   font-weight: bold;
   text-align: center;
 }
 
-.profile-intro{
+.profile-intro {
   font-size: 12px;
 }
 
@@ -135,39 +159,14 @@ function showProfileEdit() {
   font-weight:bold;
   margin: 0 auto;
 }
-
- input[type=text] {
-  width: 100%;
-  padding: 12px 12px;
-  margin: 8px 0;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.record-list {
+  text-align: center;
+  padding-top: 40px;
 }
-input[type="checkbox"] {
-  border-radius: 0;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-}
-input[type="checkbox"] {
-  position: relative;
-  width: 16px;
-  height: 16px;
-  border: 1px solid #000;
-  vertical-align: -5px;
-}
-
-input[type="checkbox"]:checked:before {
-  position: absolute;
-  top: 1px;
-  left: 4px;
-  transform: rotate(50deg);
-  width: 4px;
-  height: 8px;
-  border-right: 2px solid #000;
-  border-bottom: 2px solid #000;
-  content: '';
+.section-title {
+  border-bottom: solid 5px #ffa500;
+  font-size:25px;
+  font-weight:bold;
 }
 .search-check {
   margin-top: 20px;

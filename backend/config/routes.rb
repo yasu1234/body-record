@@ -9,9 +9,12 @@ Rails.application.routes.draw do
         registrations: 'api/v1/signup',
         sessions: 'api/v1/sessions'
       }
-      resources :records
+      resources :records do
+        get '/user/:user_id', on: :collection, to: 'records#get_target_user_record', as: 'get_target_user_record'
+      end
       get '/myRecord', to: 'records#searchMyRecord'
       delete '/record/image', to: 'records#delete_image'
+      
 
       resources :knowledges
       delete '/knowledge/image', to: 'knowledges#delete_image'
