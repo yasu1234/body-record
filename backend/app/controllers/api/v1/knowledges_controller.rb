@@ -46,6 +46,17 @@ class Api::V1::KnowledgesController < ApplicationController
         render json: { knowledge: @knowledge }, status: 200
     end
 
+    def get_target_user_knowledge
+        @knowledges = Knowledge.where(create_user_id: params[:user_id])
+
+        # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
+        if @knowledges.count > 5
+            @knowledges = @knowledges.limit(5)
+        end
+
+        render json: { knowledges: @knowledges }, status: 200
+    end
+
     def knowledge_register_params
         params.permit(:title, :content, :images)
     end

@@ -16,7 +16,9 @@ Rails.application.routes.draw do
       delete '/record/image', to: 'records#delete_image'
       
 
-      resources :knowledges
+      resources :knowledges do
+        get '/user/:user_id', on: :collection, to: 'knowledges#get_target_user_knowledge', as: 'get_target_user_record'
+      end
       delete '/knowledge/image', to: 'knowledges#delete_image'
 
       resources :profiles

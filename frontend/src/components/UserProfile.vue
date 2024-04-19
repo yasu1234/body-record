@@ -15,12 +15,13 @@ const profile = ref("");
 const userName = ref("");
 const userThumbnail = ref(null);
 const records = ref([]);
-const isDisplayOnlyOpen = ref(false);
+const knowledges = ref([]);
 const isLogin = ref(false);
 
 onMounted(() => {
     getProfile();
     getUserRecord();
+    getUserKnowledge();
 });
 
 const getProfile = async () => {
@@ -61,6 +62,24 @@ const getUserRecord = async () => {
     }
 }
 
+const getUserKnowledge = async () => {
+    const id = route.params.id
+  
+    try {
+        const res = await axios.get(import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/user/${id}`, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid'),
+            }
+        })
+
+        knowledges.value = res.data.knowledges
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
 function showProfileEdit() {
 }
 </script>
@@ -83,12 +102,15 @@ function showProfileEdit() {
     </div>
   </div>
   <div class="record-list">
-    <span class="section-title">記録一覧</span>
+    <span class="section-title">投稿した記録</span>
   </div>
   <RecordCard v-for="record in records"
         v-bind="record"
         :recordDate="record.date"
         :recordMemo="record.memo" />
+  <div class="record-list">
+    <span class="section-title">投稿した知識</span>
+  </div>
 </template>
 
 <style>
