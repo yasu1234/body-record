@@ -1,19 +1,20 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
 const router = useRouter();
 
 const isLogin = ref(false);
+const userId = ref(0);
 
 onMounted(() => {
     checkLogin();
 });
 
 const menuList = ref([
-  { id: 1, label: "ユーザー設定", isLogin: true },
+  { id: 1, label: "マイページ", isLogin: true },
   { id: 2, label: "設定", isLogin: false },
   { id: 3, label: "ログアウト", isLogin: true }
 ]);
@@ -28,12 +29,17 @@ const checkLogin = async () => {
       },
     })
     isLogin.value = res.data.isLogin
+    userId.value = res.data.user.id
   } catch (error) {
     isLogin.value = false
   }
 }
 
 const showDropdown = ref(false);
+
+function showMyPage() {
+    router.push({ name: 'UserProfile', params: { id: userId.value }})
+}
 
 function showAccountIntroduction() {
     router.push({ name: 'AccountInteroduction'})
@@ -45,6 +51,9 @@ function toggleDropdown() {
 
 function showMenu(menu) {
     switch(menu.id) {
+        case 1:
+            showMyPage();
+            break
         case 3:
             logout();
             break

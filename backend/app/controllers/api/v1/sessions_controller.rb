@@ -10,9 +10,10 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
         render_create_success
     end
 
-    def chck_login
+    def check_login
         if api_v1_user_signed_in?
-            render json: { isLogin: true }, status: 200
+            @user = current_api_v1_user
+            render json: { isLogin: true, user: @user }, status: 200
         else
             render json: { isLogin: false }, status: 200
         end

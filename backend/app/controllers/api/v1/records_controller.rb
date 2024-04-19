@@ -87,6 +87,17 @@ class Api::V1::RecordsController < ApplicationController
         render json: { imageUrls: @knowledge.image_urls }, status: 200
     end
 
+    def get_target_user_record
+        @records = Record.where(user_id: params[:user_id])
+
+        # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
+        if @records.count > 5
+            @records = @records.order("date DESC").limit(5)
+        end
+
+        render json: { records: @records }, status: 200
+    end
+
     def record_register_params
         params.permit(:memo, :date, :user_id, :images)
     end
