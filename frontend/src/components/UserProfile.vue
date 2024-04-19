@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 
 import Header from './Header.vue'
 import RecordCard from './RecordCard.vue'
+import KnowledgeCard from './KnowledgeCard.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -111,6 +112,10 @@ function showProfileEdit() {
   <div class="record-list">
     <span class="section-title">投稿した知識</span>
   </div>
+  <KnowledgeCard v-for="knowledge in knowledges"
+        v-bind="knowledge"
+        :knowledgeTitle="knowledge.title"
+        :knowledgeContent="knowledge.content" />
 </template>
 
 <style>
