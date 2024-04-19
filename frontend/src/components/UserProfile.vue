@@ -6,6 +6,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 import Header from './Header.vue'
+import RecordCard from './RecordCard.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -51,7 +52,6 @@ const getUserRecord = async () => {
                 'access-token' : Cookies.get('accessToken'),
                 'client':Cookies.get('client'),
                 'uid': Cookies.get('uid'),
-      
             }
         })
 
@@ -85,6 +85,10 @@ function showProfileEdit() {
   <div class="record-list">
     <span class="section-title">記録一覧</span>
   </div>
+  <RecordCard v-for="record in records"
+        v-bind="record"
+        :recordDate="record.date"
+        :recordMemo="record.memo" />
 </template>
 
 <style>
@@ -166,36 +170,6 @@ function showProfileEdit() {
 .section-title {
   border-bottom: solid 5px #ffa500;
   font-size:25px;
-  font-weight:bold;
-}
-.search-check {
-  margin-top: 20px;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-.search-button-area {
-  text-align: center;
-}
-.my-idea-title {
-  margin: 10px 12px 12px 10px;
-}
-.my-idea-card {
-  margin: 10px 12px 12px 12px;
-  border: 1px solid #CCC;
-  border-radius: 5px;
-}
-.idea-memo {
-  margin: 10px 0px 10px 10px;
-}
-.add-button-area {
-  text-align: right;
-  margin-top: 20px;
-  padding-right: 40px;
-}
-.add-button {
-  background: #ffa500;
-  color: white;
-  font-size:16px;
   font-weight:bold;
 }
 </style>
