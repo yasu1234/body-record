@@ -17,7 +17,7 @@ Rails.application.routes.draw do
       
 
       resources :knowledges do
-        get '/user/:user_id', on: :collection, to: 'knowledges#get_target_user_knowledge', as: 'get_target_user_record'
+        get '/user/:user_id', on: :collection, to: 'knowledges#get_target_user_knowledge', as: 'get_target_user_knowledge'
       end
       delete '/knowledge/image', to: 'knowledges#delete_image'
 
