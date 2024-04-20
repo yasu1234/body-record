@@ -10,21 +10,23 @@ import Header from './Header.vue'
 const route = useRoute();
 const router = useRouter();
 
-const title = ref("");
-const knowledge = ref("");
+const knowledge = ref(null);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
+const isBookmark = ref(false);
 
 const md = new MarkdownIt()
 
 const renderedMarkdown = computed(() => {
-  return md.render(knowledge.value)
+    if (knowledge.value && knowledge.value.content) {
+        return md.render(knowledge.value.content);
+    }
+    return '';
 })
 
 onMounted(() => {
     getDetail();
 });
-
 
 const getDetail = async () => {
     const id = route.params.id
@@ -37,9 +39,9 @@ const getDetail = async () => {
             }
         })
         knowledgeId.value = res.data.knowledge.id
-        title.value = res.data.knowledge.title
-        knowledge.value = res.data.knowledge.content
+        knowledge.value = res.data.knowledge
         imageUrls.value = res.data.imageUrls
+        isBookmark.value = res.data.isBookmark
     } catch (error) {
         console.log({ error })
     }
@@ -53,7 +55,7 @@ function edit() {
 <template>
     <Header />
     <div class="editor">
-        <p id="title" class="knowledge-title" type="text"> {{ title }} </p>
+        <p id="title" class="knowledge-title" type="text" v-if="knowledge !== null"> {{ knowledge.title }} </p>
         <p class="knowledge-content" v-html="renderedMarkdown"></p>
     </div>
     <div v-if="imageUrls.length!==0">
