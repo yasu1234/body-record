@@ -1,6 +1,8 @@
 class Knowledge < ApplicationRecord
     include Rails.application.routes.url_helpers
     has_many_attached :images
+
+    has_many :bookmarks, dependent: :destroy
   
     def image_urls
       images.map do |image|

@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
+  has_many :bookmarks, dependent: :destroy
+
   def self.guest
     find_or_create_by!(email: ENV['GUEST_USER_ADDRESS']) do |user|
       user.password = SecureRandom.urlsafe_base64
