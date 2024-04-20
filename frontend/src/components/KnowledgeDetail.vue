@@ -54,26 +54,58 @@ function edit() {
 
 <template>
     <Header />
-    <div class="editor">
-        <p id="title" class="knowledge-title" type="text" v-if="knowledge !== null"> {{ knowledge.title }} </p>
-        <p class="knowledge-content" v-html="renderedMarkdown"></p>
-    </div>
-    <div v-if="imageUrls.length!==0">
-        <p class="inputTitle">関連画像</p>
-        <div class="thumbnail-container">
-            <div class="thumbnail" v-for="item in imageUrls">
-                <div class="thumbnail-image">
-                    <img :src="item.url" alt="">
+    <div class="wrap">
+		<div class="main">
+			<div class="main_content">
+                <div class="editor">
+                    <p id="title" class="knowledge-title" type="text" v-if="knowledge !== null"> {{ knowledge.title }} </p>
+                    <p class="knowledge-content" v-html="renderedMarkdown"></p>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="relationImages">
-        <button class="editButton" @click="edit">編集する</button>
-    </div>
+                <div v-if="imageUrls.length!==0">
+                    <p class="inputTitle">関連画像</p>
+                    <div class="thumbnail-container">
+                        <div class="thumbnail" v-for="item in imageUrls">
+                            <div class="thumbnail-image">
+                                <img :src="item.url" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relationImages">
+                    <button class="editButton" @click="edit">編集する</button>
+                </div>
+			</div>
+		</div>
+		<div class="side">
+			<div class="side_content">
+				<button v-if="isBookmark" class="booknmark-button"><img src="../assets/image/bookmark_on.png" alt="ユーザー" class="booknmark-image" ></button>
+                <button v-else class="booknmark-button"><img src="../assets/image/bookmark_off.png" alt="ユーザー" class="booknmark-image" ></button>
+			</div>
+		</div>
+	</div>
 </template>
 
 <style>
+.wrap {
+    display: grid;	
+    grid-template-columns: 4fr 1fr;
+}
+.side_content {
+	position: sticky;
+	top: 100px;
+}
+
+.booknmark-button {
+	padding: 0;
+    background: transparent;
+    border: 1px solid #CCC;
+    border-radius: 50%;
+}
+.booknmark-image {
+    width: 40px;
+    height: 40px;
+}
+
 .editor{
    padding: 30px;
  }
