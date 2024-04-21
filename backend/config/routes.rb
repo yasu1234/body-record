@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       delete '/knowledge/image', to: 'knowledges#delete_image'
 
       resources :profiles
+      resources :bookmarks
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

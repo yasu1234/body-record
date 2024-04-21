@@ -47,6 +47,53 @@ const getDetail = async () => {
     }
 }
 
+const bookmarkOn = async () => {
+    try {
+        const formData = new FormData();
+        formData.append('knowledge_id', knowledgeId.value);
+
+        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/bookmarks`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        knowledge.value = res.data.knowledge
+        isBookmark.value = res.data.isBookmark
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
+const bookmarkOff = async () => {
+    const id = route.params.id
+    try {
+        const res = await axios.get(import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/${id}`, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        knowledgeId.value = res.data.knowledge.id
+        knowledge.value = res.data.knowledge
+        imageUrls.value = res.data.imageUrls
+        isBookmark.value = res.data.isBookmark
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
+function bookmarkClick(isBookmarkOn) {
+    if (isBookmarkOn === true) {
+
+    } else {
+        bookmarkOn();
+    }
+}
+
 function edit() {
     router.push({ name: 'EditKnowledge', params: { id: knowledgeId.value }})
 }
@@ -78,8 +125,8 @@ function edit() {
 		</div>
 		<div class="side">
 			<div class="side_content">
-				<button v-if="isBookmark" class="booknmark-button"><img src="../assets/image/bookmark_on.png" alt="ユーザー" class="booknmark-image" ></button>
-                <button v-else class="booknmark-button"><img src="../assets/image/bookmark_off.png" alt="ユーザー" class="booknmark-image" ></button>
+				<button v-if="isBookmark" class="booknmark-button"><img src="../assets/image/bookmark_on.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(true)"></button>
+                <button v-else class="booknmark-button"><img src="../assets/image/bookmark_off.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(false)"></button>
 			</div>
 		</div>
 	</div>
