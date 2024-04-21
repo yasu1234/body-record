@@ -68,18 +68,15 @@ const bookmarkOn = async () => {
 }
 
 const bookmarkOff = async () => {
-    const id = route.params.id
     try {
-        const res = await axios.get(import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/${id}`, {
+        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + `/api/v1/bookmarks/${knowledgeId.value}`, {
             headers: {
                 'access-token' : Cookies.get('accessToken'),
                 'client':Cookies.get('client'),
                 'uid': Cookies.get('uid')
             }
         })
-        knowledgeId.value = res.data.knowledge.id
         knowledge.value = res.data.knowledge
-        imageUrls.value = res.data.imageUrls
         isBookmark.value = res.data.isBookmark
     } catch (error) {
         console.log({ error })
@@ -88,7 +85,7 @@ const bookmarkOff = async () => {
 
 function bookmarkClick(isBookmarkOn) {
     if (isBookmarkOn === true) {
-
+        bookmarkOff()
     } else {
         bookmarkOn();
     }
