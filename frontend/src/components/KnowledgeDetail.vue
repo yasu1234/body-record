@@ -10,21 +10,23 @@ import Header from './Header.vue'
 const route = useRoute();
 const router = useRouter();
 
-const title = ref("");
-const knowledge = ref("");
+const knowledge = ref(null);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
+const isBookmark = ref(false);
 
 const md = new MarkdownIt()
 
 const renderedMarkdown = computed(() => {
-  return md.render(knowledge.value)
+    if (knowledge.value && knowledge.value.content) {
+        return md.render(knowledge.value.content);
+    }
+    return '';
 })
 
 onMounted(() => {
     getDetail();
 });
-
 
 const getDetail = async () => {
     const id = route.params.id
@@ -37,11 +39,55 @@ const getDetail = async () => {
             }
         })
         knowledgeId.value = res.data.knowledge.id
-        title.value = res.data.knowledge.title
-        knowledge.value = res.data.knowledge.content
+        knowledge.value = res.data.knowledge
         imageUrls.value = res.data.imageUrls
+        isBookmark.value = res.data.isBookmark
     } catch (error) {
         console.log({ error })
+    }
+}
+
+const bookmarkOn = async () => {
+    try {
+        const formData = new FormData();
+        formData.append('knowledge_id', knowledgeId.value);
+
+        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/bookmarks`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        knowledge.value = res.data.knowledge
+        isBookmark.value = res.data.isBookmark
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
+const bookmarkOff = async () => {
+    try {
+        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + `/api/v1/bookmarks/${knowledgeId.value}`, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        knowledge.value = res.data.knowledge
+        isBookmark.value = res.data.isBookmark
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
+function bookmarkClick(isBookmarkOn) {
+    if (isBookmarkOn === true) {
+        bookmarkOff()
+    } else {
+        bookmarkOn();
     }
 }
 
@@ -52,26 +98,58 @@ function edit() {
 
 <template>
     <Header />
-    <div class="editor">
-        <p id="title" class="knowledge-title" type="text"> {{ title }} </p>
-        <p class="knowledge-content" v-html="renderedMarkdown"></p>
-    </div>
-    <div v-if="imageUrls.length!==0">
-        <p class="inputTitle">関連画像</p>
-        <div class="thumbnail-container">
-            <div class="thumbnail" v-for="item in imageUrls">
-                <div class="thumbnail-image">
-                    <img :src="item.url" alt="">
+    <div class="wrap">
+		<div class="main">
+			<div class="main_content">
+                <div class="editor">
+                    <p id="title" class="knowledge-title" type="text" v-if="knowledge !== null"> {{ knowledge.title }} </p>
+                    <p class="knowledge-content" v-html="renderedMarkdown"></p>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="relationImages">
-        <button class="editButton" @click="edit">編集する</button>
-    </div>
+                <div v-if="imageUrls.length!==0">
+                    <p class="inputTitle">関連画像</p>
+                    <div class="thumbnail-container">
+                        <div class="thumbnail" v-for="item in imageUrls">
+                            <div class="thumbnail-image">
+                                <img :src="item.url" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relationImages">
+                    <button class="editButton" @click="edit">編集する</button>
+                </div>
+			</div>
+		</div>
+		<div class="side">
+			<div class="side_content">
+				<button v-if="isBookmark" class="booknmark-button"><img src="../assets/image/bookmark_on.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(true)"></button>
+                <button v-else class="booknmark-button"><img src="../assets/image/bookmark_off.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(false)"></button>
+			</div>
+		</div>
+	</div>
 </template>
 
 <style>
+.wrap {
+    display: grid;	
+    grid-template-columns: 4fr 1fr;
+}
+.side_content {
+	position: sticky;
+	top: 100px;
+}
+
+.booknmark-button {
+	padding: 0;
+    background: transparent;
+    border: 1px solid #CCC;
+    border-radius: 50%;
+}
+.booknmark-image {
+    width: 40px;
+    height: 40px;
+}
+
 .editor{
    padding: 30px;
  }

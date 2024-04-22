@@ -29,7 +29,8 @@ class Api::V1::KnowledgesController < ApplicationController
     def show
         @user = current_api_v1_user
         @knowledge = Knowledge.where(id: params[:id].to_i).first
-        render json: { knowledge: @knowledge, imageUrls: @knowledge.image_urls }, status: 200
+        @bookmark = @knowledge.bookmarks.where(knowledge_id: @knowledge.id).first
+        render json: { knowledge: @knowledge, imageUrls: @knowledge.image_urls, isBookmark: @bookmark.present? }, status: 200
     end
 
     def delete_image
