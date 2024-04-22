@@ -18,6 +18,7 @@ const userThumbnail = ref(null);
 const records = ref([]);
 const knowledges = ref([]);
 const isLogin = ref(false);
+const userId = ref(0);
 
 onMounted(() => {
     getProfile();
@@ -26,7 +27,8 @@ onMounted(() => {
 });
 
 const getProfile = async () => {
-    const id = route.params.id
+  userId.value = route.params.id
+  const id = route.params.id
   
     try {
         const res = await axios.get(import.meta.env.VITE_APP_API_BASE + `/api/v1/profiles/${id}`, {
@@ -81,7 +83,8 @@ const getUserKnowledge = async () => {
     }
 }
 
-function showProfileEdit() {
+function showEditProfile() {
+  router.push({ name: 'EditProfile', params: { id: userId.value }})
 }
 </script>
 
@@ -98,7 +101,7 @@ function showProfileEdit() {
         <span class="profile-intro">{{ profile }}</span>
       </div>
       <div class="profile-edit">
-        <button class="profile-edit-button" @click="profileEdit">プロフィール編集</button>
+        <button class="profile-edit-button" @click="showEditProfile">プロフィール編集</button>
       </div>
     </div>
   </div>

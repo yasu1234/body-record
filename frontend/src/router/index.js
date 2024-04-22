@@ -12,6 +12,7 @@ import OtherRecordList from '/src/components/OtherRecordList.vue';
 import RecordDetail from '/src/components/RecordDetail.vue';
 import EditRecord from '/src/components/EditRecord.vue';
 import UserProfile from '/src/components/UserProfile.vue';
+import EditProfile from '/src/components/EditProfile.vue';
 
 const routes = [
   {
@@ -78,6 +79,11 @@ const routes = [
     path: '/user/:id',
     name: 'UserProfile',
     component: UserProfile 
+  },
+  { 
+    path: '/user/edit/:id',
+    name: 'EditProfile',
+    component: EditProfile 
   },
 ];
 
