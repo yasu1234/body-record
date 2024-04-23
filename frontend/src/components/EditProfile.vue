@@ -9,13 +9,14 @@ import Header from './Header.vue'
 const goalWeight = ref(null);
 const goalFatPercentage = ref(null);
 const files = ref([]);
-
+const userThumbnail = ref(null);
 
 function onFileChange(event) {
     files.value = [...event];
 }
 
 const registerRecord = async () => {
+
 }
 </script>
 
@@ -35,6 +36,14 @@ const registerRecord = async () => {
         <div class="profile-area">
             <label for="comments">紹介文</label>
             <textarea id="profile"></textarea>
+        </div>
+        <div class="profile-image-change-container">
+            <label>プロフィール画像変更</label>
+            <div class="current-thumbnail">
+                <img v-if="userThumbnail !== null" :src="userThumbnail.url" alt="ユーザーアイコン"/>
+                <img v-else src="../assets/image/user-placeholder.png" alt="ユーザーアイコン" />
+            </div>
+            <DropFile @change="onFileChange" />
         </div>
         <button class="edit-profile-button">更新する</button>
     </form>
@@ -90,5 +99,24 @@ textarea {
     width: 180px;
     margin: 0 auto;
     margin-top: 30px;
+}
+.profile-image-change-container {
+    margin-top:20px;
+}
+
+.current-thumbnail {
+    width: 80px;
+    height: 80px;
+    border: #CCC 1px solid;
+    border-radius: 55px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.current-thumbnail img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
 }
 </style>
