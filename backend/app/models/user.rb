@@ -22,4 +22,13 @@ class User < ActiveRecord::Base
       user.name = "ゲストユーザー"
     end
   end
+
+  def support(other_user)
+    self.supports.find_or_create_by(support_id: other_user.id) unless self == other_user
+  end
+
+  def removeSupport(other_user)
+    support = self.supports.find_by(support_id: other_user.id)
+    support&.destroy
+  end
 end
