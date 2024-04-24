@@ -14,12 +14,17 @@ const title = ref("");
 const memo = ref("");
 const imageUrls = ref([]);
 const recordId = ref(null);
+const recordUserId = ref(0);
 const isMyRecord = ref(false);
+const isSupport = ref(false);
 
 const md = new MarkdownIt()
 
 const renderedMarkdown = computed(() => {
-  return md.render(memo.value)
+    if (memo.value !== null && memo.value !== "") {
+        return md.render(memo.value)
+    }
+    return ""
 })
 
 onMounted(() => {
@@ -41,6 +46,7 @@ const getDetail = async () => {
         memo.value = res.data.record.memo
         isMyRecord.value = res.data.isMyRecord
         imageUrls.value = res.data.imageUrls
+        recordUserId.value = res.data.record.user_id
     } catch (error) {
         console.log({ error })
     }
@@ -62,6 +68,48 @@ const deleteRecord = async () => {
     }
 }
 
+const supportOn = async () => {
+    try {
+        const formData = new FormData();
+        formData.append('id', recordUserId.value);
+
+        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/supports`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        isSupport.value = res.data.isSupport;
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
+const supportOff = async () => {
+    try {
+        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + `/api/v1/supports/${recordUserId.value}`, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        isSupport.value = res.data.isSupport;
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
+function supportClick(isSupport) {
+    if (isSupport === true) {
+        supportOff()
+    } else {
+        supportOn();
+    }
+}
+
 function edit() {
     router.push({ name: 'EditRecord', params: { id: recordId.value }})
 }
@@ -69,24 +117,36 @@ function edit() {
 
 <template>
     <Header />
-    <div class="editor">
-        <p id="title" class="knowledge-title" type="text"> {{ title }} </p>
-        <p class="knowledge-content" v-html="renderedMarkdown"></p>
-    </div>
-    <div v-if="imageUrls.length!==0">
-        <p class="inputTitle">関連画像</p>
-        <div class="thumbnail-container">
-            <div class="thumbnail" v-for="item in imageUrls">
-                <div class="thumbnail-image">
-                    <img :src="item.url" alt="">
+    <div class="wrap">
+		<div class="main">
+			<div class="main_content">
+                <div class="editor">
+                    <p id="title" class="knowledge-title" type="text"> {{ title }} </p>
+                    <p class="knowledge-content" v-html="renderedMarkdown" />
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="record-detail-buttons" v-if="isMyRecord">
-        <button class="detail-button" @click="edit">編集する</button>
-        <button class="detail-button" @click="deleteRecord">削除する</button>
-    </div>
+                <div v-if="imageUrls.length!==0">
+                    <p class="inputTitle">関連画像</p>
+                    <div class="thumbnail-container">
+                        <div class="thumbnail" v-for="item in imageUrls">
+                            <div class="thumbnail-image">
+                                <img :src="item.url" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="record-detail-buttons" v-if="isMyRecord">
+                    <button class="detail-button" @click="edit">編集する</button>
+                    <button class="detail-button" @click="deleteRecord">削除する</button>
+                </div>
+			</div>
+		</div>
+		<div class="side">
+			<div class="side_content">
+				<button v-if="isSupport" class="booknmark-button"><img src="../assets/image/support_on.png" alt="ユーザー" class="booknmark-image" @click="supportClick(true)"></button>
+                <button v-else class="booknmark-button"><img src="../assets/image/support_off.png" alt="ユーザー" class="booknmark-image" @click="supportClick(false)"></button>
+			</div>
+		</div>
+	</div>
 </template>
 
 <style>
