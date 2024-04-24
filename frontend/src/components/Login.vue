@@ -1,9 +1,12 @@
 <script setup>
 import axios from 'axios'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Cookies from 'js-cookie'
 
 import Header from './Header.vue'
+
+const router = useRouter();
 
 const email = ref('')
 const password = ref('')
@@ -14,9 +17,9 @@ const login = async () => {
       email: email.value,
       password: password.value
     })
-    Cookies.set('accessToken', response.headers["access-token"])
-    Cookies.set('client', response.headers["client"])
-    Cookies.set('uid', response.headers["uid"])
+    Cookies.set('accessToken', res.headers["access-token"])
+    Cookies.set('client', res.headers["client"])
+    Cookies.set('uid', res.headers["uid"])
 
     router.push({ name: 'Home'})
   } catch (error) {
