@@ -55,10 +55,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_24_221256) do
   create_table "comments", force: :cascade do |t|
     t.bigint "record_id"
     t.bigint "knowledge_id"
+    t.bigint "user_id", null: false
+    t.string "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["knowledge_id"], name: "index_comments_on_knowledge_id"
     t.index ["record_id"], name: "index_comments_on_record_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "knowledges", force: :cascade do |t|
@@ -132,6 +135,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_24_221256) do
   add_foreign_key "bookmarks", "users"
   add_foreign_key "comments", "knowledges"
   add_foreign_key "comments", "records"
+  add_foreign_key "comments", "users"
   add_foreign_key "profiles", "users"
   add_foreign_key "supports", "users"
   add_foreign_key "supports", "users", column: "support_id"
