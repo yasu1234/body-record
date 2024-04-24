@@ -3,6 +3,7 @@ class Knowledge < ApplicationRecord
     has_many_attached :images
 
     has_many :bookmarks, dependent: :destroy
+    has_many :comments, dependent: :destroy
   
     def image_urls
       images.map do |image|
