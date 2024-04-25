@@ -17,6 +17,8 @@ const recordId = ref(null);
 const recordUserId = ref(0);
 const isMyRecord = ref(false);
 const isSupport = ref(false);
+const comments = ref([]);
+const comment = ref('');
 
 const md = new MarkdownIt()
 
@@ -47,6 +49,7 @@ const getDetail = async () => {
         isMyRecord.value = res.data.isMyRecord
         imageUrls.value = res.data.imageUrls
         recordUserId.value = res.data.record.user_id
+        comments.value = res.data.record.comments
     } catch (error) {
         console.log({ error })
     }
@@ -110,6 +113,25 @@ function supportClick(isSupport) {
     }
 }
 
+const addComment = async () => {
+    try {
+        const formData = new FormData();
+        formData.append('record_id', recordId.value);
+        formData.append('comment', comment.value);
+
+        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/record`, formData, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        comments.value = res.data.record.comments
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
 function edit() {
     router.push({ name: 'EditRecord', params: { id: recordId.value }})
 }
@@ -137,6 +159,16 @@ function edit() {
                 <div class="record-detail-buttons" v-if="isMyRecord">
                     <button class="detail-button" @click="edit">編集する</button>
                     <button class="detail-button" @click="deleteRecord">削除する</button>
+                </div>
+                <div class="comment-container">
+                    <div class="comment-container-title-area">
+                        <p class="comment-container-title">コメント</p>
+                    </div>
+                    <div v-for="comment in comments">
+                        <p> {{ comment.comment }} </p>
+                    </div>
+                    <textarea name="comment" rows="15" v-model="comment" class="comment-textarea" />
+                    <button class="registerButton" @click="addComment">コメントを投稿する</button>
                 </div>
 			</div>
 		</div>
