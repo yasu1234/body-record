@@ -44,6 +44,7 @@ const getDetail = async () => {
         knowledge.value = res.data.knowledge
         imageUrls.value = res.data.imageUrls
         isBookmark.value = res.data.isBookmark
+        comments.value = res.data.knowledge.comments
     } catch (error) {
         console.log({ error })
     }
