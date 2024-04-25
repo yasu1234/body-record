@@ -94,7 +94,7 @@ const updateProfile = async () => {
         </div>
         <div class="profile-area">
             <label for="comments">紹介文</label>
-            <textarea v-model="profile"></textarea>
+            <textarea v-model="profile" class="profile-text" />
         </div>
         <div class="profile-image-change-container">
             <label>プロフィール画像変更</label>
@@ -132,7 +132,7 @@ input[type="text"] {
     margin-left: 10px;
 }
 
-textarea {
+.profile-text {
     width: 60%;
     height: 100px;
 }

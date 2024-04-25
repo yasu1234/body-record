@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
   has_many :supportings, through: :supporting_relationships, source: :support
   has_many :supporters, through: :supporter_relationships, source: :user
 
+  has_many :comments, dependent: :destroy
+
   def self.guest
     find_or_create_by!(email: ENV['GUEST_USER_ADDRESS']) do |user|
       user.password = SecureRandom.urlsafe_base64
