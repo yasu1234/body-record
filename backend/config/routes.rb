@@ -24,6 +24,11 @@ Rails.application.routes.draw do
       resources :profiles
       resources :bookmarks
       resources :supports
+
+      resources :comments do
+        post '/knowledge', on: :collection, to: 'comments#create_knowledge_comment', as: 'create_knowledge_comment'
+        post '/record', on: :collection, to: 'comments#create_record_comment', as: 'create_record_comment'
+      end
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
