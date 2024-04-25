@@ -14,6 +14,8 @@ const knowledge = ref(null);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
 const isBookmark = ref(false);
+const comments = ref([]);
+const comment = ref('');
 
 const md = new MarkdownIt()
 
@@ -91,6 +93,25 @@ function bookmarkClick(isBookmarkOn) {
     }
 }
 
+const addComment = async () => {
+    try {
+        const formData = new FormData();
+        formData.append('knowledge_id', knowledgeId.value);
+        formData.append('comment', comment.value);
+
+        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/knowledge`, formData, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        comments.value = res.data.knowledge.comments
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
 function edit() {
     router.push({ name: 'EditKnowledge', params: { id: knowledgeId.value }})
 }
@@ -117,6 +138,16 @@ function edit() {
                 </div>
                 <div class="relationImages">
                     <button class="editButton" @click="edit">編集する</button>
+                </div>
+                <div class="comment-container">
+                    <div class="comment-container-title-area">
+                        <p class="comment-container-title">コメント</p>
+                    </div>
+                    <div v-for="comment in comments">
+                        <p> {{ comment.comment }} </p>
+                    </div>
+                    <textarea name="comment" rows="15" v-model="comment" class="comment-textarea" />
+                    <button class="registerButton" @click="addComment">コメントを投稿する</button>
                 </div>
 			</div>
 		</div>
@@ -206,5 +237,21 @@ function edit() {
     position: absolute;
     top: 5px;
     right: 5px;
+}
+.comment-container {
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.comment-container-title-area {
+    border-bottom: 1px solid rgba(6, 6, 6, 0.17);
+}
+
+.comment-textarea {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.comment-container-title {
+    text-align: left;
 }
 </style>
