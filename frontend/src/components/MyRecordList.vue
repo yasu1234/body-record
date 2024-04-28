@@ -6,6 +6,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 import Header from './Header.vue'
+import ListPage from './ListPage.vue'
 
 const router = useRouter();
 
@@ -15,6 +16,9 @@ const endDate = ref("");
 const isDisplayOnlyOpen = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
+
+const pageCount = ref(1);
+const pageNum = ref(1);
 
 onMounted(() => {
   search();
@@ -56,9 +60,16 @@ const search = async () => {
       params: {
         keyword: keyword.value,
         startDate: startDate.value,             
-        endDate: endDate.value
+        endDate: endDate.value,
+        page: pageNum
       }
     })
+
+    if (res.data && res.data.totalPage) {
+      pageCount.value = res.data.totalPage
+    } else {
+      pageCount.value = 1
+    }
     
     for(let item of res.data.records){
       searchResult.value.push(item);
@@ -67,6 +78,11 @@ const search = async () => {
     console.log({ error })
   }
 }
+
+const updatePaginateItems = function (pageNum) {
+  pageNum.value = pageNum
+  search();
+};
 
 function startDateChange(event) {
   startDate.value = event
@@ -114,6 +130,12 @@ function addRecord() {
       <div>
         <p class="idea-memo">{{ item.memo }}</p>
       </div>
+    </div>
+    <div class="record-list-page">
+      <ListPage
+      :pageCount="pageCount"
+      v-model="pageNum"
+      @changePage="updatePaginateItems" />
     </div>
 </template>
 
@@ -207,5 +229,8 @@ input[type="checkbox"]:checked:before {
   color: white;
   font-size:16px;
   font-weight:bold;
+}
+.record-list-page {
+  margin-top: 50px;
 }
 </style>
