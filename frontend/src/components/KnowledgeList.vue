@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 
 import TabMenu from './TabMenu.vue'
 import Header from './Header.vue'
+import ListPage from './ListPage.vue'
 
 const router = useRouter();
 
@@ -15,6 +16,8 @@ const isLogin = ref(false);
 const searchResult = ref([]);
 
 const currentId = ref(3);
+const pageCount = ref(1);
+const pageNum = ref(1);
 
 onMounted(() => {
   search();
@@ -38,9 +41,16 @@ const search = async () => {
       },
 
       params: {
-        keyword: keyword.value
+        keyword: keyword.value,
+        page: pageNum
       }
     })
+
+    if (res.data && res.data.totalPage) {
+      pageCount.value = res.data.totalPage
+    } else {
+      pageCount.value = 1
+    }
     
     for(let item of res.data.knowledges){
       searchResult.value.push(item);
@@ -49,6 +59,11 @@ const search = async () => {
     console.log({ error })
   }
 }
+
+const updatePaginateItems = function (pageNum) {
+  pageNum.value = pageNum
+  search();
+};
 
 function clickKnowledge(item) {
   router.push({ name: 'KnowledgeDetail', params: { id: item.id }})
@@ -80,6 +95,12 @@ function addKnowledge() {
       <p class="idea-content">{{ item.content }}</p>
     </div>
   </div>
+  <div class="knowledge-list-page">
+      <ListPage
+      :pageCount="pageCount"
+      v-model="pageNum"
+      @changePage="updatePaginateItems" />
+    </div>
 </template>
 
 <style>
@@ -155,5 +176,8 @@ input[type="checkbox"]:checked:before {
   color: white;
   font-size:16px;
   font-weight:bold;
+}
+.knowledge-list-page {
+  margin-top: 50px;
 }
 </style>

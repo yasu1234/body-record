@@ -7,15 +7,21 @@ class Api::V1::KnowledgesController < ApplicationController
         else
         end
 
-        @knowledge = Knowledge.all
+        @knowledges = Knowledge.all
 
         if params[:keyword].present? 
-            @knowledge = @knowledge.where("title LIKE ?", "%#{params[:keyword]}%")
+            @knowledges = @knowledges.where("title LIKE ?", "%#{params[:keyword]}%")
         end
 
-        @totalCount = @knowledge.count
+        if params[:page].present?
+            @knowledges = @knowledges.page(params[:page]).per(50)
+        else
+            @knowledges = @knowledges.page(1).per(50)
+        end
 
-        render json: { knowledges: @knowledge, totalCount: @totalCount }, status: 200
+        @totalPage = @knowledges.total_pages
+
+        render json: { knowledges: @knowledges, totalPage: @totalPage }, status: 200
     end
 
     def create

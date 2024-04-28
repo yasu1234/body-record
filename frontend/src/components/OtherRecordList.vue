@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 
 import TabMenu from './TabMenu.vue'
 import Header from './Header.vue'
+import ListPage from './ListPage.vue'
 
 const router = useRouter();
 
@@ -81,6 +82,11 @@ const search = async () => {
   }
 }
 
+const updatePaginateItems = function (pageNum) {
+  pageNum.value = pageNum
+  search();
+};
+
 function startDateChange(event) {
   startDate.value = event
 }
@@ -90,7 +96,7 @@ function endDateChange(event) {
 }
 
 function clickRecord(item) {
-    router.push({ name: 'RecordDetail', params: { id: item.id }})
+  router.push({ name: 'RecordDetail', params: { id: item.id }})
 }
 </script>
 
