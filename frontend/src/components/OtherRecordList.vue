@@ -18,6 +18,9 @@ const isLogin = ref(false);
 const searchResult = ref([]);
 const currentId = ref(2);
 
+const pageCount = ref(1);
+const pageNum = ref(1);
+
 onMounted(() => {
   search();
 });
@@ -59,9 +62,16 @@ const search = async () => {
         params: {
             keyword: keyword.value,
             startDate: startDate.value,             
-            endDate: endDate.value
+            endDate: endDate.value,
+            page: pageNum
         }
     })
+
+    if (res.data && res.data.totalPage) {
+      pageCount.value = res.data.totalPage
+    } else {
+      pageCount.value = 1
+    }
     
     for(let item of res.data.records){
       searchResult.value.push(item);
@@ -107,6 +117,12 @@ function clickRecord(item) {
       <div>
         <p class="idea-date">{{ item.date }}</p>
       </div>
+    </div>
+    <div class="record-list-page">
+      <ListPage
+      :pageCount="pageCount"
+      v-model="pageNum"
+      @changePage="updatePaginateItems" />
     </div>
 </template>
 

@@ -53,9 +53,15 @@ class Api::V1::RecordsController < ApplicationController
             @records = @records.where("date <= ?", params[:endDate])
         end
 
-        @totalCount = @records.count
+        if params[:page].present?
+            @records = @records.page(params[:page]).per(50)
+        else
+            @records = @records.page(1).per(50)
+        end
 
-        render json: { records: @records, totalCount: @totalCount }, status: 200
+        @totalPage = @records.total_pages
+
+        render json: { records: @records, totalPage: @totalPage }, status: 200
     end
 
     def show
