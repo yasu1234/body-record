@@ -16,6 +16,19 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
     end
   end
 
+  def destory
+    if api_v1_user_signed_in?
+        @user = current_api_v1_user
+    else
+    end
+    
+    if @user.destroy
+      render status: 200
+    else
+      render json: { errors: @user.errors }, status: 422
+    end
+  end
+
   private
   
   def sign_up_params
