@@ -37,6 +37,10 @@ function showEditProfile() {
 function showPasswordEdit() {
   router.push({ name: 'PasswordEdit'})
 }
+
+function showMailAddressEdit() {
+  router.push({ name: 'MailAddressEdit'})
+}
 </script>
 
 <template>
@@ -50,7 +54,7 @@ function showPasswordEdit() {
     <span class="section-title">アカウント変更</span>
     <p class="section-message">メールアドレスやパスワードを変更します</p>
     <div class="account-edit-buttons">
-        <button class="setting-button">メールアドレス編集</button>
+        <button class="setting-button" @click="showMailAddressEdit">メールアドレス編集</button>
         <button class="setting-button" @click="showPasswordEdit">パスワード編集</button>
         <button class="account-delete-button">退会する</button>
     </div>

@@ -15,6 +15,7 @@ import UserProfile from '/src/components/UserProfile.vue';
 import EditProfile from '/src/components/EditProfile.vue';
 import Setting from '/src/components/Setting.vue';
 import PasswordEdit from '/src/components/PasswordEdit.vue';
+import MailAddressEdit from '/src/components/MailAddressEdit.vue';
 
 const routes = [
   {
@@ -96,6 +97,11 @@ const routes = [
     path: '/passwordEdit',
     name: 'PasswordEdit',
     component: PasswordEdit 
+  },
+  { 
+    path: '/mailAddressEdit',
+    name: 'MailAddressEdit',
+    component: MailAddressEdit 
   },
 ];
 
