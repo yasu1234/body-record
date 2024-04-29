@@ -22,9 +22,9 @@ const signup = async () => {
       password_confirmation: passwordConfirm.value,
       name: name.value
     })
-    Cookies.set('accessToken', response.headers["access-token"])
-    Cookies.set('client', response.headers["client"])
-    Cookies.set('uid', response.headers["uid"])
+    Cookies.set('accessToken', res.headers["access-token"])
+    Cookies.set('client', res.headers["client"])
+    Cookies.set('uid', res.headers["uid"])
 
     router.push({ name: 'Home'})
   } catch (error) {
