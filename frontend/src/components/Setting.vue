@@ -33,6 +33,10 @@ const checkLogin = async () => {
 function showEditProfile() {
   router.push({ name: 'EditProfile', params: { id: userId.value }})
 }
+
+function showPasswordEdit() {
+  router.push({ name: 'PasswordEdit'})
+}
 </script>
 
 <template>
@@ -47,7 +51,7 @@ function showEditProfile() {
     <p class="section-message">メールアドレスやパスワードを変更します</p>
     <div class="account-edit-buttons">
         <button class="setting-button">メールアドレス編集</button>
-        <button class="setting-button">パスワード編集</button>
+        <button class="setting-button" @click="showPasswordEdit">パスワード編集</button>
         <button class="account-delete-button">退会する</button>
     </div>
   </div>

@@ -14,6 +14,7 @@ import EditRecord from '/src/components/EditRecord.vue';
 import UserProfile from '/src/components/UserProfile.vue';
 import EditProfile from '/src/components/EditProfile.vue';
 import Setting from '/src/components/Setting.vue';
+import PasswordEdit from '/src/components/PasswordEdit.vue';
 
 const routes = [
   {
@@ -90,6 +91,11 @@ const routes = [
     path: '/setting',
     name: 'Setting',
     component: Setting 
+  },
+  { 
+    path: '/passwordEdit',
+    name: 'PasswordEdit',
+    component: PasswordEdit 
   },
 ];
 
