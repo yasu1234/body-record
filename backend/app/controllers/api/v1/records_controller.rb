@@ -1,7 +1,5 @@
 class Api::V1::RecordsController < ApplicationController
     def searchMyRecord
-        @totalCount = 0
-
         if api_v1_user_signed_in?
             @user = current_api_v1_user
         else
@@ -32,8 +30,6 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def index
-        @totalCount = 0
-
         if api_v1_user_signed_in?
             @user = current_api_v1_user
         else
@@ -62,6 +58,34 @@ class Api::V1::RecordsController < ApplicationController
         @totalPage = @records.total_pages
 
         render json: { records: @records, totalPage: @totalPage }, status: 200
+    end
+
+    def get_record_month
+        records = Record.where(user_id: params[:user_id])
+        # 2024年5月の開始日と終了日を設定
+        start_date = DateTime.new(2024, 4, 1)
+        end_date = DateTime.new(2024, 5, 1)
+        
+        # 1ヶ月全ての日付を含む配列を作成
+        dates = []
+        current_date = start_date
+        while current_date < end_date
+            dates << current_date
+            current_date = current_date.next_day
+        end
+
+        records = Record.where(date: start_date..end_date)
+
+        records_with_empty_dates = dates.map do |date|
+            record = records.find { |r| r.date == date }
+            if record
+                record
+            else
+                Record.new(date: date, weight: 0)
+            end
+        end
+
+        render json: { record: records_with_empty_dates.as_json(methods: :set_formatted_date)}, status: 200
     end
 
     def show
@@ -111,6 +135,6 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def record_register_params
-        params.permit(:memo, :date, :user_id, :images)
+        params.permit(:memo, :date, :user_id, :images, :weight, :fat_percentage)
     end
 end
