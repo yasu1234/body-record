@@ -45,6 +45,10 @@ function showAccountIntroduction() {
     router.push({ name: 'AccountInteroduction'})
 }
 
+function showSetting() {
+    router.push({ name: 'Setting'})
+}
+
 function toggleDropdown() {
   showDropdown.value = !showDropdown.value;
 }
@@ -53,6 +57,9 @@ function showMenu(menu) {
     switch(menu.id) {
         case 1:
             showMyPage();
+            break
+        case 2:
+            showSetting();
             break
         case 3:
             logout();

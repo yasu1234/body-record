@@ -5,42 +5,41 @@ import Cookies from 'js-cookie'
 
 import Header from './Header.vue'
 
-defineProps({
-  msg: String,
-})
-
-const email = ref('')
+const currentPassword = ref('')
 const password = ref('')
 const passwordConfirm = ref('')
 const name = ref('')
 
-const signup = async () => {
-  try {
-    const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/auth', {
-      email: email.value,
-      password: password.value,
-      password_confirmation: passwordConfirm.value,
-      name: name.value
-    })
-    Cookies.set('accessToken', res.headers["access-token"])
-    Cookies.set('client', res.headers["client"])
-    Cookies.set('uid', res.headers["uid"])
+const passwordEdit = async () => {
+    try {
+        const formData = new FormData();
+        formData.append('current_password', currentPassword.value);
+        formData.append('password', password.value);
+        formData.append('password_confirmation', passwordConfirm.value);
 
-    router.push({ name: 'Home'})
-  } catch (error) {
-    console.log({ error })
-  }
+        const res = await axios.put(import.meta.env.VITE_APP_API_BASE + `/api/v1/auth/password`, formData, {
+
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        console.log({ res })
+    } catch (error) {
+        console.log({ error })
+    }
 }
 </script>
 
 <template>
     <Header />
-    <h1 class="signUpTitle">会員登録</h1>
+    <h1 class="signUpTitle">パスワード変更</h1>
     <div class="singUpInput">
-        <form class="form" @submit.prevent="signup">
+        <form class="form" @submit.prevent="passwordEdit">
             <div class="item">
-                <label class="itemLabel">メールアドレス</label>
-                <input id="email" type="email" v-model="email">
+                <label class="itemLabel" for="password">現在のパスワード</label>
+                <input id="currentPassword" type="password" v-model="currentPassword">
             </div>
             <div class="item">
                 <label class="itemLabel" for="password">パスワード</label>
@@ -50,12 +49,8 @@ const signup = async () => {
                 <label class="itemLabel" for="passwordConfirm">パスワード(確認)</label>
                 <input id="passwordConfirm" type="password" v-model="passwordConfirm">
             </div>
-            <div class="item">
-                <label class="itemLabel" for="name">名前</label>
-                <input id="name"  type="text" v-model="name">
-            </div>
             <div class="signUpTitle">
-                <button class="registerButton">登録</button>
+                <button class="registerButton">更新</button>
             </div>
         </form>
     </div>
@@ -95,10 +90,7 @@ const signup = async () => {
     font-size: 15px;
 }
 
- /* 入力欄にpadding追加 */
-.form input[type="email"],
-.form input[type="password"],
-.form input[type="text"] {
+.form input[type="password"] {
      padding: 10px;
      width: 100%;
  }

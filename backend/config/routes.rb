@@ -7,8 +7,10 @@ Rails.application.routes.draw do
       end
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/signup',
-        sessions: 'api/v1/sessions'
+        sessions: 'api/v1/sessions',
+        passwords: 'api/v1/passwords'
       }
+
       resources :records do
         get '/user/:user_id', on: :collection, to: 'records#get_target_user_record', as: 'get_target_user_record'
       end
