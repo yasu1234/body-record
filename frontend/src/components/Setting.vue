@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router'
 import axios from 'axios';
+import Cookies from 'js-cookie'
 
 import Header from './Header.vue'
 
@@ -28,6 +29,26 @@ const checkLogin = async () => {
     userId.value = res.data.user.id
   } catch (error) {
     isLogin.value = false
+  }
+}
+
+const deleteAccount = async () => {
+  try {
+    const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + '/api/v1/auth', {
+      headers: {
+        'access-token' : Cookies.get('accessToken'),
+        'client':Cookies.get('client'),
+        'uid': Cookies.get('uid'),
+      },
+    })
+    
+    Cookies.remove('accessToken')
+    Cookies.remove('client')
+    Cookies.remove('uid')
+        
+    router.push({ name: 'Home'})
+  } catch (error) {
+    console.log({ error })
   }
 }
 
