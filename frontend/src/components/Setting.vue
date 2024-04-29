@@ -45,28 +45,44 @@ function showEditProfile() {
   <div class="setting-list">
     <span class="section-title">アカウント変更</span>
     <p class="section-message">メールアドレスやパスワードを変更します</p>
-    <button class="setting-button">編集する</button>
+    <div class="account-edit-buttons">
+        <button class="setting-button">メールアドレス編集</button>
+        <button class="setting-button">パスワード編集</button>
+        <button class="account-delete-button">退会する</button>
+    </div>
   </div>
 </template>
 
 <style>
 .setting-list {
-  text-align: center;
-  padding-top: 40px;
+    text-align: center;
+    padding-top: 40px;
 }
 .section-title {
-  border-bottom: solid 5px #ffa500;
-  font-size:25px;
-  font-weight:bold;
+    border-bottom: solid 5px #ffa500;
+    font-size:25px;
+    font-weight:bold;
 }
 .section-message {
-  font-size:20px;
+    font-size:20px;
+}
+.account-edit-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
 }
 .setting-button{
     background: #ffa500;
     color: white;
     font-size:16px;
     font-weight:bold;
-    margin-top: 20px;
+}
+.account-delete-button{
+    background: #d50c05;
+    color: white;
+    font-size:16px;
+    font-weight:bold;
 }
 </style>
