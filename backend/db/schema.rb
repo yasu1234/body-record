@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_24_221256) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_30_101208) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -62,6 +62,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_24_221256) do
     t.index ["knowledge_id"], name: "index_comments_on_knowledge_id"
     t.index ["record_id"], name: "index_comments_on_record_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "contacts", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "status"
+    t.string "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "knowledges", force: :cascade do |t|
