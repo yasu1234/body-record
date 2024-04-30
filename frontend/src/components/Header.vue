@@ -15,8 +15,9 @@ onMounted(() => {
 
 const menuList = ref([
   { id: 1, label: "マイページ", isLogin: true },
-  { id: 2, label: "設定", isLogin: false },
-  { id: 3, label: "ログアウト", isLogin: true }
+  { id: 2, label: "設定", isLogin: true },
+  { id: 3, label: "ログアウト", isLogin: true },
+  { id: 4, label: "問い合わせ", isLogin: false }
 ]);
 
 const checkLogin = async () => {
@@ -49,6 +50,10 @@ function showSetting() {
     router.push({ name: 'Setting'})
 }
 
+function showContact() {
+    router.push({ name: 'Contact'})
+}
+
 function toggleDropdown() {
   showDropdown.value = !showDropdown.value;
 }
@@ -63,6 +68,9 @@ function showMenu(menu) {
             break
         case 3:
             logout();
+            break
+        case 4:
+            showContact();
             break
         default:
             break
@@ -100,9 +108,9 @@ const logout = async () => {
                 </div>                
             </div>
             <div v-if="showDropdown" class="dropdown-menu">
-                <div v-for="menu in menuList" class="menu-item" @click="showMenu(menu)">
+                <button v-for="menu in menuList" class="menu-item" @click="showMenu(menu)">
                     {{ menu.label }}
-                </div>
+                </button>
             </div>
         </nav>
     </header>
