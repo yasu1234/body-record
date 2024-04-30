@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import Header from './Header.vue'
 import RecordCard from './RecordCard.vue'
 import KnowledgeCard from './KnowledgeCard.vue'
+import Chart from './Chart.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -24,7 +25,20 @@ onMounted(() => {
     getProfile();
     getUserRecord();
     getUserKnowledge();
+    getMonthRecord();
 });
+
+var data = ref({
+  labels: [],
+  datasets: [
+    {
+      label: "体重",
+      data: [],
+      borderColor: "rgb(75, 192, 192)",
+    },
+  ],
+});
+
 
 const getProfile = async () => {
   userId.value = route.params.id
@@ -60,6 +74,30 @@ const getUserRecord = async () => {
         })
 
         records.value = res.data.records
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
+const getMonthRecord = async () => {
+    const id = route.params.id
+  
+    try {
+        const res = await axios.get(import.meta.env.VITE_APP_API_BASE + `/api/v1/graph_record`, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid'),
+            },
+            params: {
+              user_id: id
+            }
+        })
+
+        console.log({ res })
+
+        data.value.labels = res.data.record.map(record => record.set_formatted_date)
+        data.value.datasets[0].data = res.data.record.map(record => record.weight)
     } catch (error) {
         console.log({ error })
     }
@@ -104,6 +142,9 @@ function showEditProfile() {
         <button class="profile-edit-button" @click="showEditProfile">プロフィール編集</button>
       </div>
     </div>
+  </div>
+  <div class="weight-graph">
+    <Chart :data="data" />
   </div>
   <div class="record-list">
     <span class="section-title">投稿した記録</span>
@@ -201,5 +242,8 @@ function showEditProfile() {
   border-bottom: solid 5px #ffa500;
   font-size:25px;
   font-weight:bold;
+}
+.weight-graph {
+  margin-top: 20px;
 }
 </style>
