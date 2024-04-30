@@ -9,6 +9,8 @@ import Header from './Header.vue'
 
 const memo = ref("");
 const recordDate = ref("");
+const weight = ref(null);
+const fatPercentage = ref(null);
 const files = ref([]);
 
 function dateChange(event) {
@@ -24,6 +26,8 @@ const registerRecord = async () => {
         const formData = new FormData();
         formData.append('memo', memo.value);
         formData.append('date', recordDate.value);
+        formData.append('weight', weight.value);
+        formData.append('fat_percentage', fatPercentage.value);
 
         for (const file of files.value) {
             formData.append('images', file);
@@ -49,8 +53,18 @@ const registerRecord = async () => {
     <div class="time-list">
         <div class="item">
             <p class="inputTitle">記録日</p>
-            <DatePicker isStart=false @startDateChange="dateChange"/>
+            <DatePicker isStart=false :date= recordDate @update:date="dateChange"/>
         </div>
+    </div>
+    <div class="profile-edit-content">
+        <label for="goal-weight">体重:</label>
+        <input type="text" id="goal-weight" v-model="weight">
+        <label for="goal-weight" class="unit-label">kg</label>
+    </div>
+    <div class="profile-edit-content">
+        <label for="goal-fat-percentage">体脂肪率:</label>
+        <input type="text" v-model="fatPercentage">
+        <label for="goal-fat-percentage" class="unit-label">%</label>
     </div>
     <div class="editor">
         <textarea name="memo" rows="10" v-model="memo"></textarea>

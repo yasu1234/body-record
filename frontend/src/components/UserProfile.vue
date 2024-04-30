@@ -1,13 +1,14 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
-import DatePicker from './DatePicker.vue'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
 import Header from './Header.vue'
 import RecordCard from './RecordCard.vue'
 import KnowledgeCard from './KnowledgeCard.vue'
+import Chart from './Chart.vue'
+import MonthPicker from './MonthPicker.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -19,12 +20,29 @@ const records = ref([]);
 const knowledges = ref([]);
 const isLogin = ref(false);
 const userId = ref(0);
+const month = ref({
+  month: new Date().getMonth(),
+  year: new Date().getFullYear()
+});
 
 onMounted(() => {
     getProfile();
     getUserRecord();
     getUserKnowledge();
+    getMonthRecord();
 });
+
+var data = ref({
+  labels: [],
+  datasets: [
+    {
+      label: "体重",
+      data: [],
+      borderColor: "rgb(75, 192, 192)",
+    },
+  ],
+});
+
 
 const getProfile = async () => {
   userId.value = route.params.id
@@ -65,6 +83,32 @@ const getUserRecord = async () => {
     }
 }
 
+const getMonthRecord = async () => {
+    const id = route.params.id
+  
+    try {
+        const res = await axios.get(import.meta.env.VITE_APP_API_BASE + `/api/v1/graph_record`, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid'),
+            },
+            params: {
+              user_id: id,
+              targetYear: month.value.year,
+              targetMonth: month.value.month + 1
+            }
+        })
+
+        console.log({ res })
+
+        data.value.labels = res.data.record.map(record => record.set_formatted_date)
+        data.value.datasets[0].data = res.data.record.map(record => record.weight)
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
 const getUserKnowledge = async () => {
     const id = route.params.id
   
@@ -81,6 +125,11 @@ const getUserKnowledge = async () => {
     } catch (error) {
         console.log({ error })
     }
+}
+
+function monthChange(event) {
+  month.value = event
+  getMonthRecord();
 }
 
 function showEditProfile() {
@@ -105,6 +154,10 @@ function showEditProfile() {
       </div>
     </div>
   </div>
+  <div class="weight-graph">
+    <Chart :data="data" />
+  </div>
+  <MonthPicker :date= month @update:month="monthChange"/>
   <div class="record-list">
     <span class="section-title">投稿した記録</span>
   </div>
@@ -201,5 +254,8 @@ function showEditProfile() {
   border-bottom: solid 5px #ffa500;
   font-size:25px;
   font-weight:bold;
+}
+.weight-graph {
+  margin-top: 20px;
 }
 </style>

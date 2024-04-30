@@ -3,6 +3,8 @@ class Record < ApplicationRecord
 
     has_many :comments, dependent: :destroy
 
+    attr_accessor :formatted_date
+
     def image_urls
         images.map do |image|
           {
@@ -11,5 +13,9 @@ class Record < ApplicationRecord
             filename: image.filename.to_s
           }
         end
+    end
+
+    def set_formatted_date
+      self.formatted_date = date&.strftime('%m/%d')
     end
 end
