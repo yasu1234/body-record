@@ -62,9 +62,13 @@ class Api::V1::RecordsController < ApplicationController
 
     def get_record_month
         records = Record.where(user_id: params[:user_id])
-        # 2024年5月の開始日と終了日を設定
-        start_date = DateTime.new(2024, 4, 1)
-        end_date = DateTime.new(2024, 5, 1)
+
+        if params[:targetYear].present? && params[:targetMonth].present?
+            start_date = DateTime.new(params[:targetYear].to_i, params[:targetMonth].to_i, 1)
+            end_date = start_date.next_month
+        else
+
+        end
         
         # 1ヶ月全ての日付を含む配列を作成
         dates = []

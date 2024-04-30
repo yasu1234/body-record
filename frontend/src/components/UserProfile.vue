@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
-import DatePicker from './DatePicker.vue'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -9,6 +8,7 @@ import Header from './Header.vue'
 import RecordCard from './RecordCard.vue'
 import KnowledgeCard from './KnowledgeCard.vue'
 import Chart from './Chart.vue'
+import MonthPicker from './MonthPicker.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -20,6 +20,10 @@ const records = ref([]);
 const knowledges = ref([]);
 const isLogin = ref(false);
 const userId = ref(0);
+const month = ref({
+  month: new Date().getMonth(),
+  year: new Date().getFullYear()
+});
 
 onMounted(() => {
     getProfile();
@@ -90,7 +94,9 @@ const getMonthRecord = async () => {
                 'uid': Cookies.get('uid'),
             },
             params: {
-              user_id: id
+              user_id: id,
+              targetYear: month.value.year,
+              targetMonth: month.value.month + 1
             }
         })
 
@@ -121,6 +127,11 @@ const getUserKnowledge = async () => {
     }
 }
 
+function monthChange(event) {
+  month.value = event
+  getMonthRecord();
+}
+
 function showEditProfile() {
   router.push({ name: 'EditProfile', params: { id: userId.value }})
 }
@@ -146,6 +157,7 @@ function showEditProfile() {
   <div class="weight-graph">
     <Chart :data="data" />
   </div>
+  <MonthPicker :date= month @update:month="monthChange"/>
   <div class="record-list">
     <span class="section-title">投稿した記録</span>
   </div>
