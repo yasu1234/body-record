@@ -8,7 +8,21 @@ import Header from './Header.vue'
 const contact = ref('')
 
 const contactSubmit = async () => {
+    try {
+        const formData = new FormData();
+        formData.append('content', contact.value);
 
+        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/contacts`, formData, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        console.log({ res })
+    } catch (error) {
+        console.log({ error })
+    }
 }
 </script>
 
