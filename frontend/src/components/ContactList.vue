@@ -34,7 +34,7 @@ const getContactList = async () => {
 }
 
 function clickContact(item) {
-  router.push({ name: 'KnowledgeDetail', params: { id: item.id }})
+  router.push({ name: 'ContactDetail', params: { id: item.id }})
 }
 </script>
 

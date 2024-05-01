@@ -18,6 +18,7 @@ import PasswordEdit from '/src/components/PasswordEdit.vue';
 import MailAddressEdit from '/src/components/MailAddressEdit.vue';
 import Contact from '/src/components/Contact.vue';
 import ContactList from '/src/components/ContactList.vue';
+import ContactDetail from '/src/components/ContactDetail.vue';
 
 const routes = [
   {
@@ -114,6 +115,11 @@ const routes = [
     path: '/contact-list',
     name: 'ContactList',
     component: ContactList 
+  },
+  { 
+    path: '/contact/:id',
+    name: 'ContactDetail',
+    component: ContactDetail 
   },
 ];
 
