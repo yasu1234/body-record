@@ -6,7 +6,8 @@ class Api::V1::ContactsController < ApplicationController
             contact.user_id = user.id
         end
 
-        if contact.save?
+        if contact.save
+            ContactMailer.complete.deliver_later
             render json: { contact: contact }, status: 200
         else
             render json: { errors: contact.errors.full_messages }, status: 422
