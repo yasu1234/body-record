@@ -32,6 +32,8 @@ Rails.application.routes.draw do
         post '/knowledge', on: :collection, to: 'comments#create_knowledge_comment', as: 'create_knowledge_comment'
         post '/record', on: :collection, to: 'comments#create_record_comment', as: 'create_record_comment'
       end
+
+      resources :contacts
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
