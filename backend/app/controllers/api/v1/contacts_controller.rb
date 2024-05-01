@@ -1,4 +1,15 @@
 class Api::V1::ContactsController < ApplicationController
+    def index
+        if api_v1_user_signed_in?
+            user = current_api_v1_user
+        else
+        end
+        
+        contacts = Contact.all.order(created_at: :desc)
+
+        render json: { contacts: contacts }, status: 200
+    end
+
     def create
         user = current_api_v1_user
         contact = Contact.new(contact_register_params)
