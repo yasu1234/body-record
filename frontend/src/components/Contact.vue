@@ -29,7 +29,7 @@ const contactSubmit = async () => {
 <template>
     <Header />
     <h1 class="signUpTitle">お問合せ</h1>
-    <div class="singUpInput">
+    <div class="contact-area">
         <form class="contact-form" @submit.prevent="contactSubmit">
             <div class="contact-item">
                 <label class="itemLabel" for="email">要望や不適切な表現がある場合にはお問合せフォームを入力してください</label>
@@ -39,13 +39,19 @@ const contactSubmit = async () => {
                 <button class="submit-button">送信</button>
             </div>
         </form>
+        <router-link :to="'contact-list'">問い合わせ一覧はこちら</router-link>
     </div>
 </template>
 
 <style>
+.contact-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .contact-form {
     width: 100%;
-    margin:0 auto;
     padding: 50px;
     box-sizing: border-box;
 }
