@@ -43,9 +43,27 @@ class Api::V1::ContactsController < ApplicationController
         end
     end
 
+    def update
+        if api_v1_user_signed_in?
+            user = current_api_v1_user
+        else
+        end
+
+        if params[:id].present?
+            contact = Contact.where(id: params[:id].to_i).first
+        else
+            render json: { errors: "Contact not found" }, status: 404
+        end
+
+        if contact.update(contact_register_params)
+            render json: { contact: contact }, status: 200
+        else
+        end
+    end
+
     private
 
     def contact_register_params
-        params.permit(:content)
+        params.permit(:content, :status)
     end
 end

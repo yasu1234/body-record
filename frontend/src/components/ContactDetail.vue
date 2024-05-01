@@ -32,6 +32,25 @@ const getDetail = async () => {
 }
 
 const statusChange = async (isComplete) => {
+    try {
+        const formData = new FormData();
+        if (isComplete) {
+            formData.append('status', null);
+        } else {
+            formData.append('status', 1);
+        }
+
+        const res = await axios.put(import.meta.env.VITE_APP_API_BASE + `/api/v1/contacts/${contact.value.id}`, formData, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        contact.value = res.data.contact
+    } catch (error) {
+        console.log({ error })
+    }
 }
 </script>
 
