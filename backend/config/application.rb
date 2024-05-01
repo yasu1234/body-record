@@ -24,6 +24,8 @@ module BodyRecord
       end
     end
 
+    config.i18n.default_locale = :ja
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
