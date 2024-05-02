@@ -58,7 +58,7 @@ class Api::V1::RecordsController < ApplicationController
             return render json: { error: '必須項目が不足しています'}, status: 400
         end
 
-        records = Record.where(user_id: params[:user_id])
+        user = User.find(params[:user_id])
 
         start_date = DateTime.new(params[:targetYear].to_i, params[:targetMonth].to_i, 1)
         end_date = start_date.next_month
@@ -71,7 +71,7 @@ class Api::V1::RecordsController < ApplicationController
             current_date = current_date.next_day
         end
 
-        records = Record.where(date: start_date..end_date)
+        records = user.records.where(date: start_date..end_date)
 
         # 1ヶ月全ての日付で体重や体脂肪率が存在しない場合は、0で埋める
         records_with_empty_dates = dates.map do |date|
@@ -92,12 +92,12 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         @record = Record.where(id: params[:id].to_i).first
-        render json: { record: @record, imageUrls: @record.image_urls, isMyRecord: @record.user_id == @user.id }, status: 200
+        render json: { record: @record.as_json(methods: :image_urls), isMyRecord: @record.user_id == @user.id }, status: 200
     end
 
     def create
-        @record = Record.new(record_register_params)
-        @record.user_id = @user.id
+        @record = @user.records.build(record_register_params)
+
         if @record.save
             render json: { record: @record }, status: 200
         else
@@ -123,7 +123,7 @@ class Api::V1::RecordsController < ApplicationController
             return render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @record = Record.find(params[:id])
+        @record = @user.records.find(params[:id])
         @record.images.purge
         if @record.destroy
             render json: { success: true }, status: 200
@@ -133,10 +133,10 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def delete_image
-        @record = Record.find(params[:id])
+        @record = @user.record.find(params[:id])
         @image = @record.images.find(params[:image_id])
         @image.purge
-        render json: { imageUrls: @knowledge.image_urls }, status: 200
+        render json: { imageUrls: @record.image_urls }, status: 200
     end
 
     def get_target_user_record

@@ -47,7 +47,7 @@ const getDetail = async () => {
         recordId.value = res.data.record.id
         memo.value = res.data.record.memo
         isMyRecord.value = res.data.isMyRecord
-        imageUrls.value = res.data.imageUrls
+        imageUrls.value = res.data.record.image_urls
         recordUserId.value = res.data.record.user_id
         comments.value = res.data.record.comments
     } catch (error) {
@@ -146,7 +146,7 @@ function edit() {
                     <p id="title" class="knowledge-title" type="text"> {{ title }} </p>
                     <p class="knowledge-content" v-html="renderedMarkdown" />
                 </div>
-                <div v-if="imageUrls.length!==0">
+                <div v-if="imageUrls !== null && imageUrls.length!==0">
                     <p class="inputTitle">関連画像</p>
                     <div class="thumbnail-container">
                         <div class="thumbnail" v-for="item in imageUrls">
