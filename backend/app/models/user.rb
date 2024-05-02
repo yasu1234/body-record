@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
     find_or_create_by!(email: ENV['GUEST_USER_ADDRESS']) do |user|
       user.password = SecureRandom.urlsafe_base64
       user.name = "ゲストユーザー"
+      user.status = 1
     end
   end
 
