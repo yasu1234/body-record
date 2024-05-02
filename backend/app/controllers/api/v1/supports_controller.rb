@@ -13,6 +13,7 @@ class Api::V1::SupportsController < ApplicationController
             includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == @user.id }
             render json: { user: user_json, isSupport: includes_user ,status: 200 }
         else
+            render json: { errors: supporting.erros }, status: 422
         end
     end
 
@@ -26,8 +27,9 @@ class Api::V1::SupportsController < ApplicationController
                 ]
             )
             includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == @user.id }
-            render json: { user: user_json, isSupport: includes_user ,status: 200 }
+            render json: { user: user_json, isSupport: includes_user , status: 200 }
         else
+            render json: { errors: supporting.erros }, status: 422
         end
     end
 
@@ -37,6 +39,7 @@ class Api::V1::SupportsController < ApplicationController
         if api_v1_user_signed_in?
             @user = current_api_v1_user
         else
+            render json: { errors: "未ログイン" }, status: 401
         end
         @support_user = User.find(params[:id])
     end
