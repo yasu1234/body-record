@@ -101,7 +101,7 @@ class Api::V1::KnowledgesController < ApplicationController
             return render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @knowledges = Knowledge.where(create_user_id: params[:user_id])
+        @knowledges = Knowledge.where(user_id: params[:user_id])
 
         # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
         if @knowledges.count > 5
