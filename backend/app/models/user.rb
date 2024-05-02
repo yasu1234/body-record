@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
 
   has_many :comments, dependent: :destroy
   has_many :records, dependent: :destroy
+  has_many :knowledges, dependent: :destroy
 
   def self.guest
     find_or_create_by!(email: ENV['GUEST_USER_ADDRESS']) do |user|

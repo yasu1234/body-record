@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_02_044412) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_02_061633) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -73,12 +73,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_02_044412) do
   end
 
   create_table "knowledges", force: :cascade do |t|
-    t.integer "create_user_id", null: false
     t.string "title", null: false
     t.string "content"
-    t.datetime "create_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_knowledges_on_user_id"
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -145,6 +145,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_02_044412) do
   add_foreign_key "comments", "knowledges"
   add_foreign_key "comments", "records"
   add_foreign_key "comments", "users"
+  add_foreign_key "knowledges", "users"
   add_foreign_key "profiles", "users"
   add_foreign_key "records", "users"
   add_foreign_key "supports", "users"
