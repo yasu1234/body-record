@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_30_101208) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_02_044412) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -92,7 +92,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_30_101208) do
   end
 
   create_table "records", force: :cascade do |t|
-    t.integer "user_id", null: false
     t.float "weight"
     t.float "fat_percentage"
     t.datetime "date"
@@ -100,6 +99,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_30_101208) do
     t.string "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_records_on_user_id"
   end
 
   create_table "supports", force: :cascade do |t|
@@ -145,6 +146,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_30_101208) do
   add_foreign_key "comments", "records"
   add_foreign_key "comments", "users"
   add_foreign_key "profiles", "users"
+  add_foreign_key "records", "users"
   add_foreign_key "supports", "users"
   add_foreign_key "supports", "users", column: "support_id"
 end
