@@ -17,7 +17,7 @@ const userThumbnail = ref(null);
 const userId = ref(0);
 
 function onFileChange(event) {
-    file.value = [...event];
+    file.value = event[0];
 }
 
 onMounted(() => {
