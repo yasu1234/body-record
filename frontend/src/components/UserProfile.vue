@@ -58,7 +58,7 @@ const getProfile = async () => {
             }
         })
 
-        profile.value = res.data.profile.profile
+        profile.value = res.data.user.profile.profile
         userName.value = res.data.user.name
     } catch (error) {
         console.log({ error })

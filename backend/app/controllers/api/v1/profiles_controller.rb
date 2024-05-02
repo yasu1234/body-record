@@ -2,17 +2,20 @@ class Api::V1::ProfilesController < ApplicationController
     before_action :set_user
 
     def show
-        render json: { profile: @user.profile, user: @user }, status: 200
+        render json: { user: @user.as_json(include: [:profile]) }, status: 200
     end
 
     def create
         if @user.profile.present?
-            @user.profile.update(profile_register_params)
-            render json: { profile: @user.profile, user: @user }, status: 200
+            if @user.profile.update(profile_register_params)
+                render json: { user: @user.as_json(include: [:profile]) }, status: 200
+            else
+                render json: { errors: @user.profile.errors.to_hash(true) }, status: 422
+            end
         else
             @user.profile = Profile.new(profile_register_params)
             if @user.profile.save
-                render json: { profile: @user.profile, user: @user }, status: 200
+                render json: { user: @user.as_json(include: [:profile]) }, status: 200
             else
                 render json: { errors: @user.profile.errors.to_hash(true) }, status: 422
             end
