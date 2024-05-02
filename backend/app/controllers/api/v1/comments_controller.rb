@@ -2,32 +2,44 @@ class Api::V1::CommentsController < ApplicationController
     before_action :check_user
 
     def create_knowledge_comment
+        if record_comment_params[:record_id].nil? {
+            render json: { error: 'IDが不足しています'}, status: 400
+        }
+
         @knowledge = Knowledge.where(id: knowledge_comment_params[:knowledge_id].to_i).first
+
+        if @knowledge.nil?
+            return render json: { error: 'データがありません'}, status: 404
+        end
 
         @comment = @knowledge.comments.build(knowledge_comment_params)
         @comment.user_id = @user.id
 
         if @comment.save
-            render json: {
-                knowledge: @knowledge.as_json(include: [:comments])
-            }, status: 200
+            render json: { knowledge: @knowledge.as_json(include: [:comments])}, status: 200
         else
-            render json: { error: @comment.errors.full_messages}, status: 422
+            render json: { error: @comment.errors.to_hash(true)}, status: 422
         end
     end
 
     def create_record_comment
+        if record_comment_params[:record_id].nil? {
+            render json: { error: 'IDが不足しています'}, status: 400
+        }
+
         @record = Record.where(id: record_comment_params[:record_id].to_i).first
+
+        if @record.nil?
+            return render json: { error: 'データがありません'}, status: 404
+        end
 
         @comment = @record.comments.build(record_comment_params)
         @comment.user_id = @user.id
 
         if @comment.save
-            render json: {
-                record: @record.as_json(include: [:comments])
-            }, status: 200
+            render json: { record: @record.as_json(include: [:comments]) }, status: 200
         else
-            render json: { error: @comment.errors.full_messages}, status: 422
+            render json: { error: @comment.errors.to_hash(true)}, status: 422
         end
     end
 

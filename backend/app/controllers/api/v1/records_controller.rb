@@ -1,9 +1,7 @@
 class Api::V1::RecordsController < ApplicationController
+    before_action :set_user
+
     def searchMyRecord
-        if api_v1_user_signed_in?
-            @user = current_api_v1_user
-        else
-        end
         @records = Record.where(user_id: @user.id)
 
         if params[:keyword].present? 
@@ -30,11 +28,6 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def index
-        if api_v1_user_signed_in?
-            @user = current_api_v1_user
-        else
-        end
-
         @records = Record.where(open_flg: true)
 
         if params[:keyword].present? 
@@ -61,15 +54,15 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def get_record_month
+        if params[:user_id].nil? && params[:targetYear].nil? && params[:targetMonth].nil?
+            return render json: { error: '必須項目が不足しています'}, status: 400
+        end
+
         records = Record.where(user_id: params[:user_id])
 
-        if params[:targetYear].present? && params[:targetMonth].present?
-            start_date = DateTime.new(params[:targetYear].to_i, params[:targetMonth].to_i, 1)
-            end_date = start_date.next_month
-        else
-
-        end
-        
+        start_date = DateTime.new(params[:targetYear].to_i, params[:targetMonth].to_i, 1)
+        end_date = start_date.next_month
+     
         # 1ヶ月全ての日付を含む配列を作成
         dates = []
         current_date = start_date
@@ -80,6 +73,7 @@ class Api::V1::RecordsController < ApplicationController
 
         records = Record.where(date: start_date..end_date)
 
+        # 1ヶ月全ての日付で体重や体脂肪率が存在しない場合は、0で埋める
         records_with_empty_dates = dates.map do |date|
             record = records.find { |r| r.date == date }
             if record
@@ -93,31 +87,49 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def show
-        @user = current_api_v1_user
+        if params[:id].nil?
+            return render json: { error: 'IDが不足しています'}, status: 400
+        end
+
         @record = Record.where(id: params[:id].to_i).first
         render json: { record: @record, imageUrls: @record.image_urls, isMyRecord: @record.user_id == @user.id }, status: 200
     end
 
     def create
-        @user = current_api_v1_user
         @record = Record.new(record_register_params)
         @record.user_id = @user.id
-        @record.save
-        render json: { record: @record }, status: 200
+        if @record.save
+            render json: { record: @record }, status: 200
+        else
+            render json: { errors: @record.errors }, status: 422
+        end
     end
 
     def update
-        @user = current_api_v1_user
+        if params[:id].nil?
+            return render json: { error: 'IDが不足しています'}, status: 400
+        end
+
         @record = Record.where(id: params[:id].to_i).first
-        @record.update(record_register_params)
-        render json: { record: @record }, status: 200
+        if @record.update(record_register_params)
+            render json: { record: @record }, status: 200
+        else
+            render json: { errors: @record.errors }, status: 422
+        end
     end
 
     def destroy
+        if params[:id].nil?
+            return render json: { error: 'IDが不足しています'}, status: 400
+        end
+
         @record = Record.find(params[:id])
         @record.images.purge
-        @record.destroy
-        render json: { success: true }, status: 200
+        if @record.destroy
+            render json: { success: true }, status: 200
+        else
+            render json: { errors: @record.errors }, status: 422
+        end
     end
 
     def delete_image
@@ -128,6 +140,9 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def get_target_user_record
+        if params[:user_id].nil?
+            return render json: { error: 'ユーザーIDが不足しています'}, status: 400
+        end
         @records = Record.where(user_id: params[:user_id])
 
         # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
@@ -136,6 +151,16 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         render json: { records: @records }, status: 200
+    end
+
+    private
+
+    def set_user
+        if api_v1_user_signed_in?
+            @user = current_api_v1_user
+        else
+            render json: { errors: "未ログイン" ,status: 401 }
+        end
     end
 
     def record_register_params
