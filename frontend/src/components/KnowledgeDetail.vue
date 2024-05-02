@@ -42,7 +42,7 @@ const getDetail = async () => {
         })
         knowledgeId.value = res.data.knowledge.id
         knowledge.value = res.data.knowledge
-        imageUrls.value = res.data.imageUrls
+        imageUrls.value = res.data.knowledge.image_urls
         isBookmark.value = res.data.isBookmark
         comments.value = res.data.knowledge.comments
     } catch (error) {

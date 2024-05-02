@@ -20,8 +20,7 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     def create
-        @knowledge = Knowledge.new(knowledge_register_params)
-        @knowledge.create_user_id = @user.id
+        @knowledge = @user.knowledges.build(knowledge_register_params)
 
         if @knowledge.save
             render json: { knowledge: @knowledge }, status: 200
@@ -41,7 +40,7 @@ class Api::V1::KnowledgesController < ApplicationController
             return render json: { error: 'データがありません'}, status: 404
         end
         @bookmark = @knowledge.bookmarks.where(knowledge_id: @knowledge.id).first
-        render json: { knowledge: @knowledge.as_json(include: [:comments]), imageUrls: @knowledge.image_urls, isBookmark: @bookmark.present? }, status: 200
+        render json: { knowledge: @knowledge.as_json(include: [:comments], methods: :image_urls), isBookmark: @bookmark.present? }, status: 200
     end
 
     def delete_image
@@ -66,7 +65,7 @@ class Api::V1::KnowledgesController < ApplicationController
             return render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @knowledge = Knowledge.where(id: params[:id].to_i).first
+        @knowledge = @user.knowledges.where(id: params[:id].to_i).first
 
         if @knowledge.nil?
             return render json: { error: 'データがありません'}, status: 404
@@ -76,6 +75,24 @@ class Api::V1::KnowledgesController < ApplicationController
             render json: { knowledge: @knowledge }, status: 200
         else
             render json: { errors: @knowledge.errors.to_hash(true) }, status: 422
+        end
+    end
+
+    def destroy
+        if params[:id].nil?
+            return render json: { error: 'IDが不足しています'}, status: 400
+        end
+
+        @knowledges = @user.knowledges.where(id: params[:id].to_i)
+
+        if @knowledge.nil?
+            return render json: { error: 'データがありません'}, status: 404
+        end
+
+        if @knowledges.destroy_all
+            render json: { knowledge: @knowledge }, status: 200
+        else
+            render json: { errors: @knowledges.errors.to_hash(true) }, status: 422
         end
     end
 
