@@ -11,6 +11,8 @@ ja:
       contact:
         content: "お問合せ内容"
     errors:
+      messages:
+        record_invalid: "バリデーションに失敗しました: %{errors}"
       models:
         record:
           attributes:
