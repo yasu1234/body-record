@@ -168,7 +168,7 @@ class Api::V1::RecordsController < ApplicationController
         if api_v1_user_signed_in?
             @user = current_api_v1_user
         else
-            render json: { errors: "未ログイン" ,status: 401 }
+            render json: { errors: "未ログイン" }, status: 401
         end
     end
 
