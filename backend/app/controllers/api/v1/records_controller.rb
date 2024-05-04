@@ -54,8 +54,8 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def get_record_month
-        if params[:user_id].nil? && params[:targetYear].nil? && params[:targetMonth].nil?
-            return render json: { error: '必須項目が不足しています'}, status: 400
+        if params[:user_id].nil? || params[:targetYear].nil? || params[:targetMonth].nil?
+            return render json: { error: '必須項目が不足しています'}, status: 404
         end
 
         user = User.find(params[:user_id])
@@ -79,11 +79,11 @@ class Api::V1::RecordsController < ApplicationController
             if record
                 record
             else
-                Record.new(date: date, weight: 0)
+                Record.new(date: date, weight: 0, fat_percentage: 0)
             end
         end
 
-        render json: { record: records_with_empty_dates.as_json(methods: :set_formatted_date)}, status: 200
+        render json: { records: records_with_empty_dates.as_json(methods: :set_formatted_date)}, status: 200
     end
 
     def show
@@ -92,6 +92,10 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         @record = Record.where(id: params[:id].to_i).first
+        if @record.nil?
+            return render json: { error: 'データがありません'}, status: 404
+        end
+
         render json: { record: @record.as_json(methods: :image_urls), isMyRecord: @record.user_id == @user.id }, status: 200
     end
 
@@ -101,7 +105,7 @@ class Api::V1::RecordsController < ApplicationController
         if @record.save
             render json: { record: @record }, status: 200
         else
-            render json: { errors: @record.errors }, status: 422
+            render json: { errors: @record.errors.to_hash(true) }, status: 422
         end
     end
 
@@ -111,6 +115,11 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         @record = Record.where(id: params[:id].to_i).first
+
+        if @record.nil?
+            return render json: { error: 'データがありません'}, status: 404
+        end
+
         if @record.update(record_register_params)
             render json: { record: @record }, status: 200
         else
@@ -126,9 +135,9 @@ class Api::V1::RecordsController < ApplicationController
         @record = @user.records.find(params[:id])
         @record.images.purge
         if @record.destroy
-            render json: { success: true }, status: 200
+            render json: { record: @record }, status: 200
         else
-            render json: { errors: @record.errors }, status: 422
+            render json: { errors: @record.errors.to_hash(true) }, status: 422
         end
     end
 
@@ -164,6 +173,6 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def record_register_params
-        params.permit(:memo, :date, :user_id, :images, :weight, :fat_percentage)
+        params.require(:record).permit(:memo, :date, :user_id, :images, :weight, :fat_percentage)
     end
 end

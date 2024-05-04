@@ -19,6 +19,11 @@ class Api::V1::SupportsController < ApplicationController
 
     def destroy
         supporting = @user.removeSupport(@support_user)
+
+        if supporting.nil?  
+            return render json: { errors: "応援していないユーザーなので解除できません" }, status: 404
+        end
+
         if supporting.destroy
             user_json = @support_user.as_json(
                 include: [
