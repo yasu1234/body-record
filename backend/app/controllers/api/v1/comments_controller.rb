@@ -6,10 +6,10 @@ class Api::V1::CommentsController < ApplicationController
             render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @knowledge = Knowledge.where(id: knowledge_comment_params[:knowledge_id].to_i).first
-
-        if @knowledge.nil?
-            return render json: { error: 'データがありません'}, status: 404
+        begin
+            @record = Knowledge.find(knowledge_comment_params[:knowledge_id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
         @comment = @knowledge.comments.build(knowledge_comment_params)
@@ -27,10 +27,10 @@ class Api::V1::CommentsController < ApplicationController
             render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @record = Record.where(id: record_comment_params[:record_id].to_i).first
-
-        if @record.nil?
-            return render json: { error: 'データがありません'}, status: 404
+        begin
+            @record = Record.find(record_comment_params[:record_id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
         @comment = @record.comments.build(record_comment_params)

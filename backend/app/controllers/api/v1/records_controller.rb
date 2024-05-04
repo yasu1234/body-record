@@ -91,9 +91,10 @@ class Api::V1::RecordsController < ApplicationController
             return render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @record = Record.where(id: params[:id].to_i).first
-        if @record.nil?
-            return render json: { error: 'データがありません'}, status: 404
+        begin
+            @record = @user.records.find(params[:id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
         render json: { record: @record.as_json(methods: :image_urls), isMyRecord: @record.user_id == @user.id }, status: 200
@@ -114,10 +115,10 @@ class Api::V1::RecordsController < ApplicationController
             return render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @record = Record.where(id: params[:id].to_i).first
-
-        if @record.nil?
-            return render json: { error: 'データがありません'}, status: 404
+        begin
+            @record = @user.records.find(params[:id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
         if @record.update(record_register_params)
@@ -132,7 +133,12 @@ class Api::V1::RecordsController < ApplicationController
             return render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @record = @user.records.find(params[:id])
+        begin
+            @record = @user.records.find(params[:id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
+        end
+
         @record.images.purge
         if @record.destroy
             render json: { record: @record }, status: 200

@@ -11,16 +11,16 @@ class Api::V1::ContactsController < ApplicationController
         return render json: { error: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
 
         if params[:id].present?
-            contact = Contact.where(id: params[:id].to_i).first
+            begin
+                contact = Contact.find(params[:id].to_i)
+            rescue ActiveRecord::RecordNotFound
+                return render json: { error: '対象のデータが見つかりません' }, status: 404
+            end
         else
-            return render json: { errors: "idがありません" }, status: 404
+            return render json: { errors: "対象の問い合わせデータがありません" }, status: 404
         end
 
-        if contact.present?
-            render json: { contact: contact }, status: 200
-        else
-            render json: { errors: "対象の問い合わせデータがありません" }, status: 404
-        end
+        render json: { contact: contact }, status: 200
     end
 
     def create
@@ -43,13 +43,13 @@ class Api::V1::ContactsController < ApplicationController
         return render json: { error: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
 
         if params[:id].present?
-            contact = Contact.where(id: params[:id].to_i).first
+            begin
+                contact = Contact.find(params[:id].to_i)
+            rescue ActiveRecord::RecordNotFound
+                return render json: { error: '対象のデータが見つかりません' }, status: 404
+            end
         else
             return render json: { errors: "対象の問い合わせデータがありません" }, status: 404
-        end
-
-        if contact.nil?
-            return render json: { error: 'データがありません'}, status: 404
         end
 
         if contact.update(contact_register_params)
