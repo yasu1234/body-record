@@ -68,8 +68,8 @@ const getDetail = async () => {
 const edit = async () => {
     try {
         const formData = new FormData();
-        formData.append('title', title.value);
-        formData.append('content', knowledge.value);
+        formData.append('knowledge[title]', title.value);
+        formData.append('knowledge[content]', knowledge.value);
 
         for (const file of files.value) {
             formData.append('images', file);

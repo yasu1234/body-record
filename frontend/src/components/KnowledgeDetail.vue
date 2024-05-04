@@ -53,7 +53,7 @@ const getDetail = async () => {
 const bookmarkOn = async () => {
     try {
         const formData = new FormData();
-        formData.append('knowledge_id', knowledgeId.value);
+        formData.append('bookmark[knowledge_id]', knowledgeId.value);
 
         const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/bookmarks`, formData, {
             headers: {
