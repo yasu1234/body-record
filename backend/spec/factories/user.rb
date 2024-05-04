@@ -7,10 +7,14 @@ FactoryBot.define do
         password_confirmation { 'Password1' }
         name { 'test' }
 
-        # knowledgeデータを関連付けない
+        # knowledgeデータを関連付け
         trait :without_knowledges do
             transient do
                 knowledges_count { 0 }
+            end
+
+            after(:create) do |user, evaluator|
+                create_list(:knowledge, evaluator.knowledges_count, user: user)
             end
         end
         
@@ -19,6 +23,9 @@ FactoryBot.define do
             transient do
                 knowledges_count { 5 }
              end
+             after(:create) do |user, evaluator|
+                create_list(:knowledge, evaluator.knowledges_count, user: user)
+            end
         end
 
         # knowledgeデータを関連付ける
@@ -26,17 +33,26 @@ FactoryBot.define do
             transient do
                 knowledges_count { 7 }
              end
+             after(:create) do |user, evaluator|
+                create_list(:knowledge, evaluator.knowledges_count, user: user)
+            end
         end
 
         trait :without_records do
             transient do
               records_count { 0 }
             end
+            after(:create) do |user, evaluator|
+                create_list(:record, evaluator.records_count, user: user)
+            end
           end
 
         trait :with_records do
             transient do
               records_count { 5 }
+            end
+            after(:create) do |user, evaluator|
+                create_list(:record, evaluator.records_count, user: user)
             end
           end
       
@@ -45,12 +61,9 @@ FactoryBot.define do
             transient do
               records_count { 7 }
             end
+            after(:create) do |user, evaluator|
+                create_list(:record, evaluator.records_count, user: user)
+            end
           end
-
-        # 作成後にRelationがあるデータの関連付け
-        after(:create) do |user, evaluator|
-            create_list(:knowledge, evaluator.knowledges_count, user: user)
-            create_list(:record, evaluator.records_count, user: user)
-        end
     end
 end
