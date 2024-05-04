@@ -28,7 +28,6 @@ FactoryBot.define do
             end
         end
 
-        # knowledgeデータを関連付ける
         trait :with_knowledges_over do 
             transient do
                 knowledges_count { 7 }
@@ -38,6 +37,7 @@ FactoryBot.define do
             end
         end
 
+        # recordデータを関連付ける
         trait :without_records do
             transient do
               records_count { 0 }
@@ -56,14 +56,25 @@ FactoryBot.define do
             end
           end
       
-          # recordデータを7件関連付ける
-          trait :with_records_over do
+        trait :with_records_over do
             transient do
               records_count { 7 }
             end
             after(:create) do |user, evaluator|
                 create_list(:record, evaluator.records_count, user: user)
             end
-          end
+        end
+
+        trait :with_supporting do
+            after(:create) do |user, evaluator|
+              other_user = create(:user)
+              user.support(other_user)
+            end
+        end
+    end
+
+    factory :support do
+        association :user
+        association :support, factory: :user
     end
 end
