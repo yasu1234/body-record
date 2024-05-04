@@ -100,7 +100,7 @@ RSpec.describe Api::V1::SignupController, type: :request do
     end
 
     context 'バリデーションエラー(パスワードが長すぎる)' do
-        let(:email_empty_invalid_params) { { email: '', password: 'a' * 5001, password_confirmation: 'a' * 5001 } }
+        let(:email_empty_invalid_params) { { email: 'test@example.com', password: 'a' * 5001, password_confirmation: 'a' * 5001 } }
         before do
             post "/api/v1/auth", as: :json, params: email_empty_invalid_params
         end
