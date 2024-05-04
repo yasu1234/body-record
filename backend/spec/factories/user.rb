@@ -71,6 +71,12 @@ FactoryBot.define do
               user.support(other_user)
             end
         end
+
+        trait :with_profile do
+            after(:create) do |user, evaluator|
+                create(:profile, user: user)
+            end
+        end
     end
 
     factory :support do
