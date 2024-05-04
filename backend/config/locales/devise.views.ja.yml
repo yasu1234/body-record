@@ -141,3 +141,7 @@ ja:
       not_saved:
         one: エラーが発生したため %{resource} は保存されませんでした。
         other: "%{count} 件のエラーが発生したため %{resource} は保存されませんでした。"
+      confirmation: "が一致しません"
+      too_short: "は%{count}文字以上で入力してください"
+      blank: "を入力してください"
+      too_long: "は%{count}文字以内で入力してください"
