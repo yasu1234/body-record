@@ -70,7 +70,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
     describe 'GET #index' do
       context '非公開データあり' do
         let(:user) { create(:user, :without_records, :without_knowledges) }
-        let!(:record) { create(:record, user: user, open_flg: false) }
+        let!(:record) { create(:record, user: user, open_status: 1) }
         before do
             request.headers.merge!(headers)
             get :index, format: :json
@@ -111,9 +111,9 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
     describe 'GET #index' do
       context 'メモのキーワード検索' do
         let(:user) { create(:user, :without_records, :without_knowledges) }
-        let!(:record1) { create(:record, user: user, memo: 'メモTEST', date: '2024-05-03T00:00:00.000Z', open_flg: true) }
-        let!(:record2) { create(:record, user: user, memo: 'メモ1メモ', date: '2024-05-02T00:00:00.000Z', open_flg: true) }
-        let!(:record3) { create(:record, user: user, memo: 'TEST1', date: '2024-05-01T00:00:00.000Z', open_flg: true) }
+        let!(:record1) { create(:record, user: user, memo: 'メモTEST', date: '2024-05-03T00:00:00.000Z', open_status: 1) }
+        let!(:record2) { create(:record, user: user, memo: 'メモ1メモ', date: '2024-05-02T00:00:00.000Z', open_status: 1) }
+        let!(:record3) { create(:record, user: user, memo: 'TEST1', date: '2024-05-01T00:00:00.000Z', open_status: 1) }
         before do
             request.headers.merge!(headers)
             get :index, format: :json, params: { keyword: 'メモ' }
@@ -502,9 +502,9 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
     describe 'GET #get_record_month' do
       context '4月のデータ取得' do
           let(:user) { create(:user, :without_records, :without_knowledges) }
-          let!(:record1) { create(:record, user: user, memo: 'メモTEST', date: '2024-04-03T00:00:00.000Z', open_flg: true) }
-          let!(:record2) { create(:record, user: user, memo: 'メモ1メモ', date: '2024-05-01T00:00:00.000Z', open_flg: true) }
-          let!(:record3) { create(:record, user: user, memo: 'TEST1', date: '2024-04-01T00:00:00.000Z', weight: 72.1, fat_percentage: 13.2, open_flg: true) }
+          let!(:record1) { create(:record, user: user, memo: 'メモTEST', date: '2024-04-03T00:00:00.000Z', open_status: 1) }
+          let!(:record2) { create(:record, user: user, memo: 'メモ1メモ', date: '2024-05-01T00:00:00.000Z', open_status: 1) }
+          let!(:record3) { create(:record, user: user, memo: 'TEST1', date: '2024-04-01T00:00:00.000Z', weight: 72.1, fat_percentage: 13.2, open_status: 1) }
           before do
             request.headers.merge!(headers)
             get 'get_record_month', params: { user_id: user.id, targetYear: 2024, targetMonth: 4 }, format: :json
