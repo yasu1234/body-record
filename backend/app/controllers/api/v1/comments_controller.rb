@@ -2,14 +2,14 @@ class Api::V1::CommentsController < ApplicationController
     before_action :check_user
 
     def create_knowledge_comment
-        if record_comment_params[:record_id].nil? {
+        if record_comment_params[:record_id].nil?
             render json: { error: 'IDが不足しています'}, status: 400
-        }
+        end
 
-        @knowledge = Knowledge.where(id: knowledge_comment_params[:knowledge_id].to_i).first
-
-        if @knowledge.nil?
-            return render json: { error: 'データがありません'}, status: 404
+        begin
+            @record = Knowledge.find(knowledge_comment_params[:knowledge_id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
         @comment = @knowledge.comments.build(knowledge_comment_params)
@@ -23,14 +23,14 @@ class Api::V1::CommentsController < ApplicationController
     end
 
     def create_record_comment
-        if record_comment_params[:record_id].nil? {
+        if record_comment_params[:record_id].nil? 
             render json: { error: 'IDが不足しています'}, status: 400
-        }
+        end
 
-        @record = Record.where(id: record_comment_params[:record_id].to_i).first
-
-        if @record.nil?
-            return render json: { error: 'データがありません'}, status: 404
+        begin
+            @record = Record.find(record_comment_params[:record_id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
         @comment = @record.comments.build(record_comment_params)
@@ -60,6 +60,7 @@ class Api::V1::CommentsController < ApplicationController
         if api_v1_user_signed_in?
             @user = current_api_v1_user
         else
+            render json: { error: '未ログイン'}, status: 400
         end
     end
 end

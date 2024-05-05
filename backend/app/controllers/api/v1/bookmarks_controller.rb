@@ -15,7 +15,12 @@ class Api::V1::BookmarksController < ApplicationController
     end
 
     def destroy
-        @knowledge = Knowledge.where(id: params[:id].to_i).first
+        begin
+            @knowledge = Knowledge.find(params[:id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
+        end
+
         if @knowledge.bookmarks.where(knowledge_id: @knowledge.id).destroy_all
             @bookmark = @knowledge.bookmarks.where(knowledge_id: @knowledge.id).first
             
@@ -31,11 +36,11 @@ class Api::V1::BookmarksController < ApplicationController
         if api_v1_user_signed_in?
             @user = current_api_v1_user
         else
-            return render json: { isBookmark: false }, status: 401
+            return render json: { errors: "未ログイン" }, status: 401
         end
     end
 
     def bookmark_params
-        params.permit(:user_id, :knowledge_id)
+        params.require(:bookmark).permit(:knowledge_id)
     end
 end

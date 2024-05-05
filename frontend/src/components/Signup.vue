@@ -1,9 +1,12 @@
 <script setup>
-import axios from 'axios'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Cookies from 'js-cookie'
+import axios from 'axios'
 
 import Header from './Header.vue'
+
+const router = useRouter();
 
 defineProps({
   msg: String,

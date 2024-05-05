@@ -17,7 +17,7 @@ const userThumbnail = ref(null);
 const userId = ref(0);
 
 function onFileChange(event) {
-    file.value = [...event];
+    file.value = event[0];
 }
 
 onMounted(() => {
@@ -37,16 +37,16 @@ const getProfile = async () => {
             }
         })
 
-        if (res.data.profile.goal_weight !== null) {
-            goalWeight.value = res.data.profile.goal_weight
+        if (res.data.user.profile.goal_weight !== null) {
+            goalWeight.value = res.data.user.profile.goal_weight
         }
 
-        if (res.data.profile.goal_fat_percentage !== null) {
-            goalFatPercentage.value = res.data.goal_fat_percentage
+        if (res.data.user.profile.goal_fat_percentage !== null) {
+            goalFatPercentage.value = res.data.user.profile.goal_fat_percentage
         }
 
-        if (res.data.profile.profile !== null) {
-            profile.value = res.data.profile.profile
+        if (res.data.user.profile.profile !== null) {
+            profile.value = res.data.user.profile.profile
         }
     } catch (error) {
         console.log({ error })

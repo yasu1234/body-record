@@ -24,10 +24,10 @@ function onFileChange(event) {
 const registerRecord = async () => {
   try {
         const formData = new FormData();
-        formData.append('memo', memo.value);
-        formData.append('date', recordDate.value);
-        formData.append('weight', weight.value);
-        formData.append('fat_percentage', fatPercentage.value);
+        formData.append('knowledge[memo]', memo.value);
+        formData.append('knowledge[date]', recordDate.value);
+        formData.append('knowledge[weight]', weight.value);
+        formData.append('knowledge[fat_percentage]', fatPercentage.value);
 
         for (const file of files.value) {
             formData.append('images', file);

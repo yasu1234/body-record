@@ -20,8 +20,7 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     def create
-        @knowledge = Knowledge.new(knowledge_register_params)
-        @knowledge.create_user_id = @user.id
+        @knowledge = @user.knowledges.build(knowledge_register_params)
 
         if @knowledge.save
             render json: { knowledge: @knowledge }, status: 200
@@ -35,13 +34,14 @@ class Api::V1::KnowledgesController < ApplicationController
             return render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @knowledge = Knowledge.where(id: params[:id].to_i).first
-
-        if @knowledge.nil?
-            return render json: { error: 'データがありません'}, status: 404
+        begin
+            @knowledge = Knowledge.find(params[:id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
+
         @bookmark = @knowledge.bookmarks.where(knowledge_id: @knowledge.id).first
-        render json: { knowledge: @knowledge.as_json(include: [:comments]), imageUrls: @knowledge.image_urls, isBookmark: @bookmark.present? }, status: 200
+        render json: { knowledge: @knowledge.as_json(include: [:comments], methods: :image_urls), isBookmark: @bookmark.present? }, status: 200
     end
 
     def delete_image
@@ -49,10 +49,10 @@ class Api::V1::KnowledgesController < ApplicationController
             return render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @knowledge = Knowledge.find(params[:id])
-
-        if @knowledge.nil?
-            return render json: { error: 'データがありません'}, status: 404
+        begin
+            @knowledge = Knowledge.find(params[:id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
         @image = @knowledge.images.find(params[:image_id])
@@ -66,10 +66,10 @@ class Api::V1::KnowledgesController < ApplicationController
             return render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @knowledge = Knowledge.where(id: params[:id].to_i).first
-
-        if @knowledge.nil?
-            return render json: { error: 'データがありません'}, status: 404
+        begin
+            @knowledge = @user.knowledges.find(params[:id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
         if @knowledge.update(knowledge_register_params) 
@@ -79,16 +79,34 @@ class Api::V1::KnowledgesController < ApplicationController
         end
     end
 
+    def destroy
+        if params[:id].nil?
+            return render json: { error: 'IDが不足しています'}, status: 400
+        end
+
+        begin
+            @knowledge = @user.knowledges.find(params[:id].to_i)
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
+        end
+
+        if @knowledges.destroy_all
+            render json: { knowledge: @knowledge }, status: 200
+        else
+            render json: { errors: @knowledges.errors.to_hash(true) }, status: 422
+        end
+    end
+
     def get_target_user_knowledge
         if params[:user_id].nil?
             return render json: { error: 'IDが不足しています'}, status: 400
         end
 
-        @knowledges = Knowledge.where(create_user_id: params[:user_id])
+        @knowledges = Knowledge.where(user_id: params[:user_id])
 
         # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
         if @knowledges.count > 5
-            @knowledges = @knowledges.limit(5)
+            @knowledges = @knowledges.limit(5).order(created_at: :desc)
         end
 
         render json: { knowledges: @knowledges }, status: 200
@@ -105,6 +123,6 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     def knowledge_register_params
-        params.permit(:title, :content, :images)
+        params.require(:knowledge).permit(:title, :content, :images)
     end
 end

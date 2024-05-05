@@ -58,8 +58,9 @@ const getProfile = async () => {
             }
         })
 
-        profile.value = res.data.profile.profile
+        profile.value = res.data.user.profile.profile
         userName.value = res.data.user.name
+        userThumbnail.value = res.data.user.image_url
     } catch (error) {
         console.log({ error })
     }
@@ -189,7 +190,7 @@ function showEditProfile() {
  height:130px;
  content:"";
  transform:skew(15deg,10deg);
- background: #70b7ff;
+ background: #9ecaf7;
  position:  absolute;
  top:-15%;
  left:-10%;

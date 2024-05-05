@@ -42,7 +42,7 @@ const getDetail = async () => {
         })
         knowledgeId.value = res.data.knowledge.id
         knowledge.value = res.data.knowledge
-        imageUrls.value = res.data.imageUrls
+        imageUrls.value = res.data.knowledge.image_urls
         isBookmark.value = res.data.isBookmark
         comments.value = res.data.knowledge.comments
     } catch (error) {
@@ -53,7 +53,7 @@ const getDetail = async () => {
 const bookmarkOn = async () => {
     try {
         const formData = new FormData();
-        formData.append('knowledge_id', knowledgeId.value);
+        formData.append('bookmark[knowledge_id]', knowledgeId.value);
 
         const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/bookmarks`, formData, {
             headers: {
