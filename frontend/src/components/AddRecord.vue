@@ -12,6 +12,7 @@ const recordDate = ref("");
 const weight = ref(null);
 const fatPercentage = ref(null);
 const files = ref([]);
+const isAddAsHidden = ref(false);
 
 function dateChange(event) {
     recordDate.value = event
@@ -24,10 +25,14 @@ function onFileChange(event) {
 const registerRecord = async () => {
   try {
         const formData = new FormData();
-        formData.append('knowledge[memo]', memo.value);
-        formData.append('knowledge[date]', recordDate.value);
-        formData.append('knowledge[weight]', weight.value);
-        formData.append('knowledge[fat_percentage]', fatPercentage.value);
+        formData.append('record[memo]', memo.value);
+        formData.append('record[date]', recordDate.value);
+        formData.append('record[weight]', weight.value);
+        formData.append('record[fat_percentage]', fatPercentage.value);
+
+        if (isAddAsHidden.value === false) {
+            formData.append('record[open_status]', 1);
+        }
 
         for (const file of files.value) {
             formData.append('images', file);
@@ -68,6 +73,10 @@ const registerRecord = async () => {
     </div>
     <div class="editor">
         <textarea name="memo" rows="10" v-model="memo"></textarea>
+    </div>
+    <div class="search-check">
+      <input type="checkbox" id="statusSelect" v-model="isAddAsHidden">
+      <label for="statusSelectName">非公開記録にする場合にはチェック</label>
     </div>
     <div class="relationImages">
         <p class="inputTitle">関連画像</p>
