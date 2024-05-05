@@ -4,7 +4,7 @@ FactoryBot.define do
         weight { 65.1 }
         fat_percentage { 11.2 }
         memo { "サンプルメモ" }
-        open_flg { true }
+        open_status { 1 }
         user
     end
 end

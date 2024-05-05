@@ -7,11 +7,16 @@ const props = defineProps({
     currentId: Number
 })
 
+const emit = defineEmits(['menuTapped']);
+
+function handleClick(menuId) {
+    emit('menuTapped', menuId);
+}
 </script>
 
 <template>
     <div>
-        <button @click="handleClick" class="tab-button" :class="[props.currentId === props.menuId ? 'active' : '', 'tab']">
+        <button @click="handleClick(props.menuId)" class="tab-button" :class="[props.currentId === props.menuId ? 'active' : '', 'tab']">
             {{props.menuTitle}}
         </button>
         <div class="active-tab" v-if="props.currentId === props.menuId"></div>

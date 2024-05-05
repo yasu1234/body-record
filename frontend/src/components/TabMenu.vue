@@ -4,6 +4,8 @@ import { ref } from 'vue'
 
 import TabItem from './TabItem.vue'
 
+const router = useRouter();
+
 const props = defineProps({
     currentId: Number
 })
@@ -13,6 +15,22 @@ const menuList = ref([
   { id: 2, label: "みんなの記録" },
   { id: 3, label: "ノウハウ一覧" }
 ]);
+
+function menuChange(event) {
+  switch(event) {
+    case 1:
+      router.push({ name: 'Home'});
+      break
+    case 2:
+      router.push({ name: 'OtherRecordList'})
+      break
+    case 3:
+      router.push({ name: 'KnowledgeList'})
+      break
+    default:
+      break
+  }
+}
 </script>
 
 <template>
@@ -21,7 +39,8 @@ const menuList = ref([
         v-for="item in menuList"
         v-bind="item" :menuId="item.id"
         :menuTitle="item.label"
-        :currentId="currentId" />
+        :currentId="currentId"
+        @menuTapped="menuChange" />
     </div>
 </template>
 

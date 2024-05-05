@@ -28,7 +28,7 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def index
-        records = Record.where(open_flg: true)
+        records = Record.where(open_status: 1)
 
         if params[:keyword].present? 
             records = records.where("memo LIKE ?", "%#{params[:keyword]}%")
@@ -179,6 +179,6 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def record_register_params
-        params.require(:record).permit(:memo, :date, :user_id, :images, :weight, :fat_percentage)
+        params.require(:record).permit(:memo, :date, :user_id, :images, :weight, :fat_percentage, :open_status)
     end
 end
