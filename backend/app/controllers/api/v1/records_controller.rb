@@ -2,55 +2,55 @@ class Api::V1::RecordsController < ApplicationController
     before_action :set_user
 
     def searchMyRecord
-        @records = Record.where(user_id: @user.id)
+        records = Record.where(user_id: @user.id)
 
         if params[:keyword].present? 
-            @records = @records.where("memo LIKE ?", "%#{params[:keyword]}%")
+            records = records.where("memo LIKE ?", "%#{params[:keyword]}%")
         end
 
         if params[:startDate].present?
-            @records = @records.where("date >= ?", params[:startDate])
+            records = records.where("date >= ?", params[:startDate])
         end
 
         if params[:endDate].present?
-            @records = @records.where("date <= ?", params[:endDate])
+            records = records.where("date <= ?", params[:endDate])
         end
 
         if params[:page].present?
-            @records = @records.page(params[:page]).per(50)
+            records = records.page(params[:page]).per(50)
         else
-            @records = @records.page(1).per(50)
+            records = records.page(1).per(50)
         end
 
-        @totalPage = @records.total_pages
+        totalPage = records.total_pages
 
-        render json: { records: @records, totalPage: @totalPage }, status: 200
+        render json: { records: @records, totalPage: totalPage }, status: 200
     end
 
     def index
-        @records = Record.where(open_flg: true)
+        records = Record.where(open_flg: true)
 
         if params[:keyword].present? 
-            @records = @records.where("memo LIKE ?", "%#{params[:keyword]}%")
+            records = records.where("memo LIKE ?", "%#{params[:keyword]}%")
         end
 
         if params[:startDate].present?
-            @records = @records.where("date >= ?", params[:startDate])
+            records = records.where("date >= ?", params[:startDate])
         end
 
         if params[:endDate].present?
-            @records = @records.where("date <= ?", params[:endDate])
+            records = records.where("date <= ?", params[:endDate])
         end
 
         if params[:page].present?
-            @records = @records.page(params[:page]).per(50)
+            records = records.page(params[:page]).per(50)
         else
-            @records = @records.page(1).per(50)
+            records = records.page(1).per(50)
         end
 
-        @totalPage = @records.total_pages
+        totalPage = records.total_pages
 
-        render json: { records: @records, totalPage: @totalPage }, status: 200
+        render json: { records: records, totalPage: totalPage }, status: 200
     end
 
     def get_record_month
@@ -92,21 +92,21 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         begin
-            @record = @user.records.find(params[:id].to_i)
+            record = @user.records.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
             return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
-        render json: { record: @record.as_json(methods: :image_urls), isMyRecord: @record.user_id == @user.id }, status: 200
+        render json: { record: record.as_json(methods: :image_urls), isMyRecord: record.user_id == @user.id }, status: 200
     end
 
     def create
-        @record = @user.records.build(record_register_params)
+        record = @user.records.build(record_register_params)
 
-        if @record.save
-            render json: { record: @record }, status: 200
+        if record.save
+            render json: { record: record }, status: 200
         else
-            render json: { errors: @record.errors.to_hash(true) }, status: 422
+            render json: { errors: record.errors.to_hash(true) }, status: 422
         end
     end
 
@@ -116,15 +116,15 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         begin
-            @record = @user.records.find(params[:id].to_i)
+            record = @user.records.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
             return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
-        if @record.update(record_register_params)
-            render json: { record: @record }, status: 200
+        if record.update(record_register_params)
+            render json: { record: record }, status: 200
         else
-            render json: { errors: @record.errors }, status: 422
+            render json: { errors: record.errors }, status: 422
         end
     end
 
@@ -134,38 +134,38 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         begin
-            @record = @user.records.find(params[:id].to_i)
+            record = @user.records.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
             return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
         @record.images.purge
         if @record.destroy
-            render json: { record: @record }, status: 200
+            render json: { record: record }, status: 200
         else
-            render json: { errors: @record.errors.to_hash(true) }, status: 422
+            render json: { errors: record.errors.to_hash(true) }, status: 422
         end
     end
 
     def delete_image
-        @record = @user.record.find(params[:id])
-        @image = @record.images.find(params[:image_id])
-        @image.purge
-        render json: { imageUrls: @record.image_urls }, status: 200
+        record = @user.record.find(params[:id])
+        image = record.images.find(params[:image_id])
+        image.purge
+        render json: { imageUrls: record.image_urls }, status: 200
     end
 
     def get_target_user_record
         if params[:user_id].nil?
             return render json: { error: 'ユーザーIDが不足しています'}, status: 400
         end
-        @records = Record.where(user_id: params[:user_id])
+        records = Record.where(user_id: params[:user_id])
 
         # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
-        if @records.count > 5
-            @records = @records.order("date DESC").limit(5)
+        if records.count > 5
+            records = records.order("date DESC").limit(5)
         end
 
-        render json: { records: @records }, status: 200
+        render json: { records: records }, status: 200
     end
 
     private
