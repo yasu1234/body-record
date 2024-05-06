@@ -4,9 +4,9 @@ import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-import Header from '../Header.vue'
-import RecordCard from '../RecordCard.vue'
-import KnowledgeCard from '../KnowledgeCard.vue'
+import Header from '../layout/Header.vue'
+import RecordCard from '../layout/RecordCard.vue'
+import KnowledgeCard from '../layout/KnowledgeCard.vue'
 import Chart from '../atom/Chart.vue'
 import MonthPicker from '../atom/MonthPicker.vue'
 

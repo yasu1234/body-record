@@ -4,7 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 import DropFile from '../atom/DropFile.vue'
-import Header from '../Header.vue'
+import Header from '../layout/Header.vue'
 
 const title = ref("");
 const knowledge = ref("");

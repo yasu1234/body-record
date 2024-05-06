@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Cookies from 'js-cookie'
 
-import Header from '../Header.vue'
+import Header from '../layout/Header.vue'
 
 const router = useRouter();
 

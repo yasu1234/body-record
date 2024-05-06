@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 
 import DatePicker from '../atom/DatePicker.vue'
 import DropFile from '../atom/DropFile.vue'
-import Header from '../Header.vue'
+import Header from '../layout/Header.vue'
 
 const memo = ref("");
 const recordDate = ref("");
