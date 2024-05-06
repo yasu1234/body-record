@@ -4,9 +4,9 @@ import { useRouter, onBeforeRouteUpdate } from 'vue-router'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-import TabMenu from './TabMenu.vue'
-import Header from './Header.vue'
-import ListPage from './ListPage.vue'
+import TabMenu from '../layout/TabMenu.vue'
+import Header from '../layout/Header.vue'
+import ListPage from '../layout/ListPage.vue'
 
 const router = useRouter();
 
@@ -75,6 +75,7 @@ function addKnowledge() {
 </script>
 
 <template>
+  <Header />
   <TabMenu :currentId="currentId"/>
   <div class="keyword-search">
     <input type="text" id="keyword" name="keywordName" placeholder="キーワードで絞り込む" v-model="keyword">

@@ -31,7 +31,7 @@ const guestLogin = async () => {
     <h1 class="homeTitle">理想の体を手に入れよう！</h1>
     <div class="homeContents">
         <div class="homeImage">
-            <img src="../assets/image/home_image.jpg" alt="Logo" class= "homeLogo">
+            <img src="../../assets/image/home_image.jpg" alt="Logo" class= "homeLogo">
         </div>
         <div class="homeButtons">
             <button class="commonButton" @click="showSignup">会員登録</button>

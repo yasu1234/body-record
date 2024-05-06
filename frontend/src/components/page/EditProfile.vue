@@ -4,8 +4,8 @@ import { useRoute } from 'vue-router'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-import DropFile from './DropFile.vue'
-import Header from './Header.vue'
+import DropFile from '../atom/DropFile.vue'
+import Header from '../layout/Header.vue'
 
 const route = useRoute();
 
@@ -100,7 +100,7 @@ const updateProfile = async () => {
             <label>プロフィール画像変更</label>
             <div class="current-thumbnail">
                 <img v-if="userThumbnail !== null" :src="userThumbnail.url" alt="ユーザーアイコン"/>
-                <img v-else src="../assets/image/user-placeholder.png" alt="ユーザーアイコン" />
+                <img v-else src="../../assets/image/user-placeholder.png" alt="ユーザーアイコン" />
             </div>
             <DropFile @change="onFileChange" />
         </div>

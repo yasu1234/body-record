@@ -5,57 +5,78 @@ import { useRoute, useRouter } from 'vue-router'
 import Cookies from 'js-cookie';
 import MarkdownIt from 'markdown-it'
 
-import Header from './Header.vue'
+import Header from '../layout/Header.vue'
 
 const route = useRoute();
 const router = useRouter();
 
-const knowledge = ref(null);
+const title = ref("");
+const memo = ref("");
 const imageUrls = ref([]);
-const knowledgeId = ref(null);
-const isBookmark = ref(false);
+const recordId = ref(null);
+const recordUserId = ref(0);
+const isMyRecord = ref(false);
+const isSupport = ref(false);
 const comments = ref([]);
 const comment = ref('');
 
 const md = new MarkdownIt()
 
 const renderedMarkdown = computed(() => {
-    if (knowledge.value && knowledge.value.content) {
-        return md.render(knowledge.value.content);
+    if (memo.value !== null && memo.value !== "") {
+        return md.render(memo.value)
     }
-    return '';
+    return ""
 })
 
 onMounted(() => {
     getDetail();
 });
 
+
 const getDetail = async () => {
     const id = route.params.id
     try {
-        const res = await axios.get(import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/${id}`, {
+        const res = await axios.get(import.meta.env.VITE_APP_API_BASE + `/api/v1/records/${id}`, {
             headers: {
                 'access-token' : Cookies.get('accessToken'),
                 'client':Cookies.get('client'),
                 'uid': Cookies.get('uid')
             }
         })
-        knowledgeId.value = res.data.knowledge.id
-        knowledge.value = res.data.knowledge
-        imageUrls.value = res.data.knowledge.image_urls
-        isBookmark.value = res.data.isBookmark
-        comments.value = res.data.knowledge.comments
+        recordId.value = res.data.record.id
+        memo.value = res.data.record.memo
+        isMyRecord.value = res.data.isMyRecord
+        imageUrls.value = res.data.record.image_urls
+        recordUserId.value = res.data.record.user_id
+        comments.value = res.data.record.comments
     } catch (error) {
         console.log({ error })
     }
 }
 
-const bookmarkOn = async () => {
+const deleteRecord = async () => {
+    const id = recordId.value
+    try {
+        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + `/api/v1/records/${id}`, {
+            headers: {
+                'access-token' : Cookies.get('accessToken'),
+                'client':Cookies.get('client'),
+                'uid': Cookies.get('uid')
+            }
+        })
+        router.push({ name: 'Home'})
+    } catch (error) {
+        console.log({ error })
+    }
+}
+
+const supportOn = async () => {
     try {
         const formData = new FormData();
-        formData.append('bookmark[knowledge_id]', knowledgeId.value);
+        formData.append('id', recordUserId.value);
 
-        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/bookmarks`, formData, {
+        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/supports`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'access-token' : Cookies.get('accessToken'),
@@ -63,58 +84,56 @@ const bookmarkOn = async () => {
                 'uid': Cookies.get('uid')
             }
         })
-        knowledge.value = res.data.knowledge
-        isBookmark.value = res.data.isBookmark
+        isSupport.value = res.data.isSupport;
     } catch (error) {
         console.log({ error })
     }
 }
 
-const bookmarkOff = async () => {
+const supportOff = async () => {
     try {
-        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + `/api/v1/bookmarks/${knowledgeId.value}`, {
+        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + `/api/v1/supports/${recordUserId.value}`, {
             headers: {
                 'access-token' : Cookies.get('accessToken'),
                 'client':Cookies.get('client'),
                 'uid': Cookies.get('uid')
             }
         })
-        knowledge.value = res.data.knowledge
-        isBookmark.value = res.data.isBookmark
+        isSupport.value = res.data.isSupport;
     } catch (error) {
         console.log({ error })
     }
 }
 
-function bookmarkClick(isBookmarkOn) {
-    if (isBookmarkOn === true) {
-        bookmarkOff()
+function supportClick(isSupport) {
+    if (isSupport === true) {
+        supportOff()
     } else {
-        bookmarkOn();
+        supportOn();
     }
 }
 
 const addComment = async () => {
     try {
         const formData = new FormData();
-        formData.append('knowledge_id', knowledgeId.value);
+        formData.append('record_id', recordId.value);
         formData.append('comment', comment.value);
 
-        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/knowledge`, formData, {
+        const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/record`, formData, {
             headers: {
                 'access-token' : Cookies.get('accessToken'),
                 'client':Cookies.get('client'),
                 'uid': Cookies.get('uid')
             }
         })
-        comments.value = res.data.knowledge.comments
+        comments.value = res.data.record.comments
     } catch (error) {
         console.log({ error })
     }
 }
 
 function edit() {
-    router.push({ name: 'EditKnowledge', params: { id: knowledgeId.value }})
+    router.push({ name: 'EditRecord', params: { id: recordId.value }})
 }
 </script>
 
@@ -124,10 +143,10 @@ function edit() {
 		<div class="main">
 			<div class="main_content">
                 <div class="editor">
-                    <p id="title" class="knowledge-title" type="text" v-if="knowledge !== null"> {{ knowledge.title }} </p>
-                    <p class="knowledge-content" v-html="renderedMarkdown"></p>
+                    <p id="title" class="knowledge-title" type="text"> {{ title }} </p>
+                    <p class="knowledge-content" v-html="renderedMarkdown" />
                 </div>
-                <div v-if="imageUrls.length!==0">
+                <div v-if="imageUrls !== null && imageUrls.length!==0">
                     <p class="inputTitle">関連画像</p>
                     <div class="thumbnail-container">
                         <div class="thumbnail" v-for="item in imageUrls">
@@ -137,8 +156,9 @@ function edit() {
                         </div>
                     </div>
                 </div>
-                <div class="relationImages">
-                    <button class="editButton" @click="edit">編集する</button>
+                <div class="record-detail-buttons" v-if="isMyRecord">
+                    <button class="detail-button" @click="edit">編集する</button>
+                    <button class="detail-button" @click="deleteRecord">削除する</button>
                 </div>
                 <div class="comment-container">
                     <div class="comment-container-title-area">
@@ -154,34 +174,14 @@ function edit() {
 		</div>
 		<div class="side">
 			<div class="side_content">
-				<button v-if="isBookmark" class="booknmark-button"><img src="../assets/image/bookmark_on.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(true)"></button>
-                <button v-else class="booknmark-button"><img src="../assets/image/bookmark_off.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(false)"></button>
+				<button v-if="isSupport" class="booknmark-button"><img src="../../assets/image/support_on.png" alt="ユーザー" class="booknmark-image" @click="supportClick(true)"></button>
+                <button v-else class="booknmark-button"><img src="../../assets/image/support_off.png" alt="ユーザー" class="booknmark-image" @click="supportClick(false)"></button>
 			</div>
 		</div>
 	</div>
 </template>
 
 <style>
-.wrap {
-    display: grid;	
-    grid-template-columns: 4fr 1fr;
-}
-.side_content {
-	position: sticky;
-	top: 100px;
-}
-
-.booknmark-button {
-	padding: 0;
-    background: transparent;
-    border: 1px solid #CCC;
-    border-radius: 50%;
-}
-.booknmark-image {
-    width: 40px;
-    height: 40px;
-}
-
 .editor{
    padding: 30px;
  }
@@ -202,10 +202,15 @@ function edit() {
     font-size: 22px;
     padding-top: 20px;
 }
-.relationImages {
+.record-detail-buttons {
     padding: 20px;
+    display: flex;
+    justify-content: center;
 }
-.editButton{
+.record-detail-buttons button {
+    margin-right: 15px;
+}
+.detail-button {
     background: #ffa500;
     color: white;
     font-size:16px;
@@ -238,21 +243,5 @@ function edit() {
     position: absolute;
     top: 5px;
     right: 5px;
-}
-.comment-container {
-    margin-top: 20px;
-    margin-left: 20px;
-}
-.comment-container-title-area {
-    border-bottom: 1px solid rgba(6, 6, 6, 0.17);
-}
-
-.comment-textarea {
-    width: 100%;
-    margin-top: 20px;
-}
-
-.comment-container-title {
-    text-align: left;
 }
 </style>

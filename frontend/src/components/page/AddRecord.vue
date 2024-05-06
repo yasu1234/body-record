@@ -3,9 +3,9 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-import DatePicker from './DatePicker.vue'
-import DropFile from './DropFile.vue'
-import Header from './Header.vue'
+import DatePicker from '../atom/DatePicker.vue'
+import DropFile from '../atom/DropFile.vue'
+import Header from '../layout/Header.vue'
 
 const memo = ref("");
 const recordDate = ref("");

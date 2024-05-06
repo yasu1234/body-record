@@ -104,7 +104,7 @@ const logout = async () => {
             <div class="navigation-buttons">
                 <button v-if="!isLogin" class="account-introducton-button" @click="showAccountIntroduction">会員登録・ログイン</button>
                 <div @click="toggleDropdown">
-                    <button class="user-button"><img src="../assets/image/user-placeholder.png" alt="ユーザー" class="user-image"></button>
+                    <button class="user-button"><img src="../../assets/image/user-placeholder.png" alt="ユーザー" class="user-image"></button>
                 </div>                
             </div>
             <div v-if="showDropdown" class="dropdown-menu">

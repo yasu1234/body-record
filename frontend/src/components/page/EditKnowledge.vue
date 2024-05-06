@@ -4,17 +4,16 @@ import axios from 'axios';
 import { useRoute } from 'vue-router'
 import Cookies from 'js-cookie';
 
-import DropFile from './DropFile.vue'
-import DatePicker from './DatePicker.vue'
-import Header from './Header.vue'
+import DropFile from '../atom/DropFile.vue'
+import Header from '../layout/Header.vue'
 
 const route = useRoute();
 
-const recordDate = ref("");
-const memo = ref("");
+const title = ref("");
+const knowledge = ref("");
 const files = ref([]);
 const imageUrls = ref([]);
-const recordId = ref(null);
+const knowledgeId = ref(null);
 
 onMounted(() => {
     getDetail();
@@ -30,9 +29,9 @@ function onFileChange(event) {
 
 const deleteImage = async (item) => {
     try {
-        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + '/api/v1/record/image', {
+        const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + '/api/v1/knowledges/image', {
             params: {
-                'id': recordId.value,
+                'id': knowledgeId.value,
                 'image_id': item.id
             },
             headers: {
@@ -41,7 +40,7 @@ const deleteImage = async (item) => {
                 'uid': Cookies.get('uid')
             }
         })
-        imageUrls.value = res.data.imageUrls
+        console.log({ res })
     } catch (error) {
         console.log({ error })
     }
@@ -50,16 +49,16 @@ const deleteImage = async (item) => {
 const getDetail = async () => {
     const id = route.params.id
     try {
-        const res = await axios.get(import.meta.env.VITE_APP_API_BASE + `/api/v1/records/${id}`, {
+        const res = await axios.get(import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/${id}`, {
             headers: {
                 'access-token' : Cookies.get('accessToken'),
                 'client':Cookies.get('client'),
                 'uid': Cookies.get('uid')
             }
         })
-        recordId.value = res.data.record.id
-        recordDate.value = res.data.record.date
-        memo.value = res.data.record.memo
+        knowledgeId.value = res.data.knowledge.id
+        title.value = res.data.knowledge.title
+        knowledge.value = res.data.knowledge.content
         imageUrls.value = res.data.imageUrls
     } catch (error) {
         console.log({ error })
@@ -69,14 +68,14 @@ const getDetail = async () => {
 const edit = async () => {
     try {
         const formData = new FormData();
-        formData.append('knowledge[memo]', memo.value);
-        formData.append('knowledge[date]', recordDate.value);
+        formData.append('knowledge[title]', title.value);
+        formData.append('knowledge[content]', knowledge.value);
 
         for (const file of files.value) {
             formData.append('images', file);
         }
 
-        const res = await axios.patch(import.meta.env.VITE_APP_API_BASE + `/api/v1/records/${recordId.value}`, formData, {
+        const res = await axios.patch(import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/${knowledgeId.value}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'access-token' : Cookies.get('accessToken'),
@@ -84,9 +83,9 @@ const edit = async () => {
                 'uid': Cookies.get('uid')
             }
         })
-        recordId.value = res.data.record.id
-        memo.value = res.data.record.memo
-        recordDate.value = res.data.record.date
+        knowledgeId.value = res.data.knowledge.id
+        title.value = res.data.knowledge.title
+        knowledge.value = res.data.knowledge.content
         imageUrls.value = res.data.imageUrls
     } catch (error) {
         console.log({ error })
@@ -96,38 +95,31 @@ const edit = async () => {
 
 <template>
     <Header />
-    <div class="edit-time">
-        <p class="inputTitle">開始日</p>
-        <DatePicker isStart=true :date= recordDate @update:date="dateChange"/>
-    </div>
     <div class="editor">
-        <textarea name="memo" rows="10" v-model="memo"></textarea>
+        <label class="itemLabel">タイトル</label>
+        <input id="title" type="text" v-model="title">
+        <textarea name="knowledge" rows="20" v-model="knowledge"></textarea>
     </div>
     <div class="thumbnail-container">
-        <div class="thumbnail" v-for="item in imageUrls">
-            <div class="thumbnail-image">
-                <img :src="item.url" alt="">
-            </div>
-            <div class="thumbnail-actions">
-                <button class="delete-button" @click="deleteImage(item)">X</button>
-            </div>
-        </div>
+    <div class="thumbnail" v-for="item in imageUrls">
+      <div class="thumbnail-image">
+        <img :src="item.url" alt="">
+      </div>
+      <div class="thumbnail-actions">
+        <button class="delete-button" @click="deleteImage(item)">X</button>
+      </div>
     </div>
+  </div>
     <div class="relationImages">
         <p class="inputTitle">関連画像</p>
         <DropFile @change="onFileChange"/>
     </div>
     <div class="relationImages">
-        <button class="registerButton" @click="edit">編集する</button>
+        <button class="registerButton" @click="edit">登録する</button>
     </div>
 </template>
 
 <style>
-.edit-time {
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
 .editor{
    padding: 30px;
  }
