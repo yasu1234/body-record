@@ -144,7 +144,7 @@ function showEditProfile() {
     <div class="profile-card__inner">
       <div class="profile-thumb">
         <img v-if="userThumbnail !== null" :src="userThumbnail.url" alt="ユーザーアイコン"/>
-        <img v-else src="../assets/image/user-placeholder.png" alt="ユーザーアイコン" />
+        <img v-else src="../../assets/image/user-placeholder.png" alt="ユーザーアイコン" />
       </div>
       <div class="profile-content">
         <span class="profile-name">{{ userName }}</span>

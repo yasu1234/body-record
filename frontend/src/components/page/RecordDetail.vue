@@ -174,8 +174,8 @@ function edit() {
 		</div>
 		<div class="side">
 			<div class="side_content">
-				<button v-if="isSupport" class="booknmark-button"><img src="../assets/image/support_on.png" alt="ユーザー" class="booknmark-image" @click="supportClick(true)"></button>
-                <button v-else class="booknmark-button"><img src="../assets/image/support_off.png" alt="ユーザー" class="booknmark-image" @click="supportClick(false)"></button>
+				<button v-if="isSupport" class="booknmark-button"><img src="../../assets/image/support_on.png" alt="ユーザー" class="booknmark-image" @click="supportClick(true)"></button>
+                <button v-else class="booknmark-button"><img src="../../assets/image/support_off.png" alt="ユーザー" class="booknmark-image" @click="supportClick(false)"></button>
 			</div>
 		</div>
 	</div>

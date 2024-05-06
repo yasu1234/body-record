@@ -154,8 +154,8 @@ function edit() {
 		</div>
 		<div class="side">
 			<div class="side_content">
-				<button v-if="isBookmark" class="booknmark-button"><img src="../assets/image/bookmark_on.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(true)"></button>
-                <button v-else class="booknmark-button"><img src="../assets/image/bookmark_off.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(false)"></button>
+				<button v-if="isBookmark" class="booknmark-button"><img src="../../assets/image/bookmark_on.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(true)"></button>
+                <button v-else class="booknmark-button"><img src="../../assets/image/bookmark_off.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(false)"></button>
 			</div>
 		</div>
 	</div>

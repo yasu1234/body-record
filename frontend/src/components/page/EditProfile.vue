@@ -100,7 +100,7 @@ const updateProfile = async () => {
             <label>プロフィール画像変更</label>
             <div class="current-thumbnail">
                 <img v-if="userThumbnail !== null" :src="userThumbnail.url" alt="ユーザーアイコン"/>
-                <img v-else src="../assets/image/user-placeholder.png" alt="ユーザーアイコン" />
+                <img v-else src="../../assets/image/user-placeholder.png" alt="ユーザーアイコン" />
             </div>
             <DropFile @change="onFileChange" />
         </div>
