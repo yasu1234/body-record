@@ -3,7 +3,7 @@ import axios from 'axios'
 import { ref } from 'vue'
 import Cookies from 'js-cookie'
 
-import Header from './Header.vue'
+import Header from '../Header.vue'
 
 const contact = ref('')
 

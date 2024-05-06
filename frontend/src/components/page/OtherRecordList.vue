@@ -1,12 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter, onBeforeRouteUpdate } from 'vue-router'
-import DatePicker from './DatePicker.vue'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-import Header from './Header.vue'
-import ListPage from './ListPage.vue'
+import TabMenu from '../TabMenu.vue'
+import Header from '../Header.vue'
+import ListPage from '../ListPage.vue'
+import DatePicker from '../DatePicker.vue'
 
 const router = useRouter();
 
@@ -16,6 +17,7 @@ const endDate = ref("");
 const isDisplayOnlyOpen = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
+const currentId = ref(2);
 
 const pageCount = ref(1);
 const pageNum = ref(1);
@@ -46,23 +48,24 @@ const targetSearch = ()=> {
     query.endDate = endDate.value;
   }
 
-  router.push( {path: '/', query: query});
+  router.push( {path: '/recordList', query: query});
 }
 
 const search = async () => {
   try {
-    const res = await axios.get(import.meta.env.VITE_APP_API_BASE + '/api/v1/myRecord', {
-      headers: {
-        'access-token' : Cookies.get('accessToken'),
-        'client':Cookies.get('client'),
-        'uid': Cookies.get('uid'),
-      },
-      params: {
-        keyword: keyword.value,
-        startDate: startDate.value,             
-        endDate: endDate.value,
-        page: pageNum
-      }
+    const res = await axios.get(import.meta.env.VITE_APP_API_BASE + '/api/v1/records', {
+        headers: {
+            'access-token' : Cookies.get('accessToken'),
+            'client':Cookies.get('client'),
+            'uid': Cookies.get('uid'),
+        },
+        
+        params: {
+            keyword: keyword.value,
+            startDate: startDate.value,             
+            endDate: endDate.value,
+            page: pageNum
+        }
     })
 
     if (res.data && res.data.totalPage) {
@@ -95,40 +98,31 @@ function endDateChange(event) {
 function clickRecord(item) {
   router.push({ name: 'RecordDetail', params: { id: item.id }})
 }
-
-function addRecord() {
-  router.push('/addRecord');
-}
 </script>
 
 <template>
-    <div class="keyword-search">
-        <input type="text" id="keyword" name="keywordName" placeholder="キーワードで検索" v-model="keyword">
+  <Header />
+  <TabMenu :currentId="currentId"/>
+  <div class="keyword-search">
+    <input type="text" id="keyword" name="keywordName" placeholder="キーワードで検索" v-model="keyword">
+  </div>
+  <div class="time-list">
+    <div class="item">
+      <p class="inputTitle">開始日</p>
+      <DatePicker isStart=true :date= startDate @update:date="startDateChange"/>
     </div>
-    <div class="time-list">
-        <div class="item">
-            <p class="inputTitle">開始日</p>
-            <DatePicker isStart=true :date= startDate @update:date="startDateChange"/>
-        </div>
-        <div class="item">
-            <p class="inputTitle">終了日</p>
-            <DatePicker isStart=false :date= endDate @update:date="endDateChange"/>
-        </div>
+    <div class="item">
+      <p class="inputTitle">終了日</p>
+      <DatePicker isStart=false :date= endDate @update:date="endDateChange"/>
     </div>
-    <div class="search-check">
-      <input type="checkbox" id="statusSelect" v-model="isDisplayOnlyOpen">
-      <label for="statusSelectName">非公開記録は表示しない</label>
     </div>
     <div class="search-button-area">
         <button class="search-button" @click="targetSearch">検索</button>
     </div>
-    <div class="add-button-area">
-        <button class="add-button" @click="addRecord">記録を追加する</button>
-    </div>
     <div class="my-idea-card" v-for="item of searchResult" :key="item.id" @click="clickRecord(item)">
-      <h4 class="my-idea-title"><b>{{ item.date }}</b></h4>
+      <h4 class="my-idea-title"><b>{{ item.title }}</b></h4>
       <div>
-        <p class="idea-memo">{{ item.memo }}</p>
+        <p class="idea-date">{{ item.date }}</p>
       </div>
     </div>
     <div class="record-list-page">
@@ -194,13 +188,9 @@ input[type="checkbox"]:checked:before {
   padding: 0;
   font-size: 16px;
 }
-.search-check {
-  margin-top: 20px;
-  padding-left: 20px;
-  padding-right: 20px;
-}
 .search-button-area {
   text-align: center;
+  padding-top: 25px;
 }
 .search-button {
   background: #ffa500;
@@ -216,7 +206,7 @@ input[type="checkbox"]:checked:before {
   border: 1px solid #CCC;
   border-radius: 5px;
 }
-.idea-memo {
+.idea-date {
   margin: 10px 0px 10px 10px;
 }
 .add-button-area {
@@ -229,8 +219,5 @@ input[type="checkbox"]:checked:before {
   color: white;
   font-size:16px;
   font-weight:bold;
-}
-.record-list-page {
-  margin-top: 50px;
 }
 </style>

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router'
 import Cookies from 'js-cookie';
 
-import Header from './Header.vue'
+import Header from '../Header.vue'
 
 const route = useRoute();
 const router = useRouter();

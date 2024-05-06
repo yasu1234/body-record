@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import Cookies from 'js-cookie';
 import MarkdownIt from 'markdown-it'
 
-import Header from './Header.vue'
+import Header from '../Header.vue'
 
 const route = useRoute();
 const router = useRouter();

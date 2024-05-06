@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 
-import TabMenu from './TabMenu.vue'
+import TabMenu from '../TabMenu.vue'
 import RecordList from './MyRecordList.vue'
-import Header from './Header.vue'
+import Header from '../Header.vue'
 
 const currentId = ref(1);
 </script>
