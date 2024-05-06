@@ -4,8 +4,8 @@ import axios from 'axios';
 import { useRoute } from 'vue-router'
 import Cookies from 'js-cookie';
 
-import DropFile from '../DropFile.vue'
-import DatePicker from '../DatePicker.vue'
+import DropFile from '../atom/DropFile.vue'
+import DatePicker from '../atom/DatePicker.vue'
 import Header from '../Header.vue'
 
 const route = useRoute();

@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import TabMenu from '../TabMenu.vue'
 import Header from '../Header.vue'
 import ListPage from '../ListPage.vue'
-import DatePicker from '../DatePicker.vue'
+import DatePicker from '../atom/DatePicker.vue'
 
 const router = useRouter();
 

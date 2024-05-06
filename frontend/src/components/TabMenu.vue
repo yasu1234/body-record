@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 
-import TabItem from './TabItem.vue'
+import TabItem from './atom/TabItem.vue'
 
 const router = useRouter();
 

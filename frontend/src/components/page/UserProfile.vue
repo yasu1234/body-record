@@ -7,8 +7,8 @@ import Cookies from 'js-cookie';
 import Header from '../Header.vue'
 import RecordCard from '../RecordCard.vue'
 import KnowledgeCard from '../KnowledgeCard.vue'
-import Chart from '../Chart.vue'
-import MonthPicker from '../MonthPicker.vue'
+import Chart from '../atom/Chart.vue'
+import MonthPicker from '../atom/MonthPicker.vue'
 
 const route = useRoute();
 const router = useRouter();
