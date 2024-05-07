@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router'
 import Cookies from 'js-cookie';
@@ -27,7 +27,9 @@ const getDetail = async () => {
         })
         contact.value = res.data.contact
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 
@@ -49,8 +51,14 @@ const statusChange = async (isComplete) => {
         })
         contact.value = res.data.contact
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
+}
+
+const showNotFound = () =>  {
+    router.push({ name: 'NotFound'})
 }
 </script>
 

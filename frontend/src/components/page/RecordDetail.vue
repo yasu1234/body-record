@@ -33,7 +33,6 @@ onMounted(() => {
     getDetail();
 });
 
-
 const getDetail = async () => {
     const id = route.params.id
     try {
@@ -51,7 +50,9 @@ const getDetail = async () => {
         recordUserId.value = res.data.record.user_id
         comments.value = res.data.record.comments
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 
@@ -67,7 +68,9 @@ const deleteRecord = async () => {
         })
         router.push({ name: 'Home'})
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 
@@ -86,7 +89,9 @@ const supportOn = async () => {
         })
         isSupport.value = res.data.isSupport;
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 
@@ -101,7 +106,9 @@ const supportOff = async () => {
         })
         isSupport.value = res.data.isSupport;
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 
@@ -128,8 +135,14 @@ const addComment = async () => {
         })
         comments.value = res.data.record.comments
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
+}
+
+const showNotFound = () =>  {
+    router.push({ name: 'NotFound'})
 }
 
 function edit() {

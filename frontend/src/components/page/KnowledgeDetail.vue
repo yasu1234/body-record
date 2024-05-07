@@ -46,7 +46,9 @@ const getDetail = async () => {
         isBookmark.value = res.data.isBookmark
         comments.value = res.data.knowledge.comments
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 
@@ -66,7 +68,9 @@ const bookmarkOn = async () => {
         knowledge.value = res.data.knowledge
         isBookmark.value = res.data.isBookmark
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 
@@ -82,7 +86,9 @@ const bookmarkOff = async () => {
         knowledge.value = res.data.knowledge
         isBookmark.value = res.data.isBookmark
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 
@@ -109,8 +115,14 @@ const addComment = async () => {
         })
         comments.value = res.data.knowledge.comments
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
+}
+
+const showNotFound = () =>  {
+    router.push({ name: 'NotFound'})
 }
 
 function edit() {

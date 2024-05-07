@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -80,7 +80,9 @@ const getUserRecord = async () => {
 
         records.value = res.data.records
     } catch (error) {
-        console.log({ error })
+      if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 
@@ -106,7 +108,9 @@ const getMonthRecord = async () => {
         data.value.labels = res.data.records.map(record => record.set_formatted_date)
         data.value.datasets[0].data = res.data.records.map(record => record.weight)
     } catch (error) {
-        console.log({ error })
+      if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 
@@ -135,6 +139,10 @@ function monthChange(event) {
 
 function showEditProfile() {
   router.push({ name: 'EditProfile', params: { id: userId.value }})
+}
+
+const showNotFound = () =>  {
+    router.push({ name: 'NotFound'})
 }
 </script>
 

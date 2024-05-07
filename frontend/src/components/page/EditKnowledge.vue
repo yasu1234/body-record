@@ -1,13 +1,14 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Cookies from 'js-cookie';
 
 import DropFile from '../atom/DropFile.vue'
 import Header from '../layout/Header.vue'
 
 const route = useRoute();
+const router = useRouter();
 
 const title = ref("");
 const knowledge = ref("");
@@ -25,6 +26,10 @@ function dateChange(event) {
 
 function onFileChange(event) {
     files.value = [...event];
+}
+
+const showNotFound = () =>  {
+    router.push({ name: 'NotFound'})
 }
 
 const deleteImage = async (item) => {
@@ -61,7 +66,9 @@ const getDetail = async () => {
         knowledge.value = res.data.knowledge.content
         imageUrls.value = res.data.imageUrls
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 
@@ -88,7 +95,9 @@ const edit = async () => {
         knowledge.value = res.data.knowledge.content
         imageUrls.value = res.data.imageUrls
     } catch (error) {
-        console.log({ error })
+        if (error.response.status === 404) {
+            showNotFound()
+        }
     }
 }
 </script>
