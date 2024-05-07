@@ -24,7 +24,7 @@ class Api::V1::RecordsController < ApplicationController
 
         totalPage = records.total_pages
 
-        render json: { records: @records, totalPage: totalPage }, status: 200
+        render json: { records: records, totalPage: totalPage }, status: 200
     end
 
     def index
