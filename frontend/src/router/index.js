@@ -19,6 +19,7 @@ import MailAddressEdit from '/src/components/page/MailAddressEdit.vue';
 import Contact from '/src/components/page/Contact.vue';
 import ContactList from '/src/components/page/ContactList.vue';
 import ContactDetail from '/src/components/page/ContactDetail.vue';
+import NotFound from '/src/components/page/PageNotFoundError.vue';
 
 const routes = [
   {
@@ -121,6 +122,11 @@ const routes = [
     name: 'ContactDetail',
     component: ContactDetail 
   },
+  { 
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound 
+  }
 ];
 
 const router = createRouter({
