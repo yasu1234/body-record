@@ -4,7 +4,6 @@ import { useRouter, onBeforeRouteUpdate } from 'vue-router'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-import Header from '../layout/Header.vue'
 import ListPage from '../layout/ListPage.vue'
 import DatePicker from '../atom/DatePicker.vue'
 
@@ -102,7 +101,6 @@ function addRecord() {
 </script>
 
 <template>
-  <Header />
     <div class="keyword-search">
         <input type="text" id="keyword" name="keywordName" placeholder="キーワードで検索" v-model="keyword">
     </div>
