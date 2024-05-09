@@ -2,13 +2,17 @@
 import axios from 'axios'
 import { ref } from 'vue'
 import Cookies from 'js-cookie'
+import { useField, useForm } from 'vee-validate';
+import * as yup from 'yup';
 
 import Header from '../layout/Header.vue'
 
-const currentPassword = ref('')
-const password = ref('')
-const passwordConfirm = ref('')
-const name = ref('')
+const checkValidate = async () => {
+  const result = await validate()
+  if (result.valid) {
+    passwordEdit()
+  }
+}
 
 const passwordEdit = async () => {
     try {
@@ -30,13 +34,44 @@ const passwordEdit = async () => {
         console.log({ error })
     }
 }
+
+const schema = yup.object({
+  password: yup
+    .string()
+    .required("この項目は必須です")
+    .min(6, "6文字以上で入力してください")
+    .max(128, "128文字以下で入力してください"),
+  passwordConfirm: yup
+    .string()
+    .required("この項目は必須です")
+    .min(6, "6文字以上で入力してください")
+    .max(128, "128文字以下で入力してください"),
+  currentPassword: yup
+    .string()
+    .required("この項目は必須です")
+    .min(6, "6文字以上で入力してください")
+    .max(128, "128文字以下で入力してください")
+});
+
+const { validate } = useForm({
+  validationSchema: schema,
+  initialValues: {
+    password: '',
+    passwordConfirm: '',
+    currentPassword: ''
+  }
+})
+
+const { value: password, errorMessage: passwordError } = useField('password');
+const { value: passwordConfirm, errorMessage: passwordConfirmError } = useField('passwordConfirm');
+const { value: currentPassword, errorMessage: currentPasswordError } = useField('currentPassword');
 </script>
 
 <template>
     <Header />
     <h1 class="signUpTitle">パスワード変更</h1>
     <div class="singUpInput">
-        <form class="form" @submit.prevent="passwordEdit">
+        <form class="form" @submit.prevent="checkValidate">
             <div class="item">
                 <label class="itemLabel" for="password">現在のパスワード</label>
                 <input id="currentPassword" type="password" v-model="currentPassword">
