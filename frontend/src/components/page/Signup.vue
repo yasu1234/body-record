@@ -130,11 +130,6 @@ const { value: name, errorMessage: nameError } = useField('name');
     display: block;
     text-align: left;
 }
-
-.error-message{
-    width: 50%;
-    margin: 0 auto;
-}
  
 .error-message-text{
     color: red;
