@@ -3,6 +3,8 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Cookies from 'js-cookie'
 import axios from 'axios'
+import { useField, useForm } from 'vee-validate';
+import * as yup from 'yup';
 
 import Header from '../layout/Header.vue'
 
@@ -12,10 +14,12 @@ defineProps({
   msg: String,
 })
 
-const email = ref('')
-const password = ref('')
-const passwordConfirm = ref('')
-const name = ref('')
+const checkValidate = async () => {
+  const result = await validate()
+  if (result.valid) {
+    signup()
+  }
+}
 
 const signup = async () => {
   try {
@@ -34,28 +38,67 @@ const signup = async () => {
     console.log({ error })
   }
 }
+
+const schema = yup.object({
+  password: yup
+    .string()
+    .required("この項目は必須です")
+    .min(6, "6文字以上で入力してください")
+    .max(128, "128文字以下で入力してください"),
+  passwordConfirm: yup
+    .string()
+    .required("この項目は必須です")
+    .min(6, "6文字以上で入力してください")
+    .max(128, "128文字以下で入力してください"),
+  email: yup
+    .string()
+    .required("この項目は必須です")
+    .email("メールアドレスの形式で入力してください"),
+  name: yup
+    .string()
+    .required("この項目は必須です"),
+});
+
+const { validate } = useForm({
+  validationSchema: schema,
+  initialValues: {
+    password: '',
+    passwordConfirm: '',
+    email: '',
+    name: ''
+  }
+})
+
+const { value: password, errorMessage: passwordError } = useField('password');
+const { value: passwordConfirm, errorMessage: passwordConfirmError } = useField('passwordConfirm');
+const { value: email, errorMessage: emailError } = useField('email');
+const { value: name, errorMessage: nameError } = useField('name');
 </script>
 
 <template>
     <Header />
     <h1 class="signUpTitle">会員登録</h1>
     <div class="singUpInput">
-        <form class="form" @submit.prevent="signup">
+        <form class="form" @submit.prevent="checkValidate">
             <div class="item">
                 <label class="itemLabel">メールアドレス</label>
                 <input id="email" type="email" v-model="email">
+                <p class="validation-error-message">{{ emailError }}</p>
             </div>
             <div class="item">
                 <label class="itemLabel" for="password">パスワード</label>
                 <input id="password" type="password" v-model="password">
+                <p class="validation-error-message">{{ passwordError }}</p>
             </div>
             <div class="item">
                 <label class="itemLabel" for="passwordConfirm">パスワード(確認)</label>
                 <input id="passwordConfirm" type="password" v-model="passwordConfirm">
+                <p class="validation-error-message">{{ passwordConfirmError }}</p>
             </div>
             <div class="item">
                 <label class="itemLabel" for="name">名前</label>
                 <input id="name"  type="text" v-model="name">
+                <p class="validation-error-message">{{ nameError }}</p>
             </div>
             <div class="signUpTitle">
                 <button class="registerButton">登録</button>
