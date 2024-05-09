@@ -795,6 +795,11 @@ postcss@^8.4.35, postcss@^8.4.36, postcss@^8.4.38:
     picocolors "^1.0.0"
     source-map-js "^1.2.0"
 
+primeicons@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-7.0.0.tgz#6b25c3fdcb29bb745a3035bdc1ed5902f4a419cf"
+  integrity sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw==
+
 primevue@^3.52.0:
   version "3.52.0"
   resolved "https://registry.yarnpkg.com/primevue/-/primevue-3.52.0.tgz#819d1d70fe37cea7dcd06076b7c3cd9ee4e3c6a4"
