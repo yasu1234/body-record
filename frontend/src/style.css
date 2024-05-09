@@ -59,6 +59,10 @@ textarea {
   padding: 2em;
 }
 
+p.validation-error-message {
+  color:red;
+}
+
 #app {
   margin: 0 auto;
 }
