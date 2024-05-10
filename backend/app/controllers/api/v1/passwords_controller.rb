@@ -5,7 +5,7 @@ class Api::V1::PasswordsController < DeviseTokenAuth::PasswordsController
     if @user.update_with_password(password_edit_params)
       render json: { user: @user }, status: 200
     else
-      render json: { errors: @user.errors.to_hash(true) }, status: 422
+      render json: { errors: @user.errors.full_messages }, status: 422
     end
   end
   
