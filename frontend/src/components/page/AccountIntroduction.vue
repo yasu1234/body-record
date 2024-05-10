@@ -3,7 +3,11 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
+import ErrorMessage from '../atom/ErrorMessage.vue'
+
 const router = useRouter();
+
+const errorMessage = ref('');
 
 function showSignup() {
     router.push('/signup');
@@ -22,13 +26,21 @@ const guestLogin = async () => {
 
     router.push({ name: 'Home'})
   } catch (error) {
-    console.log({ error })
+    errorMessage.value = ''
+    let errorMessages = 'ゲストログインに失敗しました\n';
+    if (error.response.status === 422) {
+        if (Array.isArray(error.response.data.errors)) {
+            errorMessages += error.response.data.errors.join('\n');
+        }
+    }
+    errorMessage.value = errorMessages
   }
 }
 </script>
 
 <template>
     <h1 class="homeTitle">理想の体を手に入れよう！</h1>
+    <ErrorMessage :errorMessage="errorMessage"/>
     <div class="homeContents">
         <div class="homeImage">
             <img src="../../assets/image/home_image.jpg" alt="Logo" class= "homeLogo">
