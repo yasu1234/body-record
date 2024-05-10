@@ -6,6 +6,9 @@ import { useField, useForm } from 'vee-validate';
 import * as yup from 'yup';
 
 import Header from '../layout/Header.vue'
+import ErrorMessage from '../atom/ErrorMessage.vue'
+
+const errorMessage = ref('');
 
 const checkValidate = async () => {
   const result = await validate()
@@ -32,7 +35,14 @@ const mailAddressEdit = async () => {
         Cookies.set('client', res.headers["client"])
         Cookies.set('uid', res.headers["uid"])
     } catch (error) {
-        console.log({ error })
+        errorMessage.value = ''
+        let errorMessages = 'メールアドレス変更に失敗しました\n';
+        if (error.response.status === 422) {
+            if (Array.isArray(error.response.data.errors)) {
+                errorMessages += error.response.data.errors.join('\n');
+            }
+        }
+        errorMessage.value = errorMessages
     }
 }
 
@@ -55,6 +65,7 @@ const { value: newMailAddres, errorMessage: emailError } = useField('newMailAddr
 
 <template>
     <Header />
+    <ErrorMessage :errorMessage="errorMessage"/>
     <h1 class="signUpTitle">メールアドレス変更</h1>
     <div class="singUpInput">
         <form class="form" @submit.prevent="checkValidate">
