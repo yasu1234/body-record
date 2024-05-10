@@ -35,7 +35,7 @@ class Api::V1::ContactsController < ApplicationController
             ContactMailer.complete.deliver_later
             render json: { contact: contact }, status: 200
         else
-            render json: { errors: contact.errors.to_hash(true) }, status: 422
+            render json: { errors: contact.errors.full_messages }, status: 422
         end
     end
 
