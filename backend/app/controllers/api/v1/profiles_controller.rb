@@ -10,14 +10,14 @@ class Api::V1::ProfilesController < ApplicationController
             if @user.profile.update(profile_register_params)
                 render json: { user: @user.profile.as_json(methods: :image_url) }, status: 200
             else
-                render json: { errors: @user.profile.errors.to_hash(true) }, status: 422
+                render json: { errors: @user.profile.errors.full_message }, status: 422
             end
         else
             @user.profile = Profile.new(profile_register_params)
             if @user.profile.save
                 render json: { user: @user.profile.as_json(methods: :image_url) }, status: 200
             else
-                render json: { errors: @user.profile.errors.to_hash(true) }, status: 422
+                render json: { errors: @user.profile.errors.full_message }, status: 422
             end
         end
     end
