@@ -3,13 +3,22 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Cookies from 'js-cookie'
+import { useField, useForm } from 'vee-validate';
+import * as yup from 'yup';
 
 import Header from '../layout/Header.vue'
+import ErrorMessage from '../atom/ErrorMessage.vue'
+
+const errorMessage = ref('');
 
 const router = useRouter();
 
-const email = ref('')
-const password = ref('')
+const handleSubmit = async () => {
+  const result = await validate()
+  if (result.valid) {
+    login()
+  }
+}
 
 const login = async () => {
   try {
@@ -23,23 +32,48 @@ const login = async () => {
 
     router.push({ name: 'Home'})
   } catch (error) {
-    console.log({ error })
+    let errorMessages = 'ログインに失敗しました\n';
+    if (error.response.status === 401) {
+        if (Array.isArray(error.response.data.errors)) {
+            errorMessages += error.response.data.errors.join('\n');
+        }
+    }
+    errorMessage.value = errorMessages
   }
 }
+
+const schema = yup.object({
+  password: yup
+    .string()
+    .required("この項目は必須です")
+    .min(6, "6文字以上で入力してください")
+    .max(128, "128文字以下で入力してください"),
+  email: yup
+    .string()
+    .required("この項目は必須です")
+    .email("メールアドレスの形式で入力してください"),
+});
+
+const { validate } = useForm({ validationSchema: schema })
+const { value: password, errorMessage: passwordError } = useField('password');
+const { value: email, errorMessage: emailError } = useField('email');
 </script>
 
 <template>
     <Header />
     <h1 class="signUpTitle">ログイン</h1>
+    <ErrorMessage :errorMessage="errorMessage"/>
     <div class="singUpInput">
-        <form class="form" @submit.prevent="login">
+        <form class="form" @submit.prevent="handleSubmit">
             <div class="item">
                 <label class="itemLabel">メールアドレス</label>
                 <input id="email" type="email" v-model="email">
+                <p class="validation-error-message">{{ emailError }}</p>
             </div>
             <div class="item">
                 <label class="itemLabel" for="password">パスワード</label>
                 <input id="password" type="password" v-model="password">
+                <p class="validation-error-message">{{ passwordError }}</p>
             </div>
             <div class="signUpTitle">
                 <button class="loginButton">ログイン</button>
@@ -70,11 +104,6 @@ const login = async () => {
 .itemLabel{
     display: block;
     text-align: left;
-}
-
-.error-message{
-    width: 50%;
-    margin: 0 auto;
 }
  
 .error-message-text{

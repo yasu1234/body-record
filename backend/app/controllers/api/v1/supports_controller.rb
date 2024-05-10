@@ -11,9 +11,9 @@ class Api::V1::SupportsController < ApplicationController
                 ]
             )
             includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == @user.id }
-            render json: { user: user_json, isSupport: includes_user ,status: 200 }
+            render json: { user: user_json, isSupport: includes_user }, status: 200
         else
-            render json: { errors: supporting.erros }, status: 422
+            render json: { errors: supporting.erros.full_messages }, status: 422
         end
     end
 
@@ -32,9 +32,9 @@ class Api::V1::SupportsController < ApplicationController
                 ]
             )
             includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == @user.id }
-            render json: { user: user_json, isSupport: includes_user , status: 200 }
+            render json: { user: user_json, isSupport: includes_user }, status: 200
         else
-            render json: { errors: supporting.erros }, status: 422
+            render json: { errors: supporting.erros.full_messages }, status: 422
         end
     end
 

@@ -25,7 +25,7 @@ class Api::V1::KnowledgesController < ApplicationController
         if knowledge.save
             render json: { knowledge: knowledge }, status: 200
         else
-            render json: { errors: knowledge.errors.to_hash(true) }, status: 422
+            render json: { errors: knowledge.errors.full_messages }, status: 422
         end
     end
 
@@ -58,7 +58,7 @@ class Api::V1::KnowledgesController < ApplicationController
         image = knowledge.images.find(params[:image_id])
         image.purge
 
-        render json: { knowledge: knowledge, imageUrls: knowledge.image_urls }, status: 200
+        render json: { knowledge: knowledge.as_json(methods: :image_urls) }, status: 200
     end
 
     def update
@@ -75,7 +75,7 @@ class Api::V1::KnowledgesController < ApplicationController
         if knowledge.update(knowledge_register_params) 
             render json: { knowledge: knowledge }, status: 200
         else
-            render json: { errors: knowledge.errors.to_hash(true) }, status: 422
+            render json: { errors: knowledge.errors.full_messages }, status: 422
         end
     end
 
@@ -93,7 +93,7 @@ class Api::V1::KnowledgesController < ApplicationController
         if knowledge.destroy
             render json: { knowledge: knowledge }, status: 200
         else
-            render json: { errors: knowledges.errors.to_hash(true) }, status: 422
+            render json: { errors: knowledges.errors.full_messages }, status: 422
         end
     end
 

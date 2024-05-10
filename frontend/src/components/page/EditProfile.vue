@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 
 import DropFile from '../atom/DropFile.vue'
 import Header from '../layout/Header.vue'
+import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const route = useRoute();
 
@@ -15,6 +16,7 @@ const profile = ref('');
 const file = ref(null);
 const userThumbnail = ref(null);
 const userId = ref(0);
+const errorMessage = ref('');
 
 function onFileChange(event) {
     file.value = event[0];
@@ -74,13 +76,21 @@ const updateProfile = async () => {
         })
         
     } catch (error) {
-        console.log({ error })
+        errorMessage.value = ''
+        let errorMessages = 'プロフィール変更に失敗しました\n';
+        if (error.response.status === 422) {
+            if (Array.isArray(error.response.data.errors)) {
+                errorMessages += error.response.data.errors.join('\n');
+            }
+        }
+        errorMessage.value = errorMessages
     }
 }
 </script>
 
 <template>
     <Header />
+    <ErrorMessage :errorMessage="errorMessage"/>
     <form @submit.prevent="updateProfile">
         <div class="profile-edit-content">
             <label for="goal-weight">目標体重:</label>

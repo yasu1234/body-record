@@ -4,8 +4,10 @@ import { ref } from 'vue'
 import Cookies from 'js-cookie'
 
 import Header from '../layout/Header.vue'
+import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const contact = ref('')
+const errorMessage = ref('');
 
 const contactSubmit = async () => {
     try {
@@ -21,13 +23,21 @@ const contactSubmit = async () => {
         })
         console.log({ res })
     } catch (error) {
-        console.log({ error })
+        errorMessage.value = ''
+        let errorMessages = 'お問合せ送信に失敗しました\n';
+        if (error.response.status === 422) {
+            if (Array.isArray(error.response.data.errors)) {
+                errorMessages += error.response.data.errors.join('\n');
+            }
+        }
+        errorMessage.value = errorMessages
     }
 }
 </script>
 
 <template>
     <Header />
+    <ErrorMessage :errorMessage="errorMessage"/>
     <h1 class="signUpTitle">お問合せ</h1>
     <div class="contact-area">
         <form class="contact-form" @submit.prevent="contactSubmit">

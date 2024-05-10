@@ -133,15 +133,35 @@ ja:
       unlocked: アカウントをロック解除しました。
   errors:
     messages:
+      accepted: を受諾してください
       already_confirmed: は既に登録済みです。ログインしてください。
+      blank: を入力してください
+      confirmation: "が一致しません"
       confirmation_period_expired: の期限が切れました。%{period} までに確認する必要があります。 新しくリクエストしてください。
+      empty: を入力してください
+      equal_to: は%{count}にしてください
+      even: は偶数にしてください
+      exclusion: は予約されています
       expired: の有効期限が切れました。新しくリクエストしてください。
+      greater_than: は%{count}より大きい値にしてください
+      greater_than_or_equal_to: は%{count}以上の値にしてください
+      inclusion: は一覧にありません
+      invalid: は不正な値です
+      less_than: は%{count}より小さい値にしてください
+      less_than_or_equal_to: は%{count}以下の値にしてください
+      model_invalid: 'バリデーションに失敗しました: %{errors}'
+      not_a_number: は数値で入力してください
+      not_an_integer: は整数で入力してください
       not_found: は見つかりませんでした。
       not_locked: はロックされていません。
       not_saved:
         one: エラーが発生したため %{resource} は保存されませんでした。
         other: "%{count} 件のエラーが発生したため %{resource} は保存されませんでした。"
-      confirmation: "が一致しません"
+      odd: は奇数にしてください
+      other_than: は%{count}以外の値にしてください
+      present: は入力しないでください
+      required: を入力してください
       too_short: "は%{count}文字以上で入力してください"
-      blank: "を入力してください"
       too_long: "は%{count}文字以内で入力してください"
+      taken: はすでに存在します
+      wrong_length: は%{count}文字で入力してください
