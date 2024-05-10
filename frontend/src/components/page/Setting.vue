@@ -5,12 +5,14 @@ import axios from 'axios';
 import Cookies from 'js-cookie'
 
 import Header from '../layout/Header.vue'
+import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const router = useRouter();
 
 const isLogin = ref(false);
 const userId = ref(0);
 const showModal = ref(false);
+const errorMessage = ref('');
 
 onMounted(() => {
     checkLogin();
@@ -48,7 +50,14 @@ const deleteAccount = async () => {
         
     router.push({ name: 'Home'})
   } catch (error) {
-    console.log({ error })
+    errorMessage.value = ''
+    let errorMessages = 'ノウハウの編集に失敗しました\n';
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join('\n');
+      }
+    }
+    errorMessage.value = errorMessages
   }
 }
 
@@ -75,6 +84,7 @@ function closeModal() {
 
 <template>
   <Header />
+  <ErrorMessage :errorMessage="errorMessage"/>
   <div class="setting-list">
     <span class="section-title">プロフィール変更</span>
     <p class="section-message">目標体重や紹介文を編集できます</p>

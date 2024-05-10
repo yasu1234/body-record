@@ -10,7 +10,7 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
       if @user.update_without_password(sign_up_params)
         render json: { user: @user }, status: 200
       else
-        render json: { errors: @user.errors }, status: 422
+        render json: { errors: @user.errors.full_messages }, status: 422
       end
     else
     end
@@ -24,7 +24,7 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
     if @user.destroy
       render status: 200
     else
-      render json: { errors: @user.errors }, status: 422
+      render json: { errors: @user.errors.full_messages }, status: 422
     end
   end
 
