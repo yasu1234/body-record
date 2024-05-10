@@ -106,7 +106,7 @@ class Api::V1::RecordsController < ApplicationController
         if record.save
             render json: { record: record }, status: 200
         else
-            render json: { errors: record.errors.to_hash(true) }, status: 422
+            render json: { errors: record.errors.full_messages }, status: 422
         end
     end
 

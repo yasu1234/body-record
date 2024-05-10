@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import DatePicker from '../atom/DatePicker.vue'
 import DropFile from '../atom/DropFile.vue'
 import Header from '../layout/Header.vue'
+import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const memo = ref("");
 const recordDate = ref("");
@@ -13,6 +14,7 @@ const weight = ref(null);
 const fatPercentage = ref(null);
 const files = ref([]);
 const isAddAsHidden = ref(false);
+const errorMessage = ref('');
 
 function dateChange(event) {
     recordDate.value = event
@@ -48,13 +50,21 @@ const registerRecord = async () => {
         })
         console.log({ res })
     } catch (error) {
-        console.log({ error })
+        errorMessage.value = ''
+        let errorMessages = '記録の追加に失敗しました\n';
+        if (error.response.status === 422) {
+            if (Array.isArray(error.response.data.errors)) {
+                errorMessages += error.response.data.errors.join('\n');
+            }
+        }
+        errorMessage.value = errorMessages
     }
 }
 </script>
 
 <template>
     <Header />
+    <ErrorMessage :errorMessage="errorMessage"/>
     <div class="time-list">
         <div class="item">
             <p class="inputTitle">記録日</p>
