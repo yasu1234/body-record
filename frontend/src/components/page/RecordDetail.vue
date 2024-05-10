@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import MarkdownIt from 'markdown-it'
 
 import Header from '../layout/Header.vue'
+import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -19,6 +20,7 @@ const isMyRecord = ref(false);
 const isSupport = ref(false);
 const comments = ref([]);
 const comment = ref('');
+const errorMessage = ref('');
 
 const md = new MarkdownIt()
 
@@ -70,6 +72,15 @@ const deleteRecord = async () => {
     } catch (error) {
         if (error.response.status === 404) {
             showNotFound()
+        } else {
+            errorMessage.value = ''
+            let errorMessages = '記録削除に失敗しました\n';
+            if (error.response.status === 422) {
+                if (Array.isArray(error.response.data.errors)) {
+                    errorMessages += error.response.data.errors.join('\n');
+                }
+            }
+            errorMessage.value = errorMessages
         }
     }
 }
@@ -91,6 +102,15 @@ const supportOn = async () => {
     } catch (error) {
         if (error.response.status === 404) {
             showNotFound()
+        } else {
+            errorMessage.value = ''
+            let errorMessages = '応援に失敗しました\n';
+            if (error.response.status === 422) {
+                if (Array.isArray(error.response.data.errors)) {
+                    errorMessages += error.response.data.errors.join('\n');
+                }
+            }
+            errorMessage.value = errorMessages
         }
     }
 }
@@ -108,6 +128,15 @@ const supportOff = async () => {
     } catch (error) {
         if (error.response.status === 404) {
             showNotFound()
+        } else {
+            errorMessage.value = ''
+            let errorMessages = '応援解除に失敗しました\n';
+            if (error.response.status === 422) {
+                if (Array.isArray(error.response.data.errors)) {
+                    errorMessages += error.response.data.errors.join('\n');
+                }
+            }
+            errorMessage.value = errorMessages
         }
     }
 }
@@ -152,6 +181,7 @@ function edit() {
 
 <template>
     <Header />
+    <ErrorMessage :errorMessage="errorMessage"/>
     <div class="wrap">
 		<div class="main">
 			<div class="main_content">
