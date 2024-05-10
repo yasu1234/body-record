@@ -7,8 +7,11 @@ import { useField, useForm } from 'vee-validate';
 import * as yup from 'yup';
 
 import Header from '../layout/Header.vue'
+import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const router = useRouter();
+
+const errorMessage = ref('');
 
 defineProps({
   msg: String,
@@ -35,7 +38,13 @@ const signup = async () => {
 
     router.push({ name: 'Home'})
   } catch (error) {
-    console.log({ error })
+    let errorMessages = '会員登録に失敗しました\n';
+    if (error.response.status === 422) {
+        if (Array.isArray(error.response.data.errors.full_messages)) {
+            errorMessages += error.response.data.errors.full_messages.join('\n');
+        }
+    }
+    errorMessage.value = errorMessages
   }
 }
 
@@ -78,6 +87,7 @@ const { value: name, errorMessage: nameError } = useField('name');
 <template>
     <Header />
     <h1 class="signUpTitle">会員登録</h1>
+    <ErrorMessage :errorMessage="errorMessage"/>
     <div class="singUpInput">
         <form class="form" @submit.prevent="checkValidate">
             <div class="item">
