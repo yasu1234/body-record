@@ -78,8 +78,8 @@ const search = async () => {
   }
 }
 
-const updatePaginateItems = function (pageNum) {
-  pageNum.value = pageNum
+const updatePaginateItems = function (page) {
+  pageNum.value = page
   search();
 };
 
