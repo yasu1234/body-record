@@ -16,6 +16,13 @@ RSpec.describe Record, type: :model do
         end
     end
 
+    describe '画像バリデーション' do            
+        it { is_expected.to validate_content_type_of(:images).allowing('image/png', 'image/jpg') }
+        it { is_expected.to validate_content_type_of(:images).rejecting('text/plain', 'image/pdf') }
+      
+        it { is_expected.to validate_size_of(:images).less_than(5.megabytes) }
+    end
+
     describe 'バリデーションチェック' do
         let(:record) { create(:record) }
     
