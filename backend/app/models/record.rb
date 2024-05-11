@@ -13,6 +13,8 @@ class Record < ApplicationRecord
     size: { less_than: 5.megabytes },
     limit: { max: 3 }
 
+    scope :latest_records, ->(limit) { order(date: :desc).limit(limit) }
+
     def image_urls
       return [] if images.blank?
         

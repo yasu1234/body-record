@@ -17,9 +17,9 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         if params[:page].present?
-            records = records.page(params[:page]).per(50)
+            records = records.page(params[:page]).latest_records(50)
         else
-            records = records.page(1).per(50)
+            records = records.page(1).latest_records(50)
         end
 
         totalPage = records.total_pages
@@ -43,9 +43,9 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         if params[:page].present?
-            records = records.page(params[:page]).per(50)
+            records = records.page(params[:page]).latest_records(50)
         else
-            records = records.page(1).per(50)
+            records = records.page(1).latest_records(50)
         end
 
         totalPage = records.total_pages
@@ -53,6 +53,7 @@ class Api::V1::RecordsController < ApplicationController
         render json: { records: records, totalPage: totalPage }, status: 200
     end
 
+    # 指定した年月1ヶ月分の記録を取得する
     def get_record_month
         if params[:user_id].nil? || params[:targetYear].nil? || params[:targetMonth].nil?
             return render json: { error: '必須項目が不足しています'}, status: 404
@@ -154,12 +155,12 @@ class Api::V1::RecordsController < ApplicationController
         render json: { imageUrls: record.image_urls }, status: 200
     end
 
+    # ユーザーページで表示する最大5件分の自分の記録を取得する
     def get_target_user_record
         records = Record.where(user_id: params[:user_id])
 
-        # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
         if records.count > 5
-            records = records.order("date DESC").limit(5)
+            records = records.latest_records(5)
         end
 
         render json: { records: records }, status: 200
