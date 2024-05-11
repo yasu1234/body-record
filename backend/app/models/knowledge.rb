@@ -8,10 +8,11 @@ class Knowledge < ApplicationRecord
     validates :title, presence: true, length: { in: 1..100 }
     validates :content, length: { maximum: 5000 }, allow_blank: true
 
-    validates :images, attached: true,
+    validates :images,
     content_type: { in: %w[image/jpeg image/png image/jpg] },
-    size: { less_than_or_equal_to: 5.megabytes },
-    limit: { max: 5 }
+    size: { less_than: 5.megabytes },
+    limit: { max: 5 },
+    allow_blank: true
 
     def image_urls
       images.map do |image|
