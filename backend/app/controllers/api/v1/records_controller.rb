@@ -17,9 +17,9 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         if params[:page].present?
-            records = records.page(params[:page]).latest_records(50)
+            records = records.page(params[:page]).latest_records(30)
         else
-            records = records.page(1).latest_records(50)
+            records = records.page(1).latest_records(30)
         end
 
         totalPage = records.total_pages
@@ -43,9 +43,9 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         if params[:page].present?
-            records = records.page(params[:page]).latest_records(50)
+            records = records.page(params[:page]).latest_records(30)
         else
-            records = records.page(1).latest_records(50)
+            records = records.page(1).latest_records(30)
         end
 
         totalPage = records.total_pages
