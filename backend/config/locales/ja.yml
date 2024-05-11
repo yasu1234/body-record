@@ -3,16 +3,24 @@ ja:
     attributes:
       record:
         date: "記録日"
+        images: "関連画像"
       knowledge:
         title: "タイトル"
         content: "内容"
+        images: "関連画像"
       comment:
         comment: "コメント"
       contact:
         content: "お問合せ内容"
+      profile:
+        image: "プロフィール画像"
     errors:
       messages:
         record_invalid: "バリデーションに失敗しました: %{errors}"
+        content_type_invalid: "はjpeg、png画像のみ有効です"
+        file_size_out_of_range: "画像サイズは %{file_size} MB以下にしてください"
+        limit_out_of_range: "画像は最大%{max}枚までしか登録できません"
+        image_metadata_missing: "有効な画像ではありません"
       models:
         record:
           attributes:

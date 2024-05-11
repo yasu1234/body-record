@@ -8,6 +8,11 @@ class Record < ApplicationRecord
 
     validates :date, presence: true
 
+    validates :images, attached: true,
+    content_type: { in: %w[image/jpeg image/png image/jpg] },
+    size: { less_than_or_equal_to: 5.megabytes },
+    limit: { max: 3 }
+
     def image_urls
       return [] if images.blank?
         

@@ -2,6 +2,8 @@ class Profile < ApplicationRecord
     belongs_to :user
     has_one_attached :image
 
+    validates :image, attached: true, content_type: { in: %w[image/jpeg image/png image/jpg] }, size: { less_than_or_equal_to: 5.megabytes }
+
     def image_url
         if image.attached?
             {
