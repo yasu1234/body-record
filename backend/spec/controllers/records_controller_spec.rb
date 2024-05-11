@@ -49,7 +49,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
     describe 'GET #index' do
       context '2ページ目のデータ' do
         let(:user) { create(:user, :without_records, :without_knowledges) }
-        let!(:record) { create_records(51) }
+        let!(:record) { create_records(31) }
         before do
             request.headers.merge!(headers)
             get :index, format: :json, params: { page: 2 }
@@ -425,8 +425,8 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
             get 'get_record_month', params: { user_id: user.id, targetMonth: 4 }, format: :json
         end
   
-        it 'ステータス404' do
-            expect(response.status).to eq 404
+        it 'ステータス422' do
+            expect(response.status).to eq 422
         end
       end
     end
@@ -439,8 +439,8 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
             get 'get_record_month', params: { user_id: user.id, targetYear: 2024 }, format: :json
         end
   
-        it 'ステータス404' do
-            expect(response.status).to eq 404
+        it 'ステータス422' do
+            expect(response.status).to eq 422
         end
       end
     end
@@ -453,8 +453,8 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
             get 'get_record_month', params: { targetYear: 2024, targetMonth: 4 }, format: :json
         end
   
-        it 'ステータス404' do
-            expect(response.status).to eq 404
+        it 'ステータス422' do
+            expect(response.status).to eq 422
         end
       end
     end

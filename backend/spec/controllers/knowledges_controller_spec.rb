@@ -50,7 +50,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     describe 'GET #index' do
       context '2ページ目のデータ' do
         let(:user) { create(:user, :without_knowledges, :without_records) }
-        let!(:knowledge) { create_knowledges(51) }
+        let!(:knowledge) { create_knowledges(31) }
         before do
             request.headers.merge!(headers)
             get :index, format: :json, params: { page: 2 }

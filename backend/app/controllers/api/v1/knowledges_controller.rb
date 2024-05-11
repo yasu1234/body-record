@@ -5,13 +5,13 @@ class Api::V1::KnowledgesController < ApplicationController
         knowledges = Knowledge.all
 
         if params[:keyword].present? 
-            knowledges = knowledges.where("title LIKE ?", "%#{params[:keyword]}%").latest_knowledges
+            knowledges = knowledges.where("title LIKE ?", "%#{params[:keyword]}%")
         end
 
         if params[:page].present?
-            knowledges = knowledges.page(params[:page]).per(50)
+            knowledges = knowledges.page(params[:page]).per(30)
         else
-            knowledges = knowledges.page(1).per(50)
+            knowledges = knowledges.page(1).per(30)
         end
 
         totalPage = knowledges.total_pages
