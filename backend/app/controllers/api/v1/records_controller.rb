@@ -2,55 +2,17 @@ class Api::V1::RecordsController < ApplicationController
     before_action :set_user
 
     def searchMyRecord
-        records = Record.where(user_id: @user.id)
-
-        if params[:keyword].present? 
-            records = records.where("memo LIKE ?", "%#{params[:keyword]}%")
-        end
-
-        if params[:startDate].present?
-            records = records.where("date >= ?", params[:startDate])
-        end
-
-        if params[:endDate].present?
-            records = records.where("date <= ?", params[:endDate])
-        end
-
-        if params[:page].present?
-            records = records.page(params[:page]).latest_records(30)
-        else
-            records = records.page(1).latest_records(30)
-        end
-
-        totalPage = records.total_pages
-
-        render json: { records: records, totalPage: totalPage }, status: 200
+        base_scope = Record.where(user_id: @user.id)
+        records, total_pages = search_and_paginate_records(base_scope)
+   
+        render json: { records: records, totalPage: total_pages }, status: 200
     end
 
     def index
-        records = Record.where(open_status: 1)
-
-        if params[:keyword].present? 
-            records = records.where("memo LIKE ?", "%#{params[:keyword]}%")
-        end
-
-        if params[:startDate].present?
-            records = records.where("date >= ?", params[:startDate])
-        end
-
-        if params[:endDate].present?
-            records = records.where("date <= ?", params[:endDate])
-        end
-
-        if params[:page].present?
-            records = records.page(params[:page]).latest_records(30)
-        else
-            records = records.page(1).latest_records(30)
-        end
-
-        totalPage = records.total_pages
-
-        render json: { records: records, totalPage: totalPage }, status: 200
+        base_scope = Record.where(open_status: 1)
+        records, total_pages = search_and_paginate_records(base_scope)
+        
+        render json: { records: records, totalPage: total_pages }, status: 200
     end
 
     # 指定した年月1ヶ月分の記録を取得する
@@ -76,7 +38,7 @@ class Api::V1::RecordsController < ApplicationController
 
         # 1ヶ月全ての日付で体重や体脂肪率が存在しない場合は、0で埋める
         records_with_empty_dates = dates.map do |date|
-            record = records.find { |r| r.date == date }
+            record = records.find { |rec| rec.date == date }
             if record
                 record
             else
@@ -89,7 +51,7 @@ class Api::V1::RecordsController < ApplicationController
 
     def show
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 400
+            return render json: { error: 'IDが不足しています'}, status: 404
         end
 
         begin
@@ -113,7 +75,7 @@ class Api::V1::RecordsController < ApplicationController
 
     def update
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 400
+            return render json: { error: 'IDが不足しています'}, status: 404
         end
 
         begin
@@ -131,7 +93,7 @@ class Api::V1::RecordsController < ApplicationController
 
     def destroy
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 400
+            return render json: { error: 'IDが不足しています'}, status: 404
         end
 
         begin
@@ -174,6 +136,30 @@ class Api::V1::RecordsController < ApplicationController
         else
             render json: { errors: "未ログイン" }, status: 401
         end
+    end
+    
+    def search_and_paginate_records(base_scope)
+        records = base_scope
+        
+        if params[:keyword].present?
+            records = records.where("lower(memo) LIKE :keyword", keyword: "%#{params[:keyword]}%")
+        end
+        
+        if params[:startDate].present?
+            records = records.where("date >= ?", params[:startDate])
+        end
+        
+        if params[:endDate].present?
+            records = records.where("date <= ?", params[:endDate])
+        end
+        
+        if params[:page].present?
+            records = records.page(params[:page]).per(30)
+        else
+            records = records.page(1).per(30)
+        end
+        
+        [records, records.total_pages]
     end
 
     def record_register_params
