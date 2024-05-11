@@ -76,11 +76,11 @@ const getDetail = async () => {
 const edit = async () => {
     try {
         const formData = new FormData();
-        formData.append('knowledge[memo]', memo.value);
-        formData.append('knowledge[date]', recordDate.value);
+        formData.append('record[memo]', memo.value);
+        formData.append('record[date]', recordDate.value);
 
         for (const file of files.value) {
-            formData.append('images', file);
+            formData.append('record[images]', file);
         }
 
         const res = await axios.patch(import.meta.env.VITE_APP_API_BASE + `/api/v1/records/${recordId.value}`, formData, {
