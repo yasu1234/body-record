@@ -5,7 +5,7 @@ class Api::V1::KnowledgesController < ApplicationController
         knowledges = Knowledge.all
 
         if params[:keyword].present? 
-            knowledges = knowledges.where("title LIKE ?", "%#{params[:keyword]}%")
+            knowledges = knowledges.where("title LIKE ?", "%#{params[:keyword]}%").latest_knowledges
         end
 
         if params[:page].present?
@@ -102,7 +102,7 @@ class Api::V1::KnowledgesController < ApplicationController
 
         # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
         if knowledges.count > 5
-            knowledges = knowledges.limit(5).order(created_at: :desc)
+            knowledges = knowledges.latest_knowledges(5)
         end
 
         render json: { knowledges: knowledges }, status: 200
