@@ -47,12 +47,12 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         begin
-            record = @user.records.find(params[:id].to_i)
+            record = Record.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
             return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
-        render json: { record: record.as_json(methods: :image_urls).merge(isMyRecord: record.user_id == @user.id) }, status: 200
+        render json: { record: record.as_json(include: [:comments], methods: :image_urls).merge(isMyRecord: record.user_id == @user.id, user: @user.as_json(include: [:profile])) }, status: 200
     end
 
     def create
@@ -79,7 +79,7 @@ class Api::V1::RecordsController < ApplicationController
         if record.update(record_register_params)
             render json: { record: record }, status: 200
         else
-            render json: { errors: record.errors.full_message }, status: 422
+            render json: { errors: record.errors.full_messages }, status: 422
         end
     end
 
