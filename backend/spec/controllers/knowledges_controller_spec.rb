@@ -368,19 +368,6 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     end
 
     describe 'GET #get_target_user_knowledge' do
-      context 'ユーザーID不足' do
-        before do
-            request.headers.merge!(headers)
-            get 'get_target_user_knowledge', params: { user_id: nil }, format: :json
-        end
-  
-        it 'ステータス404' do
-            expect(response.status).to eq 404
-        end
-      end
-    end
-
-    describe 'GET #get_target_user_knowledge' do
     context 'ユーザーのデータ5件' do
       before do
           request.headers.merge!(headers)

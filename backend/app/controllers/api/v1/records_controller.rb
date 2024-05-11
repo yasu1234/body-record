@@ -155,9 +155,6 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def get_target_user_record
-        if params[:user_id].nil?
-            return render json: { error: 'ユーザーIDが不足しています'}, status: 400
-        end
         records = Record.where(user_id: params[:user_id])
 
         # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする

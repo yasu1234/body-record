@@ -16,7 +16,7 @@ RSpec.describe Knowledge, type: :model do
         end
     end
 
-    describe '画像バリデーション' do            
+    describe '画像バリデーション' do
         it { is_expected.to validate_content_type_of(:images).allowing('image/png', 'image/jpg') }
         it { is_expected.to validate_content_type_of(:images).rejecting('text/plain', 'image/pdf') }
       
