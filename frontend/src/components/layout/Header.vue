@@ -29,7 +29,8 @@ const checkLogin = async () => {
         'uid': Cookies.get('uid'),
       },
     })
-    isLogin.value = res.data.isLogin
+
+    isLogin.value = (res.data.user !== null)
     userId.value = res.data.user.id
   } catch (error) {
     isLogin.value = false

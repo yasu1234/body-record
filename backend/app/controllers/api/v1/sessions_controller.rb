@@ -16,9 +16,9 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
     def check_login
         if api_v1_user_signed_in?
             @user = current_api_v1_user
-            render json: { isLogin: true, user: @user }, status: 200
+            render json: { user: @user.as_json(include: [:profile]) }, status: 200
         else
-            render json: { isLogin: false }, status: 200
+            render status: 200
         end
     end
 end

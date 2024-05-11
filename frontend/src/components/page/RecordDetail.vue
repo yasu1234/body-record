@@ -47,7 +47,7 @@ const getDetail = async () => {
         })
         recordId.value = res.data.record.id
         memo.value = res.data.record.memo
-        isMyRecord.value = res.data.isMyRecord
+        isMyRecord.value = res.data.record.isMyRecord
         imageUrls.value = res.data.record.image_urls
         recordUserId.value = res.data.record.user_id
         comments.value = res.data.record.comments

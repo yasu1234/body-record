@@ -66,7 +66,7 @@ const bookmarkOn = async () => {
             }
         })
         knowledge.value = res.data.knowledge
-        isBookmark.value = res.data.isBookmark
+        isBookmark.value = res.data.knowledge.isBookmark
     } catch (error) {
         if (error.response.status === 404) {
             showNotFound()
@@ -84,7 +84,7 @@ const bookmarkOff = async () => {
             }
         })
         knowledge.value = res.data.knowledge
-        isBookmark.value = res.data.isBookmark
+        isBookmark.value = res.data.knowledge.isBookmark
     } catch (error) {
         if (error.response.status === 404) {
             showNotFound()

@@ -43,7 +43,7 @@ class Api::V1::RecordsController < ApplicationController
 
     def show
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 404
+            return render json: { errors: 'IDが不足しています'}, status: 404
         end
 
         begin
@@ -52,7 +52,7 @@ class Api::V1::RecordsController < ApplicationController
             return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
-        render json: { record: record.as_json(methods: :image_urls), isMyRecord: record.user_id == @user.id }, status: 200
+        render json: { record: record.as_json(methods: :image_urls).merge(isMyRecord: record.user_id == @user.id) }, status: 200
     end
 
     def create
@@ -67,13 +67,13 @@ class Api::V1::RecordsController < ApplicationController
 
     def update
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 404
+            return render json: { errors: 'IDが不足しています'}, status: 404
         end
 
         begin
             record = @user.records.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
-            return render json: { error: '対象のデータが見つかりません' }, status: 404
+            return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
 
         if record.update(record_register_params)
@@ -85,13 +85,13 @@ class Api::V1::RecordsController < ApplicationController
 
     def destroy
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 404
+            return render json: { errors: 'IDが不足しています'}, status: 404
         end
 
         begin
             record = @user.records.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
-            return render json: { error: '対象のデータが見つかりません' }, status: 404
+            return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
 
         record.images.purge
