@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import DropFile from '../atom/DropFile.vue'
 import DatePicker from '../atom/DatePicker.vue'
 import Header from '../layout/Header.vue'
+import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -18,6 +19,7 @@ const fatPercentage = ref(null);
 const files = ref([]);
 const imageUrls = ref([]);
 const recordId = ref(null);
+const errorMessage = ref('');
 
 onMounted(() => {
     getDetail();
@@ -80,8 +82,12 @@ const edit = async () => {
         const formData = new FormData();
         formData.append('record[memo]', memo.value);
         formData.append('record[date]', recordDate.value);
-        formData.append('record[weight]', weight.value);
-        formData.append('record[fat_percentage]', fatPercentage.value);
+        if (weight.value !== null) {
+            formData.append('record[weight]', weight.value);
+        }
+        if (fatPercentage.value !== null) {
+            formData.append('record[fat_percentage]', fatPercentage.value);
+        }
 
         for (const file of files.value) {
             formData.append('record[images]', file);
@@ -102,6 +108,15 @@ const edit = async () => {
     } catch (error) {
         if (error.response.status === 404) {
             showNotFound()
+        } else {
+            errorMessage.value = ''
+            let errorMessages = '記録の更新に失敗しました\n';
+            if (error.response.status === 422) {
+                if (Array.isArray(error.response.data.errors)) {
+                    errorMessages += error.response.data.errors.join('\n');
+                }
+            }
+            errorMessage.value = errorMessages
         }
     }
 }
@@ -109,6 +124,7 @@ const edit = async () => {
 
 <template>
     <Header />
+    <ErrorMessage :errorMessage="errorMessage"/>
     <div class="edit-time">
         <p class="inputTitle">開始日</p>
         <DatePicker isStart=true :date= recordDate @update:date="dateChange"/>

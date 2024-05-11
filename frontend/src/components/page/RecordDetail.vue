@@ -108,6 +108,8 @@ const supportOn = async () => {
             if (error.response.status === 422) {
                 if (Array.isArray(error.response.data.errors)) {
                     errorMessages += error.response.data.errors.join('\n');
+                } else {
+                    errorMessages += error.response.data.errors;
                 }
             }
             errorMessage.value = errorMessages
@@ -134,6 +136,8 @@ const supportOff = async () => {
             if (error.response.status === 422) {
                 if (Array.isArray(error.response.data.errors)) {
                     errorMessages += error.response.data.errors.join('\n');
+                } else {
+                    errorMessages += error.response.data.errors;
                 }
             }
             errorMessage.value = errorMessages

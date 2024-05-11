@@ -4,6 +4,8 @@ ja:
       record:
         date: "記録日"
         images: "関連画像"
+        weight: "体重"
+        fat_percentage: "体脂肪率"
       knowledge:
         title: "タイトル"
         content: "内容"
