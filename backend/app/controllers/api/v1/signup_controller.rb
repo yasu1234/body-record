@@ -2,7 +2,7 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
   protect_from_forgery
 
   def update
-    return render json: { error: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
+    return render json: { errors: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
 
     @user = current_api_v1_user
 

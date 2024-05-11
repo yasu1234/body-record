@@ -1,6 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe Profile, type: :model do
+    describe '画像バリデーション' do            
+        it { is_expected.to validate_content_type_of(:image).allowing('image/png', 'image/jpg') }
+        it { is_expected.to validate_content_type_of(:image).rejecting('text/plain', 'image/pdf') }
+      
+        it { is_expected.to validate_size_of(:image).less_than(5.megabytes) }
+    end
+
     describe 'Association' do
         context 'ユーザーを削除' do
             let(:user) { create(:user) }

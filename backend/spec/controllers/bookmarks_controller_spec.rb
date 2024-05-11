@@ -52,7 +52,7 @@ RSpec.describe Api::V1::BookmarksController, type: :controller do
     
             it '入力した値で登録できている' do
                 jsonResponse = JSON.parse(response.body)
-                expect(jsonResponse["isBookmark"]).to eq(true)
+                expect(jsonResponse["knowledge"]["isBookmark"]).to eq(true)
                 expect(jsonResponse["knowledge"]["id"]).to eq(knowledge.id)
             end
         end
@@ -93,9 +93,9 @@ RSpec.describe Api::V1::BookmarksController, type: :controller do
         end
   
         it '1件データが削除、ブックマークがOFFになっている' do
-            expect(change(Record, :count).by(-1))
+            expect(change(Bookmark, :count).by(-1))
             jsonResponse = JSON.parse(response.body)
-            expect(jsonResponse["isBookmark"]).to eq(false)
+            expect(jsonResponse["knowledge"]["isBookmark"]).to eq(false)
             expect(jsonResponse["knowledge"]["id"]).to eq(knowledge.id)
         end
         it 'ステータス200' do

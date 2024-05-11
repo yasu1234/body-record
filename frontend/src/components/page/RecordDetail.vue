@@ -47,7 +47,7 @@ const getDetail = async () => {
         })
         recordId.value = res.data.record.id
         memo.value = res.data.record.memo
-        isMyRecord.value = res.data.isMyRecord
+        isMyRecord.value = res.data.record.isMyRecord
         imageUrls.value = res.data.record.image_urls
         recordUserId.value = res.data.record.user_id
         comments.value = res.data.record.comments
@@ -108,6 +108,8 @@ const supportOn = async () => {
             if (error.response.status === 422) {
                 if (Array.isArray(error.response.data.errors)) {
                     errorMessages += error.response.data.errors.join('\n');
+                } else {
+                    errorMessages += error.response.data.errors;
                 }
             }
             errorMessage.value = errorMessages
@@ -134,6 +136,8 @@ const supportOff = async () => {
             if (error.response.status === 422) {
                 if (Array.isArray(error.response.data.errors)) {
                     errorMessages += error.response.data.errors.join('\n');
+                } else {
+                    errorMessages += error.response.data.errors;
                 }
             }
             errorMessage.value = errorMessages

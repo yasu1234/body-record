@@ -31,7 +31,7 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
         json_response = JSON.parse(response.body)
         expect(json_response['user']['id']).to eq other_user.id
         expect(json_response['user']['supporters'][0]['id']).to eq user.id
-        expect(json_response['isSupport']).to eq true
+        expect(json_response['user']['isSupport']).to eq true
       end
     end
     
@@ -49,7 +49,7 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
         json_response = JSON.parse(response.body)
         expect(json_response['user']['id']).to eq other_user.id
         expect(json_response['user']['supporters'][0]['id']).to eq user.id
-        expect(json_response['isSupport']).to eq true
+        expect(json_response['user']['isSupport']).to eq true
       end
     end
   end
@@ -79,7 +79,7 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
       it '応援データが取得できる' do
         json_response = JSON.parse(response.body)
         expect(json_response['user']['supporters'].count).to eq 0
-        expect(json_response['isSupport']).to eq false
+        expect(json_response['user']['isSupport']).to eq false
       end
     end
 
@@ -90,8 +90,8 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
         delete :destroy, format: :json, params: { id: other_user.id }
       end
     
-      it 'ステータス404が返却される' do
-        expect(response.status).to eq 404
+      it 'ステータス422が返却される' do
+        expect(response.status).to eq 422
       end
     end
   end

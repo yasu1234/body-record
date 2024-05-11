@@ -7,15 +7,19 @@ import Cookies from 'js-cookie';
 import DropFile from '../atom/DropFile.vue'
 import DatePicker from '../atom/DatePicker.vue'
 import Header from '../layout/Header.vue'
+import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const route = useRoute();
 const router = useRouter();
 
 const recordDate = ref("");
 const memo = ref("");
+const weight = ref(null);
+const fatPercentage = ref(null);
 const files = ref([]);
 const imageUrls = ref([]);
 const recordId = ref(null);
+const errorMessage = ref('');
 
 onMounted(() => {
     getDetail();
@@ -76,11 +80,17 @@ const getDetail = async () => {
 const edit = async () => {
     try {
         const formData = new FormData();
-        formData.append('knowledge[memo]', memo.value);
-        formData.append('knowledge[date]', recordDate.value);
+        formData.append('record[memo]', memo.value);
+        formData.append('record[date]', recordDate.value);
+        if (weight.value !== null) {
+            formData.append('record[weight]', weight.value);
+        }
+        if (fatPercentage.value !== null) {
+            formData.append('record[fat_percentage]', fatPercentage.value);
+        }
 
         for (const file of files.value) {
-            formData.append('images', file);
+            formData.append('record[images]', file);
         }
 
         const res = await axios.patch(import.meta.env.VITE_APP_API_BASE + `/api/v1/records/${recordId.value}`, formData, {
@@ -98,6 +108,15 @@ const edit = async () => {
     } catch (error) {
         if (error.response.status === 404) {
             showNotFound()
+        } else {
+            errorMessage.value = ''
+            let errorMessages = '記録の更新に失敗しました\n';
+            if (error.response.status === 422) {
+                if (Array.isArray(error.response.data.errors)) {
+                    errorMessages += error.response.data.errors.join('\n');
+                }
+            }
+            errorMessage.value = errorMessages
         }
     }
 }
@@ -105,9 +124,20 @@ const edit = async () => {
 
 <template>
     <Header />
+    <ErrorMessage :errorMessage="errorMessage"/>
     <div class="edit-time">
         <p class="inputTitle">開始日</p>
         <DatePicker isStart=true :date= recordDate @update:date="dateChange"/>
+    </div>
+    <div class="profile-edit-content">
+        <label for="goal-weight">体重:</label>
+        <input type="text" id="goal-weight" v-model="weight">
+        <label for="goal-weight" class="unit-label">kg</label>
+    </div>
+    <div class="profile-edit-content">
+        <label for="goal-fat-percentage">体脂肪率:</label>
+        <input type="text" v-model="fatPercentage">
+        <label for="goal-fat-percentage" class="unit-label">%</label>
     </div>
     <div class="editor">
         <textarea name="memo" rows="10" v-model="memo"></textarea>

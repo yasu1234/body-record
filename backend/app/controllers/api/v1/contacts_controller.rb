@@ -1,6 +1,6 @@
 class Api::V1::ContactsController < ApplicationController
     def index
-        return render json: { error: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
+        return render json: { errors: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
         
         contacts = Contact.all.order(created_at: :desc)
 
@@ -8,13 +8,13 @@ class Api::V1::ContactsController < ApplicationController
     end
 
     def show
-        return render json: { error: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
+        return render json: { errors: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
 
         if params[:id].present?
             begin
                 contact = Contact.find(params[:id].to_i)
             rescue ActiveRecord::RecordNotFound
-                return render json: { error: '対象のデータが見つかりません' }, status: 404
+                return render json: { errors: '対象のデータが見つかりません' }, status: 404
             end
         else
             return render json: { errors: "対象の問い合わせデータがありません" }, status: 404
@@ -40,7 +40,7 @@ class Api::V1::ContactsController < ApplicationController
     end
 
     def update
-        return render json: { error: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
+        return render json: { errors: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
 
         if params[:id].present?
             begin
@@ -55,7 +55,7 @@ class Api::V1::ContactsController < ApplicationController
         if contact.update(contact_register_params)
             render json: { contact: contact }, status: 200
         else
-            render json: { errors: contact.errors.to_hash(true) }, status: 422
+            render json: { errors: contact.errors.full_messages}, status: 422
         end
     end
 

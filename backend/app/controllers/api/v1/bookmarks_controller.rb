@@ -5,13 +5,13 @@ class Api::V1::BookmarksController < ApplicationController
         begin
             knowledge = Knowledge.find(bookmark_params[:knowledge_id].to_i)
         rescue ActiveRecord::RecordNotFound
-            return render json: { error: '対象のデータが見つかりません' }, status: 404
+            return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
         
         if knowledge.bookmarks.create(user_id: @user.id)
-            render json: { knowledge: knowledge, isBookmark: true }, status: 200
+            render json: { knowledge: knowledge.as_json().merge(isBookmark: true) }, status: 200
         else
-            render json: { errors: knowledge.errors, isBookmark: false }, status: 422
+            render json: { errors: knowledge.errors }, status: 422
         end
     end
 
@@ -25,7 +25,7 @@ class Api::V1::BookmarksController < ApplicationController
         if knowledge.bookmarks.where(knowledge_id: knowledge.id).destroy_all
             bookmark = knowledge.bookmarks.where(knowledge_id: knowledge.id).first
             
-            render json: { knowledge: knowledge, isBookmark: bookmark.present? }, status: 200
+            render json: { knowledge: knowledge.as_json().merge(isBookmark: bookmark.present?) }, status: 200
         else
             render json: { errors: knowledge.errors }, status: 422
         end

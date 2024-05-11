@@ -2,60 +2,23 @@ class Api::V1::RecordsController < ApplicationController
     before_action :set_user
 
     def searchMyRecord
-        records = Record.where(user_id: @user.id)
-
-        if params[:keyword].present? 
-            records = records.where("memo LIKE ?", "%#{params[:keyword]}%")
-        end
-
-        if params[:startDate].present?
-            records = records.where("date >= ?", params[:startDate])
-        end
-
-        if params[:endDate].present?
-            records = records.where("date <= ?", params[:endDate])
-        end
-
-        if params[:page].present?
-            records = records.page(params[:page]).per(50)
-        else
-            records = records.page(1).per(50)
-        end
-
-        totalPage = records.total_pages
-
-        render json: { records: records, totalPage: totalPage }, status: 200
+        base_scope = Record.where(user_id: @user.id)
+        records, total_pages = search_and_paginate_records(base_scope)
+   
+        render json: { records: records, totalPage: total_pages }, status: 200
     end
 
     def index
-        records = Record.where(open_status: 1)
+        base_scope = Record.where(open_status: 1)
+        records, total_pages = search_and_paginate_records(base_scope)
 
-        if params[:keyword].present? 
-            records = records.where("memo LIKE ?", "%#{params[:keyword]}%")
-        end
-
-        if params[:startDate].present?
-            records = records.where("date >= ?", params[:startDate])
-        end
-
-        if params[:endDate].present?
-            records = records.where("date <= ?", params[:endDate])
-        end
-
-        if params[:page].present?
-            records = records.page(params[:page]).per(50)
-        else
-            records = records.page(1).per(50)
-        end
-
-        totalPage = records.total_pages
-
-        render json: { records: records, totalPage: totalPage }, status: 200
+        render json: { records: records, totalPage: total_pages }, status: 200
     end
 
+    # 指定した年月1ヶ月分の記録を取得する
     def get_record_month
         if params[:user_id].nil? || params[:targetYear].nil? || params[:targetMonth].nil?
-            return render json: { error: '必須項目が不足しています'}, status: 404
+            return render json: { error: '必須項目が不足しています'}, status: 422
         end
 
         user = User.find(params[:user_id])
@@ -73,31 +36,23 @@ class Api::V1::RecordsController < ApplicationController
 
         records = user.records.where(date: start_date..end_date)
 
-        # 1ヶ月全ての日付で体重や体脂肪率が存在しない場合は、0で埋める
-        records_with_empty_dates = dates.map do |date|
-            record = records.find { |r| r.date == date }
-            if record
-                record
-            else
-                Record.new(date: date, weight: 0, fat_percentage: 0)
-            end
-        end
+        records_with_empty_dates = records.records_in_month(dates)
 
         render json: { records: records_with_empty_dates.as_json(methods: :set_formatted_date)}, status: 200
     end
 
     def show
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 400
+            return render json: { errors: 'IDが不足しています'}, status: 404
         end
 
         begin
-            record = @user.records.find(params[:id].to_i)
+            record = Record.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
             return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
-        render json: { record: record.as_json(methods: :image_urls), isMyRecord: record.user_id == @user.id }, status: 200
+        render json: { record: record.as_json(include: [:comments], methods: :image_urls).merge(isMyRecord: record.user_id == @user.id, user: @user.as_json(include: [:profile])) }, status: 200
     end
 
     def create
@@ -112,35 +67,35 @@ class Api::V1::RecordsController < ApplicationController
 
     def update
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 400
+            return render json: { errors: 'IDが不足しています'}, status: 404
         end
 
         begin
             record = @user.records.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
-            return render json: { error: '対象のデータが見つかりません' }, status: 404
+            return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
 
         if record.update(record_register_params)
             render json: { record: record }, status: 200
         else
-            render json: { errors: record.errors }, status: 422
+            render json: { errors: record.errors.full_messages }, status: 422
         end
     end
 
     def destroy
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 400
+            return render json: { errors: 'IDが不足しています'}, status: 404
         end
 
         begin
             record = @user.records.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
-            return render json: { error: '対象のデータが見つかりません' }, status: 404
+            return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
 
-        @record.images.purge
-        if @record.destroy
+        record.images.purge
+        if record.destroy
             render json: { record: record }, status: 200
         else
             render json: { errors: record.errors.full_message }, status: 422
@@ -154,15 +109,12 @@ class Api::V1::RecordsController < ApplicationController
         render json: { imageUrls: record.image_urls }, status: 200
     end
 
+    # ユーザーページで表示する最大5件分の自分の記録を取得する
     def get_target_user_record
-        if params[:user_id].nil?
-            return render json: { error: 'ユーザーIDが不足しています'}, status: 400
-        end
         records = Record.where(user_id: params[:user_id])
 
-        # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
         if records.count > 5
-            records = records.order("date DESC").limit(5)
+            records = records.latest_records(5)
         end
 
         render json: { records: records }, status: 200
@@ -176,6 +128,30 @@ class Api::V1::RecordsController < ApplicationController
         else
             render json: { errors: "未ログイン" }, status: 401
         end
+    end
+    
+    def search_and_paginate_records(base_scope)
+        records = base_scope
+        
+        if params[:keyword].present?
+            records = records.where("lower(memo) LIKE :keyword", keyword: "%#{params[:keyword]}%")
+        end
+        
+        if params[:startDate].present?
+            records = records.where("date >= ?", params[:startDate])
+        end
+        
+        if params[:endDate].present?
+            records = records.where("date <= ?", params[:endDate])
+        end
+        
+        if params[:page].present?
+            records = records.page(params[:page]).per(30)
+        else
+            records = records.page(1).per(30)
+        end
+        
+        [records, records.total_pages]
     end
 
     def record_register_params

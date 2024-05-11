@@ -9,9 +9,9 @@ class Api::V1::KnowledgesController < ApplicationController
         end
 
         if params[:page].present?
-            knowledges = knowledges.page(params[:page]).per(50)
+            knowledges = knowledges.page(params[:page]).per(30)
         else
-            knowledges = knowledges.page(1).per(50)
+            knowledges = knowledges.page(1).per(30)
         end
 
         totalPage = knowledges.total_pages
@@ -31,28 +31,28 @@ class Api::V1::KnowledgesController < ApplicationController
 
     def show
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 400
+            return render json: { errors: 'IDが不足しています'}, status: 400
         end
 
         begin
             knowledge = Knowledge.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
-            return render json: { error: '対象のデータが見つかりません' }, status: 404
+            return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
 
         bookmark = knowledge.bookmarks.where(knowledge_id: knowledge.id).first
-        render json: { knowledge: knowledge.as_json(include: [:comments], methods: :image_urls), isBookmark: bookmark.present? }, status: 200
+        render json: { knowledge: knowledge.as_json(include: [:comments], methods: :image_urls).merge(isBookmark: bookmark.present?) }, status: 200
     end
 
     def delete_image
         if params[:id].nil? && params[:image_id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 400
+            return render json: { errors: 'IDが不足しています'}, status: 400
         end
 
         begin
             knowledge = Knowledge.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
-            return render json: { error: '対象のデータが見つかりません' }, status: 404
+            return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
 
         image = knowledge.images.find(params[:image_id])
@@ -63,13 +63,13 @@ class Api::V1::KnowledgesController < ApplicationController
 
     def update
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 400
+            return render json: { errors: 'IDが不足しています'}, status: 400
         end
 
         begin
             knowledge = @user.knowledges.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
-            return render json: { error: '対象のデータが見つかりません' }, status: 404
+            return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
 
         if knowledge.update(knowledge_register_params) 
@@ -81,13 +81,13 @@ class Api::V1::KnowledgesController < ApplicationController
 
     def destroy
         if params[:id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 400
+            return render json: { errors: 'IDが不足しています'}, status: 400
         end
 
         begin
             knowledge = @user.knowledges.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
-            return render json: { error: '対象のデータが見つかりません' }, status: 404
+            return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
 
         if knowledge.destroy
@@ -98,15 +98,11 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     def get_target_user_knowledge
-        if params[:user_id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 400
-        end
-
         knowledges = Knowledge.where(user_id: params[:user_id])
 
         # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
         if knowledges.count > 5
-            knowledges = knowledges.limit(5).order(created_at: :desc)
+            knowledges = knowledges.latest_knowledges(5)
         end
 
         render json: { knowledges: knowledges }, status: 200
@@ -118,7 +114,7 @@ class Api::V1::KnowledgesController < ApplicationController
         if api_v1_user_signed_in?
             @user = current_api_v1_user
         else
-            return render json: { error: '未ログイン' }, status: 401
+            return render json: { errors: '未ログイン' }, status: 401
         end
     end
 

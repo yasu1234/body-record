@@ -3,6 +3,11 @@ class Api::V1::SupportsController < ApplicationController
 
     def create
         supporting = @user.support(@support_user)
+
+        if supporting.nil?
+            return render json: { errors: "自分自身を応援することはできません" }, status: 422
+        end
+        
         if supporting.save
             user_json = @support_user.as_json(
                 include: [
@@ -11,7 +16,7 @@ class Api::V1::SupportsController < ApplicationController
                 ]
             )
             includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == @user.id }
-            render json: { user: user_json, isSupport: includes_user }, status: 200
+            render json: { user: user_json.merge(isSupport: includes_user) }, status: 200
         else
             render json: { errors: supporting.erros.full_messages }, status: 422
         end
@@ -21,7 +26,7 @@ class Api::V1::SupportsController < ApplicationController
         supporting = @user.removeSupport(@support_user)
 
         if supporting.nil?  
-            return render json: { errors: "応援していないユーザーなので解除できません" }, status: 404
+            return render json: { errors: "応援していないユーザーなので解除できません" }, status: 422
         end
 
         if supporting.destroy
@@ -32,7 +37,7 @@ class Api::V1::SupportsController < ApplicationController
                 ]
             )
             includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == @user.id }
-            render json: { user: user_json, isSupport: includes_user }, status: 200
+            render json: { user: user_json.merge(isSupport: includes_user) }, status: 200
         else
             render json: { errors: supporting.erros.full_messages }, status: 422
         end

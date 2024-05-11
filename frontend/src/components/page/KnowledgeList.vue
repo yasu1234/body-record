@@ -51,12 +51,14 @@ const search = async () => {
     } else {
       pageCount.value = 1
     }
+
+    searchResult.value = [];
     
     for(let item of res.data.knowledges){
       searchResult.value.push(item);
     }
   } catch (error) {
-    console.log({ error })
+    searchResult.value = [];
   }
 }
 

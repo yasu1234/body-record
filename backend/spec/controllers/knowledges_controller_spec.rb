@@ -50,7 +50,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     describe 'GET #index' do
       context '2ページ目のデータ' do
         let(:user) { create(:user, :without_knowledges, :without_records) }
-        let!(:knowledge) { create_knowledges(51) }
+        let!(:knowledge) { create_knowledges(31) }
         before do
             request.headers.merge!(headers)
             get :index, format: :json, params: { page: 2 }
@@ -363,19 +363,6 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
         end
         it 'ステータス200' do
             expect(response.status).to eq 200
-        end
-      end
-    end
-
-    describe 'GET #get_target_user_knowledge' do
-      context 'ユーザーID不足' do
-        before do
-            request.headers.merge!(headers)
-            get 'get_target_user_knowledge', params: { user_id: nil }, format: :json
-        end
-  
-        it 'ステータス404' do
-            expect(response.status).to eq 404
         end
       end
     end
