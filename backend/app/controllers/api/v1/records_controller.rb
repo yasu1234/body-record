@@ -124,7 +124,7 @@ class Api::V1::RecordsController < ApplicationController
         if record.update(record_register_params)
             render json: { record: record }, status: 200
         else
-            render json: { errors: record.errors }, status: 422
+            render json: { errors: record.errors.full_message }, status: 422
         end
     end
 
@@ -139,8 +139,8 @@ class Api::V1::RecordsController < ApplicationController
             return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
-        @record.images.purge
-        if @record.destroy
+        record.images.purge
+        if record.destroy
             render json: { record: record }, status: 200
         else
             render json: { errors: record.errors.full_message }, status: 422
