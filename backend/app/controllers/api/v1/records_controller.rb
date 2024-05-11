@@ -11,14 +11,14 @@ class Api::V1::RecordsController < ApplicationController
     def index
         base_scope = Record.where(open_status: 1)
         records, total_pages = search_and_paginate_records(base_scope)
-        
+
         render json: { records: records, totalPage: total_pages }, status: 200
     end
 
     # 指定した年月1ヶ月分の記録を取得する
     def get_record_month
         if params[:user_id].nil? || params[:targetYear].nil? || params[:targetMonth].nil?
-            return render json: { error: '必須項目が不足しています'}, status: 404
+            return render json: { error: '必須項目が不足しています'}, status: 422
         end
 
         user = User.find(params[:user_id])
@@ -36,15 +36,7 @@ class Api::V1::RecordsController < ApplicationController
 
         records = user.records.where(date: start_date..end_date)
 
-        # 1ヶ月全ての日付で体重や体脂肪率が存在しない場合は、0で埋める
-        records_with_empty_dates = dates.map do |date|
-            record = records.find { |rec| rec.date == date }
-            if record
-                record
-            else
-                Record.new(date: date, weight: 0, fat_percentage: 0)
-            end
-        end
+        records_with_empty_dates = records.records_in_month(dates)
 
         render json: { records: records_with_empty_dates.as_json(methods: :set_formatted_date)}, status: 200
     end
