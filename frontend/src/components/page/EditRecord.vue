@@ -13,6 +13,8 @@ const router = useRouter();
 
 const recordDate = ref("");
 const memo = ref("");
+const weight = ref(null);
+const fatPercentage = ref(null);
 const files = ref([]);
 const imageUrls = ref([]);
 const recordId = ref(null);
@@ -78,6 +80,8 @@ const edit = async () => {
         const formData = new FormData();
         formData.append('record[memo]', memo.value);
         formData.append('record[date]', recordDate.value);
+        formData.append('record[weight]', weight.value);
+        formData.append('record[fat_percentage]', fatPercentage.value);
 
         for (const file of files.value) {
             formData.append('record[images]', file);
@@ -108,6 +112,16 @@ const edit = async () => {
     <div class="edit-time">
         <p class="inputTitle">開始日</p>
         <DatePicker isStart=true :date= recordDate @update:date="dateChange"/>
+    </div>
+    <div class="profile-edit-content">
+        <label for="goal-weight">体重:</label>
+        <input type="text" id="goal-weight" v-model="weight">
+        <label for="goal-weight" class="unit-label">kg</label>
+    </div>
+    <div class="profile-edit-content">
+        <label for="goal-fat-percentage">体脂肪率:</label>
+        <input type="text" v-model="fatPercentage">
+        <label for="goal-fat-percentage" class="unit-label">%</label>
     </div>
     <div class="editor">
         <textarea name="memo" rows="10" v-model="memo"></textarea>
