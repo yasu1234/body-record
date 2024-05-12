@@ -105,7 +105,7 @@ const showHomeThenRelaod = async () => {
 
 <template>
     <header>
-        <h2 class="title"><router-link to="/" class="title">体レコ.com</router-link></h2>
+        <h2 class="title"><router-link to="/" class="title">In-Body.com</router-link></h2>
         <nav>
             <div class="navigation-buttons">
                 <button v-if="!isLogin" class="account-introducton-button" @click="showAccountIntroduction">会員登録・ログイン</button>
