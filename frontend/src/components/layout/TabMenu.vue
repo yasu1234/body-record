@@ -42,9 +42,10 @@ function menuChange(event) {
         :currentId="currentId"
         @menuTapped="menuChange" />
     </div>
+    <div class="tab-line"/>
 </template>
 
-<style>
+<style scoped>
 .item {
   box-sizing: border-box;
   padding: 10px;
@@ -52,7 +53,11 @@ function menuChange(event) {
   transition: all 0.8s ease;
 }
 .tab-menu {
-    display: flex;
-    margin-left: 16px;
+  display: flex;
+  margin-left: 16px;
+}
+.tab-line {
+  background-color:rgb(232, 229, 229);
+  height: 1px;
 }
 </style>
