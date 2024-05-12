@@ -7,6 +7,8 @@ import * as yup from 'yup';
 
 import Header from '../layout/Header.vue'
 import ErrorMessage from '../atom/ErrorMessage.vue'
+import PasswordText from '../atom/PasswordText.vue'
+import { PasswordType } from '../../const/const.js'
 
 const errorMessage = ref('');
 
@@ -75,6 +77,16 @@ const { validate } = useForm({
 const { value: password, errorMessage: passwordError } = useField('password');
 const { value: passwordConfirm, errorMessage: passwordConfirmError } = useField('passwordConfirm');
 const { value: currentPassword, errorMessage: currentPasswordError } = useField('currentPassword');
+
+const updatePassword = (inputPassword, passwordType) => {
+    if (passwordType === PasswordType.password) {
+        currentPassword.value = inputPassword
+    } else if (passwordType === PasswordType.newPassword) {
+        password.value = inputPassword
+    } else if (passwordType === PasswordType.newPasswordConfirm) {
+        passwordConfirm.value = inputPassword
+    }
+}
 </script>
 
 <template>
@@ -85,15 +97,15 @@ const { value: currentPassword, errorMessage: currentPasswordError } = useField(
         <form class="form" @submit.prevent="checkValidate">
             <div class="item">
                 <label class="itemLabel" for="password">現在のパスワード</label>
-                <input id="currentPassword" type="password" v-model="currentPassword">
+                <PasswordText :password=currentPassword :passwordType=PasswordType.password @updatePassword="updatePassword" />
             </div>
             <div class="item">
                 <label class="itemLabel" for="password">パスワード</label>
-                <input id="password" type="password" v-model="password">
+                <PasswordText :password=password :passwordType=PasswordType.newPassword @updatePassword="updatePassword" />
             </div>
             <div class="item">
                 <label class="itemLabel" for="passwordConfirm">パスワード(確認)</label>
-                <input id="passwordConfirm" type="password" v-model="passwordConfirm">
+                <PasswordText :password=passwordConfirm :passwordType=PasswordType.newPasswordConfirm @updatePassword="updatePassword" />
             </div>
             <div class="signUpTitle">
                 <button class="registerButton">更新</button>
@@ -102,7 +114,7 @@ const { value: currentPassword, errorMessage: currentPasswordError } = useField(
     </div>
 </template>
 
-<style>
+<style scoped>
 .form{
    width: 100%;
    margin:0 auto;

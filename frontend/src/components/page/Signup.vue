@@ -8,6 +8,8 @@ import * as yup from 'yup';
 
 import Header from '../layout/Header.vue'
 import ErrorMessage from '../atom/ErrorMessage.vue'
+import PasswordText from '../atom/PasswordText.vue'
+import { PasswordType } from '../../const/const.js'
 
 const router = useRouter();
 
@@ -82,6 +84,14 @@ const { value: password, errorMessage: passwordError } = useField('password');
 const { value: passwordConfirm, errorMessage: passwordConfirmError } = useField('passwordConfirm');
 const { value: email, errorMessage: emailError } = useField('email');
 const { value: name, errorMessage: nameError } = useField('name');
+
+const updatePassword = (inputPassword, passwordType) => {
+    if (passwordType === PasswordType.password) {
+      password.value = inputPassword
+    } else if (passwordType === PasswordType.passwordConfirm) {
+      passwordConfirm.value = inputPassword
+    }
+}
 </script>
 
 <template>
@@ -97,12 +107,12 @@ const { value: name, errorMessage: nameError } = useField('name');
             </div>
             <div class="item">
                 <label class="itemLabel" for="password">パスワード</label>
-                <input id="password" type="password" v-model="password">
+                <PasswordText :password=password :passwordType=PasswordType.password @updatePassword="updatePassword" />
                 <p class="validation-error-message">{{ passwordError }}</p>
             </div>
             <div class="item">
                 <label class="itemLabel" for="passwordConfirm">パスワード(確認)</label>
-                <input id="passwordConfirm" type="password" v-model="passwordConfirm">
+                <PasswordText :password=passwordConfirm :passwordType=PasswordType.passwordConfirm @updatePassword="updatePassword" />
                 <p class="validation-error-message">{{ passwordConfirmError }}</p>
             </div>
             <div class="item">
@@ -117,7 +127,7 @@ const { value: name, errorMessage: nameError } = useField('name');
     </div>
 </template>
 
-<style>
+<style scoped>
 .form{
    width: 100%;
    margin:0 auto;

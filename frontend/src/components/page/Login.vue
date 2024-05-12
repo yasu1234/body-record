@@ -8,6 +8,7 @@ import * as yup from 'yup';
 
 import Header from '../layout/Header.vue'
 import ErrorMessage from '../atom/ErrorMessage.vue'
+import PasswordText from '../atom/PasswordText.vue'
 
 const errorMessage = ref('');
 
@@ -55,8 +56,12 @@ const schema = yup.object({
 });
 
 const { validate } = useForm({ validationSchema: schema })
-const { value: password, errorMessage: passwordError } = useField('password');
-const { value: email, errorMessage: emailError } = useField('email');
+const { value: password, errorMessage: passwordError } = useField('password', '');
+const { value: email, errorMessage: emailError } = useField('email', '');
+
+const updatePassword = (inputPassword, passwordType) => {
+  password.value = inputPassword
+}
 </script>
 
 <template>
@@ -72,7 +77,7 @@ const { value: email, errorMessage: emailError } = useField('email');
             </div>
             <div class="item">
                 <label class="itemLabel" for="password">パスワード</label>
-                <input id="password" type="password" v-model="password">
+                <PasswordText :password=password @updatePassword="updatePassword" />
                 <p class="validation-error-message">{{ passwordError }}</p>
             </div>
             <div class="signUpTitle">
@@ -82,7 +87,7 @@ const { value: email, errorMessage: emailError } = useField('email');
     </div>
 </template>
 
-<style>
+<style scoped>
 .form{
    width: 100%;
    margin:0 auto;
