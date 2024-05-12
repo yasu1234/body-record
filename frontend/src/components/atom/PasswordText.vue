@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue';
 import Password from 'primevue/password';
 
 const passwordType = ref(0);
+const password = ref('');
 
 const props = defineProps({
     password: String,
@@ -14,6 +15,7 @@ const emit = defineEmits(['updatePassword']);
 
 onMounted(() => {
     passwordType.value = props.passwordType
+    password.value = props.password
 });
 
 function updatePassword(currentText) {
@@ -23,7 +25,7 @@ function updatePassword(currentText) {
 </script>
 
 <template>
-    <Password v-model="props.password" :feedback="false" @update:model-value="updatePassword" class="password-text" toggleMask />
+    <Password v-model="password" :feedback="false" @update:model-value="updatePassword" class="password-text" toggleMask />
 </template>
 
 <style scoped>
