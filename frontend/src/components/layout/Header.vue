@@ -91,10 +91,15 @@ const logout = async () => {
         Cookies.remove('client')
         Cookies.remove('uid')
 
-        router.push({ name: 'Home'})
+        showHomeThenRelaod()
     } catch (error) {
         console.log({ error })
     }
+}
+
+const showHomeThenRelaod = async () => {
+  await router.push({ name: 'Home'})
+  router.go(0)
 }
 </script>
 
