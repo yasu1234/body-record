@@ -1,47 +1,50 @@
 <script setup>
-import axios from 'axios'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import Cookies from 'js-cookie'
-import { useField, useForm } from 'vee-validate';
-import * as yup from 'yup';
+import axios from "axios";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import Cookies from "js-cookie";
+import { useField, useForm } from "vee-validate";
+import * as yup from "yup";
 
-import Header from '../layout/Header.vue'
-import ErrorMessage from '../atom/ErrorMessage.vue'
-import PasswordText from '../atom/PasswordText.vue'
+import Header from "../layout/Header.vue";
+import ErrorMessage from "../atom/ErrorMessage.vue";
+import PasswordText from "../atom/PasswordText.vue";
 
-const errorMessage = ref('');
+const errorMessage = ref("");
 
 const router = useRouter();
 
 const handleSubmit = async () => {
-  const result = await validate()
+  const result = await validate();
   if (result.valid) {
-    login()
+    login();
   }
-}
+};
 
 const login = async () => {
   try {
-    const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/auth/sign_in', {
-      email: email.value,
-      password: password.value
-    })
-    Cookies.set('accessToken', res.headers["access-token"])
-    Cookies.set('client', res.headers["client"])
-    Cookies.set('uid', res.headers["uid"])
+    const res = await axios.post(
+      import.meta.env.VITE_APP_API_BASE + "/api/v1/auth/sign_in",
+      {
+        email: email.value,
+        password: password.value,
+      }
+    );
+    Cookies.set("accessToken", res.headers["access-token"]);
+    Cookies.set("client", res.headers["client"]);
+    Cookies.set("uid", res.headers["uid"]);
 
-    router.push({ name: 'Home'})
+    router.push({ name: "Home" });
   } catch (error) {
-    let errorMessages = 'ログインに失敗しました\n';
+    let errorMessages = "ログインに失敗しました\n";
     if (error.response.status === 401) {
-        if (Array.isArray(error.response.data.errors)) {
-            errorMessages += error.response.data.errors.join('\n');
-        }
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      }
     }
-    errorMessage.value = errorMessages
+    errorMessage.value = errorMessages;
   }
-}
+};
 
 const schema = yup.object({
   password: yup
@@ -55,85 +58,94 @@ const schema = yup.object({
     .email("メールアドレスの形式で入力してください"),
 });
 
-const { validate } = useForm({ validationSchema: schema })
-const { value: password, errorMessage: passwordError } = useField('password', '');
-const { value: email, errorMessage: emailError } = useField('email', '');
+const { validate } = useForm({ validationSchema: schema });
+const { value: password, errorMessage: passwordError } = useField(
+  "password",
+  ""
+);
+const { value: email, errorMessage: emailError } = useField("email", "");
 
 const updatePassword = (inputPassword, passwordType) => {
-  password.value = inputPassword
-}
+  password.value = inputPassword;
+};
 </script>
 
 <template>
-    <Header />
-    <h1 class="signUpTitle">ログイン</h1>
-    <ErrorMessage :errorMessage="errorMessage"/>
-    <div class="singUpInput">
-        <form class="form" @submit.prevent="handleSubmit">
-            <div class="item">
-                <label class="itemLabel">メールアドレス</label>
-                <input id="email" type="email" v-model="email">
-                <p class="validation-error-message">{{ emailError }}</p>
-            </div>
-            <div class="item">
-                <label class="itemLabel" for="password">パスワード</label>
-                <PasswordText :password=password @updatePassword="updatePassword" />
-                <p class="validation-error-message">{{ passwordError }}</p>
-            </div>
-            <div class="signUpTitle">
-                <button class="loginButton">ログイン</button>
-            </div>
-        </form>
-    </div>
+  <Header />
+  <h1 class="signUpTitle">ログイン</h1>
+  <ErrorMessage :errorMessage="errorMessage" />
+  <div class="login-container">
+    <form class="form" @submit.prevent="handleSubmit">
+      <div class="item">
+        <label>メールアドレス</label>
+        <input id="email" type="email" v-model="email" />
+        <p class="validation-error-message">{{ emailError }}</p>
+      </div>
+      <div class="item">
+        <label>パスワード</label>
+        <PasswordText :password="password" @updatePassword="updatePassword" />
+        <p class="validation-error-message">{{ passwordError }}</p>
+      </div>
+      <div class="login-button-container">
+        <button class="login-button">ログイン</button>
+      </div>
+    </form>
+  </div>
 </template>
 
 <style scoped>
-.form{
-   width: 100%;
-   margin:0 auto;
-   padding: 50px;
-   box-sizing: border-box;
+.login-container {
+  width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-.signUpTitle {
-    padding-top: 40px;
-    text-align: center;
-}
- 
-.item{
-    padding-top: 40px;
-    width: 50%;
-    margin: 0 auto;
+.form {
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-.itemLabel{
-    display: block;
-    text-align: left;
-}
- 
-.error-message-text{
-    color: red;
-    font-size: 15px;
+.item {
+  padding-top: 40px;
+  margin: 0 auto;
 }
 
-.form input[type="email"],
-.form input[type="password"] {
-     padding: 10px;
-     width: 100%;
- }
- 
-.form textarea{
-   padding: 10px;
-   height: 100px;
-   font-size: 14px;
-   width: 50%;
- }
- 
-.loginButton{
-    background: #ffa500;
-    color: white;
-    font-size:16px;
-    font-weight:bold;
-    padding: 10px 50px;
+.error-message-text {
+  color: red;
+  font-size: 15px;
+}
+
+.form input[type="email"] {
+  padding: 10px;
+  width: 100%;
+}
+
+.login-button-container {
+  padding-top: 40px;
+  text-align: center;
+}
+
+.login-button {
+  background: #ffa500;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 50px;
+}
+
+@media screen and (max-width: 768px) {
+  .login-container {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
 }
 </style>

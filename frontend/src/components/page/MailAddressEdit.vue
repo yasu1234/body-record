@@ -81,7 +81,7 @@ const { value: newMailAddres, errorMessage: emailError } = useField('newMailAddr
     </div>
 </template>
 
-<style>
+<style scoped>
 .form{
    width: 100%;
    margin:0 auto;
@@ -109,11 +109,6 @@ const { value: newMailAddres, errorMessage: emailError } = useField('newMailAddr
     color: red;
     font-size: 15px;
 }
-
-.form input[type="password"] {
-     padding: 10px;
-     width: 100%;
- }
  
 .form textarea{
    padding: 10px;

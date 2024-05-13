@@ -32,4 +32,8 @@ function updatePassword(currentText) {
 .password-text {
     display: block;
 }
+:deep input[type="password"] {
+    padding: 10px;
+    width: 100%;
+}
 </style>
