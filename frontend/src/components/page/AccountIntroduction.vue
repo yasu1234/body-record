@@ -1,101 +1,104 @@
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router'
-import axios from 'axios'
-import Cookies from 'js-cookie'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
+import Cookies from "js-cookie";
 
-import ErrorMessage from '../atom/ErrorMessage.vue'
+import ErrorMessage from "../atom/ErrorMessage.vue";
 
 const router = useRouter();
 
-const errorMessage = ref('');
+const errorMessage = ref("");
 
-function showSignup() {
-    router.push('/signup');
+const showSignup = () => {
+  router.push("/signup");
 };
 
-function showLogin() {
-    router.push('/login');
+const showLogin = () => {
+  router.push("/login");
 };
 
 const guestLogin = async () => {
   try {
-    const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/users/guest_sign_in')
-    Cookies.set('accessToken', res.headers["access-token"])
-    Cookies.set('client', res.headers["client"])
-    Cookies.set('uid', res.headers["uid"])
+    const res = await axios.post(
+      import.meta.env.VITE_APP_API_BASE + "/api/v1/users/guest_sign_in"
+    );
+    Cookies.set("accessToken", res.headers["access-token"]);
+    Cookies.set("client", res.headers["client"]);
+    Cookies.set("uid", res.headers["uid"]);
 
-    router.push({ name: 'Home'})
+    router.push({ name: "Home" });
   } catch (error) {
-    errorMessage.value = ''
-    let errorMessages = 'ゲストログインに失敗しました\n';
+    errorMessage.value = "";
+    let errorMessages = "ゲストログインに失敗しました\n";
     if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-            errorMessages += error.response.data.errors.join('\n');
-        }
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      }
     }
-    errorMessage.value = errorMessages
+    errorMessage.value = errorMessages;
   }
-}
+};
 </script>
 
 <template>
-    <h1 class="homeTitle">理想の体を手に入れよう！</h1>
-    <ErrorMessage :errorMessage="errorMessage"/>
-    <div class="homeContents">
-        <div class="homeImage">
-            <img src="../../assets/image/home_image.jpg" alt="Logo" class= "homeLogo">
-        </div>
-        <div class="homeButtons">
-            <button class="commonButton" @click="showSignup">会員登録</button>
-            <button class="commonButton" @click="showLogin">ログイン</button>
-            <button class="guestButton" @click="guestLogin">ゲストログイン</button>
-        </div>    
-    </div>
+  <ErrorMessage :errorMessage="errorMessage" />
+  <img src="../../assets/image/home_image.jpg" alt="Logo" class="home-logo" />
+  <h1 class="account-introduction-title">Inbody-Recordへようこそ！</h1>
+  <div class="account-buttons">
+    <button class="account-button" @click="showSignup">会員登録</button>
+    <button class="account-button" @click="showLogin">ログイン</button>
+    <button class="guest-login-button" @click="guestLogin">
+      ゲストログイン
+    </button>
+  </div>
 </template>
 
-<style>
-.homeContents {
-    display: flex;
+<style scoped>
+.home-logo {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  display: block;
 }
-.homeLogo {      
-    width:100%;
-    height:auto;
-    margin-top: 20px;
+
+.account-introduction-title {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.account-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.account-buttons button {
+  width: 70%;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.account-button {
+  font-weight: bold;
+  font-size: 18px;
+  padding: 10px 50px;
+}
+
+.guest-login-button {
+  background-color: #f75549;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 10px 50px;
+}
+
+@media screen and (max-width: 768px) {
+  .home-logo {
+    width: 100%;
+    height: 200px;
     object-fit: cover;
     display: block;
-}
-.homeTitle {      
-    text-align: center;
-    padding-top:10px;
-}
-.homeButtons {
-    width:50%;
-    display:flex;
-    flex-direction: column;
-    /* margin-left: auto;
-    margin-right: auto; */
-    align-items: center; /* 水平方向の中央揃え */
-    margin: 0 auto; /* 要素を水平方向の中央に配置 */
-}
-.homeButtons button {
-    width: 80%;
-    margin-top: 20px;
-    font-weight: bold;
-    font-size: 18px;
-}
-.commonButton {
-    background-color: #ffa500;
-    font-weight: bold;
-    font-size: 18px;
-}
-.guestButton {
-    background-color: #f75549;
-    font-weight: bold;
-    font-size: 18px;
-}
-.homeImage {
-    display:inline-block;
-    width:50%;
+  }
 }
 </style>
