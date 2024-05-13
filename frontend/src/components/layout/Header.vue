@@ -6,7 +6,7 @@ import axios from "axios";
 
 const router = useRouter();
 
-const isLogin = ref(false);
+const isLogin = ref(null);
 const userId = ref(0);
 const showDropdown = ref(false);
 
@@ -117,7 +117,7 @@ const showHomeThenRelaod = async () => {
     <nav>
       <div class="navigation-menus">
         <button
-          v-if="!isLogin"
+          v-show="isLogin === false"
           class="account-introducton-button"
           @click="showAccountIntroduction"
         >
@@ -166,7 +166,6 @@ header {
   justify-content: space-between;
 }
 .account-introducton-button {
-  background: #ffa500;
   margin-right: 30px;
 }
 .user-button {
