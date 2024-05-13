@@ -95,7 +95,7 @@ const updatePassword = (inputPassword, passwordType) => {
 
 <style scoped>
 .login-container {
-  width: 400px;
+  width: 500px;
   margin: 0 auto;
   padding: 20px;
   background-color: #ffffff;
@@ -114,11 +114,6 @@ const updatePassword = (inputPassword, passwordType) => {
   margin: 0 auto;
 }
 
-.error-message-text {
-  color: red;
-  font-size: 15px;
-}
-
 .form input[type="email"] {
   padding: 10px;
   width: 100%;
@@ -130,8 +125,6 @@ const updatePassword = (inputPassword, passwordType) => {
 }
 
 .login-button {
-  background: #ffa500;
-  color: white;
   font-size: 16px;
   font-weight: bold;
   padding: 10px 50px;
