@@ -105,7 +105,7 @@ const getMonthRecord = async () => {
 
         console.log({ res })
 
-        data.value.labels = res.data.records.map(record => record.set_formatted_date)
+        data.value.labels = res.data.records.map(record => record.graph_formatted_date)
         data.value.datasets[0].data = res.data.records.map(record => record.weight)
     } catch (error) {
       if (error.response.status === 404) {

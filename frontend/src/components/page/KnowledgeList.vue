@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import TabMenu from '../layout/TabMenu.vue'
 import Header from '../layout/Header.vue'
 import ListPage from '../layout/ListPage.vue'
+import SearchButton from "../atom/SearchButton.vue";
 
 const router = useRouter();
 
@@ -29,6 +30,17 @@ onBeforeRouteUpdate(async (to, from) => {
 });
 
 const targetSearch = ()=> {
+  const query = {};
+
+  if (keyword.value.trim() !== "") {
+    query.keyword = keyword.value;
+  }
+
+  if (isBookmark.value === true) {
+    query.startDate = startDate.value;
+  }
+
+  router.push({ name: "KnowledgeList", query: query });
 }
 
 const search = async () => {
@@ -79,7 +91,8 @@ function addKnowledge() {
 <template>
   <Header />
   <TabMenu :currentId="currentId"/>
-  <div class="keyword-search">
+  <div class="knowledge-search-container">
+    <div class="keyword-search">
     <input type="text" id="keyword" name="keywordName" placeholder="キーワードで絞り込む" v-model="keyword">
   </div>
   <div class="search-check">
@@ -87,7 +100,8 @@ function addKnowledge() {
     <label for="statusSelectName">ブックマークのみ絞り込む</label>
   </div>
   <div class="search-button-area">
-     <button class="search-button" @click="targetSearch">検索</button>
+    <SearchButton @searchButtonClick="targetSearch" />
+  </div>
   </div>
   <div class="add-button-area">
     <button class="add-button" @click="addKnowledge">ノウハウを追加する</button>
@@ -106,9 +120,19 @@ function addKnowledge() {
     </div>
 </template>
 
-<style>
+<style scoped>
+.knowledge-search-container {
+  width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1.5px solid #46c443;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
 .keyword-search {
-   padding: 30px;
+   margin-top: 20px;
  }
 
  input[type=text] {
@@ -151,12 +175,6 @@ input[type="checkbox"]:checked:before {
 }
 .search-button-area {
   text-align: center;
-}
-.search-button {
-  background: #ffa500;
-  color: white;
-  font-size:16px;
-  font-weight:bold;
 }
 .knowledge-title {
   margin: 10px 12px 12px 10px;
