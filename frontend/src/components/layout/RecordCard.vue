@@ -20,7 +20,7 @@ const recordClick = () => {
   <div v-if="record !== null">
     <div class="my-idea-card" @click="recordClick">
       <h4 class="my-idea-title">
-        <b>{{ record.date }}</b>
+        <b>{{ record.formatted_date }}</b>
       </h4>
       <div>
         <p class="idea-memo">{{ record.memo }}</p>
