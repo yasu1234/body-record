@@ -97,7 +97,7 @@ const registerRecord = async () => {
     </div>
 </template>
 
-<style>
+<style scoped>
 .editor{
    padding: 30px;
  }

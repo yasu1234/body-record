@@ -146,7 +146,7 @@ const showHomeThenRelaod = async () => {
   </header>
 </template>
 
-<style>
+<style scoped>
 header {
   width: 100%;
   height: 80px;

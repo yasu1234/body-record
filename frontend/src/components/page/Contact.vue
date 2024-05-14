@@ -53,7 +53,7 @@ const contactSubmit = async () => {
     </div>
 </template>
 
-<style>
+<style scoped>
 .contact-area {
     display: flex;
     flex-direction: column;
