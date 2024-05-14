@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import ListPage from "../layout/ListPage.vue";
 import DatePicker from "../atom/DatePicker.vue";
 import SearchButton from "../atom/SearchButton.vue";
+import RecordCard from '../layout/RecordCard.vue'
 
 const router = useRouter();
 
@@ -97,7 +98,7 @@ function endDateChange(event) {
   endDate.value = event;
 }
 
-function clickRecord(item) {
+const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
 }
 
@@ -144,19 +145,10 @@ function addRecord() {
   <div class="add-button-area">
     <button class="add-button" @click="addRecord">記録を追加する</button>
   </div>
-  <div
-    class="my-idea-card"
-    v-for="item of searchResult"
-    :key="item.id"
-    @click="clickRecord(item)"
-  >
-    <h4 class="my-idea-title">
-      <b>{{ item.date }}</b>
-    </h4>
-    <div>
-      <p class="idea-memo">{{ item.memo }}</p>
-    </div>
-  </div>
+  <RecordCard v-for="record in searchResult"
+        v-bind="record"
+        :record="record"
+        @recordClick="clickRecord(record)"/>
   <div class="record-list-page">
     <ListPage
       :pageCount="pageCount"
@@ -168,11 +160,11 @@ function addRecord() {
 
 <style scoped>
 .my-record-search-container {
-  width: 500px;
+  width: 700px;
   margin: 0 auto;
   padding: 20px;
   background-color: #ffffff;
-  border: 1px solid #46c443;
+  border: 1.5px solid #46c443;
   border-radius: 5px;
   margin-top: 20px;
 }
@@ -213,7 +205,6 @@ input[type="checkbox"]:checked:before {
 }
 .time-list {
   display: flex;
-  justify-content: space-between;
 }
 .time-list .item {
   padding: 5px;
@@ -231,18 +222,6 @@ input[type="checkbox"]:checked:before {
   text-align: center;
   margin-top: 20px;
 }
-
-.my-idea-title {
-  margin: 10px 12px 12px 10px;
-}
-.my-idea-card {
-  margin: 10px 12px 12px 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-.idea-memo {
-  margin: 10px 0px 10px 10px;
-}
 .add-button-area {
   text-align: right;
   margin-top: 20px;
@@ -256,5 +235,18 @@ input[type="checkbox"]:checked:before {
 }
 .record-list-page {
   margin-top: 50px;
+}
+
+@media screen and (max-width: 768px) {
+  .my-record-search-container {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #46c443;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
 }
 </style>

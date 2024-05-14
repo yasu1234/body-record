@@ -144,6 +144,10 @@ function showEditProfile() {
 const showNotFound = () =>  {
     router.push({ name: 'NotFound'})
 }
+
+const clickRecord = (item) => {
+  router.push({ name: "RecordDetail", params: { id: item.id } });
+}
 </script>
 
 <template>
@@ -172,8 +176,8 @@ const showNotFound = () =>  {
   </div>
   <RecordCard v-for="record in records"
         v-bind="record"
-        :recordDate="record.date"
-        :recordMemo="record.memo" />
+        :record="record"
+        @recordClick="clickRecord(record)" />
   <div class="record-list">
     <span class="section-title">投稿した知識</span>
   </div>
@@ -183,7 +187,7 @@ const showNotFound = () =>  {
         :knowledgeContent="knowledge.content" />
 </template>
 
-<style>
+<style scoped>
 .profile-card{
   width: 100%;
   max-width:400px;

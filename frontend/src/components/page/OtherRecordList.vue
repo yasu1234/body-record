@@ -8,6 +8,7 @@ import TabMenu from '../layout/TabMenu.vue'
 import Header from '../layout/Header.vue'
 import ListPage from '../layout/ListPage.vue'
 import DatePicker from '../atom/DatePicker.vue'
+import RecordCard from '../layout/RecordCard.vue'
 
 const router = useRouter();
 
@@ -97,8 +98,8 @@ function endDateChange(event) {
   endDate.value = event
 }
 
-function clickRecord(item) {
-  router.push({ name: 'RecordDetail', params: { id: item.id }})
+const clickRecord = (item) => {
+  router.push({ name: "RecordDetail", params: { id: item.id } });
 }
 </script>
 
@@ -121,12 +122,10 @@ function clickRecord(item) {
     <div class="search-button-area">
         <button class="search-button" @click="targetSearch">検索</button>
     </div>
-    <div class="my-idea-card" v-for="item of searchResult" :key="item.id" @click="clickRecord(item)">
-      <h4 class="my-idea-title"><b>{{ item.title }}</b></h4>
-      <div>
-        <p class="idea-date">{{ item.date }}</p>
-      </div>
-    </div>
+    <RecordCard v-for="record in searchResult"
+        v-bind="record"
+        :record="record"
+        @recordClick="clickRecord(record)"/>
     <div class="record-list-page">
       <ListPage
       :pageCount="pageCount"
@@ -135,7 +134,7 @@ function clickRecord(item) {
     </div>
 </template>
 
-<style>
+<style scoped>
 .keyword-search {
    padding: 30px;
  }
@@ -199,17 +198,6 @@ input[type="checkbox"]:checked:before {
   color: white;
   font-size:16px;
   font-weight:bold;
-}
-.my-idea-title {
-  margin: 10px 12px 12px 10px;
-}
-.my-idea-card {
-  margin: 10px 12px 12px 12px;
-  border: 1px solid #CCC;
-  border-radius: 5px;
-}
-.idea-date {
-  margin: 10px 0px 10px 10px;
 }
 .add-button-area {
   text-align: right;
