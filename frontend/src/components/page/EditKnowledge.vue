@@ -147,7 +147,7 @@ const edit = async () => {
     </div>
 </template>
 
-<style>
+<style scoped>
 .editor{
    padding: 30px;
  }

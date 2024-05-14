@@ -18,7 +18,7 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
             @user = current_api_v1_user
             render json: { user: @user.as_json(include: [:profile]) }, status: 200
         else
-            render status: 200
+            render json: { user: nil }, status: 200
         end
     end
 end

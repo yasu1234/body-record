@@ -24,7 +24,7 @@ const renderedMarkdown = computed(() => {
     </div>
 </template>
 
-<style>
+<style scoped>
 .knowledge-title {
     margin: 10px 12px 12px 10px;
 }

@@ -161,7 +161,7 @@ const edit = async () => {
     </div>
 </template>
 
-<style>
+<style scoped>
 .edit-time {
     padding-left: 20px;
     padding-right: 20px;

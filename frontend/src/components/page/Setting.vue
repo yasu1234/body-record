@@ -117,7 +117,7 @@ function closeModal() {
   </div>
 </template>
 
-<style>
+<style scoped>
 .setting-list {
     text-align: center;
     padding-top: 40px;

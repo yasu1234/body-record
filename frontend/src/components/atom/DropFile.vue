@@ -95,7 +95,7 @@ const drop = (e) => {
 const emit = defineEmits(['change']);
 </script>
   
-<style>
+<style scoped>
 .main {
     align-items: center;
     justify-content: center;

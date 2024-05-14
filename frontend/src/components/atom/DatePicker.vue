@@ -29,5 +29,5 @@ function updateDate(newDate) {
     @update:model-value="updateDate"/>
 </template>
 
-<style>
+<style scoped>
 </style>

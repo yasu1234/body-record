@@ -5,14 +5,14 @@ class Api::V1::RecordsController < ApplicationController
         base_scope = Record.where(user_id: @user.id)
         records, total_pages = search_and_paginate_records(base_scope)
    
-        render json: { records: records, totalPage: total_pages }, status: 200
+        render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: 200
     end
 
     def index
         base_scope = Record.where(open_status: 1)
         records, total_pages = search_and_paginate_records(base_scope)
 
-        render json: { records: records, totalPage: total_pages }, status: 200
+        render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: 200
     end
 
     # 指定した年月1ヶ月分の記録を取得する
@@ -38,7 +38,7 @@ class Api::V1::RecordsController < ApplicationController
 
         records_with_empty_dates = records.records_in_month(dates)
 
-        render json: { records: records_with_empty_dates.as_json(methods: :set_formatted_date)}, status: 200
+        render json: { records: records_with_empty_dates.as_json(methods: :graph_formatted_date)}, status: 200
     end
 
     def show
@@ -115,9 +115,11 @@ class Api::V1::RecordsController < ApplicationController
 
         if records.count > 5
             records = records.latest_records(5)
+        else
+            records = records.latest_records(records.count)
         end
 
-        render json: { records: records }, status: 200
+        render json: { records: records.as_json(methods: :formatted_date) }, status: 200
     end
 
     private

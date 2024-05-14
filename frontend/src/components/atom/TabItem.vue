@@ -23,19 +23,18 @@ function handleClick(menuId) {
     </div>
 </template>
 
-<style>
+<style scoped>
 .tab {
-  border-radius: 2px 2px 0 0;
-  background: #fff;
-  color: #867d74;
-  line-height: 24px;
+    background: #fff;
+    color: #867d74;
 }
 .tab-button {
     margin-left: 8px;
     margin-right: 8px;
+    padding: 0.6em 1.2em;
 }
 .tab:hover {
-  color: #000000;
+    color: #000000;
 }
 .active {
     color: #867d74;
@@ -43,5 +42,6 @@ function handleClick(menuId) {
 .active-tab {
     height: 4px;
     background: #ffa500;
+    margin-top: 3px;
 }
 </style>

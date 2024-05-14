@@ -50,7 +50,7 @@ function clickContact(item) {
   </div>
 </template>
 
-<style>
+<style scoped>
 .search-button-area {
     text-align: center;
 }
