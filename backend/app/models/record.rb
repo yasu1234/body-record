@@ -38,7 +38,11 @@ class Record < ApplicationRecord
         end
     end
 
-    def set_formatted_date
+    def graph_formatted_date
       self.formatted_date = date&.strftime('%m/%d')
+    end
+
+    def formatted_date
+      self.formatted_date = date&.strftime('%Y年%-m月%-d日')
     end
 end
