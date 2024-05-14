@@ -115,6 +115,8 @@ class Api::V1::RecordsController < ApplicationController
 
         if records.count > 5
             records = records.latest_records(5)
+        else
+            records = records.latest_records(records.count)
         end
 
         render json: { records: records.as_json(methods: :formatted_date) }, status: 200
