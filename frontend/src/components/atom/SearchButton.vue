@@ -10,7 +10,7 @@ const searchButtonClick = () => {
 
 <template>
   <Button
-    label="検索"
+    label="この条件で検索する"
     icon="pi pi-search"
     class="search-button"
     @click="searchButtonClick"
@@ -19,7 +19,7 @@ const searchButtonClick = () => {
 
 <style scoped>
 .search-button {
-  background: #ffa500;
+  background: #46c443;
   color: white;
   font-size: 16px;
   font-weight: bold;
