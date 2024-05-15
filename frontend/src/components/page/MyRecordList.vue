@@ -145,10 +145,12 @@ function addRecord() {
   <div class="add-button-area">
     <button class="add-button" @click="addRecord">記録を追加する</button>
   </div>
-  <RecordCard v-for="record in searchResult"
+  <div class="record-search-result">
+    <RecordCard v-for="record in searchResult"
         v-bind="record"
         :record="record"
         @recordClick="clickRecord(record)"/>
+  </div>
   <div class="record-list-page">
     <ListPage
       :pageCount="pageCount"
@@ -218,6 +220,9 @@ input[type="checkbox"]:checked:before {
 .search-check {
   margin-top: 20px;
 }
+.record-search-result {
+  margin-top: 20px;
+}
 .search-button-area {
   text-align: center;
   margin-top: 20px;
@@ -236,7 +241,6 @@ input[type="checkbox"]:checked:before {
 .record-list-page {
   margin-top: 50px;
 }
-
 @media screen and (max-width: 768px) {
   .my-record-search-container {
     width: auto;
