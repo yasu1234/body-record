@@ -270,5 +270,8 @@ const clickRecord = (item) => {
 }
 .weight-graph {
   margin-top: 20px;
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
