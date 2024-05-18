@@ -6,13 +6,10 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
 
     @user = current_api_v1_user
 
-    if sign_up_params[:email].present?
-      if @user.update_without_password(sign_up_params)
-        render json: { user: @user }, status: 200
-      else
-        render json: { errors: @user.errors.full_messages }, status: 422
-      end
+    if @user.update_without_password(account_update_params)
+      render json: { user: @user }, status: 200
     else
+      render json: { errors: @user.errors.full_messages }, status: 422
     end
   end
 
@@ -32,6 +29,10 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
   
   def sign_up_params
     params.permit(:email, :password, :password_confirmation, :name)
+  end
+
+  def account_update_params
+    params.permit(:email, :password, :password_confirmation, :name, :image)
   end
 end
   

@@ -39,16 +39,20 @@ const getProfile = async () => {
             }
         })
 
-        if (res.data.user.profile.goal_weight !== null) {
-            goalWeight.value = res.data.user.profile.goal_weight
+        if (res.data.user.goal_weight !== null) {
+            goalWeight.value = res.data.user.goal_weight
         }
 
-        if (res.data.user.profile.goal_fat_percentage !== null) {
-            goalFatPercentage.value = res.data.user.profile.goal_fat_percentage
+        if (res.data.user.goal_fat_percentage !== null) {
+            goalFatPercentage.value = res.data.user.goal_fat_percentage
         }
 
-        if (res.data.user.profile.profile !== null) {
-            profile.value = res.data.user.profile.profile
+        if (res.data.user.profile !== null) {
+            profile.value = res.data.user.profile
+        }
+
+        if (res.data.user.user.image_url) {
+            userThumbnail.value = res.data.user.user.image_url
         }
     } catch (error) {
         console.log({ error })
@@ -62,19 +66,16 @@ const updateProfile = async () => {
         formData.append('goal_weight', goalWeight.value);
         formData.append('goal_fat_percentage', goalFatPercentage.value);
 
-        if (file.value !== null) {
-            formData.append('image', file.value);
-        }
-
         const res = await axios.post(import.meta.env.VITE_APP_API_BASE + `/api/v1/profiles`, formData, {
             headers: {
-                'Content-Type': 'multipart/form-data',
                 'access-token' : Cookies.get('accessToken'),
                 'client':Cookies.get('client'),
                 'uid': Cookies.get('uid')
             }
         })
-        
+        if (file.value !== null) {
+            updateProfileImage();
+        }
     } catch (error) {
         errorMessage.value = ''
         let errorMessages = 'プロフィール変更に失敗しました\n';
@@ -86,6 +87,38 @@ const updateProfile = async () => {
         errorMessage.value = errorMessages
     }
 }
+
+const updateProfileImage = async () => {
+  try {
+    const formData = new FormData();
+    if (file.value !== null) {
+        formData.append('image', file.value);
+    }
+
+    const res = await axios.put(
+      import.meta.env.VITE_APP_API_BASE + `/api/v1/auth`,
+      formData,
+      {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+          "access-token": Cookies.get("accessToken"),
+          client: Cookies.get("client"),
+          uid: Cookies.get("uid"),
+        },
+      }
+    );
+    console.log({ res });
+  } catch (error) {
+    errorMessage.value = "";
+    let errorMessages = "プロフィール画像登録に失敗しました\n";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      }
+    }
+    errorMessage.value = errorMessages;
+  }
+};
 </script>
 
 <template>
@@ -177,15 +210,15 @@ input[type="text"] {
     width: 80px;
     height: 80px;
     border: #CCC 1px solid;
-    border-radius: 55px;
+    border-radius: 50%;
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
 .current-thumbnail img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 50%;
 }
 </style>

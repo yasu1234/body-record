@@ -71,8 +71,8 @@ const getProfile = async () => {
     );
 
     profile.value = res.data.user.profile.profile;
-    userName.value = res.data.user.name;
-    userThumbnail.value = res.data.user.image_url;
+    userName.value = res.data.user.user.name;
+    userThumbnail.value = res.data.user.user.image_url;
   } catch (error) {
     console.log({ error });
   }
@@ -273,9 +273,10 @@ const clickRecord = (item) => {
   margin-top: 20px;
 }
 .profile-thumb img {
-  display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 .profile-content {
   margin: 0 0 49px;
