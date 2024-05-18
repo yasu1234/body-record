@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       resources :comments do
         post '/knowledge', on: :collection, to: 'comments#create_knowledge_comment', as: 'create_knowledge_comment'
         post '/record', on: :collection, to: 'comments#create_record_comment', as: 'create_record_comment'
+        get '/knowledge', on: :collection, to: 'comments#get_knowledge_comment', as: 'get_knowledge_comment'
       end
 
       resources :contacts
