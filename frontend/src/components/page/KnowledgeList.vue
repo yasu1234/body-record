@@ -111,7 +111,7 @@ function addKnowledge() {
         v-bind="knowledge"
         :knowledgeTitle="knowledge.title"
         :knowledgeContent="knowledge.content" 
-        @click="clickKnowledge(item)" />
+        @click="clickKnowledge(knowledge)" />
   <div class="knowledge-list-page">
       <ListPage
       :pageCount="pageCount"
