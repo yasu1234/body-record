@@ -3,7 +3,7 @@ class Api::V1::CommentsController < ApplicationController
 
     def get_knowledge_comment
         if params[:knowledge_id].nil?
-            return render json: { error: 'IDが不足しています'}, status: 404
+            return render json: { error: 'IDが不足しています'}, status: 400
         end
 
         begin
@@ -12,7 +12,7 @@ class Api::V1::CommentsController < ApplicationController
             return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
-        render json: { comments: comments.as_json(include: [:user])}, status: 200
+        render json: { comments: comments.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
     end
 
     def create_knowledge_comment
@@ -30,9 +30,9 @@ class Api::V1::CommentsController < ApplicationController
         comment.user_id = @user.id
 
         if comment.save
-            render json: { knowledge: knowledge.as_json(include: [:comments])}, status: 200
+            render json: { comments: knowledge.comments.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
         else
-            render json: { errors: comment.errors.to_hash(true)}, status: 422
+            render json: { errors: comment.errors.full_messages}, status: 422
         end
     end
 
@@ -53,7 +53,7 @@ class Api::V1::CommentsController < ApplicationController
         if @comment.save
             render json: { record: record.as_json(include: [:comments]) }, status: 200
         else
-            render json: { errors: comment.errors.to_hash(true)}, status: 422
+            render json: { errors: comment.errors.full_messages}, status: 422
         end
     end
 

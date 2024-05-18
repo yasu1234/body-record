@@ -7,6 +7,8 @@ import MarkdownIt from "markdown-it";
 
 import Header from "../layout/Header.vue";
 import TabMenu from "../layout/TabMenu.vue";
+import Comment from "../layout/Comment.vue";
+import CommentInput from "../layout/CommentInput.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -17,7 +19,6 @@ const knowledgeId = ref(null);
 const isBookmark = ref(false);
 const isMyKnowledge = ref(false);
 const comments = ref([]);
-const comment = ref("");
 
 const md = new MarkdownIt();
 
@@ -136,7 +137,7 @@ function bookmarkClick(isBookmarkOn) {
   }
 }
 
-const addComment = async () => {
+const addComment = async (comment) => {
   try {
     const formData = new FormData();
     formData.append("knowledge_id", knowledgeId.value);
@@ -153,7 +154,7 @@ const addComment = async () => {
         },
       }
     );
-    comments.value = res.data.knowledge.comments;
+    comments.value = res.data.comments;
   } catch (error) {
     comments.value = [];
     if (error.response.status === 404) {
@@ -204,22 +205,13 @@ const showEdit = () => {
           </div>
           <div v-if="comments.length !== 0">
             <div v-for="comment in comments" class="comment">
-              <p>{{ comment.comment }}</p>
+              <Comment :thumbnail="comment.user.image_url.url" :name="comment.user.name" :comment="comment.comment" />
             </div>
           </div>
           <div v-else>
             <p>コメントはありません</p>
           </div>
-          <textarea
-            name="comment"
-            rows="10"
-            v-model="comment"
-            class="comment-textarea"
-            placeholder="コメントを入力"
-          />
-          <button class="comment-add-button" @click="addComment">
-            コメントを投稿する
-          </button>
+          <CommentInput @addComment="addComment"/>
         </div>
       </div>
     </div>
@@ -354,19 +346,9 @@ input[type="text"] {
   padding-left: 20px;
   border-bottom: 1px solid rgba(6, 6, 6, 0.17);
 }
-.comment-textarea {
-  width: calc(100% - 40px);
-  margin-top: 20px;
-  margin-left: 20px;
-  padding-left: 10px;
-  border: 1px solid #ccc;
-}
 .comment-container-title {
   margin-left: 20px;
   padding-top: 20px;
   font-weight: bold;
-}
-.comment-add-button {
-  margin-bottom: 20px;
 }
 </style>
