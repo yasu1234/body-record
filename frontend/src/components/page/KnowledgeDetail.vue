@@ -138,19 +138,19 @@ function edit() {
                 <div class="editor">
                     <p id="title" class="knowledge-title" type="text" v-if="knowledge !== null"> {{ knowledge.title }} </p>
                     <p class="knowledge-content" v-html="renderedMarkdown"></p>
-                </div>
-                <div v-if="imageUrls.length!==0">
-                    <p class="inputTitle">関連画像</p>
-                    <div class="thumbnail-container">
-                        <div class="thumbnail" v-for="item in imageUrls">
-                            <div class="thumbnail-image">
-                                <img :src="item.url" alt="">
+                    <div v-if="imageUrls.length!==0">
+                        <p class="inputTitle">関連画像</p>
+                        <div class="thumbnail-container">
+                            <div class="thumbnail" v-for="item in imageUrls">
+                                <div class="thumbnail-image">
+                                    <img :src="item.url" alt="">
+                                </div>
                             </div>
                         </div>
+                        <div class="relationImages">
+                            <button class="editButton" @click="edit">編集する</button>
+                        </div>
                     </div>
-                </div>
-                <div class="relationImages">
-                    <button class="editButton" @click="edit">編集する</button>
                 </div>
                 <div class="comment-container">
                     <div class="comment-container-title-area">
@@ -166,23 +166,28 @@ function edit() {
 		</div>
 		<div class="side">
 			<div class="side_content">
-				<button v-if="isBookmark" class="booknmark-button"><img src="../../assets/image/bookmark_on.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(true)"></button>
-                <button v-else class="booknmark-button"><img src="../../assets/image/bookmark_off.png" alt="ユーザー" class="booknmark-image" @click="bookmarkClick(false)"></button>
+				<button v-if="isBookmark" class="booknmark-button"><img src="../../assets/image/bookmark_on.png" alt="ブックマーク" class="booknmark-image" @click="bookmarkClick(true)"></button>
+                <button v-else class="booknmark-button"><img src="../../assets/image/bookmark_off.png" alt="ブックマーク" class="booknmark-image" @click="bookmarkClick(false)"></button>
 			</div>
 		</div>
 	</div>
 </template>
 
-<style>
+<style scoped>
 .wrap {
     display: grid;	
     grid-template-columns: 4fr 1fr;
+    background-color: #f5f6f6;
 }
 .side_content {
 	position: sticky;
 	top: 100px;
+    margin-left: 30px;
 }
 
+.main {
+    margin-left: 20px;
+}
 .booknmark-button {
 	padding: 0;
     background: transparent;
@@ -196,6 +201,8 @@ function edit() {
 
 .editor{
    padding: 30px;
+   border-radius: 8px;
+   background-color: #ffffff;
  }
 
  input[type=text] {
@@ -218,8 +225,6 @@ function edit() {
     padding: 20px;
 }
 .editButton{
-    background: #ffa500;
-    color: white;
     font-size:16px;
     font-weight:bold;
 }
@@ -253,7 +258,8 @@ function edit() {
 }
 .comment-container {
     margin-top: 20px;
-    margin-left: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
 }
 .comment-container-title-area {
     border-bottom: 1px solid rgba(6, 6, 6, 0.17);
@@ -265,6 +271,8 @@ function edit() {
 }
 
 .comment-container-title {
-    text-align: left;
+    margin-left: 20px;
+    padding-top: 20px;
+    font-weight: bold;
 }
 </style>
