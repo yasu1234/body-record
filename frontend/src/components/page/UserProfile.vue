@@ -121,8 +121,6 @@ const getMonthRecord = async () => {
       }
     );
 
-    console.log({ res });
-
     weigtData.value.labels = res.data.records.map(
       (record) => record.graph_formatted_date
     );

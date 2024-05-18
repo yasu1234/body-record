@@ -43,15 +43,10 @@ class Api::V1::KnowledgesController < ApplicationController
         bookmark = knowledge.bookmarks.where(knowledge_id: knowledge.id).first
         render json: { knowledge: knowledge.as_json(
             include: {
-                user: {
-                    only: [:name],
-                    include:[:profile]
-                },
-            }, methods: :image_urls).merge(isBookmark: bookmark.present?, myProfile: @user.profile.as_json(include: {
-                user: {
-                  only: [:name]
-                },
-              })) }, status: 200
+                user: {only: [:name], methods: :image_url}
+            }, methods: :image_urls).merge(isBookmark: bookmark.present?,
+            myProfile: @user.profile.as_json(include: {
+                user: {only: [:name], methods: :image_url}})) }, status: 200
     end
 
     def delete_image
