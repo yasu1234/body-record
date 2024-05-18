@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import MarkdownIt from "markdown-it";
 
 import Header from "../layout/Header.vue";
+import TabMenu from "../layout/TabMenu.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -14,6 +15,7 @@ const knowledge = ref(null);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
 const isBookmark = ref(false);
+const isMyKnowledge = ref(false);
 const comments = ref([]);
 const comment = ref("");
 
@@ -28,6 +30,7 @@ const renderedMarkdown = computed(() => {
 
 onMounted(() => {
   getDetail();
+  getComments();
 });
 
 const getDetail = async () => {
@@ -47,7 +50,29 @@ const getDetail = async () => {
     knowledge.value = res.data.knowledge;
     imageUrls.value = res.data.knowledge.image_urls;
     isBookmark.value = res.data.isBookmark;
-    comments.value = res.data.knowledge.comments;
+  } catch (error) {
+    if (error.response.status === 404) {
+      showNotFound();
+    }
+  }
+};
+
+const getComments = async () => {
+  try {
+    const res = await axios.get(
+      import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/knowledge`,
+      {
+        headers: {
+          "access-token": Cookies.get("accessToken"),
+          client: Cookies.get("client"),
+          uid: Cookies.get("uid"),
+        },
+        params: {
+          knowledge_id: route.params.id,
+        },
+      }
+    );
+    comments.value = res.data.comments;
   } catch (error) {
     if (error.response.status === 404) {
       showNotFound();
@@ -130,6 +155,7 @@ const addComment = async () => {
     );
     comments.value = res.data.knowledge.comments;
   } catch (error) {
+    comments.value = [];
     if (error.response.status === 404) {
       showNotFound();
     }
@@ -140,13 +166,14 @@ const showNotFound = () => {
   router.push({ name: "NotFound" });
 };
 
-function edit() {
+const showEdit = () => {
   router.push({ name: "EditKnowledge", params: { id: knowledgeId.value } });
-}
+};
 </script>
 
 <template>
   <Header />
+  <TabMenu :currentId="0" />
   <div class="wrap">
     <div class="main">
       <div class="main_content">
@@ -169,25 +196,28 @@ function edit() {
                 </div>
               </div>
             </div>
-            <div class="relationImages">
-              <button class="editButton" @click="edit">編集する</button>
-            </div>
           </div>
         </div>
         <div class="comment-container">
           <div class="comment-container-title-area">
             <p class="comment-container-title">コメント</p>
           </div>
-          <div v-for="comment in comments">
-            <p>{{ comment.comment }}</p>
+          <div v-if="comments.length !== 0">
+            <div v-for="comment in comments" class="comment">
+              <p>{{ comment.comment }}</p>
+            </div>
+          </div>
+          <div v-else>
+            <p>コメントはありません</p>
           </div>
           <textarea
             name="comment"
-            rows="15"
+            rows="10"
             v-model="comment"
             class="comment-textarea"
+            placeholder="コメントを入力"
           />
-          <button class="registerButton" @click="addComment">
+          <button class="comment-add-button" @click="addComment">
             コメントを投稿する
           </button>
         </div>
@@ -195,20 +225,36 @@ function edit() {
     </div>
     <div class="side">
       <div class="side_content">
-        <button v-if="isBookmark" class="booknmark-button">
+        <button v-if="isBookmark" class="round-button">
           <img
             src="../../assets/image/bookmark_on.png"
             alt="ブックマーク"
-            class="booknmark-image"
+            class="side-menu-image"
             @click="bookmarkClick(true)"
           />
         </button>
-        <button v-else class="booknmark-button">
+        <button v-else class="round-button">
           <img
             src="../../assets/image/bookmark_off.png"
             alt="ブックマーク"
-            class="booknmark-image"
+            class="side-menu-image"
             @click="bookmarkClick(false)"
+          />
+        </button>
+        <button class="round-button" v-show="isMyKnowledge">
+          <img
+            src="../../assets/image/edit.png"
+            alt="編集"
+            class="side-menu-image"
+            @click="showEdit"
+          />
+        </button>
+        <button class="round-button" v-show="isMyKnowledge">
+          <img
+            src="../../assets/image/delete.png"
+            alt="削除"
+            class="side-menu-image"
+            @click=""
           />
         </button>
       </div>
@@ -221,25 +267,32 @@ function edit() {
   display: grid;
   grid-template-columns: 4fr 1fr;
   background-color: #f5f6f6;
+  padding-top: 20px;
 }
 .side_content {
   position: sticky;
   top: 100px;
   margin-left: 30px;
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
 }
 
 .main {
   margin-left: 20px;
 }
-.booknmark-button {
+.round-button {
   padding: 0;
   background: transparent;
   border: 1px solid #ccc;
   border-radius: 50%;
+  width: 60px;
+  height: 60px;
 }
-.booknmark-image {
-  width: 40px;
-  height: 40px;
+.side-menu-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .editor {
@@ -264,13 +317,6 @@ input[type="text"] {
   font-size: 22px;
   padding-top: 20px;
 }
-.relationImages {
-  padding: 20px;
-}
-.editButton {
-  font-size: 16px;
-  font-weight: bold;
-}
 .thumbnail-container {
   display: flex;
   flex-wrap: wrap;
@@ -284,9 +330,6 @@ input[type="text"] {
   margin-right: 15px;
   margin-bottom: 15px;
   padding-left: 20px;
-}
-.thumbnail img {
-  height: 100%;
 }
 .thumbnail-image {
   height: 100%;
@@ -307,15 +350,23 @@ input[type="text"] {
 .comment-container-title-area {
   border-bottom: 1px solid rgba(6, 6, 6, 0.17);
 }
-
-.comment-textarea {
-  width: 100%;
-  margin-top: 20px;
+.comment {
+  padding-left: 20px;
+  border-bottom: 1px solid rgba(6, 6, 6, 0.17);
 }
-
+.comment-textarea {
+  width: calc(100% - 40px);
+  margin-top: 20px;
+  margin-left: 20px;
+  padding-left: 10px;
+  border: 1px solid #ccc;
+}
 .comment-container-title {
   margin-left: 20px;
   padding-top: 20px;
   font-weight: bold;
+}
+.comment-add-button {
+  margin-bottom: 20px;
 }
 </style>

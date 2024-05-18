@@ -1,6 +1,20 @@
 class Api::V1::CommentsController < ApplicationController
     before_action :check_user
 
+    def get_knowledge_comment
+        if params[:knowledge_id].nil?
+            return render json: { error: 'IDが不足しています'}, status: 404
+        end
+
+        begin
+            comments = Comment.where(knowledge_id: params[:knowledge_id])
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
+        end
+
+        render json: { comments: comments.as_json(include: [:user])}, status: 200
+    end
+
     def create_knowledge_comment
         if knowledge_comment_params[:knowledge_id].nil?
             return render json: { error: 'IDが不足しています'}, status: 400

@@ -2,7 +2,7 @@ class Api::V1::ProfilesController < ApplicationController
     before_action :set_user
 
     def show
-        render json: { user: @user.profile.as_json(methods: :image_url) }, status: 200
+        render json: { user: @user.profile.as_json(include: [:user], methods: :image_url) }, status: 200
     end
 
     def create
