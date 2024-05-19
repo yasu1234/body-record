@@ -106,13 +106,13 @@ const registerRecord = async () => {
       <input type="checkbox" id="statusSelect" v-model="isAddAsHidden" />
       <label for="statusSelectName">非公開記録にする場合にはチェック</label>
     </div>
-    <div class="relationImages record-add-space">
+    <div class="record-add-space">
       <p>関連画像</p>
       <DropFile @change="onFileChange" />
     </div>
   </div>
-  <div class="relationImages">
-    <button class="registerButton" @click="registerRecord">登録する</button>
+  <div class="record-add-space">
+    <button class="add-record-button" @click="registerRecord">記録を登録する</button>
   </div>
 </template>
 
@@ -131,13 +131,9 @@ const registerRecord = async () => {
 .record-add-space {
   margin-top: 30px;
 }
-.relationImages {
-  padding: 20px;
-}
-.registerButton {
-  background: #ffa500;
-  color: white;
+.add-record-button {
   font-size: 16px;
   font-weight: bold;
+  padding: 10px 50px;
 }
 </style>
