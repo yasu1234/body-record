@@ -7,6 +7,8 @@ import MarkdownIt from 'markdown-it'
 
 import Header from '../layout/Header.vue'
 import ErrorMessage from '../atom/ErrorMessage.vue'
+import Comments from "../layout/Comments.vue";
+import CommentInput from "../layout/CommentInput.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -178,7 +180,7 @@ const showNotFound = () =>  {
     router.push({ name: 'NotFound'})
 }
 
-function edit() {
+const showEdit = () => {
     router.push({ name: 'EditRecord', params: { id: recordId.value }})
 }
 </script>
@@ -191,7 +193,7 @@ function edit() {
 			<div class="main_content">
                 <div class="editor">
                     <p id="title" class="knowledge-title" type="text"> {{ title }} </p>
-                    <p class="knowledge-content" v-html="renderedMarkdown" />
+                    <p class="record-content" v-html="renderedMarkdown" />
                 </div>
                 <div v-if="imageUrls !== null && imageUrls.length!==0">
                     <p class="inputTitle">関連画像</p>
@@ -203,34 +205,81 @@ function edit() {
                         </div>
                     </div>
                 </div>
-                <div class="record-detail-buttons" v-if="isMyRecord">
-                    <button class="detail-button" @click="edit">編集する</button>
-                    <button class="detail-button" @click="deleteRecord">削除する</button>
-                </div>
-                <div class="comment-container">
-                    <div class="comment-container-title-area">
+                <div class="radius-section">
+                     <div class="comment-container-title-area">
                         <p class="comment-container-title">コメント</p>
                     </div>
-                    <div v-for="comment in comments">
-                        <p> {{ comment.comment }} </p>
+                    <div v-if="comments.length !== 0">
+                        <Comments :comments="comments" />
                     </div>
-                    <textarea name="comment" rows="15" v-model="comment" class="comment-textarea" />
-                    <button class="registerButton" @click="addComment">コメントを投稿する</button>
+                    <div v-else>
+                        <p>コメントはありません</p>
+                    </div>
+                    <CommentInput @addComment="addComment" />
                 </div>
 			</div>
 		</div>
 		<div class="side">
 			<div class="side_content">
-				<button v-if="isSupport" class="booknmark-button"><img src="../../assets/image/support_on.png" alt="ユーザー" class="booknmark-image" @click="supportClick(true)"></button>
-                <button v-else class="booknmark-button"><img src="../../assets/image/support_off.png" alt="ユーザー" class="booknmark-image" @click="supportClick(false)"></button>
+                <button v-if="isSupport" class="round-button">
+          <img
+            src="../../assets/image/support_off.png"
+            alt="応援"
+            class="side-menu-image"
+            @click="supportClick(true)"
+          />
+        </button>
+        <button v-else class="round-button">
+          <img
+            src="../../assets/image/support_off.png"
+            alt="応援解除"
+            class="side-menu-image"
+            @click="supportClick(false)"
+          />
+        </button>
+        <button class="round-button" v-show="isMyKnowledge">
+          <img
+            src="../../assets/image/edit.png"
+            alt="編集"
+            class="side-menu-image"
+            @click="showEdit"
+          />
+        </button>
+        <button class="round-button" v-show="isMyKnowledge">
+          <img
+            src="../../assets/image/delete.png"
+            alt="削除"
+            class="side-menu-image"
+            @click=""
+          />
+        </button>
 			</div>
 		</div>
 	</div>
 </template>
 
 <style>
+.wrap {
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  background-color: #f5f6f6;
+  padding-top: 20px;
+}
+.side_content {
+  position: sticky;
+  top: 100px;
+  margin-left: 30px;
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+}
+.main {
+  margin-left: 20px;
+}
 .editor{
    padding: 30px;
+   border-radius: 8px;
+   background-color: #ffffff;
  }
 
  input[type=text] {
@@ -245,23 +294,14 @@ function edit() {
     font-weight: bold;
     font-size: 22px;
 }
-.knowledge-content {
+.record-content {
     font-size: 22px;
     padding-top: 20px;
 }
-.record-detail-buttons {
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-}
-.record-detail-buttons button {
-    margin-right: 15px;
-}
-.detail-button {
-    background: #ffa500;
-    color: white;
-    font-size:16px;
-    font-weight:bold;
+.radius-section {
+  margin-top: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
 }
 .thumbnail-container {
     display: flex;
@@ -286,9 +326,25 @@ function edit() {
 .thumbnail-image img {
     height: 100%;
 }
-.thumbnail-actions {
-    position: absolute;
-    top: 5px;
-    right: 5px;
+.round-button {
+  padding: 0;
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+}
+.side-menu-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.comment-container-title-area {
+  border-bottom: 1px solid rgba(6, 6, 6, 0.17);
+}
+.comment-container-title {
+  margin-left: 20px;
+  padding-top: 20px;
+  font-weight: bold;
 }
 </style>

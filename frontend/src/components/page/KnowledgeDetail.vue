@@ -180,43 +180,41 @@ const showEdit = () => {
   <TabMenu :currentId="0" />
   <div class="wrap">
     <div class="main">
-      <div class="main_content">
-        <div class="editor">
-          <p
-            id="title"
-            class="knowledge-title"
-            type="text"
-            v-if="knowledge !== null"
-          >
-            {{ knowledge.title }}
-          </p>
-          <p class="knowledge-content" v-html="renderedMarkdown"></p>
-          <div v-if="imageUrls.length !== 0">
-            <p class="inputTitle">関連画像</p>
-            <div class="thumbnail-container">
-              <div class="thumbnail" v-for="item in imageUrls">
-                <div class="thumbnail-image">
-                  <img :src="item.url" alt="" />
-                </div>
+      <div class="editor">
+        <p
+          id="title"
+          class="knowledge-title"
+          type="text"
+          v-if="knowledge !== null"
+        >
+          {{ knowledge.title }}
+        </p>
+        <p class="knowledge-content" v-html="renderedMarkdown"></p>
+        <div v-if="imageUrls.length !== 0">
+          <p class="inputTitle">関連画像</p>
+          <div class="thumbnail-container">
+            <div class="thumbnail" v-for="item in imageUrls">
+              <div class="thumbnail-image">
+                <img :src="item.url" alt="" />
               </div>
             </div>
           </div>
         </div>
-        <div v-if="author !== null" class="radius-section">
-          <Author :author="author" :userId="knowledge.user_id" />
+      </div>
+      <div v-if="author !== null" class="radius-section">
+        <Author :author="author" :userId="knowledge.user_id" />
+      </div>
+      <div class="radius-section">
+        <div class="comment-container-title-area">
+          <p class="comment-container-title">コメント</p>
         </div>
-        <div class="radius-section">
-          <div class="comment-container-title-area">
-            <p class="comment-container-title">コメント</p>
-          </div>
-          <div v-if="comments.length !== 0">
-            <Comments :comments="comments" />
-          </div>
-          <div v-else>
-            <p>コメントはありません</p>
-          </div>
-          <CommentInput @addComment="addComment" />
+        <div v-if="comments.length !== 0">
+          <Comments :comments="comments" />
         </div>
+        <div v-else>
+          <p>コメントはありません</p>
+        </div>
+        <CommentInput @addComment="addComment" />
       </div>
     </div>
     <div class="side">
