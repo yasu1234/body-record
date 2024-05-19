@@ -28,7 +28,7 @@ const registerKnowledge = async () => {
         formData.append('knowledge[content]', knowledge.value);
 
         for (const file of files.value) {
-            formData.append('images', file);
+            formData.append('knowledge[images]', file);
         }
 
         const res = await axios.post(import.meta.env.VITE_APP_API_BASE + '/api/v1/knowledges', formData, {
