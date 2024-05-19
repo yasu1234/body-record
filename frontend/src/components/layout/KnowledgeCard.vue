@@ -1,42 +1,55 @@
 <script setup>
-import { ref, computed } from 'vue'
-import MarkdownIt from 'markdown-it'
+import { ref, computed } from "vue";
+import MarkdownIt from "markdown-it";
 
 const props = defineProps({
-    knowledgeTitle: String,
-    knowledgeContent: String
-})
+  knowledgeTitle: String,
+  knowledgeContent: String,
+});
 
-const md = new MarkdownIt()
+const md = new MarkdownIt();
 
 const renderedMarkdown = computed(() => {
-  return md.render(props.knowledgeContent)
-})
-
+  return md.render(props.knowledgeContent);
+});
 </script>
 
 <template>
-    <div class="knowledge-card">
-        <h4 class="knowledge-title"><b>{{ props.knowledgeTitle }}</b></h4>
-        <div>
-            <p class="knowledge-content" v-html="renderedMarkdown" />
-        </div>
+  <div class="knowledge-card">
+    <h4 class="knowledge-title">
+      <b>{{ props.knowledgeTitle }}</b>
+    </h4>
+    <div>
+      <p class="knowledge-content" v-html="renderedMarkdown" />
     </div>
+  </div>
 </template>
 
 <style scoped>
 .knowledge-title {
-    margin: 10px 12px 12px 10px;
+  margin: 10px 12px 12px 10px;
 }
+
 .knowledge-card {
-  border: 1px solid #CCC;
-  border-radius: 5px;
+  margin: 2em auto;
+  position: relative;
+  background: #eee;
+  padding: 3em 1em 2em;
   width: 100%;
-  max-width:600px;
-  box-shadow: 0px 1px 3px rgba(0,0,0,.18);
+  max-width: 600px;
+}
+
+.knowledge-card::before {
+  position: absolute;
+  content: "";
+  width: 95%;
+  height: 10px;
+  top: 0.5em;
+  left: 0;
+  right: 0;
+  bottom: 0;
   margin: 0 auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  border-top: dotted 10px #fff; /*ドットの形・大きさ・色*/
 }
 .knowledge-content {
   margin: 10px 0px 10px 10px;

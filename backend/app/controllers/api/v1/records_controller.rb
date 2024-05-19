@@ -52,7 +52,14 @@ class Api::V1::RecordsController < ApplicationController
             return render json: { error: '対象のデータが見つかりません' }, status: 404
         end
 
-        render json: { record: record.as_json(include: [:comments], methods: :image_urls).merge(isMyRecord: record.user_id == @user.id, user: @user.as_json(include: [:profile])) }, status: 200
+        render json: { record: record.as_json(
+            include: {
+                user: {only: [:name], methods: :image_url}
+            }, methods: :image_urls).merge(isMyRecord: record.user_id == @user.id,
+             myProfile: @user.profile.as_json(
+                include: {
+                    user: {only: [:name], methods: :image_url}
+                })) }, status: 200
     end
 
     def create

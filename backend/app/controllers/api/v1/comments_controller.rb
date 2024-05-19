@@ -1,6 +1,34 @@
 class Api::V1::CommentsController < ApplicationController
     before_action :check_user
 
+    def get_knowledge_comment
+        if params[:knowledge_id].nil?
+            return render json: { error: 'IDが不足しています'}, status: 400
+        end
+
+        begin
+            comments = Comment.where(knowledge_id: params[:knowledge_id])
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
+        end
+
+        render json: { comments: comments.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
+    end
+
+    def get_record_comment
+        if params[:record_id].nil?
+            return render json: { error: 'IDが不足しています'}, status: 400
+        end
+
+        begin
+            comments = Comment.where(record_id: params[:record_id])
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
+        end
+
+        render json: { comments: comments.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
+    end
+
     def create_knowledge_comment
         if knowledge_comment_params[:knowledge_id].nil?
             return render json: { error: 'IDが不足しています'}, status: 400
@@ -16,9 +44,9 @@ class Api::V1::CommentsController < ApplicationController
         comment.user_id = @user.id
 
         if comment.save
-            render json: { knowledge: knowledge.as_json(include: [:comments])}, status: 200
+            render json: { comments: knowledge.comments.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
         else
-            render json: { errors: comment.errors.to_hash(true)}, status: 422
+            render json: { errors: comment.errors.full_messages}, status: 422
         end
     end
 
@@ -39,7 +67,7 @@ class Api::V1::CommentsController < ApplicationController
         if @comment.save
             render json: { record: record.as_json(include: [:comments]) }, status: 200
         else
-            render json: { errors: comment.errors.to_hash(true)}, status: 422
+            render json: { errors: comment.errors.full_messages}, status: 422
         end
     end
 

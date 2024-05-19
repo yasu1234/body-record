@@ -12,6 +12,7 @@ const showDropdown = ref(false);
 
 onMounted(() => {
   checkLogin();
+  console.log(router.currentRoute.value.fullPath);
 });
 
 const menuList = ref([
@@ -150,7 +151,7 @@ const showHomeThenRelaod = async () => {
 header {
   width: 100%;
   height: 80px;
-  background: #f1f3ef;
+  background: #f6f8fa;
   padding-left: 30px;
   padding-right: 30px;
   box-sizing: border-box;

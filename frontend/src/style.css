@@ -25,6 +25,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #f5f6f6;
 }
 
 h1 {
@@ -53,7 +54,6 @@ button:focus-visible {
 } */
 
 textarea {
-  width:90%;
   resize: vertical;
 }
 
