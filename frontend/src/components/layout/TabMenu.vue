@@ -54,7 +54,8 @@ function menuChange(event) {
 }
 .tab-menu {
   display: flex;
-  margin-left: 16px;
+  padding-left: 16px;
+  background-color: #ffffff;
 }
 .tab-line {
   background-color:rgb(232, 229, 229);
