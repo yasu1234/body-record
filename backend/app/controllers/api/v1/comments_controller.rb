@@ -15,6 +15,20 @@ class Api::V1::CommentsController < ApplicationController
         render json: { comments: comments.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
     end
 
+    def get_record_comment
+        if params[:record_id].nil?
+            return render json: { error: 'IDが不足しています'}, status: 400
+        end
+
+        begin
+            comments = Comment.where(record_id: params[:record_id])
+        rescue ActiveRecord::RecordNotFound
+            return render json: { error: '対象のデータが見つかりません' }, status: 404
+        end
+
+        render json: { comments: comments.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
+    end
+
     def create_knowledge_comment
         if knowledge_comment_params[:knowledge_id].nil?
             return render json: { error: 'IDが不足しています'}, status: 400

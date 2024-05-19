@@ -9,6 +9,8 @@ import Header from "../layout/Header.vue";
 import ErrorMessage from "../atom/ErrorMessage.vue";
 import Comments from "../layout/Comments.vue";
 import CommentInput from "../layout/CommentInput.vue";
+import TabMenu from "../layout/TabMenu.vue";
+import Author from "../layout/Author.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -21,8 +23,9 @@ const recordUserId = ref(0);
 const isMyRecord = ref(false);
 const isSupport = ref(false);
 const comments = ref([]);
-const comment = ref("");
 const errorMessage = ref("");
+const author = ref(null);
+const record = ref(null);
 
 const md = new MarkdownIt();
 
@@ -35,6 +38,7 @@ const renderedMarkdown = computed(() => {
 
 onMounted(() => {
   getDetail();
+  getComments();
 });
 
 const getDetail = async () => {
@@ -51,11 +55,35 @@ const getDetail = async () => {
       }
     );
     recordId.value = res.data.record.id;
+    record.value = res.data
     memo.value = res.data.record.memo;
     isMyRecord.value = res.data.record.isMyRecord;
     imageUrls.value = res.data.record.image_urls;
     recordUserId.value = res.data.record.user_id;
-    comments.value = res.data.record.comments;
+    author.value = res.data.record.user;
+  } catch (error) {
+    if (error.response.status === 404) {
+      showNotFound();
+    }
+  }
+};
+
+const getComments = async () => {
+  try {
+    const res = await axios.get(
+      import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/record`,
+      {
+        headers: {
+          "access-token": Cookies.get("accessToken"),
+          client: Cookies.get("client"),
+          uid: Cookies.get("uid"),
+        },
+        params: {
+          record_id: route.params.id,
+        },
+      }
+    );
+    comments.value = res.data.comments;
   } catch (error) {
     if (error.response.status === 404) {
       showNotFound();
@@ -205,6 +233,7 @@ const showEdit = () => {
 
 <template>
   <Header />
+  <TabMenu :currentId="0" />
   <ErrorMessage :errorMessage="errorMessage" />
   <div class="wrap">
     <div class="main">
@@ -222,6 +251,9 @@ const showEdit = () => {
               </div>
             </div>
           </div>
+        </div>
+        <div v-if="author !== null" class="radius-section">
+          <Author :author="author" :userId="record.user_id" />
         </div>
         <div class="radius-section">
           <div class="comment-container-title-area">
