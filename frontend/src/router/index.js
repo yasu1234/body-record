@@ -20,6 +20,7 @@ import Contact from '/src/components/page/Contact.vue';
 import ContactList from '/src/components/page/ContactList.vue';
 import ContactDetail from '/src/components/page/ContactDetail.vue';
 import NotFound from '/src/components/page/PageNotFoundError.vue';
+import UserList from '/src/components/page/UserList.vue';
 
 const routes = [
   {
@@ -121,6 +122,11 @@ const routes = [
     path: '/contact/:id',
     name: 'ContactDetail',
     component: ContactDetail 
+  },
+  { 
+    path: '/users',
+    name: 'UserList',
+    component: UserList 
   },
   { 
     path: '/:pathMatch(.*)*',

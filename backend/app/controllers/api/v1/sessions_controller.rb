@@ -25,14 +25,15 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
     def get_users
         users = User.all
 
+        if params[:isSupportOnly].present? && params[:isSupportOnly] == "true"
+            users = users.supporing
+        end
+
         if params[:keyword].present? 
             users = users.where("name LIKE ?", "%#{params[:keyword]}%")
         end
 
-        if params[:isSupportOnly].present? && params[:isSupportOnly] == "true"
-            users = users.joins(:supporters).where(supporters: { id: current_api_v1_user.id })
-        end
-
+        
         if params[:page].present?
             users = users.page(params[:page]).per(30)
         else

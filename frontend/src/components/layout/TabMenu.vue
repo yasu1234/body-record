@@ -22,7 +22,7 @@ function menuChange(event) {
       router.push({ name: 'Home'});
       break
     case 2:
-      router.push({ name: 'OtherRecordList'})
+      router.push({ name: 'UserList'})
       break
     case 3:
       router.push({ name: 'KnowledgeList'})
