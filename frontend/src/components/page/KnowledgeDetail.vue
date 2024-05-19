@@ -7,8 +7,9 @@ import MarkdownIt from "markdown-it";
 
 import Header from "../layout/Header.vue";
 import TabMenu from "../layout/TabMenu.vue";
-import Comment from "../layout/Comment.vue";
+import Comments from "../layout/Comments.vue";
 import CommentInput from "../layout/CommentInput.vue";
+import Author from "../layout/Author.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -19,6 +20,7 @@ const knowledgeId = ref(null);
 const isBookmark = ref(false);
 const isMyKnowledge = ref(false);
 const comments = ref([]);
+const author = ref(null);
 
 const md = new MarkdownIt();
 
@@ -51,6 +53,7 @@ const getDetail = async () => {
     knowledge.value = res.data.knowledge;
     imageUrls.value = res.data.knowledge.image_urls;
     isBookmark.value = res.data.isBookmark;
+    author.value = res.data.knowledge.user;
   } catch (error) {
     if (error.response.status === 404) {
       showNotFound();
@@ -199,19 +202,20 @@ const showEdit = () => {
             </div>
           </div>
         </div>
-        <div class="comment-container">
+        <div class="radius-section">
+          <Author :author="author" />
+        </div>
+        <div class="radius-section">
           <div class="comment-container-title-area">
             <p class="comment-container-title">コメント</p>
           </div>
           <div v-if="comments.length !== 0">
-            <div v-for="comment in comments" class="comment">
-              <Comment :thumbnail="comment.user.image_url.url" :name="comment.user.name" :comment="comment.comment" />
-            </div>
+            <Comments :comments="comments" />
           </div>
           <div v-else>
             <p>コメントはありません</p>
           </div>
-          <CommentInput @addComment="addComment"/>
+          <CommentInput @addComment="addComment" />
         </div>
       </div>
     </div>
@@ -334,16 +338,12 @@ input[type="text"] {
   top: 5px;
   right: 5px;
 }
-.comment-container {
+.radius-section {
   margin-top: 20px;
   border-radius: 8px;
   background-color: #ffffff;
 }
 .comment-container-title-area {
-  border-bottom: 1px solid rgba(6, 6, 6, 0.17);
-}
-.comment {
-  padding-left: 20px;
   border-bottom: 1px solid rgba(6, 6, 6, 0.17);
 }
 .comment-container-title {
