@@ -17,7 +17,7 @@ class Api::V1::SupportsController < ApplicationController
             supporters_count = support_user.supporters.count
             includes_user = support_user.supporters.exists?(id: @user.id)
 
-            render json: { user: support_user.merge(isSupport: includes_user, supportCount: supporters_count) }, status: 200
+            render json: { user: support_user.as_json.merge(isSupport: includes_user, supportCount: supporters_count) }, status: 200
         else
             render json: { errors: supporting.erros.full_messages }, status: 422
         end
