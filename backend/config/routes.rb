@@ -26,7 +26,9 @@ Rails.application.routes.draw do
 
       resources :profiles
       resources :bookmarks
-      resources :supports
+      resources :supports do
+        get '/user/:user_id', on: :collection, to: 'supports#get_user_support', as: 'get_user_support'
+      end
 
       resources :comments do
         post '/knowledge', on: :collection, to: 'comments#create_knowledge_comment', as: 'create_knowledge_comment'

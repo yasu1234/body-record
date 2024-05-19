@@ -202,8 +202,8 @@ const showEdit = () => {
             </div>
           </div>
         </div>
-        <div class="radius-section">
-          <Author :author="author" />
+        <div v-if="author !== null" class="radius-section">
+          <Author :author="author" :userId="knowledge.user_id" />
         </div>
         <div class="radius-section">
           <div class="comment-container-title-area">
