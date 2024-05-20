@@ -1,12 +1,15 @@
 class Api::V1::PasswordsController < DeviseTokenAuth::PasswordsController
   before_action :check_login
 
-  def update    
-    if current_api_v1_user.update_with_password(password_edit_params)
-      render json: { user: current_api_v1_user }, status: 200
-    else
-      render json: { errors: current_api_v1_user.errors.full_messages }, status: 422
-    end
+  def update
+    current_api_v1_user.update_with_password(password_edit_params)
+
+    render json: { errors: current_api_v1_user.errors.full_messages }, status: 422 and return if bookmark.invalid?
+
+    current_api_v1_user.save!
+    render json: { user: current_api_v1_user }, status: 200
+  rescue StandardError => e
+    render json: { errors: e.message }, status: 500
   end
   
   private
