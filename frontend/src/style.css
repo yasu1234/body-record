@@ -69,6 +69,10 @@ p.validation-error-message {
   margin: 0 auto;
 }
 
+.setting-container {
+  display: flex;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

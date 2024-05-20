@@ -7,6 +7,8 @@ import Cookies from "js-cookie";
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
 import ErrorMessage from "../atom/ErrorMessage.vue";
+import SettingSideMenu from '../layout/SettingSideMenu.vue';
+import TabMenu from '../layout/TabMenu.vue';
 
 const route = useRoute();
 
@@ -130,40 +132,46 @@ const updateProfileImage = async () => {
 
 <template>
   <Header />
+  <TabMenu />
   <ErrorMessage :errorMessage="errorMessage" />
-  <form @submit.prevent="updateProfile">
-    <div class="profile-edit-content">
-      <label for="goal-weight">目標体重:</label>
-      <input type="text" id="goal-weight" v-model="goalWeight" />
-      <label for="goal-weight" class="unit-label">kg</label>
-    </div>
-    <div class="profile-edit-content">
-      <label for="goal-fat-percentage">目標体脂肪率:</label>
-      <input type="text" v-model="goalFatPercentage" />
-      <label for="goal-fat-percentage" class="unit-label">%</label>
-    </div>
-    <div class="profile-area">
-      <label for="comments">紹介文</label>
-      <textarea v-model="profile" class="profile-text" />
-    </div>
-    <div class="profile-image-change-container">
-      <label>プロフィール画像変更</label>
-      <div class="current-thumbnail">
-        <img
-          v-if="userThumbnail !== null"
-          :src="userThumbnail.url"
-          alt="ユーザーアイコン"
-        />
-        <img
-          v-else
-          src="../../assets/image/user-placeholder.png"
-          alt="ユーザーアイコン"
-        />
-      </div>
-      <DropFile @change="onFileChange" />
-    </div>
-    <button class="edit-profile-button">更新する</button>
-  </form>
+  <div class="setting-container">
+    <SettingSideMenu :currentIndex="1"/>
+    <main>
+      <form @submit.prevent="updateProfile">
+        <div class="profile-edit-content">
+          <label for="goal-weight">目標体重:</label>
+          <input type="text" id="goal-weight" v-model="goalWeight" />
+          <label for="goal-weight" class="unit-label">kg</label>
+        </div>
+        <div class="profile-edit-content">
+          <label for="goal-fat-percentage">目標体脂肪率:</label>
+          <input type="text" v-model="goalFatPercentage" />
+          <label for="goal-fat-percentage" class="unit-label">%</label>
+        </div>
+        <div class="profile-area">
+          <label for="comments">紹介文</label>
+          <textarea v-model="profile" class="profile-text" />
+        </div>
+        <div class="profile-image-change-container">
+          <label>プロフィール画像変更</label>
+          <div class="current-thumbnail">
+            <img
+              v-if="userThumbnail !== null"
+              :src="userThumbnail.url"
+              alt="ユーザーアイコン"
+            />
+            <img
+              v-else
+              src="../../assets/image/user-placeholder.png"
+              alt="ユーザーアイコン"
+            />
+          </div>
+          <DropFile @change="onFileChange" />
+        </div>
+        <button class="edit-profile-button">更新する</button>
+      </form>
+    </main>
+  </div>
 </template>
 
 <style>
