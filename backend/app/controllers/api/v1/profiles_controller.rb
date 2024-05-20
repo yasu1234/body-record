@@ -2,22 +2,22 @@ class Api::V1::ProfilesController < ApplicationController
     before_action :set_user
 
     def show
-        render json: {user: @user.profile.as_json(include: { user: { only: [:name], methods: :image_url }})}, status: 200
+        render json: {user: current_api_v1_user.profile.as_json(include: { user: { only: [:name], methods: :image_url }})}, status: 200
     end
 
     def create
-        if @user.profile.present?
-            if @user.profile.update(profile_register_params)
-                render json: {user: @user.profile.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
+        if current_api_v1_user.profile.present?
+            if current_api_v1_user.profile.update(profile_register_params)
+                render json: {user: current_api_v1_user.profile.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
             else
-                render json: { errors: @user.profile.errors.full_messages }, status: 422
+                render json: { errors: current_api_v1_user.profile.errors.full_messages }, status: 422
             end
         else
-            @user.profile = Profile.new(profile_register_params)
-            if @user.profile.save
-                render json: {user: @user.profile.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
+            current_api_v1_user.profile = Profile.new(profile_register_params)
+            if current_api_v1_user.profile.save
+                render json: {user: current_api_v1_user.profile.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
             else
-                render json: { errors: @user.profile.errors.full_messages }, status: 422
+                render json: { errors: current_api_v1_user.profile.errors.full_messages }, status: 422
             end
         end
     end

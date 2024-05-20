@@ -4,24 +4,20 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
   def update
     return render json: { errors: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
 
-    @user = current_api_v1_user
-
-    if @user.update_without_password(account_update_params)
-      render json: { user: @user }, status: 200
+    if current_api_v1_user.update_without_password(account_update_params)
+      render json: { user: current_api_v1_user }, status: 200
     else
-      render json: { errors: @user.errors.full_messages }, status: 422
+      render json: { errors: current_api_v1_user.errors.full_messages }, status: 422
     end
   end
 
   def destory
     return render json: { error: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
-
-    @user = current_api_v1_user
     
-    if @user.destroy
+    if current_api_v1_user.destroy
       render status: 200
     else
-      render json: { errors: @user.errors.full_messages }, status: 422
+      render json: { errors: current_api_v1_user.errors.full_messages }, status: 422
     end
   end
 

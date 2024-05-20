@@ -8,7 +8,7 @@ class Api::V1::BookmarksController < ApplicationController
             return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
         
-        if knowledge.bookmarks.create(user_id: @user.id)
+        if knowledge.bookmarks.create(user_id: current_api_v1_user.id)
             render json: { knowledge: knowledge.as_json().merge(isBookmark: true) }, status: 200
         else
             render json: { errors: knowledge.errors }, status: 422

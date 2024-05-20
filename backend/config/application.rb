@@ -16,7 +16,8 @@ module BodyRecord
 
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins ENV["API_DOMAIN"]
+        origins ENV["API_DOMAIN"], 'https://web.kumaydevelop.com'
+
         resource '*',
         headers: :any,
         expose: ["access-token", "expiry", "token-type", "uid", "client"],
