@@ -1,5 +1,5 @@
 class Api::V1::SupportsController < ApplicationController
-    before_action :set_user
+    before_action :check_login
 
     def create
         support_user = User.find(params[:id])
@@ -61,15 +61,5 @@ class Api::V1::SupportsController < ApplicationController
         includes_user = support_user.supporters.exists?(id: current_api_v1_user.id)
 
         render json: { user: support_user.as_json().merge(isSupport: includes_user, supportCount: supporters_count) }, status: 200
-    end
-
-    private
-
-    def set_user
-        if api_v1_user_signed_in?
-            @user = current_api_v1_user
-        else
-            render json: { errors: "未ログイン" }, status: 401
-        end
     end
 end
