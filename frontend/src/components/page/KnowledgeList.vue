@@ -8,6 +8,7 @@ import TabMenu from '../layout/TabMenu.vue'
 import Header from '../layout/Header.vue'
 import ListPage from '../layout/ListPage.vue'
 import SearchButton from "../atom/SearchButton.vue";
+import KnowledgeCard from '../layout/KnowledgeCard.vue'
 
 const router = useRouter();
 
@@ -106,12 +107,11 @@ function addKnowledge() {
   <div class="add-button-area">
     <button class="add-button" @click="addKnowledge">ノウハウを追加する</button>
   </div>
-  <div class="knowledge-card" v-for="item of searchResult" :key="item.id" @click="clickKnowledge(item)">
-    <h4 class="knowledge-title"><b>{{ item.title }}</b></h4>
-    <div>
-      <p class="idea-content">{{ item.content }}</p>
-    </div>
-  </div>
+  <KnowledgeCard v-for="knowledge in searchResult"
+        v-bind="knowledge"
+        :knowledgeTitle="knowledge.title"
+        :knowledgeContent="knowledge.content" 
+        @click="clickKnowledge(knowledge)" />
   <div class="knowledge-list-page">
       <ListPage
       :pageCount="pageCount"
@@ -175,17 +175,6 @@ input[type="checkbox"]:checked:before {
 }
 .search-button-area {
   text-align: center;
-}
-.knowledge-title {
-  margin: 10px 12px 12px 10px;
-}
-.knowledge-card {
-  margin: 10px 12px 12px 12px;
-  border: 1px solid #CCC;
-  border-radius: 5px;
-}
-.idea-content {
-  margin: 10px 0px 10px 10px;
 }
 .add-button-area {
   text-align: right;

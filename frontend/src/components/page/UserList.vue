@@ -4,17 +4,16 @@ import { useRouter, onBeforeRouteUpdate } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
 
+import TabMenu from "../layout/TabMenu.vue";
+import Header from "../layout/Header.vue";
 import ListPage from "../layout/ListPage.vue";
-import DatePicker from "../atom/DatePicker.vue";
 import SearchButton from "../atom/SearchButton.vue";
-import RecordCard from '../layout/RecordCard.vue'
+import RecordCard from "../layout/RecordCard.vue";
 
 const router = useRouter();
 
 const keyword = ref("");
-const startDate = ref("");
-const endDate = ref("");
-const isDisplayOnlyOpen = ref(false);
+const isDisplayOnlySupport = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
 
@@ -22,14 +21,12 @@ const pageCount = ref(1);
 const pageNum = ref(1);
 
 onMounted(() => {
-  search();
+  searchUser();
 });
 
 onBeforeRouteUpdate(async (to, from) => {
   keyword.value = to.query.keyword;
-  startDate.value = to.query.startDate;
-  endDate.value = to.query.endDate;
-  search();
+  searchUser();
 });
 
 const targetSearch = () => {
@@ -39,21 +36,13 @@ const targetSearch = () => {
     query.keyword = keyword.value;
   }
 
-  if (startDate.value !== "") {
-    query.startDate = startDate.value;
-  }
-
-  if (endDate.value !== "") {
-    query.endDate = endDate.value;
-  }
-
-  router.push({ path: "/", query: query });
+  router.push({ path: "/users", query: query });
 };
 
-const search = async () => {
+const searchUser = async () => {
   try {
     const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/myRecord",
+      import.meta.env.VITE_APP_API_BASE + "/api/v1/users",
       {
         headers: {
           "access-token": Cookies.get("accessToken"),
@@ -62,22 +51,20 @@ const search = async () => {
         },
         params: {
           keyword: keyword.value,
-          startDate: startDate.value,
-          endDate: endDate.value,
-          page: pageNum,
+          page: pageNum
         },
       }
     );
 
-    if (res.data && res.data.totalPage) {
-      pageCount.value = res.data.totalPage;
+    if (res.data && res.data.total_page) {
+      pageCount.value = res.data.total_page;
     } else {
       pageCount.value = 1;
     }
 
     searchResult.value = [];
 
-    for (let item of res.data.records) {
+    for (let item of res.data.users) {
       searchResult.value.push(item);
     }
   } catch (error) {
@@ -87,20 +74,12 @@ const search = async () => {
 
 const updatePaginateItems = function (page) {
   pageNum.value = page;
-  search();
+  searchUser();
 };
-
-function startDateChange(event) {
-  startDate.value = event;
-}
-
-function endDateChange(event) {
-  endDate.value = event;
-}
 
 const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
-}
+};
 
 function addRecord() {
   router.push("/addRecord");
@@ -108,50 +87,32 @@ function addRecord() {
 </script>
 
 <template>
-  <div class="my-record-search-container">
+  <Header />
+  <TabMenu :currentId="2" />
+  <div class="user-search-container">
     <input
       type="text"
       id="keyword"
       name="keywordName"
-      placeholder="キーワードで検索"
+      placeholder="名前で検索"
       v-model="keyword"
     />
-    <div class="time-list">
-      <div class="item">
-        <p class="input-title">開始日</p>
-        <DatePicker
-          isStart="true"
-          :date="startDate"
-          @update:date="startDateChange"
-        />
-      </div>
-      <div class="item">
-        <p class="input-title">終了日</p>
-        <DatePicker
-          isStart="false"
-          :date="endDate"
-          @update:date="endDateChange"
-        />
-      </div>
-    </div>
     <div class="search-check">
-      <input type="checkbox" id="statusSelect" v-model="isDisplayOnlyOpen">
-      <label>非公開記録は表示しない</label>
+      <input type="checkbox" id="statusSelect" v-model="isDisplayOnlySupport" />
+      <label>応援しているユーザーのみ表示</label>
     </div>
     <div class="search-button-area">
       <SearchButton @searchButtonClick="targetSearch" />
     </div>
   </div>
-  <div class="add-button-area">
-    <button class="add-button" @click="addRecord">記録を追加する</button>
+  <div class="user-search-result">
+    <div v-for="user in searchResult" @click="">
+      <div>
+        <p>{{ user.name }}</p>
+      </div>
+    </div>
   </div>
-  <div class="record-search-result">
-    <RecordCard v-for="record in searchResult"
-        v-bind="record"
-        :record="record"
-        @recordClick="clickRecord(record)"/>
-  </div>
-  <div class="record-list-page">
+  <div class="user-list-page">
     <ListPage
       :pageCount="pageCount"
       v-model="pageNum"
@@ -161,7 +122,7 @@ function addRecord() {
 </template>
 
 <style scoped>
-.my-record-search-container {
+.user-search-container {
   width: 700px;
   margin: 0 auto;
   padding: 20px;
@@ -205,22 +166,10 @@ input[type="checkbox"]:checked:before {
   border-bottom: 2px solid #000;
   content: "";
 }
-.time-list {
-  display: flex;
-}
-.time-list .item {
-  padding: 5px;
-  box-sizing: border-box;
-}
-.time-list .item .input-title {
-  margin: 5px 0 0;
-  padding: 0;
-  font-size: 16px;
-}
 .search-check {
   margin-top: 20px;
 }
-.record-search-result {
+.user-search-result {
   margin-top: 20px;
 }
 .search-button-area {
@@ -233,16 +182,14 @@ input[type="checkbox"]:checked:before {
   padding-right: 40px;
 }
 .add-button {
-  background: #ffa500;
-  color: white;
   font-size: 16px;
   font-weight: bold;
 }
-.record-list-page {
+.user-list-page {
   margin-top: 50px;
 }
 @media screen and (max-width: 768px) {
-  .my-record-search-container {
+  .user-search-container {
     width: auto;
     margin-left: 20px;
     margin-right: 20px;
