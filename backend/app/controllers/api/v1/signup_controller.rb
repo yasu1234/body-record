@@ -33,5 +33,4 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
   def account_update_params
     params.permit(:email, :password, :password_confirmation, :name, :image)
   end
-end
-  
+end  

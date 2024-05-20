@@ -31,10 +31,6 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     def show
-        if params[:id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 400
-        end
-
         knowledge = Knowledge.find(params[:id].to_i)
         bookmark = knowledge.bookmarks.where(knowledge_id: knowledge.id).first
         render json: { knowledge: knowledge.as_json(
@@ -58,10 +54,6 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     def update
-        if params[:id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 400
-        end
-
         knowledge = current_api_v1_user.knowledges.find(params[:id].to_i)
         knowledge.update(knowledge_register_params)
 

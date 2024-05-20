@@ -35,4 +35,3 @@ class Api::V1::ProfilesController < ApplicationController
         render json: { errors: e.message }, status: 500 
     end
 end
-
