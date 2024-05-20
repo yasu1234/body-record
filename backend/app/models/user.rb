@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.guest
+  def self.guest!
     find_or_create_by!(email: ENV['GUEST_USER_ADDRESS']) do |user|
       user.password = SecureRandom.urlsafe_base64
       user.name = "ゲストユーザー"
