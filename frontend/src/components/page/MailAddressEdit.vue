@@ -7,8 +7,8 @@ import * as yup from "yup";
 
 import Header from "../layout/Header.vue";
 import ErrorMessage from "../atom/ErrorMessage.vue";
-import SettingSideMenu from '../layout/SettingSideMenu.vue';
-import TabMenu from '../layout/TabMenu.vue';
+import SettingSideMenu from "../layout/SettingSideMenu.vue";
+import TabMenu from "../layout/TabMenu.vue";
 
 const errorMessage = ref("");
 
@@ -75,22 +75,22 @@ const { value: newMailAddres, errorMessage: emailError } =
   <TabMenu />
   <ErrorMessage :errorMessage="errorMessage" />
   <div class="setting-container">
-    <SettingSideMenu :currentIndex="3"/>
-      <main>
-        <h1 class="mailaddress-edit-content-center">メールアドレス変更</h1>
-        <div class="mailaddress-edit-container">
-          <form class="form" @submit.prevent="checkValidate">
-            <div class="form-item">
-              <label for="email">変更後のメールアドレス</label>
-              <input id="email" type="email" v-model="newMailAddres" />
-              <p class="validation-error-message">{{ emailError }}</p>
-            </div>
-            <div class="mailaddress-edit-content-center">
-              <button class="mailaddress-edit-button">更新</button>
-            </div>
-          </form>
-        </div>
-      </main>
+    <SettingSideMenu :currentIndex="3" />
+    <main>
+      <h1 class="mailaddress-edit-content-center">メールアドレス変更</h1>
+      <div class="mailaddress-edit-container">
+        <form class="form" @submit.prevent="checkValidate">
+          <div class="form-item">
+            <label for="email">変更後のメールアドレス</label>
+            <input id="email" type="email" v-model="newMailAddres" />
+            <p class="validation-error-message">{{ emailError }}</p>
+          </div>
+          <div class="mailaddress-edit-content-center">
+            <button class="mailaddress-edit-button">更新</button>
+          </div>
+        </form>
+      </div>
+    </main>
   </div>
 </template>
 

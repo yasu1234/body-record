@@ -7,8 +7,8 @@ import Cookies from "js-cookie";
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
 import ErrorMessage from "../atom/ErrorMessage.vue";
-import SettingSideMenu from '../layout/SettingSideMenu.vue';
-import TabMenu from '../layout/TabMenu.vue';
+import SettingSideMenu from "../layout/SettingSideMenu.vue";
+import TabMenu from "../layout/TabMenu.vue";
 
 const route = useRoute();
 
@@ -135,7 +135,7 @@ const updateProfileImage = async () => {
   <TabMenu />
   <ErrorMessage :errorMessage="errorMessage" />
   <div class="setting-container">
-    <SettingSideMenu :currentIndex="1"/>
+    <SettingSideMenu :currentIndex="1" />
     <main>
       <form @submit.prevent="updateProfile">
         <div class="profile-edit-content">

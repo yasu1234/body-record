@@ -8,8 +8,8 @@ import * as yup from "yup";
 import Header from "../layout/Header.vue";
 import ErrorMessage from "../atom/ErrorMessage.vue";
 import PasswordText from "../atom/PasswordText.vue";
-import SettingSideMenu from '../layout/SettingSideMenu.vue';
-import TabMenu from '../layout/TabMenu.vue';
+import SettingSideMenu from "../layout/SettingSideMenu.vue";
+import TabMenu from "../layout/TabMenu.vue";
 import { PasswordType } from "../../const/const.js";
 
 const errorMessage = ref("");
@@ -101,45 +101,45 @@ const updatePassword = (inputPassword, passwordType) => {
   <TabMenu />
   <ErrorMessage :errorMessage="errorMessage" />
   <div class="setting-container">
-    <SettingSideMenu :currentIndex="3"/>
-      <main>
-        <h1 class="signUpTitle">パスワード変更</h1>
-        <div class="password-edit-container">
-          <form class="form" @submit.prevent="checkValidate">
-            <div class="item">
-              <label for="password">現在のパスワード</label>
-              <PasswordText
-                :password="currentPassword"
-                :passwordType="PasswordType.password"
-                @updatePassword="updatePassword"
-              />
-              <p class="validation-error-message">{{ currentPasswordError }}</p>
-            </div>
-            <div class="item">
-              <label for="password">パスワード</label>
-              <PasswordText
-                :password="password"
-                :passwordType="PasswordType.newPassword"
-                @updatePassword="updatePassword"
-              />
-              <p class="validation-error-message">{{ passwordError }}</p>
-            </div>
-            <div class="item">
-              <label for="passwordConfirm">パスワード(確認)</label>
-              <PasswordText
-                :password="passwordConfirm"
-                :passwordType="PasswordType.newPasswordConfirm"
-                @updatePassword="updatePassword"
-              />
-              <p class="validation-error-message">{{ passwordConfirmError }}</p>
-            </div>
-            <div class="signUpTitle">
-              <button class="password-edit-button">更新</button>
-            </div>
-          </form>
-        </div>
-      </main>
-    </div>
+    <SettingSideMenu :currentIndex="3" />
+    <main>
+      <h1 class="signUpTitle">パスワード変更</h1>
+      <div class="password-edit-container">
+        <form class="form" @submit.prevent="checkValidate">
+          <div class="item">
+            <label for="password">現在のパスワード</label>
+            <PasswordText
+              :password="currentPassword"
+              :passwordType="PasswordType.password"
+              @updatePassword="updatePassword"
+            />
+            <p class="validation-error-message">{{ currentPasswordError }}</p>
+          </div>
+          <div class="item">
+            <label for="password">パスワード</label>
+            <PasswordText
+              :password="password"
+              :passwordType="PasswordType.newPassword"
+              @updatePassword="updatePassword"
+            />
+            <p class="validation-error-message">{{ passwordError }}</p>
+          </div>
+          <div class="item">
+            <label for="passwordConfirm">パスワード(確認)</label>
+            <PasswordText
+              :password="passwordConfirm"
+              :passwordType="PasswordType.newPasswordConfirm"
+              @updatePassword="updatePassword"
+            />
+            <p class="validation-error-message">{{ passwordConfirmError }}</p>
+          </div>
+          <div class="signUpTitle">
+            <button class="password-edit-button">更新</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
 </template>
 
 <style scoped>

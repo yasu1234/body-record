@@ -24,7 +24,7 @@ const menuList = ref([
 
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
-}
+};
 
 const checkLogin = async () => {
   try {
@@ -39,13 +39,12 @@ const checkLogin = async () => {
       }
     );
 
-    isLogin.value = (res.data.user !== null);
+    isLogin.value = res.data.user !== null;
     userId.value = res.data.user.id;
   } catch (error) {
     isLogin.value = false;
   }
 };
-
 
 const logout = async () => {
   try {
@@ -69,13 +68,13 @@ const logout = async () => {
   }
 };
 
-const showMenu = (menu)=> {
+const showMenu = (menu) => {
   switch (menu.id) {
     case 1:
       showMyPage();
       break;
     case 2:
-      showSetting();
+      showEditProfile();
       break;
     case 3:
       logout();
@@ -86,23 +85,23 @@ const showMenu = (menu)=> {
     default:
       break;
   }
-}
+};
 
 const showMyPage = () => {
   router.push({ name: "UserProfile", params: { id: userId.value } });
-}
+};
 
 const showAccountIntroduction = () => {
   router.push({ name: "AccountInteroduction" });
-}
+};
 
-const showSetting = () => {
-  router.push({ name: "Setting" });
-}
+const showEditProfile = () => {
+  router.push({ name: "EditProfile", params: { id: userId.value } });
+};
 
 const showContact = () => {
   router.push({ name: "Contact" });
-}
+};
 
 const showHomeThenRelaod = async () => {
   await router.push({ name: "Home" });
