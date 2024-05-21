@@ -109,7 +109,7 @@ const showPasswordEdit = () => {
 }
 
 .sidebar {
-  width: 200px;
+  width: 250px;
   padding: 20px;
   margin-right: 20px;
 }

@@ -183,7 +183,7 @@ const updateProfileImage = async () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 form {
   margin-left: 15px;
 }
