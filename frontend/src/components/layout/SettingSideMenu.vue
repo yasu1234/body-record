@@ -169,6 +169,7 @@ main {
 
   .sidebar.open {
     transform: translateX(0);
+    z-index: 100;
   }
 
   .sidebar-header {

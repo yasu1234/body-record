@@ -3,6 +3,9 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
+import FloatLabel from "primevue/floatlabel";
+import InputText from "primevue/inputtext";
+import Textarea from "primevue/textarea";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
@@ -135,22 +138,28 @@ const updateProfileImage = async () => {
   <TabMenu />
   <ErrorMessage :errorMessage="errorMessage" />
   <div class="setting-container">
-    <SettingSideMenu :currentIndex="1" />
-    <main>
+    <SettingSideMenu :currentIndex="1" class="setting-side-menu" />
+    <main class="setting-main">
       <form @submit.prevent="updateProfile">
         <div class="profile-edit-content">
-          <label for="goal-weight">目標体重:</label>
-          <input type="text" id="goal-weight" v-model="goalWeight" />
+          <FloatLabel>
+            <InputText v-model="goalWeight" />
+            <label>目標体重</label>
+          </FloatLabel>
           <label for="goal-weight" class="unit-label">kg</label>
         </div>
         <div class="profile-edit-content">
-          <label for="goal-fat-percentage">目標体脂肪率:</label>
-          <input type="text" v-model="goalFatPercentage" />
+          <FloatLabel>
+            <InputText v-model="goalFatPercentage" />
+            <label>目標体脂肪率</label>
+          </FloatLabel>
           <label for="goal-fat-percentage" class="unit-label">%</label>
         </div>
         <div class="profile-area">
-          <label for="comments">紹介文</label>
-          <textarea v-model="profile" class="profile-text" />
+          <FloatLabel>
+            <Textarea v-model="profile" rows="10" class="profile-text" />
+            <label>紹介文</label>
+          </FloatLabel>
         </div>
         <div class="profile-image-change-container">
           <label>プロフィール画像変更</label>
@@ -185,38 +194,29 @@ form {
   margin-top: 20px;
 }
 
-input[type="text"] {
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  font-size: 16px;
-  width: 100px;
-  margin-left: 10px;
-}
-
 .unit-label {
   margin-left: 10px;
 }
 
 .profile-text {
-  width: 60%;
   height: 100px;
+  width: calc(100% - 40px);
+  margin-top: 20px;
+  margin-left: 20px;
 }
 
 .profile-area {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   margin-top: 20px;
 }
 
-.profile-area label {
-  margin-bottom: 5px;
+.setting-side-menu {
+  z-index: 30;
+  flex: 1;
 }
-
+.setting-main {
+  width: 100%;
+}
 .edit-profile-button {
-  background: #ffa500;
-  color: white;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
