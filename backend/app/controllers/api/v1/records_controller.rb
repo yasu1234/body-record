@@ -70,14 +70,13 @@ class Api::V1::RecordsController < ApplicationController
 
     def update        
         record = current_api_v1_user.records.find(params[:id].to_i)
-        record.update(record_register_params)
-        render json: { errors: record.errors.full_messages }, status: 422 and return if record.invalid?
-
-        record.save!
+        record.update!(record_register_params)
 
         render json: { record: record }, status: 200
     rescue ActiveRecord::RecordNotFound
         render json: { errors: '対象のデータが見つかりません' }, status: 404
+    rescue ActiveRecord::RecordInvalid => e
+        render json: { errors: e.record.errors.full_messages }, status: 422
     rescue StandardError => e
         render json: { errors: e.message }, status: 500
     end

@@ -39,15 +39,13 @@ class Api::V1::ContactsController < ApplicationController
         end
 
         contact = Contact.find(params[:id].to_i)
-        contact.update(contact_register_params)
-
-        render json: { errors: contact.errors.full_messages }, status: 422 and return if contact.invalid?
-
-        contact.save!
+        contact.update!(contact_register_params)
 
         render json: { contact: contact }, status: 200
     rescue ActiveRecord::RecordNotFound
         render json: { error: '対象のデータが見つかりません' }, status: 404
+    rescue ActiveRecord::RecordInvalid => e
+        render json: { errors: e.record.errors.full_messages }, status: 422
     rescue StandardError => e
         render json: { errors: e.message }, status: 500
     end

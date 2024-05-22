@@ -55,14 +55,13 @@ class Api::V1::KnowledgesController < ApplicationController
 
     def update
         knowledge = current_api_v1_user.knowledges.find(params[:id].to_i)
-        knowledge.update(knowledge_register_params)
+        knowledge.update!(knowledge_register_params)
 
-        render json: { errors: knowledge.errors.full_messages }, status: 422 and return if knowledge.invalid?
-
-        knowledge.save!
         render json: { knowledge: knowledge }, status: 200
     rescue ActiveRecord::RecordNotFound
         render json: { errors: '対象のデータが見つかりません' }, status: 404
+    rescue ActiveRecord::RecordInvalid => e
+        render json: { errors: e.knowledge.errors.full_messages }, status: 422
     rescue StandardError => e
         render json: { errors: e.message }, status: 500
     end

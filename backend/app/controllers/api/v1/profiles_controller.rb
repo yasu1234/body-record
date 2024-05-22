@@ -10,11 +10,11 @@ class Api::V1::ProfilesController < ApplicationController
             update_profile
         end
 
-        current_api_v1_user.profile.update(profile_register_params)
-        render json: { errors: current_api_v1_user.profile.errors.full_messages }, status: 422 and return if current_api_v1_user.profile.invalid?
+        current_api_v1_user.profile.update!(profile_register_params)
 
-        current_api_v1_user.profile.save!
         render json: {user: current_api_v1_user.profile.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
+    rescue ActiveRecord::RecordInvalid => e
+        render json: { errors: e.current_api_v1_user.profile.errors.full_messages }, status: 422
     rescue StandardError => e
         render json: { errors: e.message }, status: 500 
     end
