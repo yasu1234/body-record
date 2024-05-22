@@ -22,7 +22,7 @@ class Api::V1::BookmarksController < ApplicationController
 
         knowledge.bookmarks.where(user_id: params[:user_id]).destroy_all
 
-        bookmark = knowledge.bookmarks.where(knowledge_id: knowledge.id).first
+        bookmark = knowledge.bookmarks.where(user_id: params[:user_id]).first
 
         render json: { knowledge: knowledge.as_json.merge(isBookmark: bookmark.present?) }, status: 200
     rescue ActiveRecord::RecordNotFound
