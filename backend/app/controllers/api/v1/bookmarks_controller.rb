@@ -2,7 +2,7 @@ class Api::V1::BookmarksController < ApplicationController
     before_action :check_login
 
     def create
-        knowledge = Knowledge.find(bookmark_params[:knowledge_id].to_i)
+        knowledge = Knowledge.find(bookmark_params[:knowledge_id])
         
         bookmark = knowledge.bookmarks.new(user: current_api_v1_user)
         
@@ -18,7 +18,7 @@ class Api::V1::BookmarksController < ApplicationController
     end
 
     def destroy
-        knowledge = Knowledge.find(params[:id].to_i)
+        knowledge = Knowledge.find(params[:id])
 
         knowledge.bookmarks.where(user_id: params[:user_id]).destroy_all
 
