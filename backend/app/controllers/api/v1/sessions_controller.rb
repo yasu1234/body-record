@@ -41,6 +41,6 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
         end
 
         total_page = users.total_pages
-        render json: { users: users, total_page: total_page }, status: 200
+        render json: { users: users.as_json(only: [:id, :name], methods: :image_url), total_page: total_page }, status: 200
     end
 end
