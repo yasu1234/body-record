@@ -35,13 +35,13 @@ const clickCallback = function (pageNum) {
 
 :deep .page-item {
   color: #333;
-  padding: 8px;
   text-decoration: none;
   transition: background-color 0.3s;
   border: 1px solid #ddd;
   margin: 0 4px;
   width: 30px;
   height: 30px;
+  padding: 20px;
 }
 
 :deep .page-link {
