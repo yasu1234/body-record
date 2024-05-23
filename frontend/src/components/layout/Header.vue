@@ -160,6 +160,8 @@ header {
 }
 .title {
   color: #ffa600;
+  font-family: Comic Sans MS;
+  font-weight: bold;
 }
 .navigation-menus {
   display: flex;
