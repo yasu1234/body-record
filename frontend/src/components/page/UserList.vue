@@ -6,9 +6,9 @@ import Cookies from "js-cookie";
 
 import TabMenu from "../layout/TabMenu.vue";
 import Header from "../layout/Header.vue";
+import UserCard from "../layout/UserCard.vue";
 import ListPage from "../layout/ListPage.vue";
 import SearchButton from "../atom/SearchButton.vue";
-import RecordCard from "../layout/RecordCard.vue";
 
 const router = useRouter();
 
@@ -51,7 +51,7 @@ const searchUser = async () => {
         },
         params: {
           keyword: keyword.value,
-          page: pageNum
+          page: pageNum,
         },
       }
     );
@@ -77,13 +77,9 @@ const updatePaginateItems = function (page) {
   searchUser();
 };
 
-const clickRecord = (item) => {
-  router.push({ name: "RecordDetail", params: { id: item.id } });
+const userSelect = (item) => {
+  router.push({ name: "OtherRecordList", params: { id: item.id } });
 };
-
-function addRecord() {
-  router.push("/addRecord");
-}
 </script>
 
 <template>
@@ -106,10 +102,12 @@ function addRecord() {
     </div>
   </div>
   <div class="user-search-result">
-    <div v-for="user in searchResult" @click="">
-      <div>
-        <p>{{ user.name }}</p>
-      </div>
+    <div
+      v-for="user in searchResult"
+      class="user-card"
+      @click="userSelect(user)"
+    >
+      <UserCard :user="user" />
     </div>
   </div>
   <div class="user-list-page">
@@ -176,14 +174,18 @@ input[type="checkbox"]:checked:before {
   text-align: center;
   margin-top: 20px;
 }
-.add-button-area {
-  text-align: right;
-  margin-top: 20px;
-  padding-right: 40px;
-}
-.add-button {
-  font-size: 16px;
-  font-weight: bold;
+.user-card {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  position: relative;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.18);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #ffffff;
+  cursor: pointer;
 }
 .user-list-page {
   margin-top: 50px;
