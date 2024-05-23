@@ -1,28 +1,28 @@
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
 import Paginate from "vuejs-paginate-next";
 
 defineProps({
-    pageCount: Number,
-})
+  pageCount: Number,
+});
 
 const emits = defineEmits(["changePage"]);
 
 const clickCallback = function (pageNum) {
   emits("changePage", pageNum);
 };
-
 </script>
 
 <template>
   <Paginate
-  :page-count="pageCount"
-  :page-range="3"
-  :margin-pages="2"
-  :click-handler="clickCallback"
-  :prev-text="'<'"
-  :next-text="'>'" />
+    :page-count="pageCount"
+    :page-range="3"
+    :margin-pages="2"
+    :click-handler="clickCallback"
+    :prev-text="'<'"
+    :next-text="'>'"
+  />
 </template>
 
 <style scoped>
