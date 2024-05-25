@@ -1,14 +1,14 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter, onBeforeRouteUpdate } from 'vue-router'
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import { ref, onMounted } from "vue";
+import { useRouter, onBeforeRouteUpdate } from "vue-router";
+import axios from "axios";
+import Cookies from "js-cookie";
 
-import TabMenu from '../layout/TabMenu.vue'
-import Header from '../layout/Header.vue'
-import ListPage from '../layout/ListPage.vue'
-import DatePicker from '../atom/DatePicker.vue'
-import RecordCard from '../layout/RecordCard.vue'
+import TabMenu from "../layout/TabMenu.vue";
+import Header from "../layout/Header.vue";
+import ListPage from "../layout/ListPage.vue";
+import DatePicker from "../atom/DatePicker.vue";
+import RecordCard from "../layout/RecordCard.vue";
 import SearchButton from "../atom/SearchButton.vue";
 
 const router = useRouter();
@@ -35,104 +35,124 @@ onBeforeRouteUpdate(async (to, from) => {
   search();
 });
 
-const searchParamChange = ()=> {
+const searchParamChange = () => {
   const query = {};
 
-  if (keyword.value.trim() !== '') {
+  if (keyword.value.trim() !== "") {
     query.keyword = keyword.value;
   }
 
-  if (startDate.value !== '') {
+  if (startDate.value !== "") {
     query.startDate = startDate.value;
   }
 
-  if (endDate.value !== '') {
+  if (endDate.value !== "") {
     query.endDate = endDate.value;
   }
 
-  router.push( {path: '/recordList', query: query});
-}
+  router.push({ path: "/recordList", query: query });
+};
 
 const search = async () => {
   try {
-    const res = await axios.get(import.meta.env.VITE_APP_API_BASE + '/api/v1/records', {
+    const res = await axios.get(
+      import.meta.env.VITE_APP_API_BASE + "/api/v1/records",
+      {
         headers: {
-            'access-token' : Cookies.get('accessToken'),
-            'client':Cookies.get('client'),
-            'uid': Cookies.get('uid'),
+          "access-token": Cookies.get("accessToken"),
+          client: Cookies.get("client"),
+          uid: Cookies.get("uid"),
         },
-        
+
         params: {
-            keyword: keyword.value,
-            startDate: startDate.value,             
-            endDate: endDate.value,
-            page: page
-        }
-    })
+          keyword: keyword.value,
+          startDate: startDate.value,
+          endDate: endDate.value,
+          page: page,
+        },
+      }
+    );
 
     if (res.data && res.data.totalPage) {
-      pageCount.value = res.data.totalPage
+      pageCount.value = res.data.totalPage;
     } else {
-      pageCount.value = 1
+      pageCount.value = 1;
     }
 
     searchResult.value = [];
-    
-    for(let item of res.data.records){
+
+    for (let item of res.data.records) {
       searchResult.value.push(item);
     }
   } catch (error) {
     searchResult.value = [];
   }
-}
+};
 
 const updatePaginateItems = function (pageNum) {
-  page.value = pageNum
+  page.value = pageNum;
   search();
 };
 
 function startDateChange(event) {
-  startDate.value = event
+  startDate.value = event;
 }
 
 function endDateChange(event) {
-  endDate.value = event
+  endDate.value = event;
 }
 
 const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
-}
+};
 </script>
 
 <template>
   <Header />
-  <TabMenu :currentId="currentId"/>
+  <TabMenu :currentId="currentId" />
   <div class="user-record-search-container">
-    <input type="text" id="keyword" name="keywordName" placeholder="キーワードで検索" v-model="keyword">
-  <div class="time-list">
-    <div class="item">
-      <p class="inputTitle">開始日</p>
-      <DatePicker isStart=true :date= startDate @update:date="startDateChange"/>
-    </div>
-    <div class="item">
-      <p class="inputTitle">終了日</p>
-      <DatePicker isStart=false :date= endDate @update:date="endDateChange"/>
-    </div>
+    <input
+      type="text"
+      id="keyword"
+      name="keywordName"
+      placeholder="キーワードで検索"
+      v-model="keyword"
+    />
+    <div class="time-list">
+      <div class="item">
+        <p class="inputTitle">開始日</p>
+        <DatePicker
+          isStart="true"
+          :date="startDate"
+          @update:date="startDateChange"
+        />
+      </div>
+      <div class="item">
+        <p class="inputTitle">終了日</p>
+        <DatePicker
+          isStart="false"
+          :date="endDate"
+          @update:date="endDateChange"
+        />
+      </div>
     </div>
     <div class="search-button-area">
       <SearchButton @searchButtonClick="searchParamChange" />
     </div>
   </div>
-  <RecordCard v-for="record in searchResult"
-        v-bind="record"
-        :record="record"
-        @recordClick="clickRecord(record)"/>
-    <div class="record-list-page">
-      <ListPage
+  <RecordCard
+    v-for="record in searchResult"
+    v-bind="record"
+    :record="record"
+    @recordClick="clickRecord(record)"
+  />
+  <div class="record-list-page">
+    <ListPage
       :pageCount="pageCount"
       v-model="page"
-      @changePage="updatePaginateItems" />
-    </div>
+      @changePage="updatePaginateItems"
+    />
+  </div>
 </template>
 
 <style scoped>
@@ -145,7 +165,7 @@ const clickRecord = (item) => {
   border-radius: 5px;
   margin-top: 20px;
 }
-input[type=text] {
+input[type="text"] {
   width: 100%;
   padding: 12px 12px;
   margin: 8px 0;
@@ -157,8 +177,8 @@ input[type=text] {
 input[type="checkbox"] {
   border-radius: 0;
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 input[type="checkbox"] {
   position: relative;
@@ -177,7 +197,7 @@ input[type="checkbox"]:checked:before {
   height: 8px;
   border-right: 2px solid #000;
   border-bottom: 2px solid #000;
-  content: '';
+  content: "";
 }
 .time-list {
   display: flex;
@@ -196,8 +216,8 @@ input[type="checkbox"]:checked:before {
   padding-top: 25px;
 }
 .search-button {
-  font-size:16px;
-  font-weight:bold;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 @media screen and (max-width: 768px) {
