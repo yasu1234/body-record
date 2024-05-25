@@ -7,9 +7,12 @@ import Cookies from 'js-cookie';
 import DropFile from '../atom/DropFile.vue'
 import Header from '../layout/Header.vue'
 import ErrorMessage from '../atom/ErrorMessage.vue'
+import Toast from "primevue/toast";
 
 const route = useRoute();
 const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const title = ref("");
 const knowledge = ref("");
@@ -99,10 +102,11 @@ const edit = async () => {
                 'uid': Cookies.get('uid')
             }
         })
-        knowledgeId.value = res.data.knowledge.id
-        title.value = res.data.knowledge.title
-        knowledge.value = res.data.knowledge.content
-        imageUrls.value = res.data.imageUrls
+
+        toastNotifications.displayInfo("編集しました", "");
+        setTimeout(async () => {
+            showKnowledgeDetail(res.data.knowledge);
+        }, 3000);
     } catch (error) {
         if (error.response.status === 404) {
             showNotFound()
@@ -118,10 +122,15 @@ const edit = async () => {
         }
     }
 }
+
+const showKnowledgeDetail = (item) =>  {
+    router.push({ name: 'KnowledgeDetail', params: { id: item.id }})
+}
 </script>
 
 <template>
     <Header />
+    <Toast position="top-center" />
     <ErrorMessage :errorMessage="errorMessage"/>
     <div class="editor">
         <label class="itemLabel">タイトル</label>

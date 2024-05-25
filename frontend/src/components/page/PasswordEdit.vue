@@ -4,6 +4,9 @@ import { ref } from "vue";
 import Cookies from "js-cookie";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
 
 import Header from "../layout/Header.vue";
 import ErrorMessage from "../atom/ErrorMessage.vue";
@@ -13,6 +16,8 @@ import TabMenu from "../layout/TabMenu.vue";
 import { PasswordType } from "../../const/const.js";
 
 const errorMessage = ref("");
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const checkValidate = async () => {
   const result = await validate();
@@ -39,7 +44,7 @@ const passwordEdit = async () => {
         },
       }
     );
-    console.log({ res });
+    toastNotifications.displayInfo("パスワードを変更しました", "");
   } catch (error) {
     errorMessage.value = "";
     let errorMessages = "パスワード変更に失敗しました\n";
@@ -99,6 +104,7 @@ const updatePassword = (inputPassword, passwordType) => {
 <template>
   <Header />
   <TabMenu />
+  <Toast position="top-center" />
   <ErrorMessage :errorMessage="errorMessage" />
   <div class="setting-container">
     <SettingSideMenu :currentIndex="3" />

@@ -4,6 +4,9 @@ import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import Cookies from "js-cookie";
 import MarkdownIt from "markdown-it";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
 
 import Header from "../layout/Header.vue";
 import ErrorMessage from "../atom/ErrorMessage.vue";
@@ -14,6 +17,8 @@ import Author from "../layout/Author.vue";
 
 const route = useRoute();
 const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const title = ref("");
 const memo = ref("");
@@ -104,7 +109,10 @@ const deleteRecord = async () => {
         },
       }
     );
-    router.push({ name: "Home" });
+    toastNotifications.displayInfo("記録を削除しました", "");
+    setTimeout(async () => {
+      router.back();
+    }, 3000);
   } catch (error) {
     if (error.response.status === 404) {
       showNotFound();
@@ -234,6 +242,7 @@ const showEdit = () => {
 <template>
   <Header />
   <TabMenu :currentId="0" />
+  <Toast position="top-center" />
   <ErrorMessage :errorMessage="errorMessage" />
   <div class="wrap">
     <div class="main">
@@ -300,7 +309,7 @@ const showEdit = () => {
             src="../../assets/image/delete.png"
             alt="削除"
             class="side-menu-image"
-            @click=""
+            @click="deleteRecord"
           />
         </button>
       </div>

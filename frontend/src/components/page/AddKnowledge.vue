@@ -1,20 +1,23 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from "vue-router";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
 
 import DropFile from '../atom/DropFile.vue'
 import Header from '../layout/Header.vue'
 import ErrorMessage from '../atom/ErrorMessage.vue'
 
+const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
+
 const title = ref("");
 const knowledge = ref("");
 const files = ref([]);
 const errorMessage = ref('');
-
-function dateChange(event) {
-    recordDate.value = event
-}
 
 function onFileChange(event) {
     files.value = [...event];
@@ -39,7 +42,10 @@ const registerKnowledge = async () => {
                 'uid': Cookies.get('uid')
             }
         })
-        console.log({ res })
+        toastNotifications.displayInfo("登録しました", "");
+        setTimeout(async () => {
+            showKnowledgeDetail(res.data.knowledge);
+        }, 3000);
     } catch (error) {
         errorMessage.value = ''
         let errorMessages = 'ノウハウの追加に失敗しました\n';
@@ -51,10 +57,15 @@ const registerKnowledge = async () => {
         errorMessage.value = errorMessages
     }
 }
+
+const showKnowledgeDetail = (item) => {
+    router.push({ name: 'KnowledgeDetail', params: { id: item.id }})
+}
 </script>
 
 <template>
     <Header />
+    <Toast position="top-center" />
     <ErrorMessage :errorMessage="errorMessage"/>
     <div class="editor">
         <label class="itemLabel">タイトル</label>

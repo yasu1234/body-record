@@ -1,10 +1,14 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Textarea from "primevue/textarea";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
+import Toast from "primevue/toast";
 
 import DatePicker from "../atom/DatePicker.vue";
 import DropFile from "../atom/DropFile.vue";
@@ -18,6 +22,9 @@ const fatPercentage = ref(null);
 const files = ref([]);
 const isAddAsHidden = ref(false);
 const errorMessage = ref("");
+const toast = useToast();
+const toastNotifications = new toastService(toast);
+const router = useRouter();
 
 function dateChange(event) {
   recordDate.value = event;
@@ -55,7 +62,10 @@ const registerRecord = async () => {
         },
       }
     );
-    console.log({ res });
+    toastNotifications.displayInfo("登録しました", "");
+    setTimeout(async () => {
+      showRecordDetail(res.data.record);
+    }, 3000);
   } catch (error) {
     errorMessage.value = "";
     let errorMessages = "記録の追加に失敗しました\n";
@@ -67,10 +77,15 @@ const registerRecord = async () => {
     errorMessage.value = errorMessages;
   }
 };
+
+const showRecordDetail = (item) => {
+  router.push({ name: "RecordDetail", params: { id: item.id } });
+}
 </script>
 
 <template>
   <Header />
+  <Toast position="top-center" />
   <ErrorMessage :errorMessage="errorMessage" />
   <div class="add-record-container">
     <div class="record-add-space">
@@ -112,7 +127,9 @@ const registerRecord = async () => {
     </div>
   </div>
   <div class="record-add-space">
-    <button class="add-record-button" @click="registerRecord">記録を登録する</button>
+    <button class="add-record-button" @click="registerRecord">
+      記録を登録する
+    </button>
   </div>
 </template>
 

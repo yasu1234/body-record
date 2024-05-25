@@ -4,6 +4,9 @@ import { ref } from "vue";
 import Cookies from "js-cookie";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
+import Toast from "primevue/toast";
 
 import Header from "../layout/Header.vue";
 import ErrorMessage from "../atom/ErrorMessage.vue";
@@ -11,6 +14,8 @@ import SettingSideMenu from "../layout/SettingSideMenu.vue";
 import TabMenu from "../layout/TabMenu.vue";
 
 const errorMessage = ref("");
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const checkValidate = async () => {
   const result = await validate();
@@ -35,11 +40,12 @@ const mailAddressEdit = async () => {
         },
       }
     );
-    console.log({ res });
 
     Cookies.set("accessToken", res.headers["access-token"]);
     Cookies.set("client", res.headers["client"]);
     Cookies.set("uid", res.headers["uid"]);
+
+    toastNotifications.displayInfo("メールアドレスを変更しました", "");
   } catch (error) {
     errorMessage.value = "";
     let errorMessages = "メールアドレス変更に失敗しました\n";
@@ -73,9 +79,10 @@ const { value: newMailAddres, errorMessage: emailError } =
 <template>
   <Header />
   <TabMenu />
+  <Toast position="top-center" />
   <ErrorMessage :errorMessage="errorMessage" />
   <div class="setting-container">
-    <SettingSideMenu :currentIndex="3" />
+    <SettingSideMenu :currentIndex="2" />
     <main>
       <h1 class="mailaddress-edit-content-center">メールアドレス変更</h1>
       <div class="mailaddress-edit-container">

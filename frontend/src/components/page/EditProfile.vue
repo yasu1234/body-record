@@ -1,11 +1,14 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
@@ -14,6 +17,9 @@ import SettingSideMenu from "../layout/SettingSideMenu.vue";
 import TabMenu from "../layout/TabMenu.vue";
 
 const route = useRoute();
+const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const goalWeight = ref(null);
 const goalFatPercentage = ref(null);
@@ -87,6 +93,11 @@ const updateProfile = async () => {
     );
     if (file.value !== null) {
       updateProfileImage();
+    } else {
+      toastNotifications.displayInfo("プロフィールを更新しました", "");
+      setTimeout(async () => {
+        showProfile(res.data.user.id);
+      }, 3000);
     }
   } catch (error) {
     errorMessage.value = "";
@@ -119,7 +130,11 @@ const updateProfileImage = async () => {
         },
       }
     );
-    console.log({ res });
+    
+    toastNotifications.displayInfo("プロフィールを更新しました", "");
+    setTimeout(async () => {
+      showProfile(res.data.user.id);
+    }, 3000);
   } catch (error) {
     errorMessage.value = "";
     let errorMessages = "プロフィール画像登録に失敗しました\n";
@@ -131,6 +146,10 @@ const updateProfileImage = async () => {
     errorMessage.value = errorMessages;
   }
 };
+
+const showProfile = (id) => {
+  router.push({ name: "UserProfile", params: { id: id } });
+}
 </script>
 
 <template>
@@ -201,8 +220,6 @@ form {
 .profile-text {
   height: 100px;
   width: calc(100% - 40px);
-  margin-top: 20px;
-  margin-left: 20px;
 }
 
 .profile-area {

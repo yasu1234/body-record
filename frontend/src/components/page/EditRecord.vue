@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router'
 import Cookies from 'js-cookie';
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
 
 import DropFile from '../atom/DropFile.vue'
 import DatePicker from '../atom/DatePicker.vue'
@@ -11,6 +14,8 @@ import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const route = useRoute();
 const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const recordDate = ref("");
 const memo = ref("");
@@ -124,6 +129,7 @@ const edit = async () => {
 
 <template>
     <Header />
+    <Toast position="top-center" />
     <ErrorMessage :errorMessage="errorMessage"/>
     <div class="edit-time">
         <p class="inputTitle">開始日</p>
