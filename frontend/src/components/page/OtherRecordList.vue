@@ -9,6 +9,7 @@ import Header from '../layout/Header.vue'
 import ListPage from '../layout/ListPage.vue'
 import DatePicker from '../atom/DatePicker.vue'
 import RecordCard from '../layout/RecordCard.vue'
+import SearchButton from "../atom/SearchButton.vue";
 
 const router = useRouter();
 
@@ -21,7 +22,7 @@ const searchResult = ref([]);
 const currentId = ref(2);
 
 const pageCount = ref(1);
-const pageNum = ref(1);
+const page = ref(1);
 
 onMounted(() => {
   search();
@@ -34,7 +35,7 @@ onBeforeRouteUpdate(async (to, from) => {
   search();
 });
 
-const targetSearch = ()=> {
+const searchParamChange = ()=> {
   const query = {};
 
   if (keyword.value.trim() !== '') {
@@ -65,7 +66,7 @@ const search = async () => {
             keyword: keyword.value,
             startDate: startDate.value,             
             endDate: endDate.value,
-            page: pageNum
+            page: page
         }
     })
 
@@ -86,7 +87,7 @@ const search = async () => {
 }
 
 const updatePaginateItems = function (pageNum) {
-  pageNum.value = pageNum
+  page.value = pageNum
   search();
 };
 
@@ -106,9 +107,8 @@ const clickRecord = (item) => {
 <template>
   <Header />
   <TabMenu :currentId="currentId"/>
-  <div class="keyword-search">
+  <div class="user-record-search-container">
     <input type="text" id="keyword" name="keywordName" placeholder="キーワードで検索" v-model="keyword">
-  </div>
   <div class="time-list">
     <div class="item">
       <p class="inputTitle">開始日</p>
@@ -120,26 +120,32 @@ const clickRecord = (item) => {
     </div>
     </div>
     <div class="search-button-area">
-        <button class="search-button" @click="targetSearch">検索</button>
+      <SearchButton @searchButtonClick="searchParamChange" />
     </div>
-    <RecordCard v-for="record in searchResult"
+  </div>
+  <RecordCard v-for="record in searchResult"
         v-bind="record"
         :record="record"
         @recordClick="clickRecord(record)"/>
     <div class="record-list-page">
       <ListPage
       :pageCount="pageCount"
-      v-model="pageNum"
+      v-model="page"
       @changePage="updatePaginateItems" />
     </div>
 </template>
 
 <style scoped>
-.keyword-search {
-   padding: 30px;
- }
-
- input[type=text] {
+.user-record-search-container {
+  width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1.5px solid #46c443;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+input[type=text] {
   width: 100%;
   padding: 12px 12px;
   margin: 8px 0;
@@ -147,6 +153,7 @@ const clickRecord = (item) => {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
 input[type="checkbox"] {
   border-radius: 0;
   -webkit-appearance: none;
@@ -174,14 +181,9 @@ input[type="checkbox"]:checked:before {
 }
 .time-list {
   display: flex;
-  justify-content: space-between;
-  padding-left: 30px;
-  padding-right: 30px;
 }
 .time-list .item {
-  width: 50%;
-  margin: 0;
-  padding: 10px;
+  padding: 5px;
   box-sizing: border-box;
 }
 .time-list .item .inputTitle {
@@ -194,20 +196,20 @@ input[type="checkbox"]:checked:before {
   padding-top: 25px;
 }
 .search-button {
-  background: #ffa500;
-  color: white;
   font-size:16px;
   font-weight:bold;
 }
-.add-button-area {
-  text-align: right;
-  margin-top: 20px;
-  padding-right: 40px;
-}
-.add-button {
-  background: #ffa500;
-  color: white;
-  font-size:16px;
-  font-weight:bold;
+
+@media screen and (max-width: 768px) {
+  .user-record-search-container {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #46c443;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
 }
 </style>
