@@ -28,10 +28,11 @@ onBeforeRouteUpdate(async (to, from) => {
   keyword.value = to.query.keyword;
   startDate.value = to.query.startDate;
   endDate.value = to.query.endDate;
+  pageNum.value = to.query.page;
   search();
 });
 
-const targetSearch = () => {
+const paramChange = () => {
   const query = {};
 
   if (keyword.value.trim() !== "") {
@@ -44,6 +45,10 @@ const targetSearch = () => {
 
   if (endDate.value !== "") {
     query.endDate = endDate.value;
+  }
+
+  if (pageNum.value > 1) {
+    query.page = pageNum.value;
   }
 
   router.push({ path: "/", query: query });
@@ -86,7 +91,7 @@ const search = async () => {
 
 const updatePaginateItems = function (page) {
   pageNum.value = page;
-  search();
+  paramChange();
 };
 
 function startDateChange(event) {
@@ -138,7 +143,7 @@ function addRecord() {
       <label>非公開記録は表示しない</label>
     </div>
     <div class="search-button-area">
-      <SearchButton @searchButtonClick="targetSearch" />
+      <SearchButton @searchButtonClick="paramChange" />
     </div>
   </div>
   <div class="add-button-area">
