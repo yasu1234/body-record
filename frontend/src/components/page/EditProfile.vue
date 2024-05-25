@@ -22,7 +22,7 @@ const toastNotifications = new toastService(toast);
 
 const goalWeight = ref(null);
 const goalFatPercentage = ref(null);
-const profile = ref("");
+const profile = ref('');
 const file = ref(null);
 const userThumbnail = ref(null);
 const userId = ref(0);

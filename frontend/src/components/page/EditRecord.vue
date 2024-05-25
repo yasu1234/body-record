@@ -16,8 +16,8 @@ const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 
-const recordDate = ref("");
-const memo = ref("");
+const recordDate = ref('');
+const memo = ref('');
 const weight = ref(null);
 const fatPercentage = ref(null);
 const files = ref([]);

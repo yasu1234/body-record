@@ -13,8 +13,8 @@ import MonthPicker from "../atom/MonthPicker.vue";
 const route = useRoute();
 const router = useRouter();
 
-const profile = ref("");
-const userName = ref("");
+const profile = ref('');
+const userName = ref('');
 const userThumbnail = ref(null);
 const records = ref([]);
 const knowledges = ref([]);

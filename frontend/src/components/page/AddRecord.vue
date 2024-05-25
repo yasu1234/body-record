@@ -14,8 +14,8 @@ import DatePicker from "../atom/DatePicker.vue";
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
 
-const memo = ref("");
-const recordDate = ref("");
+const memo = ref('');
+const recordDate = ref('');
 const weight = ref(null);
 const fatPercentage = ref(null);
 const files = ref([]);

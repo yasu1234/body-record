@@ -7,17 +7,16 @@ import Cookies from "js-cookie";
 import ListPage from "../layout/ListPage.vue";
 import DatePicker from "../atom/DatePicker.vue";
 import SearchButton from "../atom/SearchButton.vue";
-import RecordCard from '../layout/RecordCard.vue'
+import RecordCard from "../layout/RecordCard.vue";
 
 const router = useRouter();
 
-const keyword = ref("");
-const startDate = ref("");
-const endDate = ref("");
+const keyword = ref('');
+const startDate = ref('');
+const endDate = ref('');
 const isDisplayOnlyOpen = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
-
 const pageCount = ref(1);
 const pageNum = ref(1);
 
@@ -100,7 +99,7 @@ function endDateChange(event) {
 
 const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
-}
+};
 
 function addRecord() {
   router.push("/addRecord");
@@ -135,7 +134,7 @@ function addRecord() {
       </div>
     </div>
     <div class="search-check">
-      <input type="checkbox" id="statusSelect" v-model="isDisplayOnlyOpen">
+      <input type="checkbox" id="statusSelect" v-model="isDisplayOnlyOpen" />
       <label>非公開記録は表示しない</label>
     </div>
     <div class="search-button-area">
@@ -146,10 +145,12 @@ function addRecord() {
     <button class="add-button" @click="addRecord">記録を追加する</button>
   </div>
   <div class="record-search-result">
-    <RecordCard v-for="record in searchResult"
-        v-bind="record"
-        :record="record"
-        @recordClick="clickRecord(record)"/>
+    <RecordCard
+      v-for="record in searchResult"
+      v-bind="record"
+      :record="record"
+      @recordClick="clickRecord(record)"
+    />
   </div>
   <div class="record-list-page">
     <ListPage
@@ -233,8 +234,6 @@ input[type="checkbox"]:checked:before {
   padding-right: 40px;
 }
 .add-button {
-  background: #ffa500;
-  color: white;
   font-size: 16px;
   font-weight: bold;
 }

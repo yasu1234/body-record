@@ -19,8 +19,8 @@ const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 
-const title = ref("");
-const memo = ref("");
+const title = ref('');
+const memo = ref('');
 const imageUrls = ref([]);
 const recordId = ref(null);
 const recordUserId = ref(0);

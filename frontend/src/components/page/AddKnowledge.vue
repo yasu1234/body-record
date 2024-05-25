@@ -13,8 +13,8 @@ const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 
-const title = ref("");
-const knowledge = ref("");
+const title = ref('');
+const knowledge = ref('');
 const files = ref([]);
 
 function onFileChange(event) {

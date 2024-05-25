@@ -6,7 +6,6 @@ import Cookies from 'js-cookie';
 
 import DropFile from '../atom/DropFile.vue'
 import Header from '../layout/Header.vue'
-import ErrorMessage from '../atom/ErrorMessage.vue'
 import Toast from "primevue/toast";
 
 const route = useRoute();
@@ -14,12 +13,11 @@ const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 
-const title = ref("");
-const knowledge = ref("");
+const title = ref('');
+const knowledge = ref('');
 const files = ref([]);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
-const errorMessage = ref('');
 
 onMounted(() => {
     getDetail();
@@ -52,7 +50,6 @@ const deleteImage = async (item) => {
         })
         console.log({ res })
     } catch (error) {
-        errorMessage.value = ''
         let errorMessages = '画像の削除に失敗しました\n';
         if (error.response.status === 422) {
             if (Array.isArray(error.response.data.errors)) {
@@ -118,6 +115,7 @@ const edit = async () => {
                     errorMessages += error.response.data.errors.join('\n');
                 }
             }
+            toastNotifications.displayError("編集しました", "");
             errorMessage.value = errorMessages
         }
     }
@@ -131,7 +129,6 @@ const showKnowledgeDetail = (item) =>  {
 <template>
     <Header />
     <Toast position="top-center" />
-    <ErrorMessage :errorMessage="errorMessage"/>
     <div class="editor">
         <label class="itemLabel">タイトル</label>
         <input id="title" type="text" v-model="title">

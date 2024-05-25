@@ -12,7 +12,7 @@ import SearchButton from "../atom/SearchButton.vue";
 
 const router = useRouter();
 
-const keyword = ref("");
+const keyword = ref('');
 const isDisplayOnlySupport = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
