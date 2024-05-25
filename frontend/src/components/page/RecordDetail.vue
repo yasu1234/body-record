@@ -9,7 +9,6 @@ import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
 import Comments from "../layout/Comments.vue";
 import CommentInput from "../layout/CommentInput.vue";
 import TabMenu from "../layout/TabMenu.vue";
@@ -28,7 +27,6 @@ const recordUserId = ref(0);
 const isMyRecord = ref(false);
 const isSupport = ref(false);
 const comments = ref([]);
-const errorMessage = ref("");
 const author = ref(null);
 const record = ref(null);
 
@@ -117,14 +115,13 @@ const deleteRecord = async () => {
     if (error.response.status === 404) {
       showNotFound();
     } else {
-      errorMessage.value = "";
-      let errorMessages = "記録削除に失敗しました\n";
+      let errorMessages = "";
       if (error.response.status === 422) {
         if (Array.isArray(error.response.data.errors)) {
           errorMessages += error.response.data.errors.join("\n");
         }
       }
-      errorMessage.value = errorMessages;
+      toastNotifications.displayError("記録削除に失敗しました", errorMessages);
     }
   }
 };
@@ -151,8 +148,7 @@ const supportOn = async () => {
     if (error.response.status === 404) {
       showNotFound();
     } else {
-      errorMessage.value = "";
-      let errorMessages = "応援に失敗しました\n";
+      let errorMessages = "";
       if (error.response.status === 422) {
         if (Array.isArray(error.response.data.errors)) {
           errorMessages += error.response.data.errors.join("\n");
@@ -160,7 +156,7 @@ const supportOn = async () => {
           errorMessages += error.response.data.errors;
         }
       }
-      errorMessage.value = errorMessages;
+      toastNotifications.displayError("応援に失敗しました", errorMessages);
     }
   }
 };
@@ -183,8 +179,7 @@ const supportOff = async () => {
     if (error.response.status === 404) {
       showNotFound();
     } else {
-      errorMessage.value = "";
-      let errorMessages = "応援解除に失敗しました\n";
+      let errorMessages = "";
       if (error.response.status === 422) {
         if (Array.isArray(error.response.data.errors)) {
           errorMessages += error.response.data.errors.join("\n");
@@ -192,7 +187,7 @@ const supportOff = async () => {
           errorMessages += error.response.data.errors;
         }
       }
-      errorMessage.value = errorMessages;
+      toastNotifications.displayError("応援解除に失敗しました", errorMessages);
     }
   }
 };
@@ -243,7 +238,6 @@ const showEdit = () => {
   <Header />
   <TabMenu :currentId="0" />
   <Toast position="top-center" />
-  <ErrorMessage :errorMessage="errorMessage" />
   <div class="wrap">
     <div class="main">
       <div class="main_content">

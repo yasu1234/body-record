@@ -2,12 +2,15 @@
 import axios from 'axios'
 import { ref } from 'vue'
 import Cookies from 'js-cookie'
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
+import Toast from "primevue/toast";
 
 import Header from '../layout/Header.vue'
-import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const contact = ref('')
-const errorMessage = ref('');
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const contactSubmit = async () => {
     try {
@@ -23,21 +26,20 @@ const contactSubmit = async () => {
         })
         console.log({ res })
     } catch (error) {
-        errorMessage.value = ''
-        let errorMessages = 'お問合せ送信に失敗しました\n';
+        let errorMessages = '';
         if (error.response.status === 422) {
             if (Array.isArray(error.response.data.errors)) {
                 errorMessages += error.response.data.errors.join('\n');
             }
         }
-        errorMessage.value = errorMessages
+        toastNotifications.displayError("お問合せ送信に失敗しました", errorMessages);
     }
 }
 </script>
 
 <template>
     <Header />
-    <ErrorMessage :errorMessage="errorMessage"/>
+    <Toast position="top-center" />
     <h1 class="signUpTitle">お問合せ</h1>
     <div class="contact-area">
         <form class="contact-form" @submit.prevent="contactSubmit">

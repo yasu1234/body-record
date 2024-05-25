@@ -5,15 +5,17 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
+import Toast from "primevue/toast";
 
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
 import PasswordText from "../atom/PasswordText.vue";
 import { PasswordType } from "../../const/const.js";
 
 const router = useRouter();
-
-const errorMessage = ref("");
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 defineProps({
   msg: String,
@@ -43,13 +45,13 @@ const signup = async () => {
 
     router.push({ name: "Home" });
   } catch (error) {
-    let errorMessages = "会員登録に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors.full_messages)) {
         errorMessages += error.response.data.errors.full_messages.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("会員登録に失敗しました", errorMessages)
   }
 };
 
@@ -98,8 +100,8 @@ const updatePassword = (inputPassword, passwordType) => {
 
 <template>
   <Header />
+  <Toast position="top-center" />
   <h1 class="signup-title">会員登録</h1>
-  <ErrorMessage :errorMessage="errorMessage" />
   <div class="signup-container">
     <form class="form" @submit.prevent="checkValidate">
       <div class="item">

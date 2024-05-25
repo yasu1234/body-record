@@ -9,13 +9,11 @@ import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
 import PasswordText from "../atom/PasswordText.vue";
 import SettingSideMenu from "../layout/SettingSideMenu.vue";
 import TabMenu from "../layout/TabMenu.vue";
 import { PasswordType } from "../../const/const.js";
 
-const errorMessage = ref("");
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 
@@ -46,14 +44,13 @@ const passwordEdit = async () => {
     );
     toastNotifications.displayInfo("パスワードを変更しました", "");
   } catch (error) {
-    errorMessage.value = "";
-    let errorMessages = "パスワード変更に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("パスワード変更に失敗しました", errorMessages);
   }
 };
 
@@ -105,7 +102,6 @@ const updatePassword = (inputPassword, passwordType) => {
   <Header />
   <TabMenu />
   <Toast position="top-center" />
-  <ErrorMessage :errorMessage="errorMessage" />
   <div class="setting-container">
     <SettingSideMenu :currentIndex="3" />
     <main>

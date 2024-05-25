@@ -9,11 +9,9 @@ import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
 
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
 import SettingSideMenu from "../layout/SettingSideMenu.vue";
 import TabMenu from "../layout/TabMenu.vue";
 
-const errorMessage = ref("");
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 
@@ -47,14 +45,13 @@ const mailAddressEdit = async () => {
 
     toastNotifications.displayInfo("メールアドレスを変更しました", "");
   } catch (error) {
-    errorMessage.value = "";
-    let errorMessages = "メールアドレス変更に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("メールアドレス変更に失敗しました", errorMessages);
   }
 };
 
@@ -80,7 +77,6 @@ const { value: newMailAddres, errorMessage: emailError } =
   <Header />
   <TabMenu />
   <Toast position="top-center" />
-  <ErrorMessage :errorMessage="errorMessage" />
   <div class="setting-container">
     <SettingSideMenu :currentIndex="2" />
     <main>

@@ -12,7 +12,6 @@ import { toastService } from "../../const/toast.js";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
 import SettingSideMenu from "../layout/SettingSideMenu.vue";
 import TabMenu from "../layout/TabMenu.vue";
 
@@ -27,7 +26,6 @@ const profile = ref("");
 const file = ref(null);
 const userThumbnail = ref(null);
 const userId = ref(0);
-const errorMessage = ref("");
 
 function onFileChange(event) {
   file.value = event[0];
@@ -100,14 +98,13 @@ const updateProfile = async () => {
       }, 3000);
     }
   } catch (error) {
-    errorMessage.value = "";
-    let errorMessages = "プロフィール変更に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("プロフィール変更に失敗しました", errorMessages);
   }
 };
 
@@ -136,14 +133,13 @@ const updateProfileImage = async () => {
       showProfile(res.data.user.id);
     }, 3000);
   } catch (error) {
-    errorMessage.value = "";
-    let errorMessages = "プロフィール画像登録に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("プロフィール画像登録に失敗しました", errorMessages);
   }
 };
 
@@ -155,7 +151,7 @@ const showProfile = (id) => {
 <template>
   <Header />
   <TabMenu />
-  <ErrorMessage :errorMessage="errorMessage" />
+  <Toast position="top-center" />
   <div class="setting-container">
     <SettingSideMenu :currentIndex="1" class="setting-side-menu" />
     <main class="setting-main">

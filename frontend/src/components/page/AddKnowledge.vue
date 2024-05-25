@@ -8,7 +8,6 @@ import { toastService } from "../../const/toast.js";
 
 import DropFile from '../atom/DropFile.vue'
 import Header from '../layout/Header.vue'
-import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const router = useRouter();
 const toast = useToast();
@@ -17,7 +16,6 @@ const toastNotifications = new toastService(toast);
 const title = ref("");
 const knowledge = ref("");
 const files = ref([]);
-const errorMessage = ref('');
 
 function onFileChange(event) {
     files.value = [...event];
@@ -47,14 +45,13 @@ const registerKnowledge = async () => {
             showKnowledgeDetail(res.data.knowledge);
         }, 3000);
     } catch (error) {
-        errorMessage.value = ''
-        let errorMessages = 'ノウハウの追加に失敗しました\n';
+        let errorMessages = '';
         if (error.response.status === 422) {
             if (Array.isArray(error.response.data.errors)) {
                 errorMessages += error.response.data.errors.join('\n');
             }
         }
-        errorMessage.value = errorMessages
+        toastNotifications.displayError("ノウハウの追加に失敗しました", errorMessages);
     }
 }
 
@@ -66,7 +63,6 @@ const showKnowledgeDetail = (item) => {
 <template>
     <Header />
     <Toast position="top-center" />
-    <ErrorMessage :errorMessage="errorMessage"/>
     <div class="editor">
         <label class="itemLabel">タイトル</label>
         <input id="title" type="text" v-model="title">

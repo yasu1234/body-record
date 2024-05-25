@@ -13,7 +13,6 @@ import Toast from "primevue/toast";
 import DatePicker from "../atom/DatePicker.vue";
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
 
 const memo = ref("");
 const recordDate = ref("");
@@ -21,7 +20,6 @@ const weight = ref(null);
 const fatPercentage = ref(null);
 const files = ref([]);
 const isAddAsHidden = ref(false);
-const errorMessage = ref("");
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 const router = useRouter();
@@ -67,14 +65,13 @@ const registerRecord = async () => {
       showRecordDetail(res.data.record);
     }, 3000);
   } catch (error) {
-    errorMessage.value = "";
-    let errorMessages = "記録の追加に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("記録の追加に失敗しました", errorMessages);
   }
 };
 
@@ -86,7 +83,6 @@ const showRecordDetail = (item) => {
 <template>
   <Header />
   <Toast position="top-center" />
-  <ErrorMessage :errorMessage="errorMessage" />
   <div class="add-record-container">
     <div class="record-add-space">
       <p>記録日</p>

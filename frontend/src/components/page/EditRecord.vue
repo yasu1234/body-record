@@ -10,7 +10,6 @@ import { toastService } from "../../const/toast.js";
 import DropFile from '../atom/DropFile.vue'
 import DatePicker from '../atom/DatePicker.vue'
 import Header from '../layout/Header.vue'
-import ErrorMessage from '../atom/ErrorMessage.vue'
 
 const route = useRoute();
 const router = useRouter();
@@ -24,7 +23,6 @@ const fatPercentage = ref(null);
 const files = ref([]);
 const imageUrls = ref([]);
 const recordId = ref(null);
-const errorMessage = ref('');
 
 onMounted(() => {
     getDetail();
@@ -114,14 +112,13 @@ const edit = async () => {
         if (error.response.status === 404) {
             showNotFound()
         } else {
-            errorMessage.value = ''
-            let errorMessages = '記録の更新に失敗しました\n';
+            let errorMessages = "";
             if (error.response.status === 422) {
                 if (Array.isArray(error.response.data.errors)) {
                     errorMessages += error.response.data.errors.join('\n');
                 }
             }
-            errorMessage.value = errorMessages
+            toastNotifications.displayError("記録の更新に失敗しました", errorMessages)
         }
     }
 }
@@ -130,7 +127,6 @@ const edit = async () => {
 <template>
     <Header />
     <Toast position="top-center" />
-    <ErrorMessage :errorMessage="errorMessage"/>
     <div class="edit-time">
         <p class="inputTitle">開始日</p>
         <DatePicker isStart=true :date= recordDate @update:date="dateChange"/>
