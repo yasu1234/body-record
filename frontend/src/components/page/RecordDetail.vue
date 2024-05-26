@@ -311,7 +311,7 @@ const showEdit = () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .wrap {
   display: grid;
   grid-template-columns: 4fr 1fr;

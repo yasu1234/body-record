@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from "vue-router";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 
@@ -22,7 +23,6 @@ function onFileChange(event) {
 }
 
 const registerKnowledge = async () => {
-    errorMessage.value = ''
     try {
         const formData = new FormData();
         formData.append('knowledge[title]', title.value);

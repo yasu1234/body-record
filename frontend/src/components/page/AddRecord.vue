@@ -13,9 +13,10 @@ import Toast from "primevue/toast";
 import DatePicker from "../atom/DatePicker.vue";
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
+import TabMenu from '../layout/TabMenu.vue'
 
-const memo = ref('');
-const recordDate = ref('');
+const memo = ref("");
+const recordDate = ref("");
 const weight = ref(null);
 const fatPercentage = ref(null);
 const files = ref([]);
@@ -77,13 +78,14 @@ const registerRecord = async () => {
 
 const showRecordDetail = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
-}
+};
 </script>
 
 <template>
   <Header />
+  <TabMenu />
   <Toast position="top-center" />
-  <div class="add-record-container">
+  <form class="add-record-container" @submit.prevent="registerRecord">
     <div class="record-add-space">
       <p>記録日</p>
       <DatePicker
@@ -109,7 +111,7 @@ const showRecordDetail = (item) => {
     </div>
     <div class="record-add-space">
       <FloatLabel>
-        <Textarea v-model="memo" rows="10" />
+        <Textarea v-model="memo" rows="10" class="record-memo" />
         <label>メモ</label>
       </FloatLabel>
     </div>
@@ -121,12 +123,10 @@ const showRecordDetail = (item) => {
       <p>関連画像</p>
       <DropFile @change="onFileChange" />
     </div>
-  </div>
-  <div class="record-add-space">
-    <button class="add-record-button" @click="registerRecord">
-      記録を登録する
-    </button>
-  </div>
+    <div class="record-button-space">
+      <button class="add-record-button">記録を登録する</button>
+    </div>
+  </form>
 </template>
 
 <style scoped>
@@ -144,9 +144,23 @@ const showRecordDetail = (item) => {
 .record-add-space {
   margin-top: 30px;
 }
+.record-button-space {
+  margin-top: 30px;
+  padding-bottom: 20px;
+}
 .add-record-button {
   font-size: 16px;
   font-weight: bold;
   padding: 10px 50px;
+  text-align: center;
+}
+.record-memo {
+  width: 500px;
+}
+
+@media (max-width: 768px) {
+  .record-memo {
+    width: calc(100% - 20px);
+  }
 }
 </style>
