@@ -13,7 +13,7 @@ import Toast from "primevue/toast";
 import DatePicker from "../atom/DatePicker.vue";
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
-import TabMenu from '../layout/TabMenu.vue'
+import TabMenu from "../layout/TabMenu.vue";
 
 const memo = ref("");
 const recordDate = ref("");
@@ -116,7 +116,12 @@ const showRecordDetail = (item) => {
       </FloatLabel>
     </div>
     <div class="record-add-space">
-      <input type="checkbox" id="statusSelect" v-model="isAddAsHidden" />
+      <input
+        type="checkbox"
+        id="statusSelect"
+        v-model="isAddAsHidden"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
       <label for="statusSelectName">非公開記録にする場合にはチェック</label>
     </div>
     <div class="record-add-space">

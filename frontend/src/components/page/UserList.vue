@@ -12,7 +12,7 @@ import SearchButton from "../atom/SearchButton.vue";
 
 const router = useRouter();
 
-const keyword = ref('');
+const keyword = ref("");
 const isDisplayOnlySupport = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
@@ -94,7 +94,12 @@ const userSelect = (item) => {
       v-model="keyword"
     />
     <div class="search-check">
-      <input type="checkbox" id="statusSelect" v-model="isDisplayOnlySupport" />
+      <input
+        type="checkbox"
+        id="statusSelect"
+        v-model="isDisplayOnlySupport"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
       <label>応援しているユーザーのみ表示</label>
     </div>
     <div class="search-button-area">
@@ -137,32 +142,6 @@ input[type="text"] {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-input[type="checkbox"] {
-  border-radius: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-input[type="checkbox"] {
-  position: relative;
-  width: 16px;
-  height: 16px;
-  border: 1px solid #000;
-  vertical-align: -5px;
-}
-
-input[type="checkbox"]:checked:before {
-  position: absolute;
-  top: 1px;
-  left: 4px;
-  transform: rotate(50deg);
-  width: 4px;
-  height: 8px;
-  border-right: 2px solid #000;
-  border-bottom: 2px solid #000;
-  content: "";
 }
 .search-check {
   margin-top: 20px;
