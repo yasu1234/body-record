@@ -6,6 +6,9 @@ import Cookies from 'js-cookie';
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
+import FloatLabel from "primevue/floatlabel";
+import InputText from "primevue/inputtext";
+import Textarea from "primevue/textarea";
 
 import DropFile from '../atom/DropFile.vue'
 import Header from '../layout/Header.vue'
@@ -64,16 +67,21 @@ const showKnowledgeDetail = (item) => {
     <Header />
     <Toast position="top-center" />
     <div class="editor">
-        <label class="itemLabel">タイトル</label>
-        <input id="title" type="text" v-model="title">
-        <textarea name="knowledge" rows="20" v-model="knowledge"></textarea>
+        <FloatLabel>
+            <InputText v-model="title" class="input-width" />
+            <label>タイトル</label>
+        </FloatLabel>
+        <FloatLabel>
+            <Textarea v-model="knowledge" rows="20" class="input-width" />
+            <label>詳細</label>
+        </FloatLabel>
     </div>
     <div class="relationImages">
         <p class="inputTitle">関連画像</p>
         <DropFile @change="onFileChange"/>
     </div>
     <div class="relationImages">
-        <button class="registerButton" @click="registerKnowledge">登録する</button>
+        <button class="add-knowledge-button" @click="registerKnowledge">登録する</button>
     </div>
 </template>
 
@@ -81,15 +89,11 @@ const showKnowledgeDetail = (item) => {
 .editor{
    padding: 30px;
  }
-
- input[type=text] {
-  width: 100%;
-  padding: 12px 12px;
-  margin: 8px 0;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+ .input-width {
+    width: 100%;
+    padding: 12px 12px;
+    margin: 8px 0;
+ }
 .time-list {
   display: flex;
   justify-content: space-between;
@@ -110,9 +114,7 @@ const showKnowledgeDetail = (item) => {
 .relationImages {
     padding: 20px;
 }
-.registerButton{
-    background: #ffa500;
-    color: white;
+.add-knowledge-button{
     font-size:16px;
     font-weight:bold;
 }
