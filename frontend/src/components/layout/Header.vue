@@ -173,6 +173,7 @@ header {
   color: #ffa600;
   font-family: Comic Sans MS;
   font-weight: bold;
+  font-size: 22px;
 }
 .navigation-menus {
   display: flex;
