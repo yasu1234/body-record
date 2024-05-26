@@ -58,9 +58,10 @@ class Api::V1::SupportsController < ApplicationController
         end
 
         supporters_count = support_user.supporters.count
+        supports_count = support_user.supports.count
         includes_user = support_user.supporters.exists?(id: @user.id)
 
-        render json: { user: support_user.as_json().merge(isSupport: includes_user, supportCount: supporters_count) }, status: 200
+        render json: { user: support_user.as_json().merge(isSupport: includes_user, supporterCount: supporters_count, supportCount: supports_count) }, status: 200
     end
 
     private
