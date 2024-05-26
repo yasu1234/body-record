@@ -12,7 +12,7 @@ import KnowledgeCard from "../layout/KnowledgeCard.vue";
 
 const router = useRouter();
 
-const keyword = ref("");
+const keyword = ref('');
 const isBookmark = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);

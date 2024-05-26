@@ -11,9 +11,9 @@ import RecordCard from "../layout/RecordCard.vue";
 
 const router = useRouter();
 
-const keyword = ref("");
-const startDate = ref("");
-const endDate = ref("");
+const keyword = ref('');
+const startDate = ref('');
+const endDate = ref('');
 const isDisplayOnlyOpen = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
