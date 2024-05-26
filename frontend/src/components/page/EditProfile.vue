@@ -155,7 +155,7 @@ const showProfile = (id) => {
   <div class="setting-container">
     <SettingSideMenu :currentIndex="1" class="setting-side-menu" />
     <main class="setting-main">
-      <form @submit.prevent="updateProfile">
+      <form @submit.prevent="updateProfile" class="ml-3.5">
         <div class="profile-edit-content">
           <FloatLabel>
             <InputText v-model="goalWeight" />
@@ -199,10 +199,6 @@ const showProfile = (id) => {
 </template>
 
 <style scoped>
-form {
-  margin-left: 15px;
-}
-
 .profile-edit-content {
   display: flex;
   align-items: center;

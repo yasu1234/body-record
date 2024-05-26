@@ -75,7 +75,7 @@ const showKnowledgeDetail = (item) => {
   <Header />
   <TabMenu />
   <Toast position="top-center" />
-  <div class="editor">
+  <div class="p-7">
     <FloatLabel>
       <InputText v-model="title" class="input-width" />
       <label>タイトル</label>
@@ -97,9 +97,6 @@ const showKnowledgeDetail = (item) => {
 </template>
 
 <style scoped>
-.editor {
-  padding: 30px;
-}
 .input-width {
   width: 100%;
   padding: 12px 12px;

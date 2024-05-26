@@ -93,7 +93,7 @@ const userSelect = (item) => {
       placeholder="名前で検索"
       v-model="keyword"
     />
-    <div class="search-check">
+    <div class="mt-5">
       <input
         type="checkbox"
         id="statusSelect"
@@ -106,7 +106,7 @@ const userSelect = (item) => {
       <SearchButton @searchButtonClick="targetSearch" />
     </div>
   </div>
-  <div class="user-search-result">
+  <div class="mt-5">
     <div
       v-for="user in searchResult"
       class="user-card"
@@ -134,7 +134,6 @@ const userSelect = (item) => {
   border-radius: 5px;
   margin-top: 20px;
 }
-
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -142,12 +141,6 @@ input[type="text"] {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-.search-check {
-  margin-top: 20px;
-}
-.user-search-result {
-  margin-top: 20px;
 }
 .search-button-area {
   text-align: center;

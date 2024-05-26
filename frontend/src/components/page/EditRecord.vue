@@ -141,7 +141,7 @@ const edit = async () => {
         <input type="text" v-model="fatPercentage">
         <label for="goal-fat-percentage" class="unit-label">%</label>
     </div>
-    <div class="editor">
+    <div class="p-7">
         <textarea name="memo" rows="10" v-model="memo"></textarea>
     </div>
     <div class="thumbnail-container">
@@ -168,11 +168,6 @@ const edit = async () => {
     padding-left: 20px;
     padding-right: 20px;
 }
-
-.editor{
-   padding: 30px;
- }
-
  input[type=text] {
   width: 100%;
   padding: 12px 12px;
@@ -247,5 +242,5 @@ const edit = async () => {
     border-radius: 4px;
     cursor: pointer;
     border-radius: 50%
-  }
+}
 </style>

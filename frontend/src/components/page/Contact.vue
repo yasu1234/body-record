@@ -104,8 +104,6 @@ const contactSubmit = async () => {
 }
 
 .submit-button {
-  background: #ffa500;
-  color: white;
   font-size: 16px;
   font-weight: bold;
   padding: 10px 50px;

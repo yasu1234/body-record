@@ -129,7 +129,7 @@ const showKnowledgeDetail = (item) =>  {
 <template>
     <Header />
     <Toast position="top-center" />
-    <div class="editor">
+    <div class="p-7">
         <label class="itemLabel">タイトル</label>
         <input id="title" type="text" v-model="title">
         <textarea name="knowledge" rows="20" v-model="knowledge"></textarea>
@@ -149,15 +149,11 @@ const showKnowledgeDetail = (item) =>  {
         <DropFile @change="onFileChange"/>
     </div>
     <div class="relationImages">
-        <button class="registerButton" @click="edit">登録する</button>
+        <button class="edit-knowledge-button" @click="edit">登録する</button>
     </div>
 </template>
 
 <style scoped>
-.editor{
-   padding: 30px;
- }
-
  input[type=text] {
   width: 100%;
   padding: 12px 12px;
@@ -186,9 +182,7 @@ const showKnowledgeDetail = (item) =>  {
 .relationImages {
     padding: 20px;
 }
-.registerButton{
-    background: #ffa500;
-    color: white;
+.edit-knowledge-button {
     font-size:16px;
     font-weight:bold;
 }

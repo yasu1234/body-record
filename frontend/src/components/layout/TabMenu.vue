@@ -42,7 +42,7 @@ function menuChange(event) {
         :currentId="currentId"
         @menuTapped="menuChange" />
     </div>
-    <div class="tab-line h-1"/>
+    <div class="tab-line h-px"/>
 </template>
 
 <style scoped>

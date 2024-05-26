@@ -128,7 +128,7 @@ function addKnowledge() {
     :knowledgeContent="knowledge.content"
     @click="clickKnowledge(knowledge)"
   />
-  <div class="knowledge-list-page">
+  <div class="mt-12">
     <ListPage
       :pageCount="pageCount"
       v-model="pageNum"
@@ -147,11 +147,9 @@ function addKnowledge() {
   border-radius: 5px;
   margin-top: 20px;
 }
-
 .keyword-search {
   margin-top: 20px;
 }
-
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -159,31 +157,6 @@ input[type="text"] {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-input[type="checkbox"] {
-  border-radius: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-input[type="checkbox"] {
-  position: relative;
-  width: 16px;
-  height: 16px;
-  border: 1px solid #000;
-  vertical-align: -5px;
-}
-
-input[type="checkbox"]:checked:before {
-  position: absolute;
-  top: 1px;
-  left: 4px;
-  transform: rotate(50deg);
-  width: 4px;
-  height: 8px;
-  border-right: 2px solid #000;
-  border-bottom: 2px solid #000;
-  content: "";
 }
 .search-check {
   margin-top: 20px;
@@ -199,12 +172,7 @@ input[type="checkbox"]:checked:before {
   padding-right: 40px;
 }
 .add-button {
-  background: #ffa500;
-  color: white;
   font-size: 16px;
   font-weight: bold;
-}
-.knowledge-list-page {
-  margin-top: 50px;
 }
 </style>

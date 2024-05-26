@@ -65,7 +65,7 @@ const showNotFound = () =>  {
 <template>
     <Header />
 	<div v-if="contact !== null">
-        <div class="editor">
+        <div class="p-7">
             <p id="title" class="knowledge-title" type="text"> {{ contact.content }} </p>
         </div>
         <div class="relationImages">
@@ -95,11 +95,6 @@ const showNotFound = () =>  {
     width: 40px;
     height: 40px;
 }
-
-.editor{
-   padding: 30px;
- }
-
  input[type=text] {
   width: 100%;
   padding: 12px 12px;

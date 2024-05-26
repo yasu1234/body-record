@@ -95,27 +95,27 @@ const showRecordDetail = (item) => {
         class="input-width"
       />
     </div>
-    <div class="record-add-space input-group">
+    <div class="input-group mt-7">
       <FloatLabel>
         <InputText v-model="weight" class="input-width" />
         <label>体重</label>
       </FloatLabel>
       <label for="goal-weight" class="unit-label">kg</label>
     </div>
-    <div class="record-add-space input-group">
+    <div class="input-group mt-7">
       <FloatLabel>
         <InputText v-model="fatPercentage" class="input-width" />
         <label>体脂肪率</label>
       </FloatLabel>
       <label for="goal-fat-percentage" class="unit-label">%</label>
     </div>
-    <div class="record-add-space">
+    <div class="mt-7">
       <FloatLabel>
         <Textarea v-model="memo" rows="10" class="record-memo" />
         <label>メモ</label>
       </FloatLabel>
     </div>
-    <div class="record-add-space">
+    <div class="mt-7">
       <input
         type="checkbox"
         id="statusSelect"
@@ -124,11 +124,11 @@ const showRecordDetail = (item) => {
       />
       <label for="statusSelectName">非公開記録にする場合にはチェック</label>
     </div>
-    <div class="record-add-space">
+    <div class="mt-7">
       <p>関連画像</p>
       <DropFile @change="onFileChange" />
     </div>
-    <div class="record-button-space">
+    <div class="record-button-space mt-7">
       <button class="add-record-button">記録を登録する</button>
     </div>
   </form>
@@ -146,11 +146,7 @@ const showRecordDetail = (item) => {
 .input-width {
   width: 200px;
 }
-.record-add-space {
-  margin-top: 30px;
-}
 .record-button-space {
-  margin-top: 30px;
   padding-bottom: 20px;
 }
 .add-record-button {
@@ -162,7 +158,6 @@ const showRecordDetail = (item) => {
 .record-memo {
   width: 500px;
 }
-
 @media (max-width: 768px) {
   .record-memo {
     width: calc(100% - 20px);
