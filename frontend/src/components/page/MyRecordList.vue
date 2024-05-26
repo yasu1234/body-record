@@ -7,17 +7,16 @@ import Cookies from "js-cookie";
 import ListPage from "../layout/ListPage.vue";
 import DatePicker from "../atom/DatePicker.vue";
 import SearchButton from "../atom/SearchButton.vue";
-import RecordCard from '../layout/RecordCard.vue'
+import RecordCard from "../layout/RecordCard.vue";
 
 const router = useRouter();
 
-const keyword = ref("");
-const startDate = ref("");
-const endDate = ref("");
+const keyword = ref('');
+const startDate = ref('');
+const endDate = ref('');
 const isDisplayOnlyOpen = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
-
 const pageCount = ref(1);
 const pageNum = ref(1);
 
@@ -29,10 +28,11 @@ onBeforeRouteUpdate(async (to, from) => {
   keyword.value = to.query.keyword;
   startDate.value = to.query.startDate;
   endDate.value = to.query.endDate;
+  pageNum.value = to.query.page;
   search();
 });
 
-const targetSearch = () => {
+const paramChange = () => {
   const query = {};
 
   if (keyword.value.trim() !== "") {
@@ -45,6 +45,10 @@ const targetSearch = () => {
 
   if (endDate.value !== "") {
     query.endDate = endDate.value;
+  }
+
+  if (pageNum.value > 1) {
+    query.page = pageNum.value;
   }
 
   router.push({ path: "/", query: query });
@@ -87,7 +91,7 @@ const search = async () => {
 
 const updatePaginateItems = function (page) {
   pageNum.value = page;
-  search();
+  paramChange();
 };
 
 function startDateChange(event) {
@@ -100,7 +104,7 @@ function endDateChange(event) {
 
 const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
-}
+};
 
 function addRecord() {
   router.push("/addRecord");
@@ -134,24 +138,31 @@ function addRecord() {
         />
       </div>
     </div>
-    <div class="search-check">
-      <input type="checkbox" id="statusSelect" v-model="isDisplayOnlyOpen">
+    <div class="mt-5">
+      <input
+        type="checkbox"
+        id="statusSelect"
+        v-model="isDisplayOnlyOpen"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
       <label>非公開記録は表示しない</label>
     </div>
     <div class="search-button-area">
-      <SearchButton @searchButtonClick="targetSearch" />
+      <SearchButton @searchButtonClick="paramChange" />
     </div>
   </div>
   <div class="add-button-area">
     <button class="add-button" @click="addRecord">記録を追加する</button>
   </div>
-  <div class="record-search-result">
-    <RecordCard v-for="record in searchResult"
-        v-bind="record"
-        :record="record"
-        @recordClick="clickRecord(record)"/>
+  <div class="mt-5">
+    <RecordCard
+      v-for="record in searchResult"
+      v-bind="record"
+      :record="record"
+      @recordClick="clickRecord(record)"
+    />
   </div>
-  <div class="record-list-page">
+  <div class="mt-12">
     <ListPage
       :pageCount="pageCount"
       v-model="pageNum"
@@ -170,7 +181,6 @@ function addRecord() {
   border-radius: 5px;
   margin-top: 20px;
 }
-
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -178,32 +188,6 @@ input[type="text"] {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-input[type="checkbox"] {
-  border-radius: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-input[type="checkbox"] {
-  position: relative;
-  width: 16px;
-  height: 16px;
-  border: 1px solid #000;
-  vertical-align: -5px;
-}
-
-input[type="checkbox"]:checked:before {
-  position: absolute;
-  top: 1px;
-  left: 4px;
-  transform: rotate(50deg);
-  width: 4px;
-  height: 8px;
-  border-right: 2px solid #000;
-  border-bottom: 2px solid #000;
-  content: "";
 }
 .time-list {
   display: flex;
@@ -217,12 +201,6 @@ input[type="checkbox"]:checked:before {
   padding: 0;
   font-size: 16px;
 }
-.search-check {
-  margin-top: 20px;
-}
-.record-search-result {
-  margin-top: 20px;
-}
 .search-button-area {
   text-align: center;
   margin-top: 20px;
@@ -233,13 +211,8 @@ input[type="checkbox"]:checked:before {
   padding-right: 40px;
 }
 .add-button {
-  background: #ffa500;
-  color: white;
   font-size: 16px;
   font-weight: bold;
-}
-.record-list-page {
-  margin-top: 50px;
 }
 @media screen and (max-width: 768px) {
   .my-record-search-container {

@@ -1,22 +1,31 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
+import FloatLabel from "primevue/floatlabel";
+import InputText from "primevue/inputtext";
+import Textarea from "primevue/textarea";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
+import SettingSideMenu from "../layout/SettingSideMenu.vue";
+import TabMenu from "../layout/TabMenu.vue";
 
 const route = useRoute();
+const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const goalWeight = ref(null);
 const goalFatPercentage = ref(null);
-const profile = ref("");
+const profile = ref('');
 const file = ref(null);
 const userThumbnail = ref(null);
 const userId = ref(0);
-const errorMessage = ref("");
 
 function onFileChange(event) {
   file.value = event[0];
@@ -82,16 +91,20 @@ const updateProfile = async () => {
     );
     if (file.value !== null) {
       updateProfileImage();
+    } else {
+      toastNotifications.displayInfo("プロフィールを更新しました", "");
+      setTimeout(async () => {
+        showProfile(res.data.user.id);
+      }, 3000);
     }
   } catch (error) {
-    errorMessage.value = "";
-    let errorMessages = "プロフィール変更に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("プロフィール変更に失敗しました", errorMessages);
   }
 };
 
@@ -114,76 +127,82 @@ const updateProfileImage = async () => {
         },
       }
     );
-    console.log({ res });
+    
+    toastNotifications.displayInfo("プロフィールを更新しました", "");
+    setTimeout(async () => {
+      showProfile(res.data.user.id);
+    }, 3000);
   } catch (error) {
-    errorMessage.value = "";
-    let errorMessages = "プロフィール画像登録に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("プロフィール画像登録に失敗しました", errorMessages);
   }
 };
+
+const showProfile = (id) => {
+  router.push({ name: "UserProfile", params: { id: id } });
+}
 </script>
 
 <template>
   <Header />
-  <ErrorMessage :errorMessage="errorMessage" />
-  <form @submit.prevent="updateProfile">
-    <div class="profile-edit-content">
-      <label for="goal-weight">目標体重:</label>
-      <input type="text" id="goal-weight" v-model="goalWeight" />
-      <label for="goal-weight" class="unit-label">kg</label>
-    </div>
-    <div class="profile-edit-content">
-      <label for="goal-fat-percentage">目標体脂肪率:</label>
-      <input type="text" v-model="goalFatPercentage" />
-      <label for="goal-fat-percentage" class="unit-label">%</label>
-    </div>
-    <div class="profile-area">
-      <label for="comments">紹介文</label>
-      <textarea v-model="profile" class="profile-text" />
-    </div>
-    <div class="profile-image-change-container">
-      <label>プロフィール画像変更</label>
-      <div class="current-thumbnail">
-        <img
-          v-if="userThumbnail !== null"
-          :src="userThumbnail.url"
-          alt="ユーザーアイコン"
-        />
-        <img
-          v-else
-          src="../../assets/image/user-placeholder.png"
-          alt="ユーザーアイコン"
-        />
-      </div>
-      <DropFile @change="onFileChange" />
-    </div>
-    <button class="edit-profile-button">更新する</button>
-  </form>
+  <TabMenu />
+  <Toast position="top-center" />
+  <div class="setting-container">
+    <SettingSideMenu :currentIndex="1" class="setting-side-menu" />
+    <main class="setting-main">
+      <form @submit.prevent="updateProfile" class="ml-3.5">
+        <div class="profile-edit-content">
+          <FloatLabel>
+            <InputText v-model="goalWeight" />
+            <label>目標体重</label>
+          </FloatLabel>
+          <label for="goal-weight" class="unit-label">kg</label>
+        </div>
+        <div class="profile-edit-content">
+          <FloatLabel>
+            <InputText v-model="goalFatPercentage" />
+            <label>目標体脂肪率</label>
+          </FloatLabel>
+          <label for="goal-fat-percentage" class="unit-label">%</label>
+        </div>
+        <div class="profile-area">
+          <FloatLabel>
+            <Textarea v-model="profile" rows="10" class="profile-text" />
+            <label>紹介文</label>
+          </FloatLabel>
+        </div>
+        <div class="profile-image-change-container">
+          <label>プロフィール画像変更</label>
+          <div class="current-thumbnail">
+            <img
+              v-if="userThumbnail !== null"
+              :src="userThumbnail.url"
+              alt="ユーザーアイコン"
+            />
+            <img
+              v-else
+              src="../../assets/image/user-placeholder.png"
+              alt="ユーザーアイコン"
+            />
+          </div>
+          <DropFile @change="onFileChange" />
+        </div>
+        <button class="edit-profile-button">更新する</button>
+      </form>
+    </main>
+  </div>
 </template>
 
-<style>
-form {
-  margin-left: 15px;
-}
-
+<style scoped>
 .profile-edit-content {
   display: flex;
   align-items: center;
   margin-top: 20px;
-}
-
-input[type="text"] {
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  font-size: 16px;
-  width: 100px;
-  margin-left: 10px;
 }
 
 .unit-label {
@@ -191,24 +210,22 @@ input[type="text"] {
 }
 
 .profile-text {
-  width: 60%;
   height: 100px;
+  width: calc(100% - 40px);
 }
 
 .profile-area {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   margin-top: 20px;
 }
 
-.profile-area label {
-  margin-bottom: 5px;
+.setting-side-menu {
+  z-index: 30;
+  flex: 1;
 }
-
+.setting-main {
+  width: 100%;
+}
 .edit-profile-button {
-  background: #ffa500;
-  color: white;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;

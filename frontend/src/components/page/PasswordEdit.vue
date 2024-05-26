@@ -4,13 +4,18 @@ import { ref } from "vue";
 import Cookies from "js-cookie";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
 
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
 import PasswordText from "../atom/PasswordText.vue";
+import SettingSideMenu from "../layout/SettingSideMenu.vue";
+import TabMenu from "../layout/TabMenu.vue";
 import { PasswordType } from "../../const/const.js";
 
-const errorMessage = ref("");
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const checkValidate = async () => {
   const result = await validate();
@@ -37,16 +42,15 @@ const passwordEdit = async () => {
         },
       }
     );
-    console.log({ res });
+    toastNotifications.displayInfo("パスワードを変更しました", "");
   } catch (error) {
-    errorMessage.value = "";
-    let errorMessages = "パスワード変更に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("パスワード変更に失敗しました", errorMessages);
   }
 };
 
@@ -96,41 +100,47 @@ const updatePassword = (inputPassword, passwordType) => {
 
 <template>
   <Header />
-  <ErrorMessage :errorMessage="errorMessage" />
-  <h1 class="signUpTitle">パスワード変更</h1>
-  <div class="password-edit-container">
-    <form class="form" @submit.prevent="checkValidate">
-      <div class="item">
-        <label for="password">現在のパスワード</label>
-        <PasswordText
-          :password="currentPassword"
-          :passwordType="PasswordType.password"
-          @updatePassword="updatePassword"
-        />
-        <p class="validation-error-message">{{ currentPasswordError }}</p>
+  <TabMenu />
+  <Toast position="top-center" />
+  <div class="setting-container">
+    <SettingSideMenu :currentIndex="3" />
+    <main>
+      <h1 class="signUpTitle">パスワード変更</h1>
+      <div class="password-edit-container">
+        <form class="form" @submit.prevent="checkValidate">
+          <div class="item">
+            <label for="password">現在のパスワード</label>
+            <PasswordText
+              :password="currentPassword"
+              :passwordType="PasswordType.password"
+              @updatePassword="updatePassword"
+            />
+            <p class="validation-error-message">{{ currentPasswordError }}</p>
+          </div>
+          <div class="item">
+            <label for="password">パスワード</label>
+            <PasswordText
+              :password="password"
+              :passwordType="PasswordType.newPassword"
+              @updatePassword="updatePassword"
+            />
+            <p class="validation-error-message">{{ passwordError }}</p>
+          </div>
+          <div class="item">
+            <label for="passwordConfirm">パスワード(確認)</label>
+            <PasswordText
+              :password="passwordConfirm"
+              :passwordType="PasswordType.newPasswordConfirm"
+              @updatePassword="updatePassword"
+            />
+            <p class="validation-error-message">{{ passwordConfirmError }}</p>
+          </div>
+          <div class="signUpTitle">
+            <button class="password-edit-button">更新</button>
+          </div>
+        </form>
       </div>
-      <div class="item">
-        <label for="password">パスワード</label>
-        <PasswordText
-          :password="password"
-          :passwordType="PasswordType.newPassword"
-          @updatePassword="updatePassword"
-        />
-        <p class="validation-error-message">{{ passwordError }}</p>
-      </div>
-      <div class="item">
-        <label for="passwordConfirm">パスワード(確認)</label>
-        <PasswordText
-          :password="passwordConfirm"
-          :passwordType="PasswordType.newPasswordConfirm"
-          @updatePassword="updatePassword"
-        />
-        <p class="validation-error-message">{{ passwordConfirmError }}</p>
-      </div>
-      <div class="signUpTitle">
-        <button class="password-edit-button">更新</button>
-      </div>
-    </form>
+    </main>
   </div>
 </template>
 

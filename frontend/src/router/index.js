@@ -69,7 +69,7 @@ const routes = [
     component: KnowledgeDetail 
   },
   { 
-    path: '/recordList',
+    path: '/recordList/:id',
     name: 'OtherRecordList',
     component: OtherRecordList 
   },

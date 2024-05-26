@@ -1,27 +1,28 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter, onBeforeRouteUpdate } from 'vue-router'
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import { ref, onMounted } from "vue";
+import { useRouter, onBeforeRouteUpdate } from "vue-router";
+import axios from "axios";
+import Cookies from "js-cookie";
 
-import TabMenu from '../layout/TabMenu.vue'
-import Header from '../layout/Header.vue'
-import ListPage from '../layout/ListPage.vue'
-import DatePicker from '../atom/DatePicker.vue'
-import RecordCard from '../layout/RecordCard.vue'
+import TabMenu from "../layout/TabMenu.vue";
+import Header from "../layout/Header.vue";
+import ListPage from "../layout/ListPage.vue";
+import DatePicker from "../atom/DatePicker.vue";
+import RecordCard from "../layout/RecordCard.vue";
+import SearchButton from "../atom/SearchButton.vue";
 
 const router = useRouter();
 
-const keyword = ref("");
-const startDate = ref("");
-const endDate = ref("");
+const keyword = ref('');
+const startDate = ref('');
+const endDate = ref('');
 const isDisplayOnlyOpen = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
 const currentId = ref(2);
 
 const pageCount = ref(1);
-const pageNum = ref(1);
+const page = ref(1);
 
 onMounted(() => {
   search();
@@ -34,112 +35,137 @@ onBeforeRouteUpdate(async (to, from) => {
   search();
 });
 
-const targetSearch = ()=> {
+const searchParamChange = () => {
   const query = {};
 
-  if (keyword.value.trim() !== '') {
+  if (keyword.value.trim() !== "") {
     query.keyword = keyword.value;
   }
 
-  if (startDate.value !== '') {
+  if (startDate.value !== "") {
     query.startDate = startDate.value;
   }
 
-  if (endDate.value !== '') {
+  if (endDate.value !== "") {
     query.endDate = endDate.value;
   }
 
-  router.push( {path: '/recordList', query: query});
-}
+  router.push({ path: "/recordList", query: query });
+};
 
 const search = async () => {
   try {
-    const res = await axios.get(import.meta.env.VITE_APP_API_BASE + '/api/v1/records', {
+    const res = await axios.get(
+      import.meta.env.VITE_APP_API_BASE + "/api/v1/records",
+      {
         headers: {
-            'access-token' : Cookies.get('accessToken'),
-            'client':Cookies.get('client'),
-            'uid': Cookies.get('uid'),
+          "access-token": Cookies.get("accessToken"),
+          client: Cookies.get("client"),
+          uid: Cookies.get("uid"),
         },
-        
+
         params: {
-            keyword: keyword.value,
-            startDate: startDate.value,             
-            endDate: endDate.value,
-            page: pageNum
-        }
-    })
+          keyword: keyword.value,
+          startDate: startDate.value,
+          endDate: endDate.value,
+          page: page,
+        },
+      }
+    );
 
     if (res.data && res.data.totalPage) {
-      pageCount.value = res.data.totalPage
+      pageCount.value = res.data.totalPage;
     } else {
-      pageCount.value = 1
+      pageCount.value = 1;
     }
 
     searchResult.value = [];
-    
-    for(let item of res.data.records){
+
+    for (let item of res.data.records) {
       searchResult.value.push(item);
     }
   } catch (error) {
     searchResult.value = [];
   }
-}
+};
 
 const updatePaginateItems = function (pageNum) {
-  pageNum.value = pageNum
+  page.value = pageNum;
   search();
 };
 
 function startDateChange(event) {
-  startDate.value = event
+  startDate.value = event;
 }
 
 function endDateChange(event) {
-  endDate.value = event
+  endDate.value = event;
 }
 
 const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
-}
+};
 </script>
 
 <template>
   <Header />
-  <TabMenu :currentId="currentId"/>
-  <div class="keyword-search">
-    <input type="text" id="keyword" name="keywordName" placeholder="キーワードで検索" v-model="keyword">
-  </div>
-  <div class="time-list">
-    <div class="item">
-      <p class="inputTitle">開始日</p>
-      <DatePicker isStart=true :date= startDate @update:date="startDateChange"/>
-    </div>
-    <div class="item">
-      <p class="inputTitle">終了日</p>
-      <DatePicker isStart=false :date= endDate @update:date="endDateChange"/>
-    </div>
+  <TabMenu :currentId="currentId" />
+  <div class="user-record-search-container">
+    <input
+      type="text"
+      id="keyword"
+      name="keywordName"
+      placeholder="キーワードで検索"
+      v-model="keyword"
+    />
+    <div class="time-list">
+      <div class="item">
+        <p class="inputTitle">開始日</p>
+        <DatePicker
+          isStart="true"
+          :date="startDate"
+          @update:date="startDateChange"
+        />
+      </div>
+      <div class="item">
+        <p class="inputTitle">終了日</p>
+        <DatePicker
+          isStart="false"
+          :date="endDate"
+          @update:date="endDateChange"
+        />
+      </div>
     </div>
     <div class="search-button-area">
-        <button class="search-button" @click="targetSearch">検索</button>
+      <SearchButton @searchButtonClick="searchParamChange" />
     </div>
-    <RecordCard v-for="record in searchResult"
-        v-bind="record"
-        :record="record"
-        @recordClick="clickRecord(record)"/>
-    <div class="record-list-page">
-      <ListPage
+  </div>
+  <RecordCard
+    v-for="record in searchResult"
+    v-bind="record"
+    :record="record"
+    @recordClick="clickRecord(record)"
+  />
+  <div class="record-list-page">
+    <ListPage
       :pageCount="pageCount"
-      v-model="pageNum"
-      @changePage="updatePaginateItems" />
-    </div>
+      v-model="page"
+      @changePage="updatePaginateItems"
+    />
+  </div>
 </template>
 
 <style scoped>
-.keyword-search {
-   padding: 30px;
- }
-
- input[type=text] {
+.user-record-search-container {
+  width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1.5px solid #46c443;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+input[type="text"] {
   width: 100%;
   padding: 12px 12px;
   margin: 8px 0;
@@ -147,41 +173,11 @@ const clickRecord = (item) => {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-input[type="checkbox"] {
-  border-radius: 0;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-}
-input[type="checkbox"] {
-  position: relative;
-  width: 16px;
-  height: 16px;
-  border: 1px solid #000;
-  vertical-align: -5px;
-}
-
-input[type="checkbox"]:checked:before {
-  position: absolute;
-  top: 1px;
-  left: 4px;
-  transform: rotate(50deg);
-  width: 4px;
-  height: 8px;
-  border-right: 2px solid #000;
-  border-bottom: 2px solid #000;
-  content: '';
-}
 .time-list {
   display: flex;
-  justify-content: space-between;
-  padding-left: 30px;
-  padding-right: 30px;
 }
 .time-list .item {
-  width: 50%;
-  margin: 0;
-  padding: 10px;
+  padding: 5px;
   box-sizing: border-box;
 }
 .time-list .item .inputTitle {
@@ -194,20 +190,20 @@ input[type="checkbox"]:checked:before {
   padding-top: 25px;
 }
 .search-button {
-  background: #ffa500;
-  color: white;
-  font-size:16px;
-  font-weight:bold;
+  font-size: 16px;
+  font-weight: bold;
 }
-.add-button-area {
-  text-align: right;
-  margin-top: 20px;
-  padding-right: 40px;
-}
-.add-button {
-  background: #ffa500;
-  color: white;
-  font-size:16px;
-  font-weight:bold;
+
+@media screen and (max-width: 768px) {
+  .user-record-search-container {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #46c443;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
 }
 </style>

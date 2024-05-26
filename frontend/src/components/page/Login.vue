@@ -5,14 +5,16 @@ import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
+import Toast from "primevue/toast";
 
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
 import PasswordText from "../atom/PasswordText.vue";
 
-const errorMessage = ref("");
-
 const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const handleSubmit = async () => {
   const result = await validate();
@@ -36,13 +38,13 @@ const login = async () => {
 
     router.push({ name: "Home" });
   } catch (error) {
-    let errorMessages = "ログインに失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 401) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("ログインに失敗しました", errorMessages)
   }
 };
 
@@ -73,7 +75,6 @@ const updatePassword = (inputPassword, passwordType) => {
 <template>
   <Header />
   <h1 class="signUpTitle">ログイン</h1>
-  <ErrorMessage :errorMessage="errorMessage" />
   <div class="login-container">
     <form class="form" @submit.prevent="handleSubmit">
       <div class="item">

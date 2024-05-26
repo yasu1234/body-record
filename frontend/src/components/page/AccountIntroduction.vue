@@ -3,12 +3,13 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
-
-import ErrorMessage from "../atom/ErrorMessage.vue";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
+import Toast from "primevue/toast";
 
 const router = useRouter();
-
-const errorMessage = ref("");
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const showSignup = () => {
   router.push("/signup");
@@ -29,20 +30,19 @@ const guestLogin = async () => {
 
     router.push({ name: "Home" });
   } catch (error) {
-    errorMessage.value = "";
-    let errorMessages = "ゲストログインに失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("ゲストログインに失敗しました", errorMessages)
   }
 };
 </script>
 
 <template>
-  <ErrorMessage :errorMessage="errorMessage" />
+  <Toast position="top-center" />
   <img src="../../assets/image/home_image.jpg" alt="Logo" class="home-logo" />
   <h1 class="account-introduction-title">Inbody-Recordへようこそ！</h1>
   <div class="account-buttons">

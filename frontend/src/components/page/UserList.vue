@@ -6,13 +6,13 @@ import Cookies from "js-cookie";
 
 import TabMenu from "../layout/TabMenu.vue";
 import Header from "../layout/Header.vue";
+import UserCard from "../layout/UserCard.vue";
 import ListPage from "../layout/ListPage.vue";
 import SearchButton from "../atom/SearchButton.vue";
-import RecordCard from "../layout/RecordCard.vue";
 
 const router = useRouter();
 
-const keyword = ref("");
+const keyword = ref('');
 const isDisplayOnlySupport = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
@@ -51,7 +51,7 @@ const searchUser = async () => {
         },
         params: {
           keyword: keyword.value,
-          page: pageNum
+          page: pageNum,
         },
       }
     );
@@ -77,13 +77,9 @@ const updatePaginateItems = function (page) {
   searchUser();
 };
 
-const clickRecord = (item) => {
-  router.push({ name: "RecordDetail", params: { id: item.id } });
+const userSelect = (item) => {
+  router.push({ name: "OtherRecordList", params: { id: item.id } });
 };
-
-function addRecord() {
-  router.push("/addRecord");
-}
 </script>
 
 <template>
@@ -97,19 +93,26 @@ function addRecord() {
       placeholder="名前で検索"
       v-model="keyword"
     />
-    <div class="search-check">
-      <input type="checkbox" id="statusSelect" v-model="isDisplayOnlySupport" />
+    <div class="mt-5">
+      <input
+        type="checkbox"
+        id="statusSelect"
+        v-model="isDisplayOnlySupport"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
       <label>応援しているユーザーのみ表示</label>
     </div>
     <div class="search-button-area">
       <SearchButton @searchButtonClick="targetSearch" />
     </div>
   </div>
-  <div class="user-search-result">
-    <div v-for="user in searchResult" @click="">
-      <div>
-        <p>{{ user.name }}</p>
-      </div>
+  <div class="mt-5">
+    <div
+      v-for="user in searchResult"
+      class="user-card"
+      @click="userSelect(user)"
+    >
+      <UserCard :user="user" />
     </div>
   </div>
   <div class="user-list-page">
@@ -131,7 +134,6 @@ function addRecord() {
   border-radius: 5px;
   margin-top: 20px;
 }
-
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -140,50 +142,22 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-
-input[type="checkbox"] {
-  border-radius: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-input[type="checkbox"] {
-  position: relative;
-  width: 16px;
-  height: 16px;
-  border: 1px solid #000;
-  vertical-align: -5px;
-}
-
-input[type="checkbox"]:checked:before {
-  position: absolute;
-  top: 1px;
-  left: 4px;
-  transform: rotate(50deg);
-  width: 4px;
-  height: 8px;
-  border-right: 2px solid #000;
-  border-bottom: 2px solid #000;
-  content: "";
-}
-.search-check {
-  margin-top: 20px;
-}
-.user-search-result {
-  margin-top: 20px;
-}
 .search-button-area {
   text-align: center;
   margin-top: 20px;
 }
-.add-button-area {
-  text-align: right;
-  margin-top: 20px;
-  padding-right: 40px;
-}
-.add-button {
-  font-size: 16px;
-  font-weight: bold;
+.user-card {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  position: relative;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.18);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #ffffff;
+  cursor: pointer;
 }
 .user-list-page {
   margin-top: 50px;

@@ -4,27 +4,25 @@ import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
 import axios from "axios";
 
+import { HeaderMenuList } from "../../const/const.js";
+import { AccountStatusType } from "../../const/const.js";
+
 const router = useRouter();
 
 const isLogin = ref(null);
 const userId = ref(0);
 const showDropdown = ref(false);
+const menuList = ref([]);
 
 onMounted(() => {
   checkLogin();
   console.log(router.currentRoute.value.fullPath);
 });
 
-const menuList = ref([
-  { id: 1, label: "マイページ", isLogin: true },
-  { id: 2, label: "設定", isLogin: true },
-  { id: 3, label: "ログアウト", isLogin: true },
-  { id: 4, label: "問い合わせ", isLogin: false },
-]);
 
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
-}
+};
 
 const checkLogin = async () => {
   try {
@@ -39,13 +37,14 @@ const checkLogin = async () => {
       }
     );
 
-    isLogin.value = (res.data.user !== null);
+    isLogin.value = res.data.user !== null;
     userId.value = res.data.user.id;
+    setMenu()
   } catch (error) {
     isLogin.value = false;
+    setMenu()
   }
 };
-
 
 const logout = async () => {
   try {
@@ -69,40 +68,51 @@ const logout = async () => {
   }
 };
 
-const showMenu = (menu)=> {
+const setMenu = () => {
+  if (isLogin.value) {
+    menuList.value = HeaderMenuList.filter(item => item.status === AccountStatusType.shouldLogin || item.status === AccountStatusType.all)
+  } else {
+    menuList.value = HeaderMenuList.filter(item => item.status === AccountStatusType.unLogin || item.status === AccountStatusType.all)
+  }
+}
+
+const showMenu = (menu) => {
   switch (menu.id) {
     case 1:
-      showMyPage();
+      showAccountIntroduction();
       break;
     case 2:
-      showSetting();
+      showMyPage();
       break;
     case 3:
-      logout();
+      showEditProfile();
       break;
     case 4:
+      logout();
+      break;
+    case 5:
       showContact();
       break;
     default:
       break;
   }
-}
+};
 
 const showMyPage = () => {
   router.push({ name: "UserProfile", params: { id: userId.value } });
-}
+};
 
 const showAccountIntroduction = () => {
   router.push({ name: "AccountInteroduction" });
-}
+};
 
-const showSetting = () => {
-  router.push({ name: "Setting" });
-}
+const showEditProfile = () => {
+  router.push({ name: "EditProfile", params: { id: userId.value } });
+};
 
 const showContact = () => {
   router.push({ name: "Contact" });
-}
+};
 
 const showHomeThenRelaod = async () => {
   await router.push({ name: "Home" });
@@ -161,6 +171,9 @@ header {
 }
 .title {
   color: #ffa600;
+  font-family: Comic Sans MS;
+  font-weight: bold;
+  font-size: 22px;
 }
 .navigation-menus {
   display: flex;

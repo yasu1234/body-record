@@ -6,17 +6,18 @@ import Cookies from 'js-cookie';
 
 import DropFile from '../atom/DropFile.vue'
 import Header from '../layout/Header.vue'
-import ErrorMessage from '../atom/ErrorMessage.vue'
+import Toast from "primevue/toast";
 
 const route = useRoute();
 const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
-const title = ref("");
-const knowledge = ref("");
+const title = ref('');
+const knowledge = ref('');
 const files = ref([]);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
-const errorMessage = ref('');
 
 onMounted(() => {
     getDetail();
@@ -49,7 +50,6 @@ const deleteImage = async (item) => {
         })
         console.log({ res })
     } catch (error) {
-        errorMessage.value = ''
         let errorMessages = '画像の削除に失敗しました\n';
         if (error.response.status === 422) {
             if (Array.isArray(error.response.data.errors)) {
@@ -99,10 +99,11 @@ const edit = async () => {
                 'uid': Cookies.get('uid')
             }
         })
-        knowledgeId.value = res.data.knowledge.id
-        title.value = res.data.knowledge.title
-        knowledge.value = res.data.knowledge.content
-        imageUrls.value = res.data.imageUrls
+
+        toastNotifications.displayInfo("編集しました", "");
+        setTimeout(async () => {
+            showKnowledgeDetail(res.data.knowledge);
+        }, 3000);
     } catch (error) {
         if (error.response.status === 404) {
             showNotFound()
@@ -114,16 +115,21 @@ const edit = async () => {
                     errorMessages += error.response.data.errors.join('\n');
                 }
             }
+            toastNotifications.displayError("編集しました", "");
             errorMessage.value = errorMessages
         }
     }
+}
+
+const showKnowledgeDetail = (item) =>  {
+    router.push({ name: 'KnowledgeDetail', params: { id: item.id }})
 }
 </script>
 
 <template>
     <Header />
-    <ErrorMessage :errorMessage="errorMessage"/>
-    <div class="editor">
+    <Toast position="top-center" />
+    <div class="p-7">
         <label class="itemLabel">タイトル</label>
         <input id="title" type="text" v-model="title">
         <textarea name="knowledge" rows="20" v-model="knowledge"></textarea>
@@ -143,15 +149,11 @@ const edit = async () => {
         <DropFile @change="onFileChange"/>
     </div>
     <div class="relationImages">
-        <button class="registerButton" @click="edit">登録する</button>
+        <button class="edit-knowledge-button" @click="edit">登録する</button>
     </div>
 </template>
 
 <style scoped>
-.editor{
-   padding: 30px;
- }
-
  input[type=text] {
   width: 100%;
   padding: 12px 12px;
@@ -180,9 +182,7 @@ const edit = async () => {
 .relationImages {
     padding: 20px;
 }
-.registerButton{
-    background: #ffa500;
-    color: white;
+.edit-knowledge-button {
     font-size:16px;
     font-weight:bold;
 }

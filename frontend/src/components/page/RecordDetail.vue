@@ -4,9 +4,11 @@ import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import Cookies from "js-cookie";
 import MarkdownIt from "markdown-it";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
 
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
 import Comments from "../layout/Comments.vue";
 import CommentInput from "../layout/CommentInput.vue";
 import TabMenu from "../layout/TabMenu.vue";
@@ -14,16 +16,17 @@ import Author from "../layout/Author.vue";
 
 const route = useRoute();
 const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
-const title = ref("");
-const memo = ref("");
+const title = ref('');
+const memo = ref('');
 const imageUrls = ref([]);
 const recordId = ref(null);
 const recordUserId = ref(0);
 const isMyRecord = ref(false);
 const isSupport = ref(false);
 const comments = ref([]);
-const errorMessage = ref("");
 const author = ref(null);
 const record = ref(null);
 
@@ -104,19 +107,21 @@ const deleteRecord = async () => {
         },
       }
     );
-    router.push({ name: "Home" });
+    toastNotifications.displayInfo("記録を削除しました", "");
+    setTimeout(async () => {
+      router.back();
+    }, 3000);
   } catch (error) {
     if (error.response.status === 404) {
       showNotFound();
     } else {
-      errorMessage.value = "";
-      let errorMessages = "記録削除に失敗しました\n";
+      let errorMessages = "";
       if (error.response.status === 422) {
         if (Array.isArray(error.response.data.errors)) {
           errorMessages += error.response.data.errors.join("\n");
         }
       }
-      errorMessage.value = errorMessages;
+      toastNotifications.displayError("記録削除に失敗しました", errorMessages);
     }
   }
 };
@@ -143,8 +148,7 @@ const supportOn = async () => {
     if (error.response.status === 404) {
       showNotFound();
     } else {
-      errorMessage.value = "";
-      let errorMessages = "応援に失敗しました\n";
+      let errorMessages = "";
       if (error.response.status === 422) {
         if (Array.isArray(error.response.data.errors)) {
           errorMessages += error.response.data.errors.join("\n");
@@ -152,7 +156,7 @@ const supportOn = async () => {
           errorMessages += error.response.data.errors;
         }
       }
-      errorMessage.value = errorMessages;
+      toastNotifications.displayError("応援に失敗しました", errorMessages);
     }
   }
 };
@@ -175,8 +179,7 @@ const supportOff = async () => {
     if (error.response.status === 404) {
       showNotFound();
     } else {
-      errorMessage.value = "";
-      let errorMessages = "応援解除に失敗しました\n";
+      let errorMessages = "";
       if (error.response.status === 422) {
         if (Array.isArray(error.response.data.errors)) {
           errorMessages += error.response.data.errors.join("\n");
@@ -184,7 +187,7 @@ const supportOff = async () => {
           errorMessages += error.response.data.errors;
         }
       }
-      errorMessage.value = errorMessages;
+      toastNotifications.displayError("応援解除に失敗しました", errorMessages);
     }
   }
 };
@@ -234,7 +237,7 @@ const showEdit = () => {
 <template>
   <Header />
   <TabMenu :currentId="0" />
-  <ErrorMessage :errorMessage="errorMessage" />
+  <Toast position="top-center" />
   <div class="wrap">
     <div class="main">
       <div class="main_content">
@@ -300,7 +303,7 @@ const showEdit = () => {
             src="../../assets/image/delete.png"
             alt="削除"
             class="side-menu-image"
-            @click=""
+            @click="deleteRecord"
           />
         </button>
       </div>
@@ -308,7 +311,7 @@ const showEdit = () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .wrap {
   display: grid;
   grid-template-columns: 4fr 1fr;

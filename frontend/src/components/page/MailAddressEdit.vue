@@ -4,11 +4,16 @@ import { ref } from "vue";
 import Cookies from "js-cookie";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
+import Toast from "primevue/toast";
 
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
+import SettingSideMenu from "../layout/SettingSideMenu.vue";
+import TabMenu from "../layout/TabMenu.vue";
 
-const errorMessage = ref("");
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const checkValidate = async () => {
   const result = await validate();
@@ -33,20 +38,20 @@ const mailAddressEdit = async () => {
         },
       }
     );
-    console.log({ res });
 
     Cookies.set("accessToken", res.headers["access-token"]);
     Cookies.set("client", res.headers["client"]);
     Cookies.set("uid", res.headers["uid"]);
+
+    toastNotifications.displayInfo("メールアドレスを変更しました", "");
   } catch (error) {
-    errorMessage.value = "";
-    let errorMessages = "メールアドレス変更に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("メールアドレス変更に失敗しました", errorMessages);
   }
 };
 
@@ -70,19 +75,25 @@ const { value: newMailAddres, errorMessage: emailError } =
 
 <template>
   <Header />
-  <ErrorMessage :errorMessage="errorMessage" />
-  <h1 class="mailaddress-edit-content-center">メールアドレス変更</h1>
-  <div class="mailaddress-edit-container">
-    <form class="form" @submit.prevent="checkValidate">
-      <div class="form-item">
-        <label for="email">変更後のメールアドレス</label>
-        <input id="email" type="email" v-model="newMailAddres" />
-        <p class="validation-error-message">{{ emailError }}</p>
+  <TabMenu />
+  <Toast position="top-center" />
+  <div class="setting-container">
+    <SettingSideMenu :currentIndex="2" />
+    <main>
+      <h1 class="mailaddress-edit-content-center">メールアドレス変更</h1>
+      <div class="mailaddress-edit-container">
+        <form class="form" @submit.prevent="checkValidate">
+          <div class="form-item">
+            <label for="email">変更後のメールアドレス</label>
+            <input id="email" type="email" v-model="newMailAddres" />
+            <p class="validation-error-message">{{ emailError }}</p>
+          </div>
+          <div class="mailaddress-edit-content-center">
+            <button class="mailaddress-edit-button">更新</button>
+          </div>
+        </form>
       </div>
-      <div class="mailaddress-edit-content-center">
-        <button class="mailaddress-edit-button">更新</button>
-      </div>
-    </form>
+    </main>
   </div>
 </template>
 

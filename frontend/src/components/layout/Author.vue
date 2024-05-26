@@ -41,7 +41,6 @@ const getSupport = async () => {
     if (error.response.status === 404) {
       showNotFound();
     } else {
-      errorMessage.value = "";
       let errorMessages = "応援に失敗しました\n";
       if (error.response.status === 422) {
         if (Array.isArray(error.response.data.errors)) {
@@ -77,7 +76,6 @@ const supportOn = async () => {
     if (error.response.status === 404) {
       showNotFound();
     } else {
-      errorMessage.value = "";
       let errorMessages = "応援に失敗しました\n";
       if (error.response.status === 422) {
         if (Array.isArray(error.response.data.errors)) {

@@ -1,15 +1,19 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Textarea from "primevue/textarea";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
+import Toast from "primevue/toast";
 
 import DatePicker from "../atom/DatePicker.vue";
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
-import ErrorMessage from "../atom/ErrorMessage.vue";
+import TabMenu from "../layout/TabMenu.vue";
 
 const memo = ref("");
 const recordDate = ref("");
@@ -17,7 +21,9 @@ const weight = ref(null);
 const fatPercentage = ref(null);
 const files = ref([]);
 const isAddAsHidden = ref(false);
-const errorMessage = ref("");
+const toast = useToast();
+const toastNotifications = new toastService(toast);
+const router = useRouter();
 
 function dateChange(event) {
   recordDate.value = event;
@@ -55,24 +61,31 @@ const registerRecord = async () => {
         },
       }
     );
-    console.log({ res });
+    toastNotifications.displayInfo("登録しました", "");
+    setTimeout(async () => {
+      showRecordDetail(res.data.record);
+    }, 3000);
   } catch (error) {
-    errorMessage.value = "";
-    let errorMessages = "記録の追加に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("記録の追加に失敗しました", errorMessages);
   }
+};
+
+const showRecordDetail = (item) => {
+  router.push({ name: "RecordDetail", params: { id: item.id } });
 };
 </script>
 
 <template>
   <Header />
-  <ErrorMessage :errorMessage="errorMessage" />
-  <div class="add-record-container">
+  <TabMenu />
+  <Toast position="top-center" />
+  <form class="add-record-container" @submit.prevent="registerRecord">
     <div class="record-add-space">
       <p>記録日</p>
       <DatePicker
@@ -82,38 +95,43 @@ const registerRecord = async () => {
         class="input-width"
       />
     </div>
-    <div class="record-add-space input-group">
+    <div class="input-group mt-7">
       <FloatLabel>
-        <InputText v-model="weight" class="input-width" />
+        <InputText v-model="weight" class="w-52 h-10" />
         <label>体重</label>
       </FloatLabel>
       <label for="goal-weight" class="unit-label">kg</label>
     </div>
-    <div class="record-add-space input-group">
+    <div class="input-group mt-7">
       <FloatLabel>
-        <InputText v-model="fatPercentage" class="input-width" />
+        <InputText v-model="fatPercentage" class="w-52 h-10" />
         <label>体脂肪率</label>
       </FloatLabel>
       <label for="goal-fat-percentage" class="unit-label">%</label>
     </div>
-    <div class="record-add-space">
+    <div class="mt-7">
       <FloatLabel>
-        <Textarea v-model="memo" rows="10" />
+        <Textarea v-model="memo" rows="10" class="record-memo" />
         <label>メモ</label>
       </FloatLabel>
     </div>
-    <div class="record-add-space">
-      <input type="checkbox" id="statusSelect" v-model="isAddAsHidden" />
+    <div class="mt-7">
+      <input
+        type="checkbox"
+        id="statusSelect"
+        v-model="isAddAsHidden"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
       <label for="statusSelectName">非公開記録にする場合にはチェック</label>
     </div>
-    <div class="record-add-space">
+    <div class="mt-7">
       <p>関連画像</p>
       <DropFile @change="onFileChange" />
     </div>
-  </div>
-  <div class="record-add-space">
-    <button class="add-record-button" @click="registerRecord">記録を登録する</button>
-  </div>
+    <div class="record-button-space mt-7">
+      <button class="add-record-button">記録を登録する</button>
+    </div>
+  </form>
 </template>
 
 <style scoped>
@@ -125,15 +143,21 @@ const registerRecord = async () => {
   display: flex;
   align-items: center;
 }
-.input-width {
-  width: 200px;
-}
-.record-add-space {
-  margin-top: 30px;
+.record-button-space {
+  padding-bottom: 20px;
 }
 .add-record-button {
   font-size: 16px;
   font-weight: bold;
   padding: 10px 50px;
+  text-align: center;
+}
+.record-memo {
+  width: 500px;
+}
+@media (max-width: 768px) {
+  .record-memo {
+    width: calc(100% - 20px);
+  }
 }
 </style>
