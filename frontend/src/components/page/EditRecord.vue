@@ -6,6 +6,9 @@ import Cookies from 'js-cookie';
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
+import Textarea from "primevue/textarea";
+import FloatLabel from "primevue/floatlabel";
+import InputText from "primevue/inputtext";
 
 import DropFile from '../atom/DropFile.vue'
 import DatePicker from '../atom/DatePicker.vue'
@@ -132,17 +135,24 @@ const edit = async () => {
         <DatePicker isStart=true :date= recordDate @update:date="dateChange"/>
     </div>
     <div class="profile-edit-content">
-        <label for="goal-weight">体重:</label>
-        <input type="text" id="goal-weight" v-model="weight">
-        <label for="goal-weight" class="unit-label">kg</label>
+        <FloatLabel>
+            <InputText v-model="weight" class="w-52 h-10" />
+            <label>体重</label>
+        </FloatLabel>
+        <label>kg</label>
     </div>
     <div class="profile-edit-content">
-        <label for="goal-fat-percentage">体脂肪率:</label>
-        <input type="text" v-model="fatPercentage">
-        <label for="goal-fat-percentage" class="unit-label">%</label>
+        <FloatLabel>
+            <InputText v-model="fatPercentage" class="w-52 h-10" />
+            <label>体脂肪率</label>
+        </FloatLabel>
+        <label>%</label>
     </div>
     <div class="p-7">
-        <textarea name="memo" rows="10" v-model="memo"></textarea>
+        <FloatLabel>
+            <Textarea v-model="memo" rows="10" />
+            <label>メモ</label>
+        </FloatLabel>
     </div>
     <div class="thumbnail-container">
         <div class="thumbnail" v-for="item in imageUrls">
@@ -155,11 +165,11 @@ const edit = async () => {
         </div>
     </div>
     <div class="relationImages">
-        <p class="inputTitle">関連画像</p>
+        <p>関連画像</p>
         <DropFile @change="onFileChange"/>
     </div>
     <div class="relationImages">
-        <button class="registerButton" @click="edit">編集する</button>
+        <button class="record-edit-button" @click="edit">編集する</button>
     </div>
 </template>
 
@@ -176,29 +186,10 @@ const edit = async () => {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-.time-list {
-  display: flex;
-  justify-content: space-between;
-  padding-left: 30px;
-  padding-right: 30px;
-}
-.time-list .item {
-  width: 50%;
-  margin: 0;
-  padding: 10px;
-  box-sizing: border-box;
-}
-.time-list .item .inputTitle {
-  margin: 5px 0 0;
-  padding: 0;
-  font-size: 16px;
-}
 .relationImages {
     padding: 20px;
 }
-.registerButton{
-    background: #ffa500;
-    color: white;
+.record-edit-button {
     font-size:16px;
     font-weight:bold;
 }

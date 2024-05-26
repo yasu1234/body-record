@@ -97,14 +97,14 @@ const showRecordDetail = (item) => {
     </div>
     <div class="input-group mt-7">
       <FloatLabel>
-        <InputText v-model="weight" class="input-width" />
+        <InputText v-model="weight" class="w-52 h-10" />
         <label>体重</label>
       </FloatLabel>
       <label for="goal-weight" class="unit-label">kg</label>
     </div>
     <div class="input-group mt-7">
       <FloatLabel>
-        <InputText v-model="fatPercentage" class="input-width" />
+        <InputText v-model="fatPercentage" class="w-52 h-10" />
         <label>体脂肪率</label>
       </FloatLabel>
       <label for="goal-fat-percentage" class="unit-label">%</label>
@@ -142,9 +142,6 @@ const showRecordDetail = (item) => {
 .input-group {
   display: flex;
   align-items: center;
-}
-.input-width {
-  width: 200px;
 }
 .record-button-space {
   padding-bottom: 20px;
