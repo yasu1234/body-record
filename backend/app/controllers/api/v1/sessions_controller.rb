@@ -4,12 +4,12 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
     wrap_parameters format: []
 
     def guest_sign_in
-        @resource = User.guest
+        @resource = User.guest!
         @token = @resource.create_token
         @resource.save!
         render_create_success
-    rescue StandardError => _
-        render_create_error
+    rescue StandardError => e
+        render json: { errors: e.message }, status: 500
     end
 
     def check_login
