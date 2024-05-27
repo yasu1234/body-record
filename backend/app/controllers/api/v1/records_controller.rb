@@ -19,20 +19,22 @@ class Api::V1::RecordsController < ApplicationController
     def get_record_month
         user = User.find(params[:user_id])
 
-        start_date = DateTime.new(params[:targetYear].to_i, params[:targetMonth].to_i, 1)
-        end_date = start_date.next_month
+        records_with_empty_dates = Record.get_month_records(params[:targetYear].to_i, params[:targetMonth].to_i, user)
+
+        # start_date = DateTime.new(params[:targetYear].to_i, params[:targetMonth].to_i, 1)
+        # end_date = start_date.next_month
      
-        # 1ヶ月全ての日付を含む配列を作成
-        dates = []
-        current_date = start_date
-        while current_date < end_date
-            dates << current_date
-            current_date = current_date.next_day
-        end
+        # # 1ヶ月全ての日付を含む配列を作成
+        # dates = []
+        # current_date = start_date
+        # while current_date < end_date
+        #     dates << current_date
+        #     current_date = current_date.next_day
+        # end
 
-        records = user.records.where(date: start_date..end_date)
+        # records = user.records.where(date: start_date..end_date)
 
-        records_with_empty_dates = records.records_in_month(dates)
+        # records_with_empty_dates = records.records_in_month(dates)
 
         render json: { records: records_with_empty_dates.as_json(methods: :graph_formatted_date)}, status: 200
     rescue ActiveRecord::RecordNotFound
