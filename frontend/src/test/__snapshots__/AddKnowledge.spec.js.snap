@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddKnowledge SnapShotテスト初期表示 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="p-7"
+  >
+    <float-label-stub />
+    <float-label-stub />
+  </div>
+  <div
+    class="relationImages"
+  >
+    <p
+      class="inputTitle"
+    >
+      関連画像
+    </p>
+    <drop-file-stub />
+  </div>
+  <div
+    class="relationImages"
+  >
+    <button
+      class="add-knowledge-button"
+    >
+       登録する 
+    </button>
+  </div>
+  
+</div>
+`;

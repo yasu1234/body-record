@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddRecord SnapShotテスト初期表示 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub />
+  <toast-stub
+    position="top-center"
+  />
+  <form
+    class="add-record-container"
+  >
+    <div
+      class="record-add-space"
+    >
+      <p>
+        記録日
+      </p>
+      <date-picker-stub
+        class="input-width"
+        date=""
+        isstart="false"
+      />
+    </div>
+    <div
+      class="input-group mt-7"
+    >
+      <float-label-stub />
+      <label
+        class="unit-label"
+        for="goal-weight"
+      >
+        kg
+      </label>
+    </div>
+    <div
+      class="input-group mt-7"
+    >
+      <float-label-stub />
+      <label
+        class="unit-label"
+        for="goal-fat-percentage"
+      >
+        %
+      </label>
+    </div>
+    <div
+      class="mt-7"
+    >
+      <float-label-stub />
+    </div>
+    <div
+      class="mt-7"
+    >
+      <input
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+        id="statusSelect"
+        type="checkbox"
+      />
+      <label
+        for="statusSelectName"
+      >
+        非公開記録にする場合にはチェック
+      </label>
+    </div>
+    <div
+      class="mt-7"
+    >
+      <p>
+        関連画像
+      </p>
+      <drop-file-stub />
+    </div>
+    <div
+      class="record-button-space mt-7"
+    >
+      <button
+        class="add-record-button"
+      >
+        記録を登録する
+      </button>
+    </div>
+  </form>
+  
+</div>
+`;

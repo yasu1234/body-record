@@ -1,0 +1,433 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditKnowledge SnapShotテスト初期表示(コメントあり) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="0"
+  />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="wrap"
+  >
+    <div
+      class="main"
+    >
+      <div
+        class="main_content"
+      >
+        <div
+          class="editor"
+        >
+          <p
+            class="knowledge-title"
+            id="title"
+            type="text"
+          />
+          <p
+            class="record-content"
+          >
+            <p>
+              Test
+            </p>
+            
+
+          </p>
+        </div>
+        <div>
+          <p
+            class="inputTitle"
+          >
+            関連画像
+          </p>
+          <div
+            class="thumbnail-container"
+          >
+            
+            <div
+              class="thumbnail"
+            >
+              <div
+                class="thumbnail-image"
+              >
+                <img
+                  alt=""
+                  src="https://example.com/image1.jpg"
+                />
+              </div>
+            </div>
+            <div
+              class="thumbnail"
+            >
+              <div
+                class="thumbnail-image"
+              >
+                <img
+                  alt=""
+                  src="https://example.com/image2.jpg"
+                />
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        <div
+          class="radius-section"
+        >
+          <author-stub />
+        </div>
+        <div
+          class="radius-section"
+        >
+          <div
+            class="comment-container-title-area"
+          >
+            <p
+              class="comment-container-title"
+            >
+              コメント
+            </p>
+          </div>
+          <div>
+            <comments-stub
+              comments="[object Object],[object Object]"
+            />
+          </div>
+          <comment-input-stub />
+        </div>
+      </div>
+    </div>
+    <div
+      class="side"
+    >
+      <div
+        class="side_content"
+      >
+        <button
+          class="round-button"
+        >
+          <img
+            alt="応援解除"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style=""
+        >
+          <img
+            alt="編集"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style=""
+        >
+          <img
+            alt="削除"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+  
+</div>
+`;
+
+exports[`EditKnowledge SnapShotテスト初期表示(コメントなし) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="0"
+  />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="wrap"
+  >
+    <div
+      class="main"
+    >
+      <div
+        class="main_content"
+      >
+        <div
+          class="editor"
+        >
+          <p
+            class="knowledge-title"
+            id="title"
+            type="text"
+          />
+          <p
+            class="record-content"
+          >
+            <p>
+              Test
+            </p>
+            
+
+          </p>
+        </div>
+        <div>
+          <p
+            class="inputTitle"
+          >
+            関連画像
+          </p>
+          <div
+            class="thumbnail-container"
+          >
+            
+            <div
+              class="thumbnail"
+            >
+              <div
+                class="thumbnail-image"
+              >
+                <img
+                  alt=""
+                  src="https://example.com/image1.jpg"
+                />
+              </div>
+            </div>
+            <div
+              class="thumbnail"
+            >
+              <div
+                class="thumbnail-image"
+              >
+                <img
+                  alt=""
+                  src="https://example.com/image2.jpg"
+                />
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        <div
+          class="radius-section"
+        >
+          <author-stub />
+        </div>
+        <div
+          class="radius-section"
+        >
+          <div
+            class="comment-container-title-area"
+          >
+            <p
+              class="comment-container-title"
+            >
+              コメント
+            </p>
+          </div>
+          <div>
+            <comments-stub
+              comments="[object Object],[object Object]"
+            />
+          </div>
+          <comment-input-stub />
+        </div>
+      </div>
+    </div>
+    <div
+      class="side"
+    >
+      <div
+        class="side_content"
+      >
+        <button
+          class="round-button"
+        >
+          <img
+            alt="応援解除"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style=""
+        >
+          <img
+            alt="編集"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style=""
+        >
+          <img
+            alt="削除"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+  
+</div>
+`;
+
+exports[`EditKnowledge SnapShotテスト初期表示(自分以外の記録)) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="0"
+  />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="wrap"
+  >
+    <div
+      class="main"
+    >
+      <div
+        class="main_content"
+      >
+        <div
+          class="editor"
+        >
+          <p
+            class="knowledge-title"
+            id="title"
+            type="text"
+          />
+          <p
+            class="record-content"
+          >
+            <p>
+              Test
+            </p>
+            
+
+          </p>
+        </div>
+        <div>
+          <p
+            class="inputTitle"
+          >
+            関連画像
+          </p>
+          <div
+            class="thumbnail-container"
+          >
+            
+            <div
+              class="thumbnail"
+            >
+              <div
+                class="thumbnail-image"
+              >
+                <img
+                  alt=""
+                  src="https://example.com/image1.jpg"
+                />
+              </div>
+            </div>
+            <div
+              class="thumbnail"
+            >
+              <div
+                class="thumbnail-image"
+              >
+                <img
+                  alt=""
+                  src="https://example.com/image2.jpg"
+                />
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        <div
+          class="radius-section"
+        >
+          <author-stub />
+        </div>
+        <div
+          class="radius-section"
+        >
+          <div
+            class="comment-container-title-area"
+          >
+            <p
+              class="comment-container-title"
+            >
+              コメント
+            </p>
+          </div>
+          <div>
+            <p>
+              コメントはありません
+            </p>
+          </div>
+          <comment-input-stub />
+        </div>
+      </div>
+    </div>
+    <div
+      class="side"
+    >
+      <div
+        class="side_content"
+      >
+        <button
+          class="round-button"
+        >
+          <img
+            alt="応援解除"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="編集"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="削除"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+  
+</div>
+`;

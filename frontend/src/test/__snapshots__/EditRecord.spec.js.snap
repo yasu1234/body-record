@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditRecord SnapShotテスト初期表示 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="edit-time"
+  >
+    <p
+      class="inputTitle"
+    >
+      開始日
+    </p>
+    <date-picker-stub
+      isstart="true"
+    />
+  </div>
+  <div
+    class="profile-edit-content"
+  >
+    <float-label-stub />
+    <label>
+      kg
+    </label>
+  </div>
+  <div
+    class="profile-edit-content"
+  >
+    <float-label-stub />
+    <label>
+      %
+    </label>
+  </div>
+  <div
+    class="p-7"
+  >
+    <float-label-stub />
+  </div>
+  <div
+    class="thumbnail-container"
+  >
+    
+    
+  </div>
+  <div
+    class="relationImages"
+  >
+    <p>
+      関連画像
+    </p>
+    <drop-file-stub />
+  </div>
+  <div
+    class="relationImages"
+  >
+    <button
+      class="record-edit-button"
+    >
+      編集する
+    </button>
+  </div>
+  
+</div>
+`;
