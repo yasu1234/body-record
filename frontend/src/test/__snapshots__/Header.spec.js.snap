@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header.vue SnapShotテスト 1`] = `
+<header>
+  <h2
+    class="title"
+  >
+    <router-link-stub
+      class="title"
+      to="/"
+    />
+  </h2>
+  <nav>
+    <div
+      class="navigation-menus"
+    >
+      <button
+        class="account-introducton-button"
+        style=""
+      >
+         会員登録・ログイン 
+      </button>
+      <div>
+        <button
+          class="user-button"
+        >
+          <img
+            alt="ユーザー"
+            class="user-image"
+            src=""
+          />
+        </button>
+      </div>
+    </div>
+    <!--v-if-->
+  </nav>
+</header>
+`;

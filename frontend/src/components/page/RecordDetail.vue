@@ -290,7 +290,7 @@ const showEdit = () => {
             @click="supportClick(false)"
           />
         </button>
-        <button class="round-button" v-show="isMyKnowledge">
+        <button class="round-button" v-show="isMyRecord">
           <img
             src="../../assets/image/edit.png"
             alt="編集"
@@ -298,7 +298,7 @@ const showEdit = () => {
             @click="showEdit"
           />
         </button>
-        <button class="round-button" v-show="isMyKnowledge">
+        <button class="round-button" v-show="isMyRecord">
           <img
             src="../../assets/image/delete.png"
             alt="削除"
