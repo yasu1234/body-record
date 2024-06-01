@@ -1,5 +1,4 @@
 import { shallowMount } from '@vue/test-utils'
-import { useRouter } from "vue-router";
 import TabItem from '@/components/atom/TabItem.vue'
 
 jest.mock('vue-router', () => {
