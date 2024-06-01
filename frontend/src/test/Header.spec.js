@@ -12,6 +12,7 @@ jest.mock('vue-router', () => {
     pathname: '/',
     route: '',
     asPath: '',
+    currentRoute: '',
     query: {},
     events: {
       on: jest.fn(),
