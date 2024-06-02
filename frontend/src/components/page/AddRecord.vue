@@ -15,22 +15,23 @@ import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
 import TabMenu from "../layout/TabMenu.vue";
 
+const toast = useToast();
+const toastNotifications = new toastService(toast);
+const router = useRouter();
+
 const memo = ref("");
 const recordDate = ref("");
 const weight = ref(null);
 const fatPercentage = ref(null);
-const files = ref([]);
+const files = ref([...Array(3)]);
 const isAddAsHidden = ref(false);
-const toast = useToast();
-const toastNotifications = new toastService(toast);
-const router = useRouter();
 
 function dateChange(event) {
   recordDate.value = event;
 }
 
-function onFileChange(event) {
-  files.value = [...event];
+function onFileChange(event, index) {
+  files.value[index - 1] = event;
 }
 
 const registerRecord = async () => {
@@ -46,7 +47,9 @@ const registerRecord = async () => {
     }
 
     for (const file of files.value) {
-      formData.append("images", file);
+      if (file != null) {
+        formData.append("images", file);
+      }
     }
 
     const res = await axios.post(
@@ -86,32 +89,31 @@ const showRecordDetail = (item) => {
   <TabMenu />
   <Toast position="top-center" />
   <form class="add-record-container" @submit.prevent="registerRecord">
-    <div class="record-add-space">
+    <div class="record-add-space w-52">
       <p>記録日</p>
       <DatePicker
         isStart="false"
         :date="recordDate"
         @update:date="dateChange"
-        class="input-width"
       />
     </div>
     <div class="input-group mt-7">
       <FloatLabel>
-        <InputText v-model="weight" class="w-52 h-10" />
+        <InputText v-model="weight" class="w-52 h-10 p-2.5" />
         <label>体重</label>
       </FloatLabel>
       <label for="goal-weight" class="unit-label">kg</label>
     </div>
     <div class="input-group mt-7">
       <FloatLabel>
-        <InputText v-model="fatPercentage" class="w-52 h-10" />
+        <InputText v-model="fatPercentage" class="w-52 h-10 p-2.5" />
         <label>体脂肪率</label>
       </FloatLabel>
       <label for="goal-fat-percentage" class="unit-label">%</label>
     </div>
     <div class="mt-7">
       <FloatLabel>
-        <Textarea v-model="memo" rows="10" class="record-memo" />
+        <Textarea v-model="memo" rows="10" class="record-memo p-2.5" />
         <label>メモ</label>
       </FloatLabel>
     </div>
@@ -125,8 +127,10 @@ const showRecordDetail = (item) => {
       <label for="statusSelectName">非公開記録にする場合にはチェック</label>
     </div>
     <div class="mt-7">
-      <p>関連画像</p>
-      <DropFile @change="onFileChange" />
+      <p>関連画像(3枚まで登録できます)</p>
+      <div v-for="i in 3">
+        <DropFile @change="onFileChange" :index="i" class="mt-3" />
+      </div>
     </div>
     <div class="record-button-space mt-7">
       <button class="add-record-button">記録を登録する</button>
