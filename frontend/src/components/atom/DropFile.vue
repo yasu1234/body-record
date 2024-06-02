@@ -8,12 +8,11 @@
       >
         <input
           type="file"
-          multiple
           name="file"
           id="fileInput"
           class="hidden-input"
           @change="onChange"
-          ref="fileInput"
+          @click="(e) => { e.target.value = '' }"
           accept=".pdf,.jpg,.jpeg,.png"
         />
         <label for="fileInput" class="file-label">
@@ -22,17 +21,17 @@
             ファイルをドロップ、もしくは<u>こちらをクリックして</u>アップロードしてください
           </div>
         </label>
-        <div class="preview-container mt-4" v-if="files.length">
-          <div v-for="file in files" :key="file.name" class="preview-card">
+        <div class="preview-container mt-4" v-if="file !== null">
+          <div :key="file.name" class="preview-card">
             <div>
               <img class="preview-img" :src="generateThumbnail(file)" />
-              <p :title="file.name">{{ makeName(file.name) }}</p>
+              <p :title="file.name">{{ file.name }}</p>
             </div>
             <div>
               <button
                 class="ml-2"
                 type="button"
-                @click="remove(files.indexOf(file))"
+                @click="remove"
                 title="Remove file"
               >
                 <b>&times;</b>
@@ -47,13 +46,12 @@
 <script setup>
 import { ref } from 'vue';
   
-const fileInput = ref(null);
 const isDragging = ref(false);
-const files = ref([]);
+const file = ref(null);
   
-const onChange = () => {
-    files.value = [...fileInput.value.files];
-    emit('change', [...fileInput.value.files]);
+const onChange = (e) => {
+  file.value = e.target.files[0];
+    emit('change', file.value);
 };
   
 const generateThumbnail = (file) => {
@@ -64,16 +62,8 @@ const generateThumbnail = (file) => {
     return fileSrc;
 };
   
-const makeName = (name) => {
-    return (
-      name.split('.')[0].substring(0, 3) +
-      '...' +
-      name.split('.')[name.split('.').length - 1]
-    );
-};
-  
-const remove = (i) => {
-    files.value.splice(i, 1);
+const remove = () => {
+  file.value = null
 };
   
 const dragover = (e) => {
@@ -87,9 +77,9 @@ const dragleave = () => {
   
 const drop = (e) => {
     e.preventDefault();
-    fileInput.value.files = e.dataTransfer.files;
-    onChange();
+    file.value = e.dataTransfer.files[0];
     isDragging.value = false;
+    emit('change', file.value);
 };
   
 const emit = defineEmits(['change']);
@@ -97,13 +87,11 @@ const emit = defineEmits(['change']);
   
 <style scoped>
 .main {
-    align-items: center;
-    justify-content: center;
+  width: 400px;
     text-align: center;
 }
 .dropzone-container {
-    padding: 4rem;
-    background: #f7fafc;
+    padding: 3rem;
     border: 1px solid #e2e8f0;
 }
 .hidden-input {
@@ -129,10 +117,10 @@ const emit = defineEmits(['change']);
     margin-left: 5px;
 }
 .preview-img {
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
     border-radius: 5px;
     border: 1px solid #a2a2a2;
-    background-color: #a2a2a2;
 }
 </style>
