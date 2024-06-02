@@ -40,7 +40,7 @@ RSpec.describe User, type: :model do
 
   describe '#guest' do
     it 'ゲストユーザーが作成される' do
-      expect { User.guest }.to change { User.count }.by(1)
+      expect { User.guest! }.to change { User.count }.by(1)
       guest_user = User.find_by(email: ENV['GUEST_USER_ADDRESS'])
       expect(guest_user).to be_present
       expect(guest_user.name).to eq 'ゲストユーザー'

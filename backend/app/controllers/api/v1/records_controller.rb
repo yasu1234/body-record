@@ -3,14 +3,14 @@ class Api::V1::RecordsController < ApplicationController
 
     def searchMyRecord
         base_scope = Record.where(user_id: current_api_v1_user.id)
-        records, total_pages = search_and_paginate_records(base_scope)
+        records, total_pages = Record.search_and_paginate(params, base_scope)
    
         render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: 200
     end
 
     def index
         base_scope = Record.where(open_status: 1)
-        records, total_pages = search_and_paginate_records(base_scope)
+        records, total_pages = Record.search_and_paginate(params, base_scope)
 
         render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: 200
     end
@@ -103,30 +103,6 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     private
-    
-    def search_and_paginate_records(base_scope)
-        records = base_scope
-        
-        if params[:keyword].present?
-            records = records.where("lower(memo) LIKE :keyword", keyword: "%#{params[:keyword]}%")
-        end
-        
-        if params[:startDate].present?
-            records = records.where("date >= ?", params[:startDate])
-        end
-        
-        if params[:endDate].present?
-            records = records.where("date <= ?", params[:endDate])
-        end
-        
-        if params[:page].present?
-            records = records.page(params[:page]).per(30)
-        else
-            records = records.page(1).per(30)
-        end
-        
-        [records, records.total_pages]
-    end
 
     def record_register_params
         params.require(:record).permit(:memo, :date, :user_id, :images, :weight, :fat_percentage, :open_status)

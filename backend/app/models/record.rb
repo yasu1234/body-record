@@ -46,6 +46,30 @@ class Record < ApplicationRecord
       records_with_empty_dates
     end
 
+    def self.search_and_paginate(params, base_records)
+      records = base_records
+  
+      if params[:keyword].present?
+        records = records.where("lower(memo) LIKE :keyword", keyword: "%#{params[:keyword]}%")
+      end
+  
+      if params[:startDate].present?
+        records = records.where("date >= ?", params[:startDate])
+      end
+  
+      if params[:endDate].present?
+        records = records.where("date <= ?", params[:endDate])
+      end
+  
+      if params[:page].present?
+        records = records.page(params[:page]).per(30)
+      else
+        records = records.page(1).per(30)
+      end
+  
+      [records, records.total_pages]
+    end
+
     def image_urls
       return [] if images.blank?
         
