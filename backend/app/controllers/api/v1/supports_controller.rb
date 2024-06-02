@@ -7,7 +7,7 @@ class Api::V1::SupportsController < ApplicationController
         if support_user.nil?
             return render json: { errors: "対象のユーザーが見つかりません" }, status: 404
         end
-        supporting = @user.support(support_user)
+        supporting = current_api_v1_user.support(support_user)
 
         if supporting.nil?
             return render json: { errors: "自分自身を応援することはできません" }, status: 422
@@ -15,7 +15,7 @@ class Api::V1::SupportsController < ApplicationController
         
         if supporting.save
             supporters_count = support_user.supporters.count
-            includes_user = support_user.supporters.exists?(id: @user.id)
+            includes_user = support_user.supporters.exists?(id: current_api_v1_user.id)
 
             render json: { user: support_user.as_json.merge(isSupport: includes_user, supportCount: supporters_count) }, status: 200
         else
@@ -30,7 +30,7 @@ class Api::V1::SupportsController < ApplicationController
             return render json: { errors: "対象のユーザーが見つかりません" }, status: 404
         end
 
-        supporting = @user.removeSupport(support_user)
+        supporting = current_api_v1_user.removeSupport(support_user)
 
         if supporting.nil?  
             return render json: { errors: "応援していないユーザーなので解除できません" }, status: 422
@@ -43,7 +43,7 @@ class Api::V1::SupportsController < ApplicationController
                     { supporters: { include: %i[supportings supporters] } }
                 ]
             )
-            includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == @user.id }
+            includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == current_api_v1_user.id }
             render json: { user: user_json.merge(isSupport: includes_user) }, status: 200
         else
             render json: { errors: supporting.erros.full_messages }, status: 422
@@ -59,7 +59,7 @@ class Api::V1::SupportsController < ApplicationController
 
         supporters_count = support_user.supporters.count
         supports_count = support_user.supports.count
-        includes_user = support_user.supporters.exists?(id: @user.id)
+        includes_user = support_user.supporters.exists?(id: current_api_v1_user.id)
 
         render json: { user: support_user.as_json().merge(isSupport: includes_user, supporterCount: supporters_count, supportCount: supports_count) }, status: 200
     end

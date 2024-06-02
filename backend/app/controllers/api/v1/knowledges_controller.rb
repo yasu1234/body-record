@@ -20,7 +20,7 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     def create
-        knowledge = @user.knowledges.build(knowledge_register_params)
+        knowledge = current_api_v1_user.knowledges.build(knowledge_register_params)
 
         if knowledge.save
             render json: { knowledge: knowledge }, status: 200
@@ -45,7 +45,7 @@ class Api::V1::KnowledgesController < ApplicationController
             include: {
                 user: {only: [:name], methods: :image_url}
             }, methods: :image_urls).merge(isBookmark: bookmark.present?,
-            myProfile: @user.profile.as_json(include: {
+            myProfile: current_api_v1_user.profile.as_json(include: {
                 user: {only: [:name], methods: :image_url}})) }, status: 200
     end
 
@@ -72,7 +72,7 @@ class Api::V1::KnowledgesController < ApplicationController
         end
 
         begin
-            knowledge = @user.knowledges.find(params[:id].to_i)
+            knowledge = current_api_v1_user.knowledges.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
             return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
@@ -90,7 +90,7 @@ class Api::V1::KnowledgesController < ApplicationController
         end
 
         begin
-            knowledge = @user.knowledges.find(params[:id].to_i)
+            knowledge = current_api_v1_user.knowledges.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
             return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end

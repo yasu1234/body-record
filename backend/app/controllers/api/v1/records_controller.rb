@@ -2,7 +2,7 @@ class Api::V1::RecordsController < ApplicationController
     before_action :set_user
 
     def searchMyRecord
-        base_scope = Record.where(user_id: @user.id)
+        base_scope = Record.where(user_id: current_api_v1_user.id)
         records, total_pages = search_and_paginate_records(base_scope)
    
         render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: 200
@@ -55,15 +55,15 @@ class Api::V1::RecordsController < ApplicationController
         render json: { record: record.as_json(
             include: {
                 user: {only: [:name], methods: :image_url}
-            }, methods: :image_urls).merge(isMyRecord: record.user_id == @user.id,
-             myProfile: @user.profile.as_json(
+            }, methods: :image_urls).merge(isMyRecord: record.user_id == current_api_v1_user.id,
+             myProfile: current_api_v1_user.profile.as_json(
                 include: {
                     user: {only: [:name], methods: :image_url}
                 })) }, status: 200
     end
 
     def create
-        record = @user.records.build(record_register_params)
+        record = current_api_v1_user.records.build(record_register_params)
 
         if record.save
             render json: { record: record }, status: 200
@@ -78,7 +78,7 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         begin
-            record = @user.records.find(params[:id].to_i)
+            record = current_api_v1_user.records.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
             return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
@@ -96,7 +96,7 @@ class Api::V1::RecordsController < ApplicationController
         end
 
         begin
-            record = @user.records.find(params[:id].to_i)
+            record = current_api_v1_user.records.find(params[:id].to_i)
         rescue ActiveRecord::RecordNotFound
             return render json: { errors: '対象のデータが見つかりません' }, status: 404
         end
@@ -110,7 +110,7 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def delete_image
-        record = @user.record.find(params[:id])
+        record = current_api_v1_user.record.find(params[:id])
         image = record.images.find(params[:image_id])
         image.purge
         render json: { imageUrls: record.image_urls }, status: 200

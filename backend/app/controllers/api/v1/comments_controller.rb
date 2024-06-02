@@ -41,7 +41,7 @@ class Api::V1::CommentsController < ApplicationController
         end
 
         comment = knowledge.comments.build(knowledge_comment_params)
-        comment.user_id = @user.id
+        comment.user_id = current_api_v1_user.id
 
         if comment.save
             render json: { comments: knowledge.comments.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
@@ -62,7 +62,7 @@ class Api::V1::CommentsController < ApplicationController
         end
 
         comment = record.comments.build(record_comment_params)
-        comment.user_id = @user.id
+        comment.user_id = current_api_v1_user.id
 
         if @comment.save
             render json: { record: record.as_json(include: [:comments]) }, status: 200
