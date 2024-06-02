@@ -61,9 +61,9 @@ class Api::V1::KnowledgesController < ApplicationController
 
         render json: { knowledge: knowledge }, status: 200
     rescue ActiveRecord::RecordNotFound
-        return render json: { errors: '対象のデータが見つかりません' }, status: 404
+        render json: { errors: '対象のデータが見つかりません' }, status: 404
     rescue ActiveRecord::RecordInvalid => e
-        render json: { errors: e.knowledge.errors.full_messages }, status: 422
+        render json: { errors: e.record.errors.full_messages }, status: 422
     rescue StandardError => e
         render json: { errors: e.message }, status: 500
     end

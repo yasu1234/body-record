@@ -19,6 +19,10 @@ class Api::V1::RecordsController < ApplicationController
     def get_record_month
         user = User.find(params[:user_id])
 
+        if params[:targetYear].nil? || params[:targetMonth].nil?
+            return render json: { errors: '対象のデータが見つかりません' }, status: 404
+        end
+
         start_date = DateTime.new(params[:targetYear].to_i, params[:targetMonth].to_i, 1)
         end_date = start_date.next_month
      

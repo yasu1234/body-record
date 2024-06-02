@@ -89,7 +89,7 @@ RSpec.describe Api::V1::BookmarksController, type: :controller do
         let!(:knowledge) { create(:knowledge, :with_bookmark) }
         before do
             request.headers.merge!(headers)
-            delete :destroy, params: { id: knowledge.id }, format: :json
+            delete :destroy, params: { id: knowledge.id, user_id: user.id }, format: :json
         end
   
         it '1件データが削除、ブックマークがOFFになっている' do
