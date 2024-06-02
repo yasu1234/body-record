@@ -1,25 +1,17 @@
 class Api::V1::PasswordsController < DeviseTokenAuth::PasswordsController
-  before_action :set_user
+  before_action :check_login
 
-  def update    
-    if @user.update_with_password(password_edit_params)
-      render json: { user: @user }, status: 200
-    else
-      render json: { errors: @user.errors.full_messages }, status: 422
+  def update
+    unless current_api_v1_user.update_with_password(password_edit_params)
+      render json: { errors: current_api_v1_user.errors.full_messages }, status: :unprocessable_entity and return
     end
+
+    render json: { user: current_api_v1_user }, status: :ok
   end
-  
+
   private
 
-  def set_user
-    if api_v1_user_signed_in?
-      @user = current_api_v1_user
-    else
-      render json: { errors: "未ログイン" }, status: 401
+    def password_edit_params
+      params.permit(:password, :password_confirmation, :current_password)
     end
-  end
-
-  def password_edit_params
-    params.permit(:password, :password_confirmation, :current_password)
-  end
 end

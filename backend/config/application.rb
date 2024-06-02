@@ -2,7 +2,7 @@ require_relative "boot"
 
 require "rails/all"
 
-require 'dotenv'
+require "dotenv"
 Dotenv.load
 
 # Require the gems listed in Gemfile, including any gems
@@ -17,10 +17,10 @@ module BodyRecord
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins ENV["API_DOMAIN"]
-        resource '*',
-        headers: :any,
-        expose: ["access-token", "expiry", "token-type", "uid", "client"],
-        methods: [:get, :post, :put, :patch, :delete, :options, :head]
+        resource "*",
+                 headers: :any,
+                 expose: %w[access-token expiry token-type uid client],
+                 methods: %i[get post put patch delete options head]
       end
     end
 
@@ -34,15 +34,17 @@ module BodyRecord
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    config.hosts.clear
+
     config.generators do |g|
       g.assets false
       g.helper false
       g.jbuilder false
       g.test_framework :rspec,
-        fixtures: false,
-        view_specs: false,
-        helper_specs: false,
-        routing_specs: false
+                       fixtures: false,
+                       view_specs: false,
+                       helper_specs: false,
+                       routing_specs: false
     end
   end
 end

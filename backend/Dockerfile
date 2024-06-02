@@ -1,11 +1,12 @@
 FROM ruby:3.2.3
 
-ARG WORKDIR
+ENV WORKDIR /body-record
 
 RUN apt-get update -qq && apt-get install -y postgresql-client
-WORKDIR /${WORKDIR}
+WORKDIR $WORKDIR
 COPY Gemfile* ./
 RUN bundle install
+COPY . $WORKDIR
 
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh

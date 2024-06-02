@@ -1,39 +1,26 @@
 class Api::V1::ProfilesController < ApplicationController
-    before_action :set_user
+  before_action :check_login
 
-    def show
-        render json: {user: @user.profile.as_json(include: { user: { only: [:name], methods: :image_url }})}, status: 200
+  def show
+    render json: { user: current_api_v1_user.profile.as_json(include: { user: { only: [:name], methods: :image_url } }) }, status: :ok
+  end
+
+  def create
+      ## プロフィールがあれば更新、なければ作成
+    Profile.find_or_create_by!(user: current_api_v1_user).tap do |profile|
+      profile.update!(profile_register_params)
     end
 
-    def create
-        if @user.profile.present?
-            if @user.profile.update(profile_register_params)
-                render json: {user: @user.profile.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
-            else
-                render json: { errors: @user.profile.errors.full_messages }, status: 422
-            end
-        else
-            @user.profile = Profile.new(profile_register_params)
-            if @user.profile.save
-                render json: {user: @user.profile.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
-            else
-                render json: { errors: @user.profile.errors.full_messages }, status: 422
-            end
-        end
-    end
+    render json: { user: current_api_v1_user.profile.as_json(include: { user: { only: [:name], methods: :image_url } }) }, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
 
-    private
-
-    def set_user
-        if api_v1_user_signed_in?
-            @user = current_api_v1_user
-        else
-            render json: { errors: "未ログイン" }, status: 401
-        end
-    end
+  private
 
     def profile_register_params
-        params.permit(:profile, :goal_weight, :goal_fat_percentage)
+      params.permit(:profile, :goal_weight, :goal_fat_percentage)
     end
 end
-

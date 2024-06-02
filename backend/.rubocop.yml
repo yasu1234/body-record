@@ -1,0 +1,191 @@
+require:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-performance
+
+AllCops:
+  Exclude:
+    - "Gemfile"
+    - "bin/**/*"
+    - "db/**/*"
+    - "log/**/*"
+    - "tmp/**/*"
+    - "vendor/**/*"
+    - "lib/**/*"
+
+Rails:
+  Enabled: true
+
+Rails/DynamicFindBy:
+  Enabled: false
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/HasAndBelongsToMany:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+# 日本語コメントを許可
+Style/AsciiComments:
+  Enabled: false
+
+# アクセス修飾子以下のメソッドのインデント
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+# コメントのインデント
+Layout/CommentIndentation:
+  Enabled: false
+
+# メソッド呼び出しの演算子の前後のスペース
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+# 非推奨のOpenSSL定数を検出
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+# 例外形式の発生を検出
+Lint/RaiseException:
+  Enabled: true
+
+# Structクラスがメソッドを上書きしているかどうかを検出
+Lint/StructNewOverride:
+  Enabled: true
+
+Layout/LineLength:
+  Max: 400
+
+Metrics/BlockLength:
+  # CountComments: false
+  Max: 50
+  Exclude:
+    - 'Guardfile'
+    - 'config/routes.rb'
+    - 'spec/**/*'
+    - 'app/views/**/*.jbuilder'
+    - 'lib/tasks/dev.rake'
+
+Metrics/ClassLength:
+  CountComments: false
+  Max: 200
+
+Metrics/MethodLength:
+  Max: 15
+  # CountComments: false
+  Exclude:
+    - 'lib/tasks/dev.rake'
+
+Metrics/ModuleLength:
+  CountComments: false
+
+Metrics/AbcSize:
+  Max: 30
+
+Naming/FileName:
+  Exclude:
+    - 'Gemfile'
+    - 'Guardfile'
+
+Naming/MethodParameterName:
+  AllowedNames: [e]
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/DescribedClass:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/ExpectInHook:
+  Enabled: false
+
+# An instance variable can be used when needed, but use let when possible.
+RSpec/InstanceVariable:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/NoExpectationExample:
+  Enabled: false
+
+# 複数行コメントの使用
+Style/BlockComments:
+  Exclude:
+    - 'spec/spec_helper.rb'
+
+Style/BlockDelimiters:
+  EnforcedStyle: braces_for_chaining
+  Exclude:
+    - 'spec/**/*'
+
+# コントローラ等のモジュールをネストしての宣言
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+# クラスにコメントを残さなくてもよい
+Style/Documentation:
+  Enabled: false
+
+# # frozen_string_literal: trueの追加を強制
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# 文字列のダブルクォートチェック
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+# https://rubocop.readthedocs.io/en/stable/cops_style/#styleexponentialnotation
+Style/ExponentialNotation:
+  Enabled: true
+
+# https://rubocop.readthedocs.io/en/stable/cops_style/#stylehasheachmethods
+Style/HashEachMethods:
+  Enabled: true
+
+# https://rubocop.readthedocs.io/en/stable/cops_style/#stylehashtransformkeys
+Style/HashTransformKeys:
+  Enabled: true
+
+# https://rubocop.readthedocs.io/en/stable/cops_style/#stylehashtransformvalues
+Style/HashTransformValues:
+  Enabled: true
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/RegexpLiteral:
+  Enabled: false
+
+# https://rubocop.readthedocs.io/en/stable/cops_style/#styleslicingwithrange
+Style/SlicingWithRange:
+  Enabled: true
+
+Rails/FilePath:
+  Exclude:
+    - 'lib/tasks/dev.rake'
+    - 'spec/rails_helper.rb'
+
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+FactoryBot/AssociationStyle:
+  Enabled: false

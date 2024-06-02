@@ -1,169 +1,112 @@
 class Api::V1::RecordsController < ApplicationController
-    before_action :set_user
+  before_action :check_login
 
-    def searchMyRecord
-        base_scope = Record.where(user_id: @user.id)
-        records, total_pages = search_and_paginate_records(base_scope)
-   
-        render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: 200
-    end
+  def searchMyRecord
+    base_scope = Record.where(user_id: current_api_v1_user.id)
+    records, total_pages = Record.search_and_paginate(params, base_scope)
 
-    def index
-        base_scope = Record.where(open_status: 1)
-        records, total_pages = search_and_paginate_records(base_scope)
+    render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: :ok
+  end
 
-        render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: 200
-    end
+  def index
+    base_scope = Record.where(open_status: 1)
+    records, total_pages = Record.search_and_paginate(params, base_scope)
+
+    render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: :ok
+  end
 
     # 指定した年月1ヶ月分の記録を取得する
-    def get_record_month
-        if params[:user_id].nil? || params[:targetYear].nil? || params[:targetMonth].nil?
-            return render json: { error: '必須項目が不足しています'}, status: 422
-        end
+  def get_record_month
+    user = User.find(params[:user_id])
 
-        user = User.find(params[:user_id])
-
-        start_date = DateTime.new(params[:targetYear].to_i, params[:targetMonth].to_i, 1)
-        end_date = start_date.next_month
-     
-        # 1ヶ月全ての日付を含む配列を作成
-        dates = []
-        current_date = start_date
-        while current_date < end_date
-            dates << current_date
-            current_date = current_date.next_day
-        end
-
-        records = user.records.where(date: start_date..end_date)
-
-        records_with_empty_dates = records.records_in_month(dates)
-
-        render json: { records: records_with_empty_dates.as_json(methods: :graph_formatted_date)}, status: 200
+    if params[:targetYear].nil? || params[:targetMonth].nil?
+      return render json: { errors: "対象のデータが見つかりません" }, status: :not_found
     end
 
-    def show
-        if params[:id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 404
-        end
+    records_with_empty_dates = Record.get_month_records(params[:targetYear].to_i, params[:targetMonth].to_i, user)
 
-        begin
-            record = Record.find(params[:id].to_i)
-        rescue ActiveRecord::RecordNotFound
-            return render json: { error: '対象のデータが見つかりません' }, status: 404
-        end
+    render json: { records: records_with_empty_dates.as_json(methods: :graph_formatted_date) }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "対象のデータが見つかりません" }, status: :not_found
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
 
-        render json: { record: record.as_json(
-            include: {
-                user: {only: [:name], methods: :image_url}
-            }, methods: :image_urls).merge(isMyRecord: record.user_id == @user.id,
-             myProfile: @user.profile.as_json(
-                include: {
-                    user: {only: [:name], methods: :image_url}
-                })) }, status: 200
-    end
+  def show
+    record = Record.find(params[:id])
 
-    def create
-        record = @user.records.build(record_register_params)
+    render json: { record: record.as_json(
+      include: {
+        user: { only: [:name], methods: :image_url }
+      }, methods: :image_urls
+    ).merge(isMyRecord: record.user_id == current_api_v1_user.id,
+            myProfile: current_api_v1_user.profile.as_json(
+              include: {
+                user: { only: [:name], methods: :image_url }
+              }
+            )) }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "対象のデータが見つかりません" }, status: :not_found
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
 
-        if record.save
-            render json: { record: record }, status: 200
-        else
-            render json: { errors: record.errors.full_messages }, status: 422
-        end
-    end
+  def create
+    record = current_api_v1_user.records.build(record_register_params)
 
-    def update
-        if params[:id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 404
-        end
+    render json: { errors: record.errors.full_messages }, status: :unprocessable_entity and return if record.invalid?
 
-        begin
-            record = @user.records.find(params[:id].to_i)
-        rescue ActiveRecord::RecordNotFound
-            return render json: { errors: '対象のデータが見つかりません' }, status: 404
-        end
+    record.save!
+    render json: { record: }, status: :ok
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
 
-        if record.update(record_register_params)
-            render json: { record: record }, status: 200
-        else
-            render json: { errors: record.errors.full_messages }, status: 422
-        end
-    end
+  def update
+    record = current_api_v1_user.records.find(params[:id])
+    record.update!(record_register_params)
+    render json: { record: }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  end
 
-    def destroy
-        if params[:id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 404
-        end
+  def destroy
+    record = current_api_v1_user.records.find(params[:id])
 
-        begin
-            record = @user.records.find(params[:id].to_i)
-        rescue ActiveRecord::RecordNotFound
-            return render json: { errors: '対象のデータが見つかりません' }, status: 404
-        end
+    record.images.purge
+    record.destroy!
+    render json: { record: }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
 
-        record.images.purge
-        if record.destroy
-            render json: { record: record }, status: 200
-        else
-            render json: { errors: record.errors.full_message }, status: 422
-        end
-    end
-
-    def delete_image
-        record = @user.record.find(params[:id])
-        image = record.images.find(params[:image_id])
-        image.purge
-        render json: { imageUrls: record.image_urls }, status: 200
-    end
+  def delete_image
+    record = current_api_v1_user.record.find(params[:id])
+    image = record.images.find(params[:image_id])
+    image.purge
+    render json: { imageUrls: record.image_urls }, status: :ok
+  end
 
     # ユーザーページで表示する最大5件分の自分の記録を取得する
-    def get_target_user_record
-        records = Record.where(user_id: params[:user_id])
+  def get_target_user_record
+    records = Record.where(user_id: params[:user_id])
 
-        if records.count > 5
-            records = records.latest_records(5)
-        else
-            records = records.latest_records(records.count)
-        end
+    records = if records.count > 5
+                records.latest_records(5)
+              else
+                records.latest_records(records.count)
+              end
 
-        render json: { records: records.as_json(methods: :formatted_date) }, status: 200
-    end
+    render json: { records: records.as_json(methods: :formatted_date) }, status: :ok
+  end
 
-    private
-
-    def set_user
-        if api_v1_user_signed_in?
-            @user = current_api_v1_user
-        else
-            render json: { errors: "未ログイン" }, status: 401
-        end
-    end
-    
-    def search_and_paginate_records(base_scope)
-        records = base_scope
-        
-        if params[:keyword].present?
-            records = records.where("lower(memo) LIKE :keyword", keyword: "%#{params[:keyword]}%")
-        end
-        
-        if params[:startDate].present?
-            records = records.where("date >= ?", params[:startDate])
-        end
-        
-        if params[:endDate].present?
-            records = records.where("date <= ?", params[:endDate])
-        end
-        
-        if params[:page].present?
-            records = records.page(params[:page]).per(30)
-        else
-            records = records.page(1).per(30)
-        end
-        
-        [records, records.total_pages]
-    end
+  private
 
     def record_register_params
-        params.require(:record).permit(:memo, :date, :user_id, :images, :weight, :fat_percentage, :open_status)
+      params.require(:record).permit(:memo, :date, :user_id, :images, :weight, :fat_percentage, :open_status)
     end
 end

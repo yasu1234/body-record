@@ -1,67 +1,54 @@
 class Api::V1::ContactsController < ApplicationController
-    def index
-        return render json: { errors: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
-        
-        contacts = Contact.all.order(created_at: :desc)
+  before_action :check_login, only: %i[index show update]
 
-        render json: { contacts: contacts }, status: 200
+  def index
+    contacts = Contact.all.order(created_at: :desc)
+
+    render json: { contacts: }, status: :ok
+  end
+
+  def show
+    contact = Contact.find(params[:id])
+    render json: { contact: }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
+
+  def create
+    contact = Contact.new(contact_register_params)
+    if current_api_v1_user.present?
+      contact.user_id = current_api_v1_user.id
     end
 
-    def show
-        return render json: { errors: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
+    render json: { errors: contact.errors.full_messages }, status: :unprocessable_entity and return if contact.invalid?
 
-        if params[:id].present?
-            begin
-                contact = Contact.find(params[:id].to_i)
-            rescue ActiveRecord::RecordNotFound
-                return render json: { errors: '対象のデータが見つかりません' }, status: 404
-            end
-        else
-            return render json: { errors: "対象の問い合わせデータがありません" }, status: 404
-        end
+    contact.save!
 
-        render json: { contact: contact }, status: 200
-    end
+    ContactMailer.complete.deliver_later
 
-    def create
-        user = current_api_v1_user
-        
-        contact = Contact.new(contact_register_params)
-        if user.present?
-            contact.user_id = user.id
-        end
+    render json: { contact: }, status: :ok
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
 
-        if contact.save
-            ContactMailer.complete.deliver_later
-            render json: { contact: contact }, status: 200
-        else
-            render json: { errors: contact.errors.full_messages }, status: 422
-        end
-    end
+  def update
+    contact = Contact.find(params[:id])
+    contact.update!(contact_register_params)
 
-    def update
-        return render json: { errors: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
+    render json: { contact: }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "対象のデータが見つかりません" }, status: :not_found
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
 
-        if params[:id].present?
-            begin
-                contact = Contact.find(params[:id].to_i)
-            rescue ActiveRecord::RecordNotFound
-                return render json: { error: '対象のデータが見つかりません' }, status: 404
-            end
-        else
-            return render json: { errors: "対象の問い合わせデータがありません" }, status: 404
-        end
-
-        if contact.update(contact_register_params)
-            render json: { contact: contact }, status: 200
-        else
-            render json: { errors: contact.errors.full_messages}, status: 422
-        end
-    end
-
-    private
+  private
 
     def contact_register_params
-        params.permit(:content, :status)
+      params.permit(:content, :status)
     end
 end
