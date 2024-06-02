@@ -17,14 +17,34 @@ class Record < ApplicationRecord
 
     scope :latest_records, ->(limit) { order(date: :desc).limit(limit) }
 
-    # １ヶ月の記録をまとめる、なければ体重と体脂肪率が0のデータを作成(DBには保存しない)
-    scope :records_in_month, ->(dates) {
-      records = all.to_a
-      dates.map do |date|
-        record = records.find { |r| r.date == date }
-        record || new(date: date, weight: 0, fat_percentage: 0)
-      end
+    scope :in_month, ->(year, month) {
+      start_date = DateTime.new(year, month, 1)
+      end_date = start_date.next_month
+      where(date: start_date..end_date)
     }
+
+    def self.get_month_records(year, month, user)
+      start_date = DateTime.new(year, month, 1)
+      end_date = start_date.next_month
+     
+      dates = []
+      current_date = start_date
+      while current_date < end_date
+        dates << current_date
+        current_date = current_date.next_day
+      end
+
+      records = user.records.in_month(year, month)
+      records_with_empty_dates = []
+      
+      # 1ヶ月の記録をまとめる、なければ体重と体脂肪率が0のデータを作成(DBには保存しない)
+      dates.each do |date|
+        record = records.find { |r| r.date == date }
+        records_with_empty_dates << (record || Record.new(date: date, weight: 0, fat_percentage: 0))
+      end
+
+      records_with_empty_dates
+    end
 
     def image_urls
       return [] if images.blank?
