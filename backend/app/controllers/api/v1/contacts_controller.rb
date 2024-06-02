@@ -8,7 +8,7 @@ class Api::V1::ContactsController < ApplicationController
     end
 
     def show
-        contact = Contact.find(params[:id].to_i)
+        contact = Contact.find(params[:id])
         render json: { contact: contact }, status: 200
     rescue ActiveRecord::RecordNotFound
         return render json: { errors: '対象のデータが見つかりません' }, status: 404
@@ -34,7 +34,7 @@ class Api::V1::ContactsController < ApplicationController
     end
 
     def update
-        contact = Contact.find(params[:id].to_i)
+        contact = Contact.find(params[:id])
         contact.update!(contact_register_params)
 
         render json: { contact: contact }, status: 200

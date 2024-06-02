@@ -16,7 +16,7 @@ class Api::V1::CommentsController < ApplicationController
     end
 
     def create_knowledge_comment
-        knowledge = Knowledge.find(knowledge_comment_params[:knowledge_id].to_i)
+        knowledge = Knowledge.find(knowledge_comment_params[:knowledge_id])
 
         comment = knowledge.comments.build(knowledge_comment_params)
         comment.user_id = current_api_v1_user.id
@@ -33,14 +33,14 @@ class Api::V1::CommentsController < ApplicationController
     end
 
     def create_record_comment
-        record = Record.find(record_comment_params[:record_id].to_i)
+        record = Record.find(record_comment_params[:record_id])
         comment = record.comments.build(record_comment_params)
         comment.user_id = current_api_v1_user.id
 
         render json: { errors: comment.errors.full_messages}, status: 422 and return if comment.invalid?
 
         comment.save!
-        
+
         render json: { record: record.as_json(include: [:comments]) }, status: 200
     rescue ActiveRecord::RecordNotFound
         return render json: { errors: '対象のデータが見つかりません' }, status: 404

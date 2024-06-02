@@ -31,7 +31,7 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     def show
-        knowledge = Knowledge.find(params[:id].to_i)
+        knowledge = Knowledge.find(params[:id])
 
         bookmark = knowledge.bookmarks.where(knowledge_id: knowledge.id).first
         render json: { knowledge: knowledge.as_json(
@@ -45,7 +45,7 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     def delete_image
-        knowledge = Knowledge.find(params[:id].to_i)
+        knowledge = Knowledge.find(params[:id])
 
         image = knowledge.images.find(params[:image_id])
         image.purge
@@ -56,7 +56,7 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     def update
-        knowledge = current_api_v1_user.knowledges.find(params[:id].to_i)
+        knowledge = current_api_v1_user.knowledges.find(params[:id])
         knowledge.update!(knowledge_register_params)
 
         render json: { knowledge: knowledge }, status: 200
@@ -69,7 +69,7 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     def destroy
-        knowledge = current_api_v1_user.knowledges.find(params[:id].to_i)
+        knowledge = current_api_v1_user.knowledges.find(params[:id])
         knowledge.destroy!
 
         render json: { knowledge: knowledge }, status: 200

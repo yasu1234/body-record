@@ -46,7 +46,7 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def show
-        record = Record.find(params[:id].to_i)
+        record = Record.find(params[:id])
 
         render json: { record: record.as_json(
             include: {
@@ -74,7 +74,7 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def update
-        record = current_api_v1_user.records.find(params[:id].to_i)
+        record = current_api_v1_user.records.find(params[:id])
         record.update!(record_register_params)
         render json: { record: record }, status: 200
     rescue ActiveRecord::RecordNotFound
@@ -84,7 +84,7 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     def destroy
-        record = current_api_v1_user.records.find(params[:id].to_i)
+        record = current_api_v1_user.records.find(params[:id])
 
         record.images.purge
         record.destroy!
