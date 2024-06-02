@@ -1,41 +1,41 @@
 class Api::V1::BookmarksController < ApplicationController
-    before_action :check_login
+  before_action :check_login
 
-    def create
-        knowledge = Knowledge.find(bookmark_params[:knowledge_id].to_i)
+  def create
+    knowledge = Knowledge.find(bookmark_params[:knowledge_id])
 
-        bookmark = knowledge.bookmarks.new(user: current_api_v1_user)
-        
-        render json: { errors: knowledge.errors.full_message }, status: 422 and return if bookmark.invalid?
+    bookmark = knowledge.bookmarks.new(user: current_api_v1_user)
 
-        bookmark.save!
+    render json: { errors: knowledge.errors.full_message }, status: :unprocessable_entity and return if bookmark.invalid?
 
-        render json: { knowledge: knowledge.as_json.merge(isBookmark: true) }, status: 200
-    rescue ActiveRecord::RecordNotFound
-        return render json: { errors: '対象のデータが見つかりません' }, status: 404
-    rescue StandardError => e
-        return render json: { errors: e.message }, status: 500
-    end
+    bookmark.save!
 
-    def destroy
-        knowledge = Knowledge.find(params[:id].to_i)
+    render json: { knowledge: knowledge.as_json.merge(isBookmark: true) }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
 
-        puts knowledge.bookmarks.first.user_id
+  def destroy
+    knowledge = Knowledge.find(params[:id])
 
-        knowledge.bookmarks.where(user_id: params[:user_id]).destroy_all
+    puts knowledge.bookmarks.first.user_id
 
-        bookmark = knowledge.bookmarks.where(user_id: params[:user_id]).first
+    knowledge.bookmarks.where(user_id: params[:user_id]).destroy_all
 
-        render json: { knowledge: knowledge.as_json.merge(isBookmark: bookmark.present?) }, status: 200
-    rescue ActiveRecord::RecordNotFound
-        return render json: { errors: '対象のデータが見つかりません' }, status: 404
-    rescue StandardError => e
-        render json: { errors: e.message }, status: 500
-    end
+    bookmark = knowledge.bookmarks.where(user_id: params[:user_id]).first
 
-    private
+    render json: { knowledge: knowledge.as_json.merge(isBookmark: bookmark.present?) }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
+
+  private
 
     def bookmark_params
-        params.require(:bookmark).permit(:knowledge_id)
+      params.require(:bookmark).permit(:knowledge_id)
     end
 end

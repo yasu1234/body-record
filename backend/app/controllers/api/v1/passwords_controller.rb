@@ -3,15 +3,15 @@ class Api::V1::PasswordsController < DeviseTokenAuth::PasswordsController
 
   def update
     unless current_api_v1_user.update_with_password(password_edit_params)
-      render json: { errors: current_api_v1_user.errors.full_messages }, status: 422 and return
+      render json: { errors: current_api_v1_user.errors.full_messages }, status: :unprocessable_entity and return
     end
 
-    render json: { user: current_api_v1_user }, status: 200
+    render json: { user: current_api_v1_user }, status: :ok
   end
-  
+
   private
 
-  def password_edit_params
-    params.permit(:password, :password_confirmation, :current_password)
-  end
+    def password_edit_params
+      params.permit(:password, :password_confirmation, :current_password)
+    end
 end

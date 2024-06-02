@@ -1,54 +1,54 @@
 class Api::V1::ContactsController < ApplicationController
-    before_action :check_login, only: %i[index show update]
+  before_action :check_login, only: %i[index show update]
 
-    def index        
-        contacts = Contact.all.order(created_at: :desc)
+  def index
+    contacts = Contact.all.order(created_at: :desc)
 
-        render json: { contacts: contacts }, status: 200
+    render json: { contacts: }, status: :ok
+  end
+
+  def show
+    contact = Contact.find(params[:id])
+    render json: { contact: }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
+
+  def create
+    contact = Contact.new(contact_register_params)
+    if current_api_v1_user.present?
+      contact.user_id = current_api_v1_user.id
     end
 
-    def show
-        contact = Contact.find(params[:id])
-        render json: { contact: contact }, status: 200
-    rescue ActiveRecord::RecordNotFound
-        return render json: { errors: '対象のデータが見つかりません' }, status: 404
-    rescue StandardError => e
-        render json: { errors: e.message }, status: 500
-    end
+    render json: { errors: contact.errors.full_messages }, status: :unprocessable_entity and return if contact.invalid?
 
-    def create        
-        contact = Contact.new(contact_register_params)
-        if current_api_v1_user.present?
-            contact.user_id = current_api_v1_user.id
-        end
+    contact.save!
 
-        render json: { errors: contact.errors.full_messages }, status: 422 and return if contact.invalid?
+    ContactMailer.complete.deliver_later
 
-        contact.save!
+    render json: { contact: }, status: :ok
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
 
-        ContactMailer.complete.deliver_later
+  def update
+    contact = Contact.find(params[:id])
+    contact.update!(contact_register_params)
 
-        render json: { contact: contact }, status: 200
-    rescue StandardError => e
-        render json: { errors: e.message }, status: 500
-    end
+    render json: { contact: }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "対象のデータが見つかりません" }, status: :not_found
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
 
-    def update
-        contact = Contact.find(params[:id])
-        contact.update!(contact_register_params)
-
-        render json: { contact: contact }, status: 200
-    rescue ActiveRecord::RecordNotFound
-        render json: { error: '対象のデータが見つかりません' }, status: 404
-    rescue ActiveRecord::RecordInvalid => e
-        render json: { errors: e.record.errors.full_messages }, status: 422
-    rescue StandardError => e
-        render json: { errors: e.message }, status: 500
-    end
-
-    private
+  private
 
     def contact_register_params
-        params.permit(:content, :status)
+      params.permit(:content, :status)
     end
 end
