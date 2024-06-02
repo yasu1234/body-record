@@ -1,5 +1,5 @@
 class Api::V1::BookmarksController < ApplicationController
-    before_action :set_user
+    before_action :check_login
 
     def create
         begin
@@ -32,14 +32,6 @@ class Api::V1::BookmarksController < ApplicationController
     end
 
     private
-
-    def set_user
-        if api_v1_user_signed_in?
-            @user = current_api_v1_user
-        else
-            return render json: { errors: "未ログイン" }, status: 401
-        end
-    end
 
     def bookmark_params
         params.require(:bookmark).permit(:knowledge_id)

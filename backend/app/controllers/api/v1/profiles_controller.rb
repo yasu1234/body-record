@@ -1,5 +1,5 @@
 class Api::V1::ProfilesController < ApplicationController
-    before_action :set_user
+    before_action :check_login
 
     def show
         render json: {user: current_api_v1_user.profile.as_json(include: { user: { only: [:name], methods: :image_url }})}, status: 200
@@ -23,14 +23,6 @@ class Api::V1::ProfilesController < ApplicationController
     end
 
     private
-
-    def set_user
-        if api_v1_user_signed_in?
-            @user = current_api_v1_user
-        else
-            render json: { errors: "未ログイン" }, status: 401
-        end
-    end
 
     def profile_register_params
         params.permit(:profile, :goal_weight, :goal_fat_percentage)

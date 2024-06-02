@@ -1,5 +1,5 @@
 class Api::V1::RecordsController < ApplicationController
-    before_action :set_user
+    before_action :check_login
 
     def searchMyRecord
         base_scope = Record.where(user_id: current_api_v1_user.id)
@@ -130,14 +130,6 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     private
-
-    def set_user
-        if api_v1_user_signed_in?
-            @user = current_api_v1_user
-        else
-            render json: { errors: "未ログイン" }, status: 401
-        end
-    end
     
     def search_and_paginate_records(base_scope)
         records = base_scope

@@ -1,5 +1,5 @@
 class Api::V1::KnowledgesController < ApplicationController
-    before_action :set_user
+    before_action :check_login
 
     def index
         knowledges = Knowledge.all
@@ -114,14 +114,6 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     private
-
-    def set_user
-        if api_v1_user_signed_in?
-            @user = current_api_v1_user
-        else
-            return render json: { errors: '未ログイン' }, status: 401
-        end
-    end
 
     def knowledge_register_params
         params.require(:knowledge).permit(:title, :content, :images)

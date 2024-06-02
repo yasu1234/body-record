@@ -1,5 +1,5 @@
 class Api::V1::CommentsController < ApplicationController
-    before_action :check_user
+    before_action :check_login
 
     def get_knowledge_comment
         if params[:knowledge_id].nil?
@@ -80,15 +80,5 @@ class Api::V1::CommentsController < ApplicationController
 
     def record_comment_params
         params.permit(:record_id, :comment)
-    end
-
-    private 
-
-    def check_user
-        if api_v1_user_signed_in?
-            @user = current_api_v1_user
-        else
-            render json: { error: '未ログイン'}, status: 400
-        end
     end
 end

@@ -1,5 +1,5 @@
 class Api::V1::PasswordsController < DeviseTokenAuth::PasswordsController
-  before_action :set_user
+  before_action :check_login
 
   def update    
     if current_api_v1_user.update_with_password(password_edit_params)
@@ -10,14 +10,6 @@ class Api::V1::PasswordsController < DeviseTokenAuth::PasswordsController
   end
   
   private
-
-  def set_user
-    if api_v1_user_signed_in?
-      @user = current_api_v1_user
-    else
-      render json: { errors: "未ログイン" }, status: 401
-    end
-  end
 
   def password_edit_params
     params.permit(:password, :password_confirmation, :current_password)

@@ -1,9 +1,9 @@
 class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
   protect_from_forgery
 
-  def update
-    return render json: { errors: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
+  before_action :check_login, only: %i[update destory]
 
+  def update
     if current_api_v1_user.update_without_password(account_update_params)
       render json: { user: current_api_v1_user }, status: 200
     else
@@ -11,9 +11,7 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
     end
   end
 
-  def destory
-    return render json: { error: '未ログイン' }, status: 401 unless api_v1_user_signed_in?
-    
+  def destory    
     if current_api_v1_user.destroy
       render status: 200
     else
