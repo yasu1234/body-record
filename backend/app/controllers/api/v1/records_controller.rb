@@ -17,10 +17,6 @@ class Api::V1::RecordsController < ApplicationController
 
     # 指定した年月1ヶ月分の記録を取得する
     def get_record_month
-        if params[:user_id].nil? || params[:targetYear].nil? || params[:targetMonth].nil?
-            return render json: { error: '必須項目が不足しています'}, status: 422
-        end
-
         user = User.find(params[:user_id])
 
         start_date = DateTime.new(params[:targetYear].to_i, params[:targetMonth].to_i, 1)
@@ -39,18 +35,14 @@ class Api::V1::RecordsController < ApplicationController
         records_with_empty_dates = records.records_in_month(dates)
 
         render json: { records: records_with_empty_dates.as_json(methods: :graph_formatted_date)}, status: 200
+    rescue ActiveRecord::RecordNotFound
+        return render json: { error: '対象のデータが見つかりません' }, status: 404
+    rescue StandardError => e
+        render json: { errors: e.message }, status: 500
     end
 
     def show
-        if params[:id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 404
-        end
-
-        begin
-            record = Record.find(params[:id].to_i)
-        rescue ActiveRecord::RecordNotFound
-            return render json: { error: '対象のデータが見つかりません' }, status: 404
-        end
+        record = Record.find(params[:id].to_i)
 
         render json: { record: record.as_json(
             include: {
@@ -60,53 +52,43 @@ class Api::V1::RecordsController < ApplicationController
                 include: {
                     user: {only: [:name], methods: :image_url}
                 })) }, status: 200
+    rescue ActiveRecord::RecordNotFound
+        return render json: { error: '対象のデータが見つかりません' }, status: 404
+    rescue StandardError => e
+        render json: { errors: e.message }, status: 500        
     end
 
     def create
         record = current_api_v1_user.records.build(record_register_params)
 
-        if record.save
-            render json: { record: record }, status: 200
-        else
-            render json: { errors: record.errors.full_messages }, status: 422
-        end
+        render json: { errors: record.errors.full_messages }, status: 422 and return if record.invalid?
+
+        record.save!
+        render json: { record: record }, status: 200
+    rescue StandardError => e
+        render json: { errors: e.message }, status: 500
     end
 
     def update
-        if params[:id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 404
-        end
-
-        begin
-            record = current_api_v1_user.records.find(params[:id].to_i)
-        rescue ActiveRecord::RecordNotFound
-            return render json: { errors: '対象のデータが見つかりません' }, status: 404
-        end
-
-        if record.update(record_register_params)
-            render json: { record: record }, status: 200
-        else
-            render json: { errors: record.errors.full_messages }, status: 422
-        end
+        record = current_api_v1_user.records.find(params[:id].to_i)
+        record.update!(record_register_params)
+        render json: { record: record }, status: 200
+    rescue ActiveRecord::RecordNotFound
+        return render json: { errors: '対象のデータが見つかりません' }, status: 404
+    rescue ActiveRecord::RecordInvalid => e
+        render json: { errors: e.record.errors.full_messages }, status: 422
     end
 
     def destroy
-        if params[:id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 404
-        end
-
-        begin
-            record = current_api_v1_user.records.find(params[:id].to_i)
-        rescue ActiveRecord::RecordNotFound
-            return render json: { errors: '対象のデータが見つかりません' }, status: 404
-        end
+        record = current_api_v1_user.records.find(params[:id].to_i)
 
         record.images.purge
-        if record.destroy
-            render json: { record: record }, status: 200
-        else
-            render json: { errors: record.errors.full_message }, status: 422
-        end
+        record.destroy!
+        render json: { record: record }, status: 200
+    rescue ActiveRecord::RecordNotFound
+        return render json: { errors: '対象のデータが見つかりません' }, status: 404
+    rescue StandardError => e
+        render json: { errors: e.message }, status: 500
     end
 
     def delete_image

@@ -6,11 +6,10 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
     def guest_sign_in
         @resource = User.guest
         @token = @resource.create_token
-        if @resource.save
-            render_create_success
-        else
-            render_create_error
-        end
+        @resource.save!
+        render_create_success
+    rescue StandardError => _
+        render_create_error
     end
 
     def check_login

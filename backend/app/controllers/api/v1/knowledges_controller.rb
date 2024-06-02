@@ -22,23 +22,16 @@ class Api::V1::KnowledgesController < ApplicationController
     def create
         knowledge = current_api_v1_user.knowledges.build(knowledge_register_params)
 
-        if knowledge.save
-            render json: { knowledge: knowledge }, status: 200
-        else
-            render json: { errors: knowledge.errors.full_messages }, status: 422
-        end
+        render json: { errors: knowledge.errors.full_messages }, status: 422 and return if knowledge.invalid?
+
+        knowledge.save!
+        render json: { knowledge: knowledge }, status: 200
+    rescue StandardError => e
+        render json: { errors: e.message }, status: 500
     end
 
     def show
-        if params[:id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 400
-        end
-
-        begin
-            knowledge = Knowledge.find(params[:id].to_i)
-        rescue ActiveRecord::RecordNotFound
-            return render json: { errors: '対象のデータが見つかりません' }, status: 404
-        end
+        knowledge = Knowledge.find(params[:id].to_i)
 
         bookmark = knowledge.bookmarks.where(knowledge_id: knowledge.id).first
         render json: { knowledge: knowledge.as_json(
@@ -47,59 +40,45 @@ class Api::V1::KnowledgesController < ApplicationController
             }, methods: :image_urls).merge(isBookmark: bookmark.present?,
             myProfile: current_api_v1_user.profile.as_json(include: {
                 user: {only: [:name], methods: :image_url}})) }, status: 200
+    rescue ActiveRecord::RecordNotFound
+        render json: { errors: '対象のデータが見つかりません' }, status: 404        
     end
 
     def delete_image
-        if params[:id].nil? && params[:image_id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 400
-        end
-
-        begin
-            knowledge = Knowledge.find(params[:id].to_i)
-        rescue ActiveRecord::RecordNotFound
-            return render json: { errors: '対象のデータが見つかりません' }, status: 404
-        end
+        knowledge = Knowledge.find(params[:id].to_i)
 
         image = knowledge.images.find(params[:image_id])
         image.purge
 
         render json: { knowledge: knowledge.as_json(methods: :image_urls) }, status: 200
+    rescue ActiveRecord::RecordNotFound
+        render json: { errors: '対象のデータが見つかりません' }, status: 404
     end
 
     def update
-        if params[:id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 400
-        end
+        knowledge = current_api_v1_user.knowledges.find(params[:id].to_i)
+        knowledge.update!(knowledge_register_params)
 
-        begin
-            knowledge = current_api_v1_user.knowledges.find(params[:id].to_i)
-        rescue ActiveRecord::RecordNotFound
-            return render json: { errors: '対象のデータが見つかりません' }, status: 404
-        end
-
-        if knowledge.update(knowledge_register_params) 
-            render json: { knowledge: knowledge }, status: 200
-        else
-            render json: { errors: knowledge.errors.full_messages }, status: 422
-        end
+        render json: { knowledge: knowledge }, status: 200
+    rescue ActiveRecord::RecordNotFound
+        return render json: { errors: '対象のデータが見つかりません' }, status: 404
+    rescue ActiveRecord::RecordInvalid => e
+        render json: { errors: e.knowledge.errors.full_messages }, status: 422
+    rescue StandardError => e
+        render json: { errors: e.message }, status: 500
     end
 
     def destroy
-        if params[:id].nil?
-            return render json: { errors: 'IDが不足しています'}, status: 400
-        end
+        knowledge = current_api_v1_user.knowledges.find(params[:id].to_i)
+        knowledge.destroy!
 
-        begin
-            knowledge = current_api_v1_user.knowledges.find(params[:id].to_i)
-        rescue ActiveRecord::RecordNotFound
-            return render json: { errors: '対象のデータが見つかりません' }, status: 404
-        end
-
-        if knowledge.destroy
-            render json: { knowledge: knowledge }, status: 200
-        else
-            render json: { errors: knowledges.errors.full_messages }, status: 422
-        end
+        render json: { knowledge: knowledge }, status: 200
+    rescue ActiveRecord::RecordNotFound
+        render json: { errors: '対象のデータが見つかりません' }, status: 404
+    rescue ActiveRecord::RecordNotDestroyed => e
+        render json: { errors: e.message }, status: 422
+    rescue StandardError => e
+        render json: { errors: e.message }, status: 500
     end
 
     def get_target_user_knowledge
