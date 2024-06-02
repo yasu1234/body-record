@@ -6,9 +6,11 @@ class Api::V1::ProfilesController < ApplicationController
     end
 
     def create
-        create_profile and return if current_api_v1_user.profile.nil?
-
-        current_api_v1_user.profile.update!(profile_register_params)
+        ## プロフィールがあれば更新、なければ作成
+        Profile.find_or_create_by!(user: current_api_v1_user).tap do |profile|
+            profile.update!(profile_register_params)
+        end
+ 
         render json: {user: current_api_v1_user.profile.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
     rescue ActiveRecord::RecordInvalid => e
         render json: { errors: e.record.errors.full_messages }, status: 422
@@ -20,16 +22,6 @@ class Api::V1::ProfilesController < ApplicationController
 
     def profile_register_params
         params.permit(:profile, :goal_weight, :goal_fat_percentage)
-    end
-
-    def create_profile
-        current_api_v1_user.profile = Profile.new(profile_register_params)
-        render json: { errors: current_api_v1_user.profile.errors.full_messages }, status: 422 and return if current_api_v1_user.profile.invalid?
-
-        current_api_v1_user.profile.save!
-        render json: {user: current_api_v1_user.profile.as_json(include: { user: { only: [:name], methods: :image_url } })}, status: 200
-    rescue StandardError => e
-        render json: { errors: e.message }, status: 500 
     end
 end
 
