@@ -138,8 +138,8 @@ const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
 };
 
-function addRecord() {
-  router.push("/addRecord");
+const addRecord = () => {
+  router.push({ name: "AddRecord"});
 }
 </script>
 
@@ -152,7 +152,7 @@ function addRecord() {
       placeholder="キーワードで検索"
       v-model="keyword"
     />
-    <div class="time-list">
+    <div class="record-search-time-list">
       <div class="item">
         <p class="input-title">検索開始日</p>
         <DatePicker
@@ -214,11 +214,11 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-.time-list .item {
+.record-search-time-list .item {
   padding: 5px;
   box-sizing: border-box;
 }
-.time-list .item .input-title {
+.record-search-time-list .item .input-title {
   margin: 5px 0 0;
   padding: 0;
   font-size: 16px;
@@ -236,12 +236,6 @@ input[type="text"] {
 .add-button {
   font-size: 16px;
   font-weight: bold;
-}
-
-@media screen and (min-width: 768px) {
-  .time-list {
-    display: flex;
-  }
 }
 
 @media screen and (max-width: 768px) {

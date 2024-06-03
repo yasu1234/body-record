@@ -118,9 +118,9 @@ const clickRecord = (item) => {
       placeholder="キーワードで検索"
       v-model="keyword"
     />
-    <div class="time-list">
+    <div class="record-search-time-list">
       <div class="item">
-        <p class="inputTitle">開始日</p>
+        <p class="inputTitle">検索開始日</p>
         <DatePicker
           isStart="true"
           :date="startDate"
@@ -128,7 +128,7 @@ const clickRecord = (item) => {
         />
       </div>
       <div class="item">
-        <p class="inputTitle">終了日</p>
+        <p class="inputTitle">検索終了日</p>
         <DatePicker
           isStart="false"
           :date="endDate"
@@ -164,14 +164,11 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-.time-list {
-  display: flex;
-}
-.time-list .item {
+.record-search-time-list .item {
   padding: 5px;
   box-sizing: border-box;
 }
-.time-list .item .inputTitle {
+.record-search-time-list .item .inputTitle {
   margin: 5px 0 0;
   padding: 0;
   font-size: 16px;
