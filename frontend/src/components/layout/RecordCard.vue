@@ -1,11 +1,15 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 
 const props = defineProps(['record']);
 
 const record = ref(null);
 
 onMounted(() => {
+  record.value = props.record;
+});
+
+watch(props, () => {
   record.value = props.record;
 });
 
