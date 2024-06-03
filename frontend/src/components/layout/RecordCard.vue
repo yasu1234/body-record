@@ -4,16 +4,32 @@ import { ref, onMounted, watch } from "vue";
 const props = defineProps(["record"]);
 
 const record = ref(null);
+const recordMemo = ref('');
 
 onMounted(() => {
   record.value = props.record;
+  memoTrim(props.record.memo);
 });
 
 watch(props, () => {
   record.value = props.record;
+  memoTrim(props.record.memo);
 });
 
 const emit = defineEmits(["recordClick"]);
+
+const memoTrim = (memo) => {
+  if (memo == null) {
+    recordMemo.value = '';
+    return
+  }
+
+  if (memo.length > 50) {
+    recordMemo.value = memo.slice(0, 50) + '...';
+  } else {
+    recordMemo.value = memo;
+  }
+}
 
 const recordClick = () => {
   emit("recordClick", record);
@@ -23,20 +39,17 @@ const recordClick = () => {
 <template>
   <div v-if="record !== null">
     <div class="my-idea-card" @click="recordClick">
-      <h4 class="my-idea-title">
+      <h4 class="mt-2.5 mx-3">
         <b>{{ record.formatted_date }}の記録</b>
       </h4>
       <div>
-        <p class="idea-memo">{{ record.memo }}</p>
+        <p class="mt-2.5 mb-2.5 mx-3">{{ recordMemo }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.my-idea-title {
-  margin: 10px 12px 12px 10px;
-}
 .my-idea-card {
   width: 100%;
   max-width: 600px;
@@ -50,6 +63,7 @@ const recordClick = () => {
   border: dashed 2px white;
   padding: 0.2em 0.5em;
   color: #454545;
+  cursor: pointer;
 }
 .my-idea-card:after {
   position: absolute;
@@ -60,9 +74,6 @@ const recordClick = () => {
   border-style: solid;
   border-color: #ffdb88 #fff #ffdb88;
   box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.15);
-}
-.idea-memo {
-  margin: 10px 0px 10px 10px;
 }
 
 @media screen and (max-width: 768px) {
