@@ -102,17 +102,17 @@ const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
   if (keywordParam != null) {
     keyword.value = keywordParam;
   } else {
-    keyword.value = '';
+    keyword.value = "";
   }
   if (startDateParam != null) {
     startDate.value = startDateParam;
   } else {
-    startDate.value = '';
+    startDate.value = "";
   }
   if (endDateParam != null) {
     endDate.value = endDateParam;
   } else {
-    endDate.value = '';
+    endDate.value = "";
   }
   if (pageParam != null) {
     pageNum.value = pageParam;
@@ -184,7 +184,9 @@ function addRecord() {
     </div>
   </div>
   <div class="add-button-area">
-    <button class="add-button" @click="addRecord">記録を追加する</button>
+    <button class="add-button p-2.5" @click="addRecord">
+      + 記録を追加する
+    </button>
   </div>
   <div class="mt-5">
     <RecordCard
@@ -226,9 +228,10 @@ input[type="text"] {
   margin-top: 20px;
 }
 .add-button-area {
-  text-align: right;
+  width: 700px;
+  margin: 0 auto;
   margin-top: 20px;
-  padding-right: 40px;
+  text-align: right;
 }
 .add-button {
   font-size: 16px;
@@ -238,6 +241,15 @@ input[type="text"] {
 @media screen and (min-width: 768px) {
   .time-list {
     display: flex;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .add-button-area {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: right;
   }
 }
 </style>
