@@ -25,10 +25,21 @@ onMounted(() => {
 });
 
 onBeforeRouteUpdate(async (to, from) => {
-  keyword.value = to.query.keyword;
-  startDate.value = to.query.startDate;
-  endDate.value = to.query.endDate;
-  pageNum.value = to.query.page;
+  if (to.query.keyword != null) {
+    keyword.value = to.query.keyword;
+  }
+  if (to.query.startDate != null) {
+    startDate.value = to.query.startDate;
+  }
+  if (to.query.endDate != null) {
+    endDate.value = to.query.endDate;
+  }
+  if (to.query.page != null) {
+    pageNum.value = to.query.page;
+  } else {
+    pageNum.value = 1;
+  }
+  
   search();
 });
 
@@ -68,7 +79,7 @@ const search = async () => {
           keyword: keyword.value,
           startDate: startDate.value,
           endDate: endDate.value,
-          page: pageNum,
+          page: pageNum.value,
         },
       }
     );
