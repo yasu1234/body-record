@@ -19,25 +19,4 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
       render json: { user: nil }, status: :ok
     end
   end
-
-  def get_users
-    users = User.all
-
-    if params[:isSupportOnly].present? && params[:isSupportOnly] == "true"
-      users = users.supporing
-    end
-
-    if params[:keyword].present?
-      users = users.where("name LIKE ?", "%#{params[:keyword]}%")
-    end
-
-    users = if params[:page].present?
-              users.page(params[:page]).per(30)
-            else
-              users.page(1).per(30)
-            end
-
-    total_page = users.total_pages
-    render json: { users: users.as_json(only: %i[id name], methods: :image_url), total_page: }, status: :ok
-  end
 end

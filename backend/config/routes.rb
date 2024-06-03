@@ -4,7 +4,6 @@ Rails.application.routes.draw do
       devise_scope :api_v1_user do
         post "users/guest_sign_in", to: "sessions#guest_sign_in"
         get "users/check_login", to: "sessions#check_login"
-        get "users", to: "sessions#get_users"
       end
       mount_devise_token_auth_for "User", at: "auth", controllers: {
         registrations: "api/v1/signup",
@@ -38,6 +37,7 @@ Rails.application.routes.draw do
       end
 
       resources :contacts
+      resources :users
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

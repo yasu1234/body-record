@@ -14,9 +14,10 @@ import SearchButton from "../atom/SearchButton.vue";
 const router = useRouter();
 const route = useRoute();
 
-const keyword = ref('');
-const startDate = ref('');
-const endDate = ref('');
+const user = ref(null);
+const keyword = ref("");
+const startDate = ref("");
+const endDate = ref("");
 const isLogin = ref(false);
 const searchResult = ref([]);
 const currentId = ref(2);
@@ -30,6 +31,7 @@ onMounted(() => {
     route.query.endDate,
     route.query.page
   );
+  getUser();
   search();
 });
 
@@ -83,6 +85,33 @@ const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
     page.value = 1;
   }
 };
+
+const getUser = async () => {
+  const id = route.params.id;
+
+  try {
+    const res = await axios.get(
+      import.meta.env.VITE_APP_API_BASE + `/api/v1/users/${id}`,
+      {
+        headers: {
+          "access-token": Cookies.get("accessToken"),
+          client: Cookies.get("client"),
+          uid: Cookies.get("uid"),
+        },
+
+        params: {
+          keyword: keyword.value,
+          startDate: startDate.value,
+          endDate: endDate.value,
+          page: page,
+        },
+      }
+    );
+
+    user.value = res.data.user;
+  } catch (error) {
+  }
+}
 
 const search = async () => {
   try {
@@ -142,6 +171,7 @@ const clickRecord = (item) => {
   <Header />
   <TabMenu :currentId="currentId" />
   <div class="record-search-container">
+    <p class="inputTitle font-bold" v-if="user != null">{{ user.name }}さんの記録検索</p>
     <input
       type="text"
       id="keyword"
@@ -190,7 +220,7 @@ const clickRecord = (item) => {
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
-  margin: 8px 0;
+  margin: 10px 0;
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
