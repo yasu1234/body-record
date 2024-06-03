@@ -107,6 +107,6 @@ class Api::V1::RecordsController < ApplicationController
   private
 
     def record_register_params
-      params.require(:record).permit(:memo, :date, :user_id, :images, :weight, :fat_percentage, :open_status)
+      params.require(:record).permit(:memo, :date, :user_id, :weight, :fat_percentage, :open_status, images: [])
     end
 end

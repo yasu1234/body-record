@@ -48,7 +48,7 @@ const registerRecord = async () => {
 
     for (const file of files.value) {
       if (file != null) {
-        formData.append("images", file);
+        formData.append("record[images][]", file);
       }
     }
 
@@ -57,8 +57,8 @@ const registerRecord = async () => {
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
+          'content-type': 'multipart/form-data',
+          'access-token': Cookies.get("accessToken"),
           client: Cookies.get("client"),
           uid: Cookies.get("uid"),
         },
@@ -89,7 +89,7 @@ const showRecordDetail = (item) => {
   <TabMenu />
   <Toast position="top-center" />
   <form class="add-record-container" @submit.prevent="registerRecord">
-    <div class="record-add-space w-52">
+    <div class="w-52">
       <p>記録日</p>
       <DatePicker
         isStart="false"
