@@ -110,7 +110,7 @@ const clickRecord = (item) => {
 <template>
   <Header />
   <TabMenu :currentId="currentId" />
-  <div class="user-record-search-container">
+  <div class="record-search-container">
     <input
       type="text"
       id="keyword"
@@ -156,15 +156,6 @@ const clickRecord = (item) => {
 </template>
 
 <style scoped>
-.user-record-search-container {
-  width: 700px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border: 1.5px solid #46c443;
-  border-radius: 5px;
-  margin-top: 20px;
-}
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -192,18 +183,5 @@ input[type="text"] {
 .search-button {
   font-size: 16px;
   font-weight: bold;
-}
-
-@media screen and (max-width: 768px) {
-  .user-record-search-container {
-    width: auto;
-    margin-left: 20px;
-    margin-right: 20px;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #46c443;
-    border-radius: 5px;
-    margin-top: 20px;
-  }
 }
 </style>

@@ -77,6 +77,29 @@ p.validation-error-message {
   display: flex;
 }
 
+.record-search-container {
+  width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1.5px solid #46c443;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .record-search-container {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #46c443;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
