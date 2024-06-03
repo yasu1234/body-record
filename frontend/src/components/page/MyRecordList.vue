@@ -12,9 +12,9 @@ import RecordCard from "../layout/RecordCard.vue";
 const router = useRouter();
 const route = useRoute();
 
-const keyword = ref('');
-const startDate = ref('');
-const endDate = ref('');
+const keyword = ref("");
+const startDate = ref("");
+const endDate = ref("");
 const isDisplayOnlyOpen = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
@@ -22,39 +22,22 @@ const pageCount = ref(1);
 const pageNum = ref(1);
 
 onMounted(() => {
-  if (route.query.keyword != null) {
-    keyword.value = route.query.keyword;
-  }
-  if (route.query.startDate != null) {
-    startDate.value = route.query.startDate;
-  }
-  if (route.query.endDate != null) {
-    endDate.value = route.query.endDate;
-  }
-  if (route.query.page != null) {
-    pageNum.value = route.query.page;
-  } else {
-    pageNum.value = 1;
-  }
+  setQuery(
+    route.query.keyword,
+    route.query.startDate,
+    route.query.endDate,
+    route.query.page
+  );
   search();
 });
 
 onBeforeRouteUpdate(async (to, from) => {
-  if (to.query.keyword != null) {
-    keyword.value = to.query.keyword;
-  }
-  if (to.query.startDate != null) {
-    startDate.value = to.query.startDate;
-  }
-  if (to.query.endDate != null) {
-    endDate.value = to.query.endDate;
-  }
-  if (to.query.page != null) {
-    pageNum.value = to.query.page;
-  } else {
-    pageNum.value = 1;
-  }
-  
+  setQuery(
+    to.query.keyword,
+    to.query.startDate,
+    to.query.endDate,
+    to.query.page
+  );
   search();
 });
 
@@ -115,6 +98,29 @@ const search = async () => {
   }
 };
 
+const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
+  if (keywordParam != null) {
+    keyword.value = keywordParam;
+  } else {
+    keyword.value = '';
+  }
+  if (startDateParam != null) {
+    startDate.value = startDateParam;
+  } else {
+    startDate.value = '';
+  }
+  if (endDateParam != null) {
+    endDate.value = endDateParam;
+  } else {
+    endDate.value = '';
+  }
+  if (pageParam != null) {
+    pageNum.value = pageParam;
+  } else {
+    pageNum.value = 1;
+  }
+};
+
 const updatePaginateItems = function (page) {
   pageNum.value = page;
   paramChange();
@@ -138,7 +144,7 @@ function addRecord() {
 </script>
 
 <template>
-  <div class="my-record-search-container">
+  <div class="record-search-container">
     <input
       type="text"
       id="keyword"
@@ -148,7 +154,7 @@ function addRecord() {
     />
     <div class="time-list">
       <div class="item">
-        <p class="input-title">開始日</p>
+        <p class="input-title">検索開始日</p>
         <DatePicker
           isStart="true"
           :date="startDate"
@@ -156,7 +162,7 @@ function addRecord() {
         />
       </div>
       <div class="item">
-        <p class="input-title">終了日</p>
+        <p class="input-title">検索終了日</p>
         <DatePicker
           isStart="false"
           :date="endDate"
@@ -198,15 +204,6 @@ function addRecord() {
 </template>
 
 <style scoped>
-.my-record-search-container {
-  width: 700px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border: 1.5px solid #46c443;
-  border-radius: 5px;
-  margin-top: 20px;
-}
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -214,9 +211,6 @@ input[type="text"] {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-.time-list {
-  display: flex;
 }
 .time-list .item {
   padding: 5px;
@@ -240,16 +234,10 @@ input[type="text"] {
   font-size: 16px;
   font-weight: bold;
 }
-@media screen and (max-width: 768px) {
-  .my-record-search-container {
-    width: auto;
-    margin-left: 20px;
-    margin-right: 20px;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #46c443;
-    border-radius: 5px;
-    margin-top: 20px;
+
+@media screen and (min-width: 768px) {
+  .time-list {
+    display: flex;
   }
 }
 </style>
