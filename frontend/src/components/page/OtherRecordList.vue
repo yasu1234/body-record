@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter, onBeforeRouteUpdate } from "vue-router";
+import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -12,26 +12,34 @@ import RecordCard from "../layout/RecordCard.vue";
 import SearchButton from "../atom/SearchButton.vue";
 
 const router = useRouter();
+const route = useRoute();
 
 const keyword = ref('');
 const startDate = ref('');
 const endDate = ref('');
-const isDisplayOnlyOpen = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
 const currentId = ref(2);
-
 const pageCount = ref(1);
 const page = ref(1);
 
 onMounted(() => {
+  setQuery(
+    route.query.keyword,
+    route.query.startDate,
+    route.query.endDate,
+    route.query.page
+  );
   search();
 });
 
 onBeforeRouteUpdate(async (to, from) => {
-  keyword.value = to.query.keyword;
-  startDate.value = to.query.startDate;
-  endDate.value = to.query.endDate;
+  setQuery(
+    to.query.keyword,
+    to.query.startDate,
+    to.query.endDate,
+    to.query.page
+  );
   search();
 });
 
@@ -51,6 +59,29 @@ const searchParamChange = () => {
   }
 
   router.push({ path: "/recordList", query: query });
+};
+
+const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
+  if (keywordParam != null) {
+    keyword.value = keywordParam;
+  } else {
+    keyword.value = "";
+  }
+  if (startDateParam != null) {
+    startDate.value = startDateParam;
+  } else {
+    startDate.value = "";
+  }
+  if (endDateParam != null) {
+    endDate.value = endDateParam;
+  } else {
+    endDate.value = "";
+  }
+  if (pageParam != null) {
+    page.value = pageParam;
+  } else {
+    page.value = 1;
+  }
 };
 
 const search = async () => {

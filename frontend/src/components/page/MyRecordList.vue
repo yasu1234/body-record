@@ -19,7 +19,7 @@ const isDisplayOnlyOpen = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
 const pageCount = ref(1);
-const pageNum = ref(1);
+const page = ref(1);
 
 onMounted(() => {
   setQuery(
@@ -56,8 +56,8 @@ const paramChange = () => {
     query.endDate = endDate.value;
   }
 
-  if (pageNum.value > 1) {
-    query.page = pageNum.value;
+  if (page.value > 1) {
+    query.page = page.value;
   }
 
   router.push({ path: "/", query: query });
@@ -77,7 +77,7 @@ const search = async () => {
           keyword: keyword.value,
           startDate: startDate.value,
           endDate: endDate.value,
-          page: pageNum.value,
+          page: page.value,
         },
       }
     );
@@ -115,14 +115,14 @@ const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
     endDate.value = "";
   }
   if (pageParam != null) {
-    pageNum.value = pageParam;
+    page.value = pageParam;
   } else {
-    pageNum.value = 1;
+    page.value = 1;
   }
 };
 
-const updatePaginateItems = function (page) {
-  pageNum.value = page;
+const updatePaginateItems = function (pageParam) {
+  page.value = pageParam;
   paramChange();
 };
 
@@ -199,7 +199,7 @@ const addRecord = () => {
   <div class="mt-12">
     <ListPage
       :pageCount="pageCount"
-      v-model="pageNum"
+      v-model="page"
       @changePage="updatePaginateItems"
     />
   </div>
