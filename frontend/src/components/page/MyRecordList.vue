@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter, onBeforeRouteUpdate } from "vue-router";
+import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -10,6 +10,7 @@ import SearchButton from "../atom/SearchButton.vue";
 import RecordCard from "../layout/RecordCard.vue";
 
 const router = useRouter();
+const route = useRoute();
 
 const keyword = ref('');
 const startDate = ref('');
@@ -21,6 +22,20 @@ const pageCount = ref(1);
 const pageNum = ref(1);
 
 onMounted(() => {
+  if (route.query.keyword != null) {
+    keyword.value = route.query.keyword;
+  }
+  if (route.query.startDate != null) {
+    startDate.value = route.query.startDate;
+  }
+  if (route.query.endDate != null) {
+    endDate.value = route.query.endDate;
+  }
+  if (route.query.page != null) {
+    pageNum.value = route.query.page;
+  } else {
+    pageNum.value = 1;
+  }
   search();
 });
 
