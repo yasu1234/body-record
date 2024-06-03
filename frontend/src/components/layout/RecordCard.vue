@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 
-const props = defineProps(['record']);
+const props = defineProps(["record"]);
 
 const record = ref(null);
 
@@ -13,11 +13,11 @@ watch(props, () => {
   record.value = props.record;
 });
 
-const emit = defineEmits(['recordClick']);
+const emit = defineEmits(["recordClick"]);
 
 const recordClick = () => {
-    emit('recordClick', record);
-}
+  emit("recordClick", record);
+};
 </script>
 
 <template>
@@ -37,7 +37,7 @@ const recordClick = () => {
 .my-idea-title {
   margin: 10px 12px 12px 10px;
 }
-.my-idea-card{
+.my-idea-card {
   width: 100%;
   max-width: 600px;
   padding: 0.5em 1em;
@@ -51,17 +51,25 @@ const recordClick = () => {
   padding: 0.2em 0.5em;
   color: #454545;
 }
-.my-idea-card:after{
-    position: absolute;
-    content: '';
-    right: -7px;
-    top: -7px;
-    border-width: 0 15px 15px 0;
-    border-style: solid;
-    border-color: #ffdb88 #fff #ffdb88;
-    box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.15);
+.my-idea-card:after {
+  position: absolute;
+  content: "";
+  right: -7px;
+  top: -7px;
+  border-width: 0 15px 15px 0;
+  border-style: solid;
+  border-color: #ffdb88 #fff #ffdb88;
+  box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.15);
 }
 .idea-memo {
   margin: 10px 0px 10px 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .my-idea-card {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 }
 </style>
