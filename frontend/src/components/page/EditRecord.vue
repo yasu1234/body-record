@@ -102,7 +102,7 @@ const edit = async () => {
     }
 
     for (const file of files.value) {
-      formData.append("record[images]", file);
+      formData.append("record[images][]", file);
     }
 
     const res = await axios.patch(
@@ -143,31 +143,31 @@ const edit = async () => {
 <template>
   <Header />
   <Toast position="top-center" />
-  <div class="edit-time">
-    <p class="inputTitle">開始日</p>
+  <div class="pl-5 w-52">
+    <p class="inputTitle">記録日</p>
     <DatePicker isStart="true" :date="recordDate" @update:date="dateChange" />
   </div>
-  <div class="profile-edit-content">
+  <div class="weight-group mt-7">
     <FloatLabel>
-      <InputText v-model="weight" class="w-52 h-10" />
+      <InputText v-model="weight" class="w-52 h-10 p-2.5" />
       <label>体重</label>
     </FloatLabel>
     <label>kg</label>
   </div>
-  <div class="profile-edit-content">
+  <div class="weight-group mt-7">
     <FloatLabel>
-      <InputText v-model="fatPercentage" class="w-52 h-10" />
+      <InputText v-model="fatPercentage" class="w-52 h-10 p-2.5" />
       <label>体脂肪率</label>
     </FloatLabel>
     <label>%</label>
   </div>
   <div class="p-7">
     <FloatLabel>
-      <Textarea v-model="memo" rows="10" />
+      <Textarea v-model="memo" rows="10" class="record-memo" />
       <label>メモ</label>
     </FloatLabel>
   </div>
-  <div class="thumbnail-container">
+  <div class="thumbnail-container" v-if="imageUrls != null">
     <div class="thumbnail" v-for="item in imageUrls">
       <div class="thumbnail-image">
         <img :src="item.url" alt="" />
@@ -178,8 +178,10 @@ const edit = async () => {
     </div>
   </div>
   <div class="relationImages">
-    <p>関連画像</p>
-    <DropFile @change="onFileChange" />
+    <p>関連画像(3枚まで登録できます)</p>
+    <div v-for="i in 3">
+      <DropFile @change="onFileChange" :index="i" class="mt-3" />
+    </div>
   </div>
   <div class="relationImages">
     <button class="record-edit-button" @click="edit">編集する</button>
@@ -187,10 +189,6 @@ const edit = async () => {
 </template>
 
 <style scoped>
-.edit-time {
-  padding-left: 20px;
-  padding-right: 20px;
-}
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -201,6 +199,10 @@ input[type="text"] {
 }
 .relationImages {
   padding: 20px;
+}
+.weight-group {
+  display: flex;
+  align-items: center;
 }
 .record-edit-button {
   font-size: 16px;
@@ -246,5 +248,13 @@ input[type="text"] {
   border-radius: 4px;
   cursor: pointer;
   border-radius: 50%;
+}
+.record-memo {
+  width: 500px;
+}
+@media (max-width: 768px) {
+  .record-memo {
+    width: calc(100% - 20px);
+  }
 }
 </style>
