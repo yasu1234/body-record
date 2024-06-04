@@ -9,7 +9,7 @@
       <input
         type="file"
         name="file"
-        id="fileInput"
+        :id="`fileInput-${index}`"
         class="hidden-input"
         @change="onChange"
         @click="
@@ -19,14 +19,14 @@
         "
         accept=".pdf,.jpg,.jpeg,.png"
       />
-      <label for="fileInput" class="file-label">
+      <label :for="`fileInput-${index}`" class="file-label">
         <div v-if="isDragging">Release to drop files here.</div>
         <div v-else>
           ファイルをドロップ、もしくは<u>こちらをクリックして</u>アップロードしてください
         </div>
       </label>
       <div class="preview-container mt-4" v-if="file !== null">
-        <div :key="file.name" class="preview-card">
+        <div :key="index" class="preview-card">
           <div>
             <img class="preview-img" :src="generateThumbnail(file)" />
             <p :title="file.name">{{ file.name }}</p>
