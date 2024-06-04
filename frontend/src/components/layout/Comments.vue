@@ -29,7 +29,7 @@ watch(props, () => {
       </div>
       <p class="comment-name">{{ comment.user.name }}</p>
     </div>
-    <p>{{ comment.comment }}</p>
+    <p class="pt-2.5 mb-1.5">{{ comment.comment }}</p>
   </div>
 </template>
 
