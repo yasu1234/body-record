@@ -14,6 +14,7 @@ import Button from "primevue/button";
 import DropFile from "../atom/DropFile.vue";
 import DatePicker from "../atom/DatePicker.vue";
 import Header from "../layout/Header.vue";
+import TabMenu from "../layout/TabMenu.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -145,59 +146,69 @@ const edit = async () => {
 
 <template>
   <Header />
+  <TabMenu />
   <Toast position="top-center" />
-  <div class="pl-5 w-52">
-    <p class="inputTitle">記録日</p>
-    <DatePicker isStart="true" :date="recordDate" @update:date="dateChange" />
-  </div>
-  <div class="weight-group mt-7">
-    <FloatLabel>
-      <InputText v-model="weight" class="w-52 h-10 p-2.5" />
-      <label>体重</label>
-    </FloatLabel>
-    <label>kg</label>
-  </div>
-  <div class="weight-group mt-7">
-    <FloatLabel>
-      <InputText v-model="fatPercentage" class="w-52 h-10 p-2.5" />
-      <label>体脂肪率</label>
-    </FloatLabel>
-    <label>%</label>
-  </div>
-  <div class="p-7">
-    <FloatLabel>
-      <Textarea v-model="memo" rows="10" class="record-memo" />
-      <label>メモ</label>
-    </FloatLabel>
-  </div>
-  <p>登録済みの画像</p>
-  <div class="thumbnail-container" v-if="imageUrls != null">
-    <div class="thumbnail" v-for="item in imageUrls">
-      <div class="thumbnail-image">
-        <img :src="item.url" alt="" />
-      </div>
-      <div class="thumbnail-actions">
-        <Button
-          label=""
-          icon="pi pi-trash"
-          class="delete-button"
-          @click="deleteImage(item)"
-        />
+  <div class="edit-container">
+    <div class="w-52">
+      <p class="inputTitle">記録日</p>
+      <DatePicker isStart="true" :date="recordDate" @update:date="dateChange" />
+    </div>
+    <div class="weight-group mt-7">
+      <FloatLabel>
+        <InputText v-model="weight" class="w-52 h-10 p-2.5" />
+        <label>体重</label>
+      </FloatLabel>
+      <label>kg</label>
+    </div>
+    <div class="weight-group mt-7">
+      <FloatLabel>
+        <InputText v-model="fatPercentage" class="w-52 h-10 p-2.5" />
+        <label>体脂肪率</label>
+      </FloatLabel>
+      <label>%</label>
+    </div>
+    <div class="mt-5">
+      <FloatLabel>
+        <Textarea v-model="memo" rows="10" class="record-memo p-2.5" />
+        <label>メモ</label>
+      </FloatLabel>
+    </div>
+    <div v-if="imageUrls !== null && imageUrls.length !== 0">
+      <p class="mt-5">登録済みの画像</p>
+      <div class="thumbnail-container">
+        <div class="thumbnail" v-for="item in imageUrls">
+          <div class="thumbnail-image">
+            <img :src="item.url" alt="" />
+          </div>
+          <div class="thumbnail-actions">
+            <Button
+              label=""
+              icon="pi pi-trash"
+              class="delete-button"
+              @click="deleteImage(item)"
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="p-5">
-    <p>関連画像(3枚まで登録できます)</p>
-    <div v-for="i in 3">
-      <DropFile @change="onFileChange" :index="i" class="mt-3" />
+    <div class="mt-5">
+      <p>関連画像(登録済みの画像と合わせて3枚まで登録できます)</p>
+      <div v-for="i in 3">
+        <DropFile @change="onFileChange" :index="i" class="mt-3" />
+      </div>
     </div>
-  </div>
-  <div class="p-5">
-    <button class="record-edit-button" @click="edit">編集する</button>
+    <div class="p-5">
+      <button class="record-edit-button" @click="edit">編集する</button>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.edit-container {
+  width: 600px;
+  margin: 0 auto;
+  margin-top: 20px;
+}
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -260,6 +271,11 @@ input[type="text"] {
 @media (max-width: 768px) {
   .record-memo {
     width: calc(100% - 20px);
+  }
+  .edit-container {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 }
 </style>
