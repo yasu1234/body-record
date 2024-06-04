@@ -191,7 +191,7 @@ const showEdit = () => {
         </p>
         <p class="knowledge-content" v-html="renderedMarkdown"></p>
         <div v-if="imageUrls.length !== 0">
-          <p class="inputTitle">関連画像</p>
+          <p class="mt-5">関連画像</p>
           <div class="thumbnail-container">
             <div class="thumbnail" v-for="item in imageUrls">
               <div class="thumbnail-image">
@@ -201,7 +201,7 @@ const showEdit = () => {
           </div>
         </div>
       </div>
-      <div v-if="author !== null" class="radius-section">
+      <div v-if="author !== null" class="radius-section pt-2.5">
         <Author :author="author" :userId="knowledge.user_id" />
       </div>
       <div class="radius-section">
@@ -212,7 +212,7 @@ const showEdit = () => {
           <Comments :comments="comments" />
         </div>
         <div v-else>
-          <p>コメントはありません</p>
+          <p class="pt-2.5 pl-5">コメントはありません</p>
         </div>
         <CommentInput @addComment="addComment" />
       </div>
