@@ -46,8 +46,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  def support(other_user)
-    self.supports.find_or_create_by(support_id: other_user.id) unless self == other_user
+  def check_support_mine(target_support_user)
+    self == target_support_user
+  end
+
+  def support(other_user)!
+    self.supports.find_or_create_by!(support_id: other_user.id)
   end
 
   def removeSupport(other_user)
