@@ -9,6 +9,7 @@ import { toastService } from "../../const/toast.js";
 import Textarea from "primevue/textarea";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
+import Button from "primevue/button";
 
 import DropFile from "../atom/DropFile.vue";
 import DatePicker from "../atom/DatePicker.vue";
@@ -81,7 +82,7 @@ const getDetail = async () => {
     recordId.value = res.data.record.id;
     recordDate.value = res.data.record.date;
     memo.value = res.data.record.memo;
-    imageUrls.value = res.data.imageUrls;
+    imageUrls.value = res.data.record.image_urls;
   } catch (error) {
     if (error.response.status === 404) {
       showNotFound();
@@ -167,23 +168,29 @@ const edit = async () => {
       <label>メモ</label>
     </FloatLabel>
   </div>
+  <p>登録済みの画像</p>
   <div class="thumbnail-container" v-if="imageUrls != null">
     <div class="thumbnail" v-for="item in imageUrls">
       <div class="thumbnail-image">
         <img :src="item.url" alt="" />
       </div>
       <div class="thumbnail-actions">
-        <button class="delete-button" @click="deleteImage(item)">X</button>
+        <Button
+          label=""
+          icon="pi pi-trash"
+          class="delete-button"
+          @click="deleteImage(item)"
+        />
       </div>
     </div>
   </div>
-  <div class="relationImages">
+  <div class="p-5">
     <p>関連画像(3枚まで登録できます)</p>
     <div v-for="i in 3">
       <DropFile @change="onFileChange" :index="i" class="mt-3" />
     </div>
   </div>
-  <div class="relationImages">
+  <div class="p-5">
     <button class="record-edit-button" @click="edit">編集する</button>
   </div>
 </template>
@@ -196,9 +203,6 @@ input[type="text"] {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-.relationImages {
-  padding: 20px;
 }
 .weight-group {
   display: flex;
@@ -240,14 +244,14 @@ input[type="text"] {
   background-color: rgba(255, 255, 255, 0.7);
   border: none;
   color: #000;
-  padding: 5px 10px;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
   font-size: 12px;
   border-radius: 4px;
   cursor: pointer;
   border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 }
 .record-memo {
   width: 500px;
