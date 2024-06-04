@@ -54,8 +54,8 @@ class User < ActiveRecord::Base
     self.supports.find_or_create_by!(support_id: other_user.id)
   end
 
-  def removeSupport(other_user)
+  def removeSupport(other_user)!
     support = self.supports.find_by(support_id: other_user.id)
-    support&.destroy
+    support&.destroy!
   end
 end

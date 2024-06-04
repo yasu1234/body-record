@@ -12,7 +12,7 @@ class Api::V1::SupportsController < ApplicationController
 
         supporters_count = support_user.supporters.count
    
-        render json: { user: support_user.as_json.merge(isSupport: includes_user, supportCount: supporters_count) }, status: 200
+        render json: { user: support_user.as_json.merge(supportCount: supporters_count) }, status: 200
     rescue ActiveRecord::RecordNotFound
         render json: { errors: '対象のユーザーが見つかりません' }, status: 404
     rescue ActiveRecord::RecordInvalid => e
@@ -23,24 +23,11 @@ class Api::V1::SupportsController < ApplicationController
 
     def destroy
         support_user = User.find(params[:id])
-        supporting = current_api_v1_user.removeSupport(support_user)
+        current_api_v1_user.removeSupport!(support_user)
 
-        if supporting.nil?  
-            return render json: { errors: "応援していないユーザーなので解除できません" }, status: 422
-        end
+        supporters_count = support_user.supporters.count
 
-        if supporting.destroy
-            user_json = support_user.as_json(
-                include: [
-                    { supportings: { include: %i[supportings supporters] } },
-                    { supporters: { include: %i[supportings supporters] } }
-                ]
-            )
-            includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == current_api_v1_user.id }
-            render json: { user: user_json.merge(isSupport: includes_user) }, status: 200
-        else
-            render json: { errors: supporting.errors.full_messages }, status: 422
-        end
+        render json: { user: user_json.merge(supportCount: supporters_count) }, status: 200
     rescue ActiveRecord::RecordNotFound
         render json: { errors: '対象のユーザーが見つかりません' }, status: 404
     rescue StandardError => e
