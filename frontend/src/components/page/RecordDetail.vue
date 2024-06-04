@@ -19,7 +19,7 @@ const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 
-const title = ref("");
+const date = ref("");
 const memo = ref("");
 const imageUrls = ref([]);
 const recordId = ref(null);
@@ -59,6 +59,7 @@ const getDetail = async () => {
     );
     recordId.value = res.data.record.id;
     record.value = res.data;
+    date.value = res.data.record.formatted_date
     memo.value = res.data.record.memo;
     isMyRecord.value = res.data.record.isMyRecord;
     imageUrls.value = res.data.record.image_urls;
@@ -200,11 +201,11 @@ function supportClick(isSupport) {
   }
 }
 
-const addComment = async () => {
+const addComment = async (comment) => {
   try {
     const formData = new FormData();
     formData.append("record_id", recordId.value);
-    formData.append("comment", comment.value);
+    formData.append("comment", comment);
 
     const res = await axios.post(
       import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/record`,
@@ -242,15 +243,15 @@ const showEdit = () => {
     <div class="main ml-5">
       <div class="main_content">
         <div class="editor">
-          <p id="title" class="record-title" type="text">{{ title }}</p>
+          <p class="record-title">{{ date }}の記録</p>
           <p class="record-content" v-html="renderedMarkdown" />
-        </div>
-        <div v-if="imageUrls !== null && imageUrls.length !== 0">
-          <p>関連画像</p>
-          <div class="thumbnail-container">
-            <div class="thumbnail" v-for="item in imageUrls">
-              <div class="thumbnail-image">
-                <img :src="item.url" alt="" />
+          <div v-if="imageUrls !== null && imageUrls.length !== 0">
+            <p class="mt-5">関連画像</p>
+            <div class="thumbnail-container">
+              <div class="thumbnail" v-for="item in imageUrls">
+                <div class="thumbnail-image">
+                  <img :src="item.url" alt="" />
+                </div>
               </div>
             </div>
           </div>

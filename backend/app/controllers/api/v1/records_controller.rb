@@ -38,7 +38,7 @@ class Api::V1::RecordsController < ApplicationController
     render json: { record: record.as_json(
       include: {
         user: { only: [:name], methods: :image_url }
-      }, methods: :image_urls
+      }, methods: [:image_urls, :formatted_date]
     ).merge(isMyRecord: record.user_id == current_api_v1_user.id,
             myProfile: current_api_v1_user.profile.as_json(
               include: {
