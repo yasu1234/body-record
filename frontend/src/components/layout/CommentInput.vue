@@ -18,9 +18,9 @@ const addComment = () => {
     class="comment-textarea"
     placeholder="コメントを入力"
   />
-  <button class="comment-add-button" @click="addComment">
-    コメントを投稿する
-  </button>
+  <div class="add-commet-button-container mt-2.5 mr-5">
+    <button class="mb-5" @click="addComment">コメントを投稿する</button>
+  </div>
 </template>
 
 <style scoped>
@@ -31,7 +31,8 @@ const addComment = () => {
   padding-left: 10px;
   border: 1px solid #ccc;
 }
-.comment-add-button {
-  margin-bottom: 20px;
+.add-commet-button-container {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

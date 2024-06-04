@@ -19,8 +19,8 @@ const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 
-const title = ref('');
-const memo = ref('');
+const title = ref("");
+const memo = ref("");
 const imageUrls = ref([]);
 const recordId = ref(null);
 const recordUserId = ref(0);
@@ -58,7 +58,7 @@ const getDetail = async () => {
       }
     );
     recordId.value = res.data.record.id;
-    record.value = res.data
+    record.value = res.data;
     memo.value = res.data.record.memo;
     isMyRecord.value = res.data.record.isMyRecord;
     imageUrls.value = res.data.record.image_urls;
@@ -239,14 +239,14 @@ const showEdit = () => {
   <TabMenu :currentId="0" />
   <Toast position="top-center" />
   <div class="wrap">
-    <div class="main">
+    <div class="main ml-5">
       <div class="main_content">
         <div class="editor">
-          <p id="title" class="knowledge-title" type="text">{{ title }}</p>
+          <p id="title" class="record-title" type="text">{{ title }}</p>
           <p class="record-content" v-html="renderedMarkdown" />
         </div>
         <div v-if="imageUrls !== null && imageUrls.length !== 0">
-          <p class="inputTitle">関連画像</p>
+          <p>関連画像</p>
           <div class="thumbnail-container">
             <div class="thumbnail" v-for="item in imageUrls">
               <div class="thumbnail-image">
@@ -255,18 +255,18 @@ const showEdit = () => {
             </div>
           </div>
         </div>
-        <div v-if="author !== null" class="radius-section">
+        <div v-if="author !== null" class="radius-section pt-2.5">
           <Author :author="author" :userId="record.user_id" />
         </div>
         <div class="radius-section">
           <div class="comment-container-title-area">
-            <p class="comment-container-title">コメント</p>
+            <p class="ml-5 pt-5 font-bold">コメント</p>
           </div>
           <div v-if="comments.length !== 0">
             <Comments :comments="comments" />
           </div>
           <div v-else>
-            <p>コメントはありません</p>
+            <p class="pt-2.5 pl-5">コメントはありません</p>
           </div>
           <CommentInput @addComment="addComment" />
         </div>
@@ -326,15 +326,11 @@ const showEdit = () => {
   flex-flow: column;
   gap: 10px;
 }
-.main {
-  margin-left: 20px;
-}
 .editor {
   padding: 30px;
   border-radius: 8px;
   background-color: #ffffff;
 }
-
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -343,7 +339,7 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-.knowledge-title {
+.record-title {
   font-weight: bold;
   font-size: 22px;
 }
@@ -395,9 +391,43 @@ input[type="text"] {
 .comment-container-title-area {
   border-bottom: 1px solid rgba(6, 6, 6, 0.17);
 }
-.comment-container-title {
-  margin-left: 20px;
-  padding-top: 20px;
-  font-weight: bold;
+
+@media (max-width: 768px) {
+  .wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main {
+    padding-bottom: 65px;
+    margin-right: 20px;
+  }
+
+  .side {
+    position: fixed;
+    align-items: center;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-color: #fff;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .side_content {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .round-button {
+    padding: 0;
+    background: transparent;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+  }
 }
 </style>
