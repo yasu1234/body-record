@@ -1,10 +1,20 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 
 import Paginate from "vuejs-paginate-next";
 
-defineProps({
+const pageCount = ref(0);
+
+const props = defineProps({
   pageCount: Number,
+});
+
+onMounted(() => {
+  pageCount.value = props.pageCount;
+});
+
+watch(props, () => {
+  pageCount.value = props.pageCount;
 });
 
 const emits = defineEmits(["changePage"]);
@@ -64,15 +74,6 @@ const clickCallback = function (pageNum) {
   cursor: not-allowed;
   color: #332;
 }
-
-:deep .page-link:hover {
-  /* color: transparent; */
-}
-
-/* マウスオーバー時のスタイル */
-/* :deep .page-link:hover:not(.disabled):not(.active) {
-  background-color: #4CAF50;
-} */
 
 :deep .page-item:hover:not(.disabled):not(.active) {
   background-color: #f5c977;
