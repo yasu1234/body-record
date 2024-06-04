@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { format } from "date-fns";
@@ -13,6 +13,10 @@ const props = defineProps({
 const emit = defineEmits(["update:date"]);
 
 onMounted(() => {
+  date.value = props.date;
+});
+
+watch(props, () => {
   date.value = props.date;
 });
 

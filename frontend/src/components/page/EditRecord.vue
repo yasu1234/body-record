@@ -80,7 +80,9 @@ const getDetail = async () => {
       }
     );
     recordId.value = res.data.record.id;
-    recordDate.value = res.data.record.date;
+    recordDate.value = res.data.record.calendar_date;
+    weight.value = res.data.record.weight;
+    fatPercentage.value = res.data.record.fat_percentage;
     memo.value = res.data.record.memo;
     imageUrls.value = res.data.record.image_urls;
   } catch (error) {
@@ -120,7 +122,7 @@ const edit = async () => {
     );
     recordId.value = res.data.record.id;
     memo.value = res.data.record.memo;
-    recordDate.value = res.data.record.date;
+    recordDate.value = res.data.record.calendar_date;
     imageUrls.value = res.data.imageUrls;
   } catch (error) {
     if (error.response.status === 404) {
@@ -245,7 +247,6 @@ input[type="text"] {
   border: none;
   color: #000;
   text-align: center;
-  font-size: 12px;
   border-radius: 4px;
   cursor: pointer;
   border-radius: 50%;
