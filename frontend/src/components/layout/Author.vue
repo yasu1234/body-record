@@ -21,7 +21,7 @@ watch(props, () => {
 
 const getSupport = async () => {
   userId.value = props.userId;
-  if (userId === null) {
+  if (userId.value == null) {
     return;
   }
   try {
@@ -140,7 +140,7 @@ const supportOff = async () => {
     </div>
     <p class="author-name" v-if="author !== null">{{ author.name }}</p>
   </div>
-  <div class="support-container">
+  <div class="support-container mt-2.5 ml-5 pb-5">
     <button v-if="author !== null && author.isSupport" class="support-button">
       <img
         src="../../assets/image/support_on.png"
@@ -180,9 +180,6 @@ const supportOff = async () => {
 .support-container {
   display: flex;
   align-items: center;
-  margin-top: 10px;
-  margin-left: 20px;
-  padding-bottom: 20px;
 }
 .support-button {
   width: 50px;
@@ -193,7 +190,7 @@ const supportOff = async () => {
 }
 .support-image {
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
 }
 </style>
