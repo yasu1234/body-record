@@ -34,7 +34,7 @@ class Api::V1::SupportsController < ApplicationController
         render json: { errors: e.message }, status: 500
     end
     
-    def get_user_support
+    def index
         support_user = User.find(params[:user_id])
 
         supporters_count = support_user.supporters.count
