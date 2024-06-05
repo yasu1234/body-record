@@ -43,16 +43,6 @@ class Api::V1::KnowledgesController < ApplicationController
         render json: { errors: '対象のデータが見つかりません' }, status: 404        
     end
 
-    def delete_image        
-        knowledge = Knowledge.find(params[:id])
-        image = knowledge.images.find(params[:image_id])
-        image.purge
-
-        render json: { knowledge: knowledge.as_json(methods: :image_urls) }, status: 200
-    rescue ActiveRecord::RecordNotFound
-        render json: { errors: '対象のデータが見つかりません' }, status: 404
-    end
-
     def update
         knowledge = current_api_v1_user.knowledges.find(params[:id])
         knowledge.update!(knowledge_register_params)
@@ -75,17 +65,6 @@ class Api::V1::KnowledgesController < ApplicationController
         render json: { errors: '対象のデータが見つかりません' }, status: 404
     rescue StandardError => e
         render json: { errors: e.message }, status: 500
-    end
-
-    def get_target_user_knowledge
-        knowledges = Knowledge.where(user_id: params[:user_id])
-
-        # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
-        if knowledges.count > 5
-            knowledges = knowledges.latest_knowledges(5)
-        end
-
-        render json: { knowledges: knowledges }, status: 200
     end
 
     private
