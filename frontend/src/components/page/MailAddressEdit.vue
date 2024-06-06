@@ -80,7 +80,7 @@ const { value: newMailAddres, errorMessage: emailError } =
   <div class="setting-container">
     <SettingSideMenu :currentIndex="2" />
     <main>
-      <h1 class="mailaddress-edit-content-center">メールアドレス変更</h1>
+      <h1 class="view-title pt-10">メールアドレス変更</h1>
       <div class="mailaddress-edit-container">
         <form class="form" @submit.prevent="checkValidate">
           <div class="form-item">

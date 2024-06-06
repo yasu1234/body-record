@@ -101,7 +101,7 @@ const updatePassword = (inputPassword, passwordType) => {
 <template>
   <Header />
   <Toast position="top-center" />
-  <h1 class="signup-title">会員登録</h1>
+  <p class="view-title mt-7">会員登録</p>
   <div class="signup-container">
     <form class="form" @submit.prevent="checkValidate">
       <div class="item">
@@ -132,7 +132,7 @@ const updatePassword = (inputPassword, passwordType) => {
         <input id="name" type="text" v-model="name" />
         <p class="validation-error-message">{{ nameError }}</p>
       </div>
-      <div class="signUpTitle">
+      <div class="text-center">
         <button class="signup-button">登録</button>
       </div>
     </form>
@@ -148,29 +148,20 @@ const updatePassword = (inputPassword, passwordType) => {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
 .form {
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
 }
-
-.signup-title {
-  padding-top: 40px;
-  text-align: center;
-}
-
 .item {
   padding-top: 40px;
   margin: 0 auto;
 }
-
 .form input[type="email"],
 .form input[type="text"] {
   padding: 10px;
   width: 100%;
 }
-
 .signup-button {
   font-size: 16px;
   font-weight: bold;

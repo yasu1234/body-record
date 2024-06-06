@@ -74,7 +74,7 @@ const updatePassword = (inputPassword, passwordType) => {
 
 <template>
   <Header />
-  <h1 class="signUpTitle">ログイン</h1>
+  <h1 class="view-title mt-7">ログイン</h1>
   <div class="login-container">
     <form class="form" @submit.prevent="handleSubmit">
       <div class="item">

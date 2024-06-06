@@ -105,7 +105,7 @@ const updatePassword = (inputPassword, passwordType) => {
   <div class="setting-container">
     <SettingSideMenu :currentIndex="3" />
     <main>
-      <h1 class="signUpTitle">パスワード変更</h1>
+      <h1 class="view-title pt-10">パスワード変更</h1>
       <div class="password-edit-container">
         <form class="form" @submit.prevent="checkValidate">
           <div class="item">
@@ -153,23 +153,15 @@ const updatePassword = (inputPassword, passwordType) => {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
 .form {
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
 }
-
-.signUpTitle {
-  padding-top: 40px;
-  text-align: center;
-}
-
 .item {
   padding-top: 40px;
   margin: 0 auto;
 }
-
 .password-edit-button {
   font-size: 16px;
   font-weight: bold;
