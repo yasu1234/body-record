@@ -334,4 +334,43 @@ input[type="text"] {
   padding-top: 20px;
   font-weight: bold;
 }
+
+@media (max-width: 768px) {
+  .wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main {
+    padding-bottom: 65px;
+    margin-right: 20px;
+  }
+
+  .side {
+    position: fixed;
+    align-items: center;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-color: #fff;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .side_content {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .round-button {
+    padding: 0;
+    background: transparent;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+  }
+}
 </style>
