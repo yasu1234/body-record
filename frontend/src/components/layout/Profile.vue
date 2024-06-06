@@ -1,9 +1,12 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
 
 const props = defineProps(["userId"]);
+
+const router = useRouter();
 
 const profile = ref('');
 const userName = ref('');
@@ -14,6 +17,7 @@ const goalWeight = ref(null);
 const goalFatPercentage = ref(null);
 const supportCount = ref(0);
 const supporterCount = ref(0);
+const isMyProfile = ref(false);
 
 onMounted(() => {
   getProfile();
@@ -47,11 +51,12 @@ const getProfile = async () => {
       }
     );
 
-    profile.value = res.data.user.profile;
-    userName.value = res.data.user.user.name;
-    userThumbnail.value = res.data.user.user.image_url;
-    goalFatPercentage.value = res.data.user.goal_fat_percentage;
-    goalWeight.value = res.data.user.goal_weight;
+    profile.value = res.data.profile.profile;
+    userName.value = res.data.profile.user.name;
+    userThumbnail.value = res.data.profile.user.image_url;
+    goalFatPercentage.value = res.data.profile.goal_fat_percentage;
+    goalWeight.value = res.data.profile.goal_weight;
+    isMyProfile.value = res.data.profile.is_my_profile;
   } catch (error) {
     user.value = null
   }
@@ -159,6 +164,10 @@ const supportOff = async () => {
     }
   }
 };
+
+const showEditProfile = () => {
+  router.push({ name: "EditProfile", params: { id: userId.value } });
+}
 </script>
 
 <template>
@@ -179,15 +188,15 @@ const supportOff = async () => {
       <div class="profile-content">
         <span class="profile-name">{{ userName }}</span>
         <span class="profile-intro">{{ profile }}</span>
-        <span class="profile-top-space">目標体重：{{ goalWeight }}</span>
-        <span class="profile-top-space">目標体脂肪率：{{ goalFatPercentage }}</span>
+        <span class="profile-top-space">目標体重：{{ goalWeight }}kg</span>
+        <span class="profile-top-space">目標体脂肪率：{{ goalFatPercentage }}%</span>
       </div>
       <div class="profile-support-container">
         <div class="support-content">{{ supportCount }}<br />サポート</div>
         <div class="support-content">{{ supporterCount }}<br />サポーター</div>
       </div>
       <div class="profile-edit">
-        <button class="profile-edit-button" @click="showEditProfile">
+        <button v-if="isMyProfile" class="profile-edit-button" @click="showEditProfile">
           プロフィール編集
         </button>
       </div>
@@ -278,5 +287,13 @@ const supportOff = async () => {
   font-size: 16px;
   font-weight: bold;
   margin: 0 auto;
+}
+
+@media screen and (max-width: 768px) {
+  .profile-card {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 }
 </style>
