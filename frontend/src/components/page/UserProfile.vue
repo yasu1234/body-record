@@ -14,6 +14,8 @@ import Profile from "../layout/Profile.vue";
 const route = useRoute();
 const router = useRouter();
 
+const profile = ref(null);
+const support = ref(null);
 const records = ref([]);
 const knowledges = ref([]);
 const isLogin = ref(false);
@@ -25,6 +27,8 @@ const month = ref({
 
 onMounted(() => {
   userId.value = route.params.id;
+  getProfile();
+  getSupport();
   getUserRecord();
   getUserKnowledge();
   getMonthRecord();
@@ -52,10 +56,63 @@ var fatPercentageData = ref({
   ],
 });
 
+const getProfile = async () => {
+  try {
+    const res = await axios.get(
+      import.meta.env.VITE_APP_API_BASE + `/api/v1/profiles/${userId.value}`,
+      {
+        headers: {
+          "access-token": Cookies.get("accessToken"),
+          client: Cookies.get("client"),
+          uid: Cookies.get("uid"),
+        },
+      }
+    );
+
+    profile.value = res.data.profile;
+  } catch (error) {
+    user.value = null
+  }
+};
+
+const getSupport = async () => {
+  try {
+    const res = await axios.get(
+      import.meta.env.VITE_APP_API_BASE +
+        `/api/v1/supports/user/${userId.value}`,
+      {
+        headers: {
+          "access-token": Cookies.get("accessToken"),
+          client: Cookies.get("client"),
+          uid: Cookies.get("uid"),
+        },
+      }
+    );
+
+    support.value = res.data.user;
+  } catch (error) {
+    if (error.response.status === 404) {
+      showNotFound();
+    } else {
+      let errorMessages = "応援に失敗しました\n";
+      if (error.response.status === 422) {
+        if (Array.isArray(error.response.data.errors)) {
+          errorMessages += error.response.data.errors.join("\n");
+        } else {
+          errorMessages += error.response.data.errors;
+        }
+      }
+      errorMessage.value = errorMessages;
+    }
+  }
+};
+
+
 const getUserRecord = async () => {
   try {
     const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/records/user/${userId.value}`,
+      import.meta.env.VITE_APP_API_BASE +
+        `/api/v1/records/user/${userId.value}`,
       {
         headers: {
           "access-token": Cookies.get("accessToken"),
@@ -113,7 +170,8 @@ const getMonthRecord = async () => {
 const getUserKnowledge = async () => {
   try {
     const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/user/${userId.value}`,
+      import.meta.env.VITE_APP_API_BASE +
+        `/api/v1/knowledges/user/${userId.value}`,
       {
         headers: {
           "access-token": Cookies.get("accessToken"),
@@ -125,17 +183,13 @@ const getUserKnowledge = async () => {
 
     knowledges.value = res.data.knowledges;
   } catch (error) {
-    knowledges.value = null
+    knowledges.value = null;
   }
 };
 
 function monthChange(event) {
   month.value = event;
   getMonthRecord();
-}
-
-function showEditProfile() {
-  router.push({ name: "EditProfile", params: { id: userId.value } });
 }
 
 const showNotFound = () => {
@@ -149,7 +203,7 @@ const clickRecord = (item) => {
 
 <template>
   <Header />
-  <Profile :userId="userId" />
+  <Profile :profile="profile" :support="support" />
   <div class="weight-graph">
     <Chart :data="weigtData" />
   </div>

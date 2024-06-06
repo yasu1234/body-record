@@ -4,12 +4,12 @@ import { useRouter } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const props = defineProps(["userId"]);
+const props = defineProps(["profile", "support"]);
 
 const router = useRouter();
 
-const profile = ref('');
-const userName = ref('');
+const profileMessage = ref("");
+const userName = ref("");
 const userThumbnail = ref(null);
 const userId = ref(null);
 const user = ref(null);
@@ -20,82 +20,57 @@ const supporterCount = ref(0);
 const isMyProfile = ref(false);
 
 onMounted(() => {
-  getProfile();
-  getSupport();
+  setProfile(props.profile);
+  setSupport(props.support);
 });
 
 watch(props, () => {
-  userId.value = props.userId;
-
-  if (user.value === null) {
-    getProfile()
-    getSupport()
-  }
+  setProfile(props.profile);
+  setSupport(props.support);
 });
 
-const getProfile = async () => {
-  if (userId.value === null) {
-    user.value = null
-    return
+const setProfile = (profile) => {
+  if (profile == null) {
+    profileMessage.value = "";
+    userName.value = "";
+    userThumbnail.value = null;
+    goalFatPercentage.value = null;
+    goalWeight.value = null;
+    isMyProfile.value = false;
+    return;
   }
 
-  try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/profiles/${userId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+  profileMessage.value = profile.profile;
+  userName.value = profile.user.name;
+  userThumbnail.value = profile.user.image_url;
+  profileMessage.value = profile.profile;
+  goalFatPercentage.value = profile.goal_fat_percentage;
+  goalWeight.value = profile.goal_weight;
 
-    profile.value = res.data.profile.profile;
-    userName.value = res.data.profile.user.name;
-    userThumbnail.value = res.data.profile.user.image_url;
-    goalFatPercentage.value = res.data.profile.goal_fat_percentage;
-    goalWeight.value = res.data.profile.goal_weight;
-    isMyProfile.value = res.data.profile.is_my_profile;
-  } catch (error) {
-    user.value = null
+  if (profile.is_my_profile != null) {
+    isMyProfile.value = profile.is_my_profile;
+  } else {
+    isMyProfile.value = false;
   }
 };
 
-const getSupport = async () => {
-  if (userId.value === null) {
-    user.value = null
-    return
+const setSupport = (support) => {
+  if (support == null) {
+    supportCount.value = 0;
+    supporterCount.value = 0;
+    return;
   }
 
-  try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE +
-        `/api/v1/supports/user/${userId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
-    supportCount.value = res.data.user.supportCount
-    supporterCount.value = res.data.user.supporterCount
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessages = "応援に失敗しました\n";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        } else {
-          errorMessages += error.response.data.errors;
-        }
-      }
-      errorMessage.value = errorMessages;
-    }
+  if (support.supportCount != null) {
+    supportCount.value = support.supportCount;
+  } else {
+    supportCount.value = 0;
+  }
+
+  if (support.supporterCount != null) {
+    supporterCount.value = support.supporterCount;
+  } else {
+    supporterCount.value = 0;
   }
 };
 
@@ -167,7 +142,7 @@ const supportOff = async () => {
 
 const showEditProfile = () => {
   router.push({ name: "EditProfile", params: { id: userId.value } });
-}
+};
 </script>
 
 <template>
@@ -186,17 +161,25 @@ const showEditProfile = () => {
         />
       </div>
       <div class="profile-content">
-        <span class="profile-name">{{ userName }}</span>
-        <span class="profile-intro">{{ profile }}</span>
+        <span class="profile-name">{{ userName != null ? userName : "" }}</span>
+        <span class="profile-intro">{{
+          profileMessage != null ? profileMessage : ""
+        }}</span>
         <span class="profile-top-space">目標体重：{{ goalWeight }}kg</span>
-        <span class="profile-top-space">目標体脂肪率：{{ goalFatPercentage }}%</span>
+        <span class="profile-top-space"
+          >目標体脂肪率：{{ goalFatPercentage }}%</span
+        >
       </div>
       <div class="profile-support-container">
         <div class="support-content">{{ supportCount }}<br />サポート</div>
         <div class="support-content">{{ supporterCount }}<br />サポーター</div>
       </div>
       <div class="profile-edit">
-        <button v-if="isMyProfile" class="profile-edit-button" @click="showEditProfile">
+        <button
+          v-if="isMyProfile"
+          class="profile-edit-button"
+          @click="showEditProfile"
+        >
           プロフィール編集
         </button>
       </div>
