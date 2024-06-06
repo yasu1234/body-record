@@ -270,7 +270,6 @@ const showEdit = () => {
   flex-flow: column;
   gap: 10px;
 }
-
 .main {
   margin-left: 20px;
 }
@@ -287,13 +286,11 @@ const showEdit = () => {
   height: auto;
   object-fit: cover;
 }
-
 .editor {
   padding: 30px;
   border-radius: 8px;
   background-color: #ffffff;
 }
-
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -323,17 +320,6 @@ input[type="text"] {
   margin-right: 15px;
   margin-bottom: 15px;
   padding-left: 20px;
-}
-.thumbnail-image {
-  height: 100%;
-}
-.thumbnail-image img {
-  height: 100%;
-}
-.thumbnail-actions {
-  position: absolute;
-  top: 5px;
-  right: 5px;
 }
 .radius-section {
   margin-top: 20px;

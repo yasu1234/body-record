@@ -26,7 +26,18 @@ onMounted(() => {
 });
 
 onBeforeRouteUpdate(async (to, from) => {
-  keyword.value = to.query.keyword;
+  if (to.query.keyword != null) {
+    keyword.value = to.query.keyword;
+  } else {
+    keyword.value = "";
+  }
+
+  if (to.query.isBookmark != null && to.query.isBookmark === true) {
+    isBookmark.value = true;
+  } else {
+    isBookmark.value = false;
+  }
+  
   search();
 });
 
@@ -38,7 +49,7 @@ const targetSearch = () => {
   }
 
   if (isBookmark.value === true) {
-    query.startDate = startDate.value;
+    query.isBookmark = true;
   }
 
   router.push({ name: "KnowledgeList", query: query });
@@ -57,7 +68,7 @@ const search = async () => {
 
         params: {
           keyword: keyword.value,
-          page: pageNum,
+          page: pageNum.value,
         },
       }
     );
@@ -83,11 +94,11 @@ const updatePaginateItems = function (pageNum) {
   search();
 };
 
-function clickKnowledge(item) {
+const clickKnowledge = (item) => {
   router.push({ name: "KnowledgeDetail", params: { id: item.id } });
 }
 
-function addKnowledge() {
+const addKnowledge = () => {
   router.push("/addKnowledge");
 }
 </script>
@@ -96,7 +107,7 @@ function addKnowledge() {
   <Header />
   <TabMenu :currentId="currentId" />
   <div class="knowledge-search-container">
-    <div class="keyword-search">
+    <div class="mt-5">
       <input
         type="text"
         id="keyword"
@@ -114,7 +125,7 @@ function addKnowledge() {
       />
       <label for="statusSelectName">ブックマークのみ絞り込む</label>
     </div>
-    <div class="search-button-area">
+    <div class="text-center mt-2.5">
       <SearchButton @searchButtonClick="targetSearch" />
     </div>
   </div>
@@ -147,9 +158,6 @@ function addKnowledge() {
   border-radius: 5px;
   margin-top: 20px;
 }
-.keyword-search {
-  margin-top: 20px;
-}
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -160,11 +168,7 @@ input[type="text"] {
 }
 .search-check {
   margin-top: 20px;
-  padding-left: 20px;
   padding-right: 20px;
-}
-.search-button-area {
-  text-align: center;
 }
 .add-button-area {
   text-align: right;
@@ -174,5 +178,15 @@ input[type="text"] {
 .add-button {
   font-size: 16px;
   font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .knowledge-search-container {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    margin-top: 20px;
+  }
 }
 </style>
