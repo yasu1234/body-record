@@ -13,6 +13,7 @@ import Comments from "../layout/Comments.vue";
 import CommentInput from "../layout/CommentInput.vue";
 import TabMenu from "../layout/TabMenu.vue";
 import Author from "../layout/Author.vue";
+import RelationImage from "../layout/RelationImage.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -59,7 +60,7 @@ const getDetail = async () => {
     );
     recordId.value = res.data.record.id;
     record.value = res.data;
-    date.value = res.data.record.formatted_date
+    date.value = res.data.record.formatted_date;
     memo.value = res.data.record.memo;
     isMyRecord.value = res.data.record.isMyRecord;
     imageUrls.value = res.data.record.image_urls;
@@ -249,9 +250,7 @@ const showEdit = () => {
             <p class="mt-5">関連画像</p>
             <div class="thumbnail-container">
               <div class="thumbnail" v-for="item in imageUrls">
-                <div class="thumbnail-image">
-                  <img :src="item.url" alt="" />
-                </div>
+                <RelationImage :item=item />
               </div>
             </div>
           </div>
@@ -366,15 +365,6 @@ input[type="text"] {
   margin-right: 15px;
   margin-bottom: 15px;
   padding-left: 20px;
-}
-.thumbnail img {
-  height: 100%;
-}
-.thumbnail-image {
-  height: 100%;
-}
-.thumbnail-image img {
-  height: 100%;
 }
 .round-button {
   padding: 0;

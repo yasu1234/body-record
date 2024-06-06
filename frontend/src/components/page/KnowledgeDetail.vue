@@ -10,6 +10,7 @@ import TabMenu from "../layout/TabMenu.vue";
 import Comments from "../layout/Comments.vue";
 import CommentInput from "../layout/CommentInput.vue";
 import Author from "../layout/Author.vue";
+import RelationImage from "../layout/RelationImage.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -194,9 +195,7 @@ const showEdit = () => {
           <p class="mt-5">関連画像</p>
           <div class="thumbnail-container">
             <div class="thumbnail" v-for="item in imageUrls">
-              <div class="thumbnail-image">
-                <img :src="item.url" alt="" />
-              </div>
+              <RelationImage :item=item />
             </div>
           </div>
         </div>
