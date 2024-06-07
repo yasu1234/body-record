@@ -90,7 +90,10 @@ const { value: newMailAddres, errorMessage: emailError } =
         <form class="form" @submit.prevent="checkValidate">
           <div class="form-item">
             <FloatLabel>
-              <InputText v-model="newMailAddres" class="email-edit-input h-10 p-2.5" />
+              <InputText
+                v-model="newMailAddres"
+                class="email-edit-input h-10 p-2.5"
+              />
               <label>変更後のメールアドレス</label>
             </FloatLabel>
             <p class="validation-error-message">{{ emailError }}</p>
@@ -138,5 +141,20 @@ const { value: newMailAddres, errorMessage: emailError } =
   font-size: 16px;
   font-weight: bold;
   padding: 10px 50px;
+}
+
+@media screen and (max-width: 768px) {
+  main {
+    flex: 1;
+  }
+  .mailaddress-edit-container {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
 }
 </style>

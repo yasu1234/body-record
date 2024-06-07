@@ -165,6 +165,9 @@ const updatePassword = (inputPassword, passwordType) => {
 }
 
 @media screen and (max-width: 768px) {
+  main {
+    flex: 1;
+  }
   .password-edit-container {
     width: auto;
     margin-left: 20px;
