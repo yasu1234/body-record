@@ -22,7 +22,7 @@ const toastNotifications = new toastService(toast);
 
 const goalWeight = ref(null);
 const goalFatPercentage = ref(null);
-const profile = ref('');
+const profile = ref("");
 const file = ref(null);
 const userThumbnail = ref(null);
 const userId = ref(0);
@@ -51,21 +51,14 @@ const getProfile = async () => {
       }
     );
 
-    if (res.data.user.goal_weight !== null) {
-      goalWeight.value = res.data.user.goal_weight;
+    goalWeight.value = res.data.user.profile.goal_weight;
+    goalFatPercentage.value = res.data.user.profile.goal_fat_percentage;
+
+    if (res.data.user.profile.profile !== null) {
+      profile.value = res.data.user.profile.profile;
     }
 
-    if (res.data.user.goal_fat_percentage !== null) {
-      goalFatPercentage.value = res.data.user.goal_fat_percentage;
-    }
-
-    if (res.data.user.profile !== null) {
-      profile.value = res.data.user.profile;
-    }
-
-    if (res.data.user.user.image_url) {
-      userThumbnail.value = res.data.user.user.image_url;
-    }
+    userThumbnail.value = res.data.user.user.image_url;
   } catch (error) {
     console.log({ error });
   }
@@ -104,7 +97,10 @@ const updateProfile = async () => {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    toastNotifications.displayError("プロフィール変更に失敗しました", errorMessages);
+    toastNotifications.displayError(
+      "プロフィール変更に失敗しました",
+      errorMessages
+    );
   }
 };
 
@@ -127,7 +123,7 @@ const updateProfileImage = async () => {
         },
       }
     );
-    
+
     toastNotifications.displayInfo("プロフィールを更新しました", "");
     setTimeout(async () => {
       showProfile(res.data.user.id);
@@ -139,13 +135,16 @@ const updateProfileImage = async () => {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    toastNotifications.displayError("プロフィール画像登録に失敗しました", errorMessages);
+    toastNotifications.displayError(
+      "プロフィール画像登録に失敗しました",
+      errorMessages
+    );
   }
 };
 
 const showProfile = (id) => {
   router.push({ name: "UserProfile", params: { id: id } });
-}
+};
 </script>
 
 <template>
@@ -155,28 +154,28 @@ const showProfile = (id) => {
   <div class="setting-container">
     <SettingSideMenu :currentIndex="1" class="setting-side-menu" />
     <main class="setting-main">
-      <form @submit.prevent="updateProfile" class="ml-3.5">
+      <form @submit.prevent="updateProfile" class="ml-3.5 pb-5">
         <div class="profile-edit-content">
           <FloatLabel>
-            <InputText v-model="goalWeight" />
+            <InputText v-model="goalWeight" class="p-2.5" />
             <label>目標体重</label>
           </FloatLabel>
-          <label for="goal-weight" class="unit-label">kg</label>
+          <label for="goal-weight" class="ml-2.5">kg</label>
         </div>
         <div class="profile-edit-content">
           <FloatLabel>
-            <InputText v-model="goalFatPercentage" />
+            <InputText v-model="goalFatPercentage" class="p-2.5" />
             <label>目標体脂肪率</label>
           </FloatLabel>
-          <label for="goal-fat-percentage" class="unit-label">%</label>
+          <label for="goal-fat-percentage" class="ml-2.5">%</label>
         </div>
-        <div class="profile-area">
+        <div class="mt-5">
           <FloatLabel>
-            <Textarea v-model="profile" rows="10" class="profile-text" />
+            <Textarea v-model="profile" rows="10" class="profile-text p-2.5" />
             <label>紹介文</label>
           </FloatLabel>
         </div>
-        <div class="profile-image-change-container">
+        <div class="mt-5">
           <label>プロフィール画像変更</label>
           <div class="current-thumbnail">
             <img
@@ -204,20 +203,10 @@ const showProfile = (id) => {
   align-items: center;
   margin-top: 20px;
 }
-
-.unit-label {
-  margin-left: 10px;
-}
-
 .profile-text {
   height: 100px;
   width: calc(100% - 40px);
 }
-
-.profile-area {
-  margin-top: 20px;
-}
-
 .setting-side-menu {
   z-index: 30;
   flex: 1;
@@ -233,11 +222,8 @@ const showProfile = (id) => {
   width: 180px;
   margin: 0 auto;
   margin-top: 30px;
+  padding: 10px 30px;
 }
-.profile-image-change-container {
-  margin-top: 20px;
-}
-
 .current-thumbnail {
   width: 80px;
   height: 80px;
@@ -246,7 +232,6 @@ const showProfile = (id) => {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-
 .current-thumbnail img {
   width: 100%;
   height: 100%;
