@@ -1,39 +1,45 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
-import Password from 'primevue/password';
+import Password from "primevue/password";
 
 const passwordType = ref(0);
-const password = ref('');
+const password = ref("");
 
 const props = defineProps({
-    password: String,
-    passwordType: Number
-})
+  password: String,
+  passwordType: Number,
+});
 
-const emit = defineEmits(['updatePassword']);
+const emit = defineEmits(["updatePassword"]);
 
 onMounted(() => {
-    passwordType.value = props.passwordType
-    password.value = props.password
+  passwordType.value = props.passwordType;
+  password.value = props.password;
 });
 
 function updatePassword(currentText) {
-  emit('updatePassword', currentText, passwordType.value);
+  emit("updatePassword", currentText, passwordType.value);
 }
-
 </script>
 
 <template>
-    <Password v-model="password" :feedback="false" @update:model-value="updatePassword" class="password-text" toggleMask />
+  <Password
+    v-model="password"
+    :feedback="false"
+    @update:model-value="updatePassword"
+    class="password-text"
+    toggleMask
+  />
 </template>
 
 <style scoped>
 .password-text {
-    display: block;
+  display: block;
+  border: 1px solid #ccc;
 }
 :deep input[type="password"] {
-    padding: 10px;
-    width: 100%;
+  padding: 10px;
+  width: 100%;
 }
 </style>

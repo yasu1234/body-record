@@ -108,7 +108,7 @@ const updatePassword = (inputPassword, passwordType) => {
       <h1 class="view-title pt-10">パスワード変更</h1>
       <div class="password-edit-container">
         <form class="form" @submit.prevent="checkValidate">
-          <div class="item">
+          <div class="pt-10">
             <label for="password">現在のパスワード</label>
             <PasswordText
               :password="currentPassword"
@@ -117,7 +117,7 @@ const updatePassword = (inputPassword, passwordType) => {
             />
             <p class="validation-error-message">{{ currentPasswordError }}</p>
           </div>
-          <div class="item">
+          <div class="pt-10">
             <label for="password">パスワード</label>
             <PasswordText
               :password="password"
@@ -126,7 +126,7 @@ const updatePassword = (inputPassword, passwordType) => {
             />
             <p class="validation-error-message">{{ passwordError }}</p>
           </div>
-          <div class="item">
+          <div class="pt-10">
             <label for="passwordConfirm">パスワード(確認)</label>
             <PasswordText
               :password="passwordConfirm"
@@ -135,8 +135,8 @@ const updatePassword = (inputPassword, passwordType) => {
             />
             <p class="validation-error-message">{{ passwordConfirmError }}</p>
           </div>
-          <div class="signUpTitle">
-            <button class="password-edit-button">更新</button>
+          <div class="text-center">
+            <button class="password-edit-button mt-5">更新</button>
           </div>
         </form>
       </div>
@@ -157,10 +157,6 @@ const updatePassword = (inputPassword, passwordType) => {
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
-}
-.item {
-  padding-top: 40px;
-  margin: 0 auto;
 }
 .password-edit-button {
   font-size: 16px;

@@ -7,6 +7,8 @@ import * as yup from "yup";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
+import FloatLabel from "primevue/floatlabel";
+import InputText from "primevue/inputtext";
 
 import Header from "../layout/Header.vue";
 import SettingSideMenu from "../layout/SettingSideMenu.vue";
@@ -51,7 +53,10 @@ const mailAddressEdit = async () => {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    toastNotifications.displayError("メールアドレス変更に失敗しました", errorMessages);
+    toastNotifications.displayError(
+      "メールアドレス変更に失敗しました",
+      errorMessages
+    );
   }
 };
 
@@ -84,8 +89,10 @@ const { value: newMailAddres, errorMessage: emailError } =
       <div class="mailaddress-edit-container">
         <form class="form" @submit.prevent="checkValidate">
           <div class="form-item">
-            <label for="email">変更後のメールアドレス</label>
-            <input id="email" type="email" v-model="newMailAddres" />
+            <FloatLabel>
+              <InputText v-model="newMailAddres" class="email-edit-input h-10 p-2.5" />
+              <label>変更後のメールアドレス</label>
+            </FloatLabel>
             <p class="validation-error-message">{{ emailError }}</p>
           </div>
           <div class="mailaddress-edit-content-center">
@@ -120,12 +127,11 @@ const { value: newMailAddres, errorMessage: emailError } =
 
 .form-item {
   padding-top: 40px;
-  margin: 0 auto;
 }
 
-.form input[type="email"] {
-  padding: 10px;
+.email-edit-input {
   width: 100%;
+  border: #ccc 1px solid;
 }
 
 .mailaddress-edit-button {
