@@ -3,6 +3,10 @@ class Api::V1::MyRecordsController < ApplicationController
 
     def index
         base_scope = Record.where(user_id: current_api_v1_user.id)
+        if (params[:is_only_open].present? && params[:is_only_open] == "true")
+            base_scope = base_scope.where(open_status: 1)
+        end
+
         records, total_pages = Record.search_and_paginate(params, base_scope)
    
         render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: 200

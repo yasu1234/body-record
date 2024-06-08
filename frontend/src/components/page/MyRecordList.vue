@@ -15,7 +15,7 @@ const route = useRoute();
 const keyword = ref("");
 const startDate = ref("");
 const endDate = ref("");
-const isDisplayOnlyOpen = ref(false);
+const isOnlyOpen = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
 const pageCount = ref(1);
@@ -26,7 +26,8 @@ onMounted(() => {
     route.query.keyword,
     route.query.startDate,
     route.query.endDate,
-    route.query.page
+    route.query.page,
+    route.query.isOnlyOpen
   );
   search();
 });
@@ -36,7 +37,8 @@ onBeforeRouteUpdate(async (to, from) => {
     to.query.keyword,
     to.query.startDate,
     to.query.endDate,
-    to.query.page
+    to.query.page,
+    to.query.isOnlyOpen
   );
   search();
 });
@@ -60,6 +62,10 @@ const paramChange = () => {
     query.page = page.value;
   }
 
+  if (isOnlyOpen.value != null && isOnlyOpen.value === true) {
+    query.isOnlyOpen = isOnlyOpen.value;
+  }
+
   router.push({ path: "/", query: query });
 };
 
@@ -70,6 +76,7 @@ const search = async () => {
         keyword: keyword.value,
         startDate: startDate.value,
         endDate: endDate.value,
+        is_only_open: isOnlyOpen.value,
         page: page.value,
       },
     });
@@ -90,7 +97,7 @@ const search = async () => {
   }
 };
 
-const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
+const setQuery = (keywordParam, startDateParam, endDateParam, pageParam, isOnlyOpenParam) => {
   if (keywordParam != null) {
     keyword.value = keywordParam;
   } else {
@@ -110,6 +117,12 @@ const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
     page.value = pageParam;
   } else {
     page.value = 1;
+  }
+
+  if (isOnlyOpenParam != null && isOnlyOpenParam === 'true') {
+    isOnlyOpen.value = true;
+  } else {
+    isOnlyOpen.value = false;
   }
 };
 
@@ -166,10 +179,10 @@ const addRecord = () => {
       <input
         type="checkbox"
         id="statusSelect"
-        v-model="isDisplayOnlyOpen"
+        v-model="isOnlyOpen"
         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
       />
-      <label>非公開記録は表示しない</label>
+      <label class="ml-2">非公開記録は表示しない</label>
     </div>
     <div class="search-button-area">
       <SearchButton @searchButtonClick="paramChange" />
