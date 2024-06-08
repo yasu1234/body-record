@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -12,11 +11,11 @@ const toast = useToast();
 const toastNotifications = new toastService(toast);
 
 const showSignup = () => {
-  router.push("/signup");
+  router.push({ name: "Signup" });
 };
 
 const showLogin = () => {
-  router.push("/login");
+  router.push({ name: "Login" });
 };
 
 const guestLogin = async () => {
@@ -36,7 +35,10 @@ const guestLogin = async () => {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    toastNotifications.displayError("ゲストログインに失敗しました", errorMessages)
+    toastNotifications.displayError(
+      "ゲストログインに失敗しました",
+      errorMessages
+    );
   }
 };
 </script>
@@ -44,8 +46,8 @@ const guestLogin = async () => {
 <template>
   <Toast position="top-center" />
   <img src="../../assets/image/home_image.jpg" alt="Logo" class="home-logo" />
-  <h1 class="account-introduction-title">Inbody-Recordへようこそ！</h1>
-  <div class="account-buttons">
+  <h1 class="text-center mt-5">In-body.comへようこそ！</h1>
+  <div class="account-buttons mt-5">
     <button class="account-button" @click="showSignup">会員登録</button>
     <button class="account-button" @click="showLogin">ログイン</button>
     <button class="guest-login-button" @click="guestLogin">
@@ -61,31 +63,22 @@ const guestLogin = async () => {
   object-fit: cover;
   display: block;
 }
-
-.account-introduction-title {
-  text-align: center;
-  margin-top: 20px;
-}
-
 .account-buttons {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
 }
-
 .account-buttons button {
   width: 70%;
   font-weight: bold;
   font-size: 18px;
 }
-
 .account-button {
   font-weight: bold;
   font-size: 18px;
   padding: 10px 50px;
 }
-
 .guest-login-button {
   background-color: #f75549;
   font-weight: bold;
