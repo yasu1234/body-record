@@ -7,7 +7,7 @@ import Textarea from "primevue/textarea";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Toast from "primevue/toast";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import DatePicker from "../atom/DatePicker.vue";
 import DropFile from "../atom/DropFile.vue";
@@ -17,6 +17,7 @@ import TabMenu from "../layout/TabMenu.vue";
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 const router = useRouter();
+setupInterceptors(router);
 
 const memo = ref("");
 const recordDate = ref("");

@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted, defineCustomElement } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import TabMenu from "../layout/TabMenu.vue";
 import Header from "../layout/Header.vue";
@@ -13,6 +13,7 @@ import ResultEmpty from "../atom/ResultEmpty.vue";
 
 const router = useRouter();
 const route = useRoute();
+setupInterceptors(router);
 
 const userId = ref(0);
 const user = ref(null);

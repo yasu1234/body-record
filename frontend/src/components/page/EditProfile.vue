@@ -1,15 +1,13 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import axios from "axios";
-import Cookies from "js-cookie";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
@@ -20,6 +18,7 @@ const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
+setupInterceptors(router)
 
 const goalWeight = ref(null);
 const goalFatPercentage = ref(null);

@@ -5,7 +5,7 @@ import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
 import Button from "primevue/button";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
@@ -14,6 +14,7 @@ const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
+setupInterceptors(router);
 
 const title = ref("");
 const knowledge = ref("");
@@ -25,17 +26,9 @@ onMounted(() => {
   getDetail();
 });
 
-function dateChange(event) {
-  recordDate.value = event;
-}
-
 function onFileChange(event) {
   files.value = [...event];
 }
-
-const showNotFound = () => {
-  router.push({ name: "NotFound" });
-};
 
 const deleteImage = async (item) => {
   try {
@@ -65,11 +58,7 @@ const getDetail = async () => {
     title.value = res.data.knowledge.title;
     knowledge.value = res.data.knowledge.content;
     imageUrls.value = res.data.imageUrls;
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
-  }
+  } catch (error) {}
 };
 
 const edit = async () => {
@@ -97,21 +86,17 @@ const edit = async () => {
       showKnowledgeDetail(res.data.knowledge);
     }, 3000);
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessage = "";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessage += error.response.data.errors.join("\n");
-        }
+    let errorMessage = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessage += error.response.data.errors.join("\n");
       }
-
-      toastNotifications.displayError(
-        "ノウハウの編集に失敗しました",
-        errorMessage
-      );
     }
+
+    toastNotifications.displayError(
+      "ノウハウの編集に失敗しました",
+      errorMessage
+    );
   }
 };
 

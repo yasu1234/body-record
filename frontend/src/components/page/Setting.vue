@@ -2,11 +2,12 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 
 const router = useRouter();
+setupInterceptors(router);
 
 const isLogin = ref(false);
 const userId = ref(0);

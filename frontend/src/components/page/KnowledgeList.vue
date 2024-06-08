@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, onBeforeRouteUpdate } from "vue-router";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import TabMenu from "../layout/TabMenu.vue";
 import Header from "../layout/Header.vue";
@@ -11,12 +10,12 @@ import SearchButton from "../atom/SearchButton.vue";
 import KnowledgeCard from "../layout/KnowledgeCard.vue";
 
 const router = useRouter();
+setupInterceptors(router);
 
-const keyword = ref('');
+const keyword = ref("");
 const isBookmark = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
-
 const currentId = ref(3);
 const pageCount = ref(1);
 const pageNum = ref(1);
@@ -37,7 +36,7 @@ onBeforeRouteUpdate(async (to, from) => {
   } else {
     isBookmark.value = false;
   }
-  
+
   search();
 });
 
@@ -57,21 +56,12 @@ const targetSearch = () => {
 
 const search = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/knowledges",
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-
-        params: {
-          keyword: keyword.value,
-          page: pageNum.value,
-        },
-      }
-    );
+    const res = await axiosInstance.get("/api/v1/knowledges", {
+      params: {
+        keyword: keyword.value,
+        page: pageNum.value,
+      },
+    });
 
     if (res.data && res.data.totalPage) {
       pageCount.value = res.data.totalPage;
@@ -96,11 +86,11 @@ const updatePaginateItems = function (pageNum) {
 
 const clickKnowledge = (item) => {
   router.push({ name: "KnowledgeDetail", params: { id: item.id } });
-}
+};
 
 const addKnowledge = () => {
   router.push("/addKnowledge");
-}
+};
 </script>
 
 <template>

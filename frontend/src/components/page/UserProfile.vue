@@ -1,11 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import axios from "axios";
-import Cookies from "js-cookie";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import RecordCard from "../layout/RecordCard.vue";
@@ -18,6 +17,7 @@ const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
+setupInterceptors(router);
 
 const user = ref(null);
 const support = ref(null);
@@ -63,16 +63,7 @@ var fatPercentageData = ref({
 
 const getProfile = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/profiles/${userId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/profiles/${userId.value}`);
 
     user.value = res.data.user;
   } catch (error) {
@@ -82,75 +73,41 @@ const getProfile = async () => {
 
 const getSupport = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE +
-        `/api/v1/supports/user/${userId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
+    const res = await axiosInstance.get(
+      `/api/v1/supports/user/${userId.value}`
     );
 
     support.value = res.data.user;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessages = "応援に失敗しました\n";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        } else {
-          errorMessages += error.response.data.errors;
-        }
+    let errorMessages = "応援に失敗しました\n";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages += error.response.data.errors;
       }
-      errorMessage.value = errorMessages;
     }
+    errorMessage.value = errorMessages;
   }
 };
 
 const getUserRecord = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE +
-        `/api/v1/records/user/${userId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/records/user/${userId.value}`);
 
     records.value = res.data.records;
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
-  }
+  } catch (error) {}
 };
 
 const getMonthRecord = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/graph_record`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-        params: {
-          user_id: userId.value,
-          targetYear: month.value.year,
-          targetMonth: month.value.month + 1,
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/graph_record`, {
+      params: {
+        user_id: userId.value,
+        targetYear: month.value.year,
+        targetMonth: month.value.month + 1,
+      },
+    });
 
     weigtData.value.labels = res.data.records.map(
       (record) => record.graph_formatted_date
@@ -164,25 +121,13 @@ const getMonthRecord = async () => {
     fatPercentageData.value.datasets[0].data = res.data.records.map(
       (record) => record.fat_percentage
     );
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
-  }
+  } catch (error) {}
 };
 
 const getUserKnowledge = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE +
-        `/api/v1/knowledges/user/${userId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
+    const res = await axiosInstance.get(
+      `/api/v1/knowledges/user/${userId.value}`
     );
 
     knowledges.value = res.data.knowledges;
@@ -196,71 +141,44 @@ const supportOn = async () => {
     const formData = new FormData();
     formData.append("id", userId.value);
 
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/supports`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.post(`/api/v1/supports`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     support.value = res.data.user;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessages = "";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        } else {
-          errorMessages += error.response.data.errors;
-        }
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages += error.response.data.errors;
       }
-
-      toastNotifications.displayError(
-        "サポート登録に失敗しました",
-        errorMessages
-      );
     }
+
+    toastNotifications.displayError(
+      "サポート登録に失敗しました",
+      errorMessages
+    );
   }
 };
 
 const supportOff = async () => {
   try {
-    const res = await axios.delete(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/supports/${userId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.delete(`/api/v1/supports/${userId.value}`);
     support.value = res.data.user;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessage = "";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessage += error.response.data.errors.join("\n");
-        } else {
-          errorMessage += error.response.data.errors;
-        }
+    let errorMessage = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessage += error.response.data.errors.join("\n");
+      } else {
+        errorMessage += error.response.data.errors;
       }
-
-      toastNotifications.displayError(
-        "サポート解除に失敗しました",
-        errorMessage
-      );
     }
+
+    toastNotifications.displayError("サポート解除に失敗しました", errorMessage);
   }
 };
 
@@ -275,10 +193,6 @@ const editSupport = (isSupport) => {
   } else {
     supportOn();
   }
-};
-
-const showNotFound = () => {
-  router.push({ name: "NotFound" });
 };
 
 const clickRecord = (item) => {

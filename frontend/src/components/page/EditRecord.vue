@@ -8,7 +8,7 @@ import Textarea from "primevue/textarea";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import DropFile from "../atom/DropFile.vue";
 import DatePicker from "../atom/DatePicker.vue";
@@ -19,6 +19,7 @@ const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
+setupInterceptors(router)
 
 const recordDate = ref("");
 const memo = ref("");
@@ -40,10 +41,6 @@ function onFileChange(event) {
   files.value = [...event];
 }
 
-const showNotFound = () => {
-  router.push({ name: "NotFound" });
-};
-
 const deleteImage = async (item) => {
   try {
     const res = await axiosInstance.delete("/api/v1/record/image", {
@@ -54,7 +51,7 @@ const deleteImage = async (item) => {
     });
     imageUrls.value = res.data.imageUrls;
   } catch (error) {
-    console.log({ error });
+    toastNotifications.displayError("画像の削除に失敗しました", "");
   }
 };
 
@@ -68,11 +65,7 @@ const getDetail = async () => {
     fatPercentage.value = res.data.record.fat_percentage;
     memo.value = res.data.record.memo;
     imageUrls.value = res.data.record.image_urls;
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
-  }
+  } catch (error) {}
 };
 
 const edit = async () => {
@@ -105,20 +98,13 @@ const edit = async () => {
     recordDate.value = res.data.record.calendar_date;
     imageUrls.value = res.data.imageUrls;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessages = "";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        }
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
       }
-      toastNotifications.displayError(
-        "記録の更新に失敗しました",
-        errorMessages
-      );
     }
+    toastNotifications.displayError("記録の更新に失敗しました", errorMessages);
   }
 };
 </script>

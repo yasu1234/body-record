@@ -1,9 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
-import Cookies from "js-cookie";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 

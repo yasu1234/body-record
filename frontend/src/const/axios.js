@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useRouter } from 'vue-router'
 
 const baseURL = import.meta.env.VITE_APP_API_BASE;
 
@@ -18,4 +19,19 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-export default axiosInstance;
+const setupInterceptors = (router) => {
+  axiosInstance.interceptors.response.use(
+    response => response,
+    error => {
+      // 共通のエラー処理
+      if (error.response.status === 404) {
+        router.push({ name: 'NotFound' })
+      }
+
+      // エラーをキャッチしてreturnする
+      return Promise.reject(error)
+    }
+  )
+}
+
+export { axiosInstance, setupInterceptors }

@@ -7,7 +7,7 @@ import * as yup from "yup";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import PasswordText from "../atom/PasswordText.vue";
@@ -15,6 +15,7 @@ import PasswordText from "../atom/PasswordText.vue";
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
+setupInterceptors(router);
 
 const handleSubmit = async () => {
   const result = await validate();

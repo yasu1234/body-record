@@ -1,12 +1,13 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 
 const route = useRoute();
 const router = useRouter();
+setupInterceptors(router);
 
 const contact = ref(null);
 
@@ -20,9 +21,6 @@ const getDetail = async () => {
     const res = await axiosInstance.get(`/api/v1/contacts/${id}`);
     contact.value = res.data.contact;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
   }
 };
 
@@ -41,14 +39,7 @@ const statusChange = async (isComplete) => {
     );
     contact.value = res.data.contact;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
   }
-};
-
-const showNotFound = () => {
-  router.push({ name: "NotFound" });
 };
 </script>
 

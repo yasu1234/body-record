@@ -4,7 +4,7 @@ import * as yup from "yup";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import PasswordText from "../atom/PasswordText.vue";

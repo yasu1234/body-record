@@ -7,7 +7,7 @@ import { toastService } from "../../const/toast.js";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance } from "../../const/axios.js";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, onBeforeRouteUpdate } from "vue-router";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import TabMenu from "../layout/TabMenu.vue";
 import Header from "../layout/Header.vue";
@@ -10,12 +10,12 @@ import ListPage from "../layout/ListPage.vue";
 import SearchButton from "../atom/SearchButton.vue";
 
 const router = useRouter();
+setupInterceptors(router);
 
 const keyword = ref("");
 const isDisplayOnlySupport = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
-
 const pageCount = ref(1);
 const pageNum = ref(1);
 

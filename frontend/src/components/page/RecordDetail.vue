@@ -5,7 +5,7 @@ import MarkdownIt from "markdown-it";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import Comments from "../layout/Comments.vue";
@@ -18,6 +18,7 @@ const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
+setupInterceptors(router);
 
 const date = ref("");
 const memo = ref("");
@@ -58,9 +59,7 @@ const getDetail = async () => {
     recordUserId.value = res.data.record.user_id;
     author.value = res.data.record.user;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
+    console.log(error);
   }
 };
 
@@ -72,11 +71,7 @@ const getComments = async () => {
       },
     });
     comments.value = res.data.comments;
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
-  }
+  } catch (error) {}
 };
 
 const deleteRecord = async () => {
@@ -170,15 +165,7 @@ const addComment = async (comment) => {
 
     const res = await axiosInstance.post(`/api/v1/comments/record`, formData);
     comments.value = res.data.record.comments;
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
-  }
-};
-
-const showNotFound = () => {
-  router.push({ name: "NotFound" });
+  } catch (error) {}
 };
 
 const showEdit = () => {

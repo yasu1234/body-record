@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import TabMenu from "../layout/TabMenu.vue";

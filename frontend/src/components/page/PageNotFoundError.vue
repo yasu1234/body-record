@@ -1,8 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router'
-import Cookies from 'js-cookie';
-
+import { useRouter } from 'vue-router';
 import Header from '../layout/Header.vue'
 
 const router = useRouter();

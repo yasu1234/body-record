@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import MarkdownIt from "markdown-it";
-import axiosInstance from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import TabMenu from "../layout/TabMenu.vue";
@@ -13,6 +13,7 @@ import RelationImage from "../layout/RelationImage.vue";
 
 const route = useRoute();
 const router = useRouter();
+setupInterceptors(router);
 
 const knowledge = ref(null);
 const imageUrls = ref([]);
@@ -47,9 +48,6 @@ const getDetail = async () => {
     author.value = res.data.knowledge.user;
     isMyKnowledge.value = res.data.knowledge.is_my_knowledge;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
   }
 };
 
@@ -62,9 +60,6 @@ const getComments = async () => {
     });
     comments.value = res.data.comments;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
   }
 };
 
@@ -81,9 +76,6 @@ const bookmarkOn = async () => {
     knowledge.value = res.data.knowledge;
     isBookmark.value = res.data.knowledge.isBookmark;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
   }
 };
 
@@ -95,9 +87,6 @@ const bookmarkOff = async () => {
     knowledge.value = res.data.knowledge;
     isBookmark.value = res.data.knowledge.isBookmark;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
   }
 };
 
@@ -122,14 +111,7 @@ const addComment = async (comment) => {
     comments.value = res.data.comments;
   } catch (error) {
     comments.value = [];
-    if (error.response.status === 404) {
-      showNotFound();
-    }
   }
-};
-
-const showNotFound = () => {
-  router.push({ name: "NotFound" });
 };
 
 const showEdit = () => {
