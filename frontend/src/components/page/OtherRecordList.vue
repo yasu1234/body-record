@@ -14,6 +14,7 @@ import SearchButton from "../atom/SearchButton.vue";
 const router = useRouter();
 const route = useRoute();
 
+const userId = ref(0);
 const user = ref(null);
 const keyword = ref("");
 const startDate = ref("");
@@ -25,6 +26,7 @@ const pageCount = ref(1);
 const page = ref(1);
 
 onMounted(() => {
+  userId.value = route.params.id;
   setQuery(
     route.query.keyword,
     route.query.startDate,
@@ -60,7 +62,7 @@ const searchParamChange = () => {
     query.endDate = endDate.value;
   }
 
-  router.push({ path: "/recordList", query: query });
+  router.push({ name: "OtherRecordList", params: { id: userId.value }, query: query });
 };
 
 const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
@@ -87,11 +89,9 @@ const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
 };
 
 const getUser = async () => {
-  const id = route.params.id;
-
   try {
     const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/users/${id}`,
+      import.meta.env.VITE_APP_API_BASE + `/api/v1/users/${userId.value}`,
       {
         headers: {
           "access-token": Cookies.get("accessToken"),
@@ -110,8 +110,9 @@ const getUser = async () => {
 
     user.value = res.data.user;
   } catch (error) {
+    user.value = null;
   }
-}
+};
 
 const search = async () => {
   try {
@@ -125,10 +126,11 @@ const search = async () => {
         },
 
         params: {
+          user_id: userId.value,
           keyword: keyword.value,
           startDate: startDate.value,
           endDate: endDate.value,
-          page: page,
+          page: page
         },
       }
     );
@@ -171,7 +173,9 @@ const clickRecord = (item) => {
   <Header />
   <TabMenu :currentId="currentId" />
   <div class="record-search-container">
-    <p class="inputTitle font-bold" v-if="user != null">{{ user.name }}さんの記録検索</p>
+    <p class="inputTitle font-bold" v-if="user != null">
+      {{ user.name }}さんの記録検索
+    </p>
     <input
       type="text"
       id="keyword"
@@ -209,6 +213,7 @@ const clickRecord = (item) => {
   />
   <div class="record-list-page">
     <ListPage
+      v-if="searchResult.length > 0"
       :pageCount="pageCount"
       v-model="page"
       @changePage="updatePaginateItems"
