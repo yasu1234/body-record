@@ -18,8 +18,8 @@ const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 
-const title = ref('');
-const knowledge = ref('');
+const title = ref("");
+const knowledge = ref("");
 const files = ref([]);
 
 function onFileChange(event) {
@@ -76,20 +76,22 @@ const showKnowledgeDetail = (item) => {
   <TabMenu />
   <Toast position="top-center" />
   <div class="p-7">
-    <FloatLabel>
+    <FloatLabel class="mt-5">
       <InputText v-model="title" class="input-width" />
       <label>タイトル</label>
     </FloatLabel>
-    <FloatLabel>
+    <FloatLabel class="mt-5">
       <Textarea v-model="knowledge" rows="20" class="input-width" />
       <label>詳細</label>
     </FloatLabel>
   </div>
-  <div class="relationImages">
-    <p class="inputTitle">関連画像</p>
-    <DropFile @change="onFileChange" />
+  <div class="p-5">
+    <p class="inputTitle">関連画像(5枚まで登録できます)</p>
+    <div v-for="i in 5">
+      <DropFile @change="onFileChange" :index="i" class="mt-3" />
+    </div>
   </div>
-  <div class="relationImages">
+  <div class="p-5 text-center">
     <button class="add-knowledge-button" @click="registerKnowledge">
       登録する
     </button>
@@ -99,11 +101,7 @@ const showKnowledgeDetail = (item) => {
 <style scoped>
 .input-width {
   width: 100%;
-  padding: 12px 12px;
-  margin: 8px 0;
-}
-.relationImages {
-  padding: 20px;
+  padding: 10px;
 }
 .add-knowledge-button {
   font-size: 16px;
