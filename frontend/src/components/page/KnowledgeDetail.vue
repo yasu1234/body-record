@@ -53,8 +53,9 @@ const getDetail = async () => {
     knowledgeId.value = res.data.knowledge.id;
     knowledge.value = res.data.knowledge;
     imageUrls.value = res.data.knowledge.image_urls;
-    isBookmark.value = res.data.isBookmark;
+    isBookmark.value = res.data.is_bookmark;
     author.value = res.data.knowledge.user;
+    isMyKnowledge.value = res.data.knowledge.is_my_knowledge;
   } catch (error) {
     if (error.response.status === 404) {
       showNotFound();

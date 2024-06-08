@@ -38,10 +38,7 @@ class Api::V1::KnowledgesController < ApplicationController
       include: {
         user: { only: [:name], methods: :image_url }
       }, methods: :image_urls
-    ).merge(isBookmark: bookmark.present?,
-            myProfile: current_api_v1_user.profile.as_json(include: {
-                                                             user: { only: [:name], methods: :image_url }
-                                                           })) }, status: :ok
+    ).merge(is_bookmark: bookmark.present?, is_my_knowledge: knowledge.user_id == current_api_v1_user.id) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   end
