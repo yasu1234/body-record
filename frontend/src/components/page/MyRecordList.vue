@@ -66,7 +66,7 @@ const paramChange = () => {
 const search = async () => {
   try {
     const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/myRecord",
+      import.meta.env.VITE_APP_API_BASE + "/api/v1/my_records",
       {
         headers: {
           "access-token": Cookies.get("accessToken"),
@@ -139,8 +139,8 @@ const clickRecord = (item) => {
 };
 
 const addRecord = () => {
-  router.push({ name: "AddRecord"});
-}
+  router.push({ name: "AddRecord" });
+};
 </script>
 
 <template>
@@ -198,6 +198,7 @@ const addRecord = () => {
   </div>
   <div class="mt-12">
     <ListPage
+      v-if="searchResult.length > 0"
       :pageCount="pageCount"
       v-model="page"
       @changePage="updatePaginateItems"

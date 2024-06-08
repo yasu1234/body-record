@@ -14,7 +14,6 @@ Rails.application.routes.draw do
       resources :records do
         get "/user/:user_id", on: :collection, to: "records#get_target_user_record", as: "get_target_user_record"
       end
-      get "/myRecord", to: "records#searchMyRecord"
       get "/graph_record", to: "records#get_record_month"
       delete "/record/image", to: "records#delete_image"
 
@@ -38,6 +37,7 @@ Rails.application.routes.draw do
 
       resources :contacts
       resources :users
+      resources :my_records
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

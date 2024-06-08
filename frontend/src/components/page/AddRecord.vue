@@ -53,7 +53,7 @@ const registerRecord = async () => {
     }
 
     const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/records",
+      import.meta.env.VITE_APP_API_BASE + "/api/v1/my_records",
       formData,
       {
         headers: {

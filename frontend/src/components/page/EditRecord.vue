@@ -110,7 +110,7 @@ const edit = async () => {
     }
 
     const res = await axios.patch(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/records/${recordId.value}`,
+      import.meta.env.VITE_APP_API_BASE + `/api/v1/my_records/${recordId.value}`,
       formData,
       {
         headers: {
