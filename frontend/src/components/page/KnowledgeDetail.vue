@@ -195,7 +195,7 @@ const showEdit = () => {
           <p class="mt-5">関連画像</p>
           <div class="thumbnail-container">
             <div class="thumbnail" v-for="item in imageUrls">
-              <RelationImage :item=item />
+              <RelationImage :item="item" />
             </div>
           </div>
         </div>
@@ -221,7 +221,8 @@ const showEdit = () => {
         <button v-if="isBookmark" class="round-button">
           <img
             src="../../assets/image/bookmark_on.png"
-            alt="ブックマーク"
+            alt="ブックマーク解除"
+            v-tooltip="{ value: 'ブックマーク解除' }"
             class="side-menu-image"
             @click="bookmarkClick(true)"
           />
@@ -230,6 +231,7 @@ const showEdit = () => {
           <img
             src="../../assets/image/bookmark_off.png"
             alt="ブックマーク"
+            v-tooltip="{ value: 'ブックマークする' }"
             class="side-menu-image"
             @click="bookmarkClick(false)"
           />
@@ -238,6 +240,7 @@ const showEdit = () => {
           <img
             src="../../assets/image/edit.png"
             alt="編集"
+            v-tooltip="{ value: '編集' }"
             class="side-menu-image"
             @click="showEdit"
           />
@@ -246,6 +249,7 @@ const showEdit = () => {
           <img
             src="../../assets/image/delete.png"
             alt="削除"
+            v-tooltip="{ value: '削除' }"
             class="side-menu-image"
             @click=""
           />

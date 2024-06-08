@@ -276,8 +276,9 @@ const showEdit = () => {
       <div class="side_content">
         <button v-if="isSupport" class="round-button">
           <img
-            src="../../assets/image/support_off.png"
-            alt="応援"
+            src="../../assets/image/support_on.png"
+            alt="応援解除"
+            v-tooltip="{ value: '応援解除' }"
             class="side-menu-image"
             @click="supportClick(true)"
           />
@@ -285,7 +286,8 @@ const showEdit = () => {
         <button v-else class="round-button">
           <img
             src="../../assets/image/support_off.png"
-            alt="応援解除"
+            alt="応援"
+            v-tooltip="{ value: '応援する' }"
             class="side-menu-image"
             @click="supportClick(false)"
           />
@@ -293,7 +295,8 @@ const showEdit = () => {
         <button class="round-button" v-show="isMyRecord">
           <img
             src="../../assets/image/edit.png"
-            alt="編集"
+            alt="記録編集"
+            v-tooltip="{ value: '記録編集' }"
             class="side-menu-image"
             @click="showEdit"
           />
@@ -302,6 +305,7 @@ const showEdit = () => {
           <img
             src="../../assets/image/delete.png"
             alt="削除"
+            v-tooltip="{ value: '削除' }"
             class="side-menu-image"
             @click="deleteRecord"
           />
