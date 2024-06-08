@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineCustomElement } from "vue";
 import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -10,6 +10,7 @@ import ListPage from "../layout/ListPage.vue";
 import DatePicker from "../atom/DatePicker.vue";
 import RecordCard from "../layout/RecordCard.vue";
 import SearchButton from "../atom/SearchButton.vue";
+import ResultEmpty from "../atom/ResultEmpty.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -62,7 +63,11 @@ const searchParamChange = () => {
     query.endDate = endDate.value;
   }
 
-  router.push({ name: "OtherRecordList", params: { id: userId.value }, query: query });
+  router.push({
+    name: "OtherRecordList",
+    params: { id: userId.value },
+    query: query,
+  });
 };
 
 const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
@@ -130,7 +135,7 @@ const search = async () => {
           keyword: keyword.value,
           startDate: startDate.value,
           endDate: endDate.value,
-          page: page
+          page: page,
         },
       }
     );
@@ -205,19 +210,25 @@ const clickRecord = (item) => {
       <SearchButton @searchButtonClick="searchParamChange" />
     </div>
   </div>
-  <RecordCard
-    v-for="record in searchResult"
-    v-bind="record"
-    :record="record"
-    @recordClick="clickRecord(record)"
-  />
-  <div class="record-list-page">
-    <ListPage
-      v-if="searchResult.length > 0"
-      :pageCount="pageCount"
-      v-model="page"
-      @changePage="updatePaginateItems"
-    />
+  <div class="mt-5">
+    <div v-if="searchResult.length > 0">
+      <RecordCard
+        v-for="record in searchResult"
+        v-bind="record"
+        :record="record"
+        @recordClick="clickRecord(record)"
+      />
+      <div class="record-list-page">
+        <ListPage
+          :pageCount="pageCount"
+          v-model="page"
+          @changePage="updatePaginateItems"
+        />
+      </div>
+    </div>
+    <div v-else>
+      <ResultEmpty class="mx-5" />
+    </div>
   </div>
 </template>
 

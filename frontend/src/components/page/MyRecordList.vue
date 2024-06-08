@@ -8,6 +8,7 @@ import ListPage from "../layout/ListPage.vue";
 import DatePicker from "../atom/DatePicker.vue";
 import SearchButton from "../atom/SearchButton.vue";
 import RecordCard from "../layout/RecordCard.vue";
+import ResultEmpty from "../atom/ResultEmpty.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -189,20 +190,24 @@ const addRecord = () => {
     </button>
   </div>
   <div class="mt-5">
-    <RecordCard
-      v-for="record in searchResult"
-      v-bind="record"
-      :record="record"
-      @recordClick="clickRecord(record)"
-    />
-  </div>
-  <div class="mt-12">
-    <ListPage
-      v-if="searchResult.length > 0"
-      :pageCount="pageCount"
-      v-model="page"
-      @changePage="updatePaginateItems"
-    />
+    <div v-if="searchResult.length > 0">
+      <RecordCard
+        v-for="record in searchResult"
+        v-bind="record"
+        :record="record"
+        @recordClick="clickRecord(record)"
+      />
+      <div class="record-list-page">
+        <ListPage
+          :pageCount="pageCount"
+          v-model="page"
+          @changePage="updatePaginateItems"
+        />
+      </div>
+    </div>
+    <div v-else>
+      <ResultEmpty class="mx-5" />
+    </div>
   </div>
 </template>
 
