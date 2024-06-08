@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
+import Button from "primevue/button";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
@@ -15,8 +16,8 @@ const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 
-const title = ref('');
-const knowledge = ref('');
+const title = ref("");
+const knowledge = ref("");
 const files = ref([]);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
@@ -121,15 +122,17 @@ const edit = async () => {
     if (error.response.status === 404) {
       showNotFound();
     } else {
-      errorMessage.value = "";
-      let errorMessages = "ノウハウの編集に失敗しました\n";
+      let errorMessage = "";
       if (error.response.status === 422) {
         if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
+          errorMessage += error.response.data.errors.join("\n");
         }
       }
-      toastNotifications.displayError("編集しました", "");
-      errorMessage.value = errorMessages;
+
+      toastNotifications.displayError(
+        "ノウハウの編集に失敗しました",
+        errorMessage
+      );
     }
   }
 };
@@ -153,7 +156,12 @@ const showKnowledgeDetail = (item) => {
         <img :src="item.url" alt="" />
       </div>
       <div class="thumbnail-actions">
-        <button class="delete-button" @click="deleteImage(item)">X</button>
+        <Button
+          label=""
+          icon="pi pi-trash"
+          class="delete-button"
+          @click="deleteImage(item)"
+        />
       </div>
     </div>
   </div>
@@ -162,7 +170,7 @@ const showKnowledgeDetail = (item) => {
     <DropFile @change="onFileChange" />
   </div>
   <div class="relationImages">
-    <button class="edit-knowledge-button" @click="edit">登録する</button>
+    <button class="edit-knowledge-button" @click="edit">編集する</button>
   </div>
 </template>
 
