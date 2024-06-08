@@ -1,14 +1,13 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
-import Cookies from "js-cookie";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
+import axiosInstance from "../../const/axios.js";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
@@ -36,18 +35,7 @@ const registerKnowledge = async () => {
       formData.append("knowledge[images]", file);
     }
 
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/knowledges",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.post("/api/v1/knowledges", formData);
     toastNotifications.displayInfo("登録しました", "");
     setTimeout(async () => {
       showKnowledgeDetail(res.data.knowledge);

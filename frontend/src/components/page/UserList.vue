@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, onBeforeRouteUpdate } from "vue-router";
-import axios from "axios";
-import Cookies from "js-cookie";
+import axiosInstance from "../../const/axios.js";
 
 import TabMenu from "../layout/TabMenu.vue";
 import Header from "../layout/Header.vue";
@@ -12,7 +11,7 @@ import SearchButton from "../atom/SearchButton.vue";
 
 const router = useRouter();
 
-const keyword = ref('');
+const keyword = ref("");
 const isDisplayOnlySupport = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
@@ -41,20 +40,12 @@ const targetSearch = () => {
 
 const searchUser = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/users",
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-        params: {
-          keyword: keyword.value,
-          page: pageNum,
-        },
-      }
-    );
+    const res = await axiosInstance.get("/api/v1/users", {
+      params: {
+        keyword: keyword.value,
+        page: pageNum,
+      },
+    });
 
     if (res.data && res.data.total_page) {
       pageCount.value = res.data.total_page;

@@ -3,6 +3,9 @@ import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
+import Toast from "primevue/toast";
 
 import Header from "../layout/Header.vue";
 import RecordCard from "../layout/RecordCard.vue";
@@ -13,8 +16,10 @@ import Profile from "../layout/Profile.vue";
 
 const route = useRoute();
 const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
-const profile = ref(null);
+const user = ref(null);
 const support = ref(null);
 const records = ref([]);
 const knowledges = ref([]);
@@ -69,9 +74,9 @@ const getProfile = async () => {
       }
     );
 
-    profile.value = res.data.profile;
+    user.value = res.data.user;
   } catch (error) {
-    user.value = null
+    user.value = null;
   }
 };
 
@@ -106,7 +111,6 @@ const getSupport = async () => {
     }
   }
 };
-
 
 const getUserRecord = async () => {
   try {
@@ -187,10 +191,91 @@ const getUserKnowledge = async () => {
   }
 };
 
+const supportOn = async () => {
+  try {
+    const formData = new FormData();
+    formData.append("id", userId.value);
+
+    const res = await axios.post(
+      import.meta.env.VITE_APP_API_BASE + `/api/v1/supports`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "access-token": Cookies.get("accessToken"),
+          client: Cookies.get("client"),
+          uid: Cookies.get("uid"),
+        },
+      }
+    );
+    support.value = res.data.user;
+  } catch (error) {
+    if (error.response.status === 404) {
+      showNotFound();
+    } else {
+      let errorMessages = "";
+      if (error.response.status === 422) {
+        if (Array.isArray(error.response.data.errors)) {
+          errorMessages += error.response.data.errors.join("\n");
+        } else {
+          errorMessages += error.response.data.errors;
+        }
+      }
+
+      toastNotifications.displayError(
+        "サポート登録に失敗しました",
+        errorMessages
+      );
+    }
+  }
+};
+
+const supportOff = async () => {
+  try {
+    const res = await axios.delete(
+      import.meta.env.VITE_APP_API_BASE + `/api/v1/supports/${userId.value}`,
+      {
+        headers: {
+          "access-token": Cookies.get("accessToken"),
+          client: Cookies.get("client"),
+          uid: Cookies.get("uid"),
+        },
+      }
+    );
+    support.value = res.data.user;
+  } catch (error) {
+    if (error.response.status === 404) {
+      showNotFound();
+    } else {
+      let errorMessage = "";
+      if (error.response.status === 422) {
+        if (Array.isArray(error.response.data.errors)) {
+          errorMessage += error.response.data.errors.join("\n");
+        } else {
+          errorMessage += error.response.data.errors;
+        }
+      }
+
+      toastNotifications.displayError(
+        "サポート解除に失敗しました",
+        errorMessage
+      );
+    }
+  }
+};
+
 function monthChange(event) {
   month.value = event;
   getMonthRecord();
 }
+
+const editSupport = (isSupport) => {
+  if (isSupport) {
+    supportOff();
+  } else {
+    supportOn();
+  }
+};
 
 const showNotFound = () => {
   router.push({ name: "NotFound" });
@@ -202,8 +287,9 @@ const clickRecord = (item) => {
 </script>
 
 <template>
+  <Toast position="top-center" />
   <Header />
-  <Profile :profile="profile" :support="support" />
+  <Profile :user="user" :support="support" @edit-support="editSupport" />
   <div class="weight-graph">
     <Chart :data="weigtData" />
   </div>

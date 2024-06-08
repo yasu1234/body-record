@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router'
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
+import Cookies from "js-cookie";
+import axiosInstance from "../../const/axios.js";
 
-import Header from '../layout/Header.vue'
+import Header from "../layout/Header.vue";
 
 const router = useRouter();
 
@@ -12,35 +13,34 @@ const isLogin = ref(false);
 const searchResult = ref([]);
 
 onMounted(() => {
-    getContactList();
+  getContactList();
 });
 
 const getContactList = async () => {
   try {
-    const res = await axios.get(import.meta.env.VITE_APP_API_BASE + '/api/v1/contacts', {
-      headers: {
-        'access-token': Cookies.get('accessToken'),
-        'client':Cookies.get('client'),
-        'uid': Cookies.get('uid'),
-      },
-    })
-    
-    for(let item of res.data.contacts){
+    const res = await axiosInstance.get("/api/v1/contacts");
+
+    for (let item of res.data.contacts) {
       searchResult.value.push(item);
     }
   } catch (error) {
-    console.log({ error })
+    console.log({ error });
   }
-}
+};
 
 function clickContact(item) {
-  router.push({ name: 'ContactDetail', params: { id: item.id }})
+  router.push({ name: "ContactDetail", params: { id: item.id } });
 }
 </script>
 
 <template>
-  <Header/>
-  <div class="contact-card" v-for="item of searchResult" :key="item.id" @click="clickContact(item)">
+  <Header />
+  <div
+    class="contact-card"
+    v-for="item of searchResult"
+    :key="item.id"
+    @click="clickContact(item)"
+  >
     <div class="complete-image" v-if="item.status === 1">
       <p class="contact-complete">対応済</p>
     </div>
@@ -52,45 +52,45 @@ function clickContact(item) {
 
 <style scoped>
 .search-button-area {
-    text-align: center;
+  text-align: center;
 }
 .search-button {
-    background: #ffa500;
-    color: white;
-    font-size:16px;
-    font-weight:bold;
+  background: #ffa500;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .contact-card {
-    margin: 10px 12px 12px 12px;
-    border: 1px solid #CCC;
-    border-radius: 5px;
+  margin: 10px 12px 12px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 .idea-content {
-    margin: 10px 0px 10px 10px;
+  margin: 10px 0px 10px 10px;
 }
 .add-button-area {
-    text-align: right;
-    margin-top: 20px;
-    padding-right: 40px;
+  text-align: right;
+  margin-top: 20px;
+  padding-right: 40px;
 }
 .add-button {
-    background: #ffa500;
-    color: white;
-    font-size:16px;
-    font-weight:bold;
+  background: #ffa500;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
 }
 .complete-image {
-    border-radius: 20px;
-    background: #ffa500;
-    margin-top: 10px;
-    padding-right: 16px;
-    padding-left: 16px;
-    width: 50px;
-    margin-left: 10px;
-    font-weight:bold;
+  border-radius: 20px;
+  background: #ffa500;
+  margin-top: 10px;
+  padding-right: 16px;
+  padding-left: 16px;
+  width: 50px;
+  margin-left: 10px;
+  font-weight: bold;
 }
 .contact-complete {
-    font-size:15px;
+  font-size: 15px;
 }
 </style>

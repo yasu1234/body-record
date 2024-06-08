@@ -1,13 +1,12 @@
 <script setup>
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
-import axios from "axios";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
+import axiosInstance from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import PasswordText from "../atom/PasswordText.vue";
@@ -30,15 +29,12 @@ const checkValidate = async () => {
 
 const signup = async () => {
   try {
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/auth",
-      {
-        email: email.value,
-        password: password.value,
-        password_confirmation: passwordConfirm.value,
-        name: name.value,
-      }
-    );
+    const res = await axiosInstance.post("/api/v1/auth", {
+      email: email.value,
+      password: password.value,
+      password_confirmation: passwordConfirm.value,
+      name: name.value,
+    });
     Cookies.set("accessToken", res.headers["access-token"]);
     Cookies.set("client", res.headers["client"]);
     Cookies.set("uid", res.headers["uid"]);
@@ -51,7 +47,7 @@ const signup = async () => {
         errorMessages += error.response.data.errors.full_messages.join("\n");
       }
     }
-    toastNotifications.displayError("会員登録に失敗しました", errorMessages)
+    toastNotifications.displayError("会員登録に失敗しました", errorMessages);
   }
 };
 

@@ -1,12 +1,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
-import Cookies from "js-cookie";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
 import Button from "primevue/button";
+import axiosInstance from "../../const/axios.js";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
@@ -40,20 +39,12 @@ const showNotFound = () => {
 
 const deleteImage = async (item) => {
   try {
-    const res = await axios.delete(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/knowledges/image",
-      {
-        params: {
-          id: knowledgeId.value,
-          image_id: item.id,
-        },
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.delete("/api/v1/knowledges/image", {
+      params: {
+        id: knowledgeId.value,
+        image_id: item.id,
+      },
+    });
     console.log({ res });
   } catch (error) {
     let errorMessages = "画像の削除に失敗しました\n";
@@ -69,16 +60,7 @@ const deleteImage = async (item) => {
 const getDetail = async () => {
   const id = route.params.id;
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/${id}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/knowledges/${id}`);
     knowledgeId.value = res.data.knowledge.id;
     title.value = res.data.knowledge.title;
     knowledge.value = res.data.knowledge.content;
@@ -100,16 +82,12 @@ const edit = async () => {
       formData.append("images", file);
     }
 
-    const res = await axios.patch(
-      import.meta.env.VITE_APP_API_BASE +
-        `/api/v1/knowledges/${knowledgeId.value}`,
+    const res = await axiosInstance.patch(
+      `/api/v1/knowledges/${knowledgeId.value}`,
       formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
         },
       }
     );

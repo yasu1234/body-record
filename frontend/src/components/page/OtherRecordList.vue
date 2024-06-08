@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onMounted, defineCustomElement } from "vue";
 import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
-import axios from "axios";
-import Cookies from "js-cookie";
+import axiosInstance from "../../const/axios.js";
 
 import TabMenu from "../layout/TabMenu.vue";
 import Header from "../layout/Header.vue";
@@ -95,23 +94,14 @@ const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
 
 const getUser = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/users/${userId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-
-        params: {
-          keyword: keyword.value,
-          startDate: startDate.value,
-          endDate: endDate.value,
-          page: page,
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/users/${userId.value}`, {
+      params: {
+        keyword: keyword.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+        page: page,
+      },
+    });
 
     user.value = res.data.user;
   } catch (error) {
@@ -121,24 +111,15 @@ const getUser = async () => {
 
 const search = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/records",
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-
-        params: {
-          user_id: userId.value,
-          keyword: keyword.value,
-          startDate: startDate.value,
-          endDate: endDate.value,
-          page: page,
-        },
-      }
-    );
+    const res = await axiosInstance.get("/api/v1/records", {
+      params: {
+        user_id: userId.value,
+        keyword: keyword.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+        page: page,
+      },
+    });
 
     if (res.data && res.data.totalPage) {
       pageCount.value = res.data.totalPage;

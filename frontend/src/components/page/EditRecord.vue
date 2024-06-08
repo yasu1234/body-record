@@ -1,8 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
-import Cookies from "js-cookie";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
@@ -10,6 +8,7 @@ import Textarea from "primevue/textarea";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
+import axiosInstance from "../../const/axios.js";
 
 import DropFile from "../atom/DropFile.vue";
 import DatePicker from "../atom/DatePicker.vue";
@@ -47,20 +46,12 @@ const showNotFound = () => {
 
 const deleteImage = async (item) => {
   try {
-    const res = await axios.delete(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/record/image",
-      {
-        params: {
-          id: recordId.value,
-          image_id: item.id,
-        },
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.delete("/api/v1/record/image", {
+      params: {
+        id: recordId.value,
+        image_id: item.id,
+      },
+    });
     imageUrls.value = res.data.imageUrls;
   } catch (error) {
     console.log({ error });
@@ -70,16 +61,7 @@ const deleteImage = async (item) => {
 const getDetail = async () => {
   const id = route.params.id;
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/records/${id}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/records/${id}`);
     recordId.value = res.data.record.id;
     recordDate.value = res.data.record.calendar_date;
     weight.value = res.data.record.weight;
@@ -109,15 +91,12 @@ const edit = async () => {
       formData.append("record[images][]", file);
     }
 
-    const res = await axios.patch(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/my_records/${recordId.value}`,
+    const res = await axiosInstance.patch(
+      `/api/v1/my_records/${recordId.value}`,
       formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
         },
       }
     );

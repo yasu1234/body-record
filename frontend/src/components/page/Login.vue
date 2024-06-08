@@ -1,5 +1,4 @@
 <script setup>
-import axios from "axios";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
@@ -8,6 +7,7 @@ import * as yup from "yup";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
+import axiosInstance from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import PasswordText from "../atom/PasswordText.vue";
@@ -25,8 +25,7 @@ const handleSubmit = async () => {
 
 const login = async () => {
   try {
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/auth/sign_in",
+    const res = await axiosInstance.post("/api/v1/auth/sign_in",
       {
         email: email.value,
         password: password.value,
@@ -74,6 +73,7 @@ const updatePassword = (inputPassword, passwordType) => {
 
 <template>
   <Header />
+  <Toast position="top-center" />
   <h1 class="view-title mt-7">ログイン</h1>
   <div class="login-container">
     <form class="form" @submit.prevent="handleSubmit">

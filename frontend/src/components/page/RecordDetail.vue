@@ -1,12 +1,11 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
-import Cookies from "js-cookie";
 import MarkdownIt from "markdown-it";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
+import axiosInstance from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import Comments from "../layout/Comments.vue";
@@ -48,16 +47,8 @@ onMounted(() => {
 const getDetail = async () => {
   const id = route.params.id;
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/records/${id}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/records/${id}`);
+
     recordId.value = res.data.record.id;
     record.value = res.data;
     date.value = res.data.record.formatted_date;
@@ -75,19 +66,11 @@ const getDetail = async () => {
 
 const getComments = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/record`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-        params: {
-          record_id: route.params.id,
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/comments/record`, {
+      params: {
+        record_id: route.params.id,
+      },
+    });
     comments.value = res.data.comments;
   } catch (error) {
     if (error.response.status === 404) {
@@ -99,16 +82,8 @@ const getComments = async () => {
 const deleteRecord = async () => {
   const id = recordId.value;
   try {
-    const res = await axios.delete(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/records/${id}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.delete(`/api/v1/records/${id}`);
+
     toastNotifications.displayInfo("記録を削除しました", "");
     setTimeout(async () => {
       router.back();
@@ -133,18 +108,11 @@ const supportOn = async () => {
     const formData = new FormData();
     formData.append("id", recordUserId.value);
 
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/supports`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.post(`/api/v1/supports`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     isSupport.value = res.data.isSupport;
   } catch (error) {
     if (error.response.status === 404) {
@@ -165,16 +133,8 @@ const supportOn = async () => {
 
 const supportOff = async () => {
   try {
-    const res = await axios.delete(
-      import.meta.env.VITE_APP_API_BASE +
-        `/api/v1/supports/${recordUserId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
+    const res = await axiosInstance.delete(
+      `/api/v1/supports/${recordUserId.value}`
     );
     isSupport.value = res.data.isSupport;
   } catch (error) {
@@ -208,17 +168,7 @@ const addComment = async (comment) => {
     formData.append("record_id", recordId.value);
     formData.append("comment", comment);
 
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/record`,
-      formData,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.post(`/api/v1/comments/record`, formData);
     comments.value = res.data.record.comments;
   } catch (error) {
     if (error.response.status === 404) {
@@ -250,7 +200,7 @@ const showEdit = () => {
             <p class="mt-5">関連画像</p>
             <div class="thumbnail-container">
               <div class="thumbnail" v-for="item in imageUrls">
-                <RelationImage :item=item />
+                <RelationImage :item="item" />
               </div>
             </div>
           </div>

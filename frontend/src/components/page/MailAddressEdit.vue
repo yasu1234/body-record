@@ -1,6 +1,5 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
 import Cookies from "js-cookie";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
@@ -9,6 +8,7 @@ import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
+import axiosInstance from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import SettingSideMenu from "../layout/SettingSideMenu.vue";
@@ -29,16 +29,8 @@ const mailAddressEdit = async () => {
     const formData = new FormData();
     formData.append("email", newMailAddres.value);
 
-    const res = await axios.put(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/auth`,
-      formData,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
+    const res = await axiosInstance.put(`/api/v1/auth`,
+      formData
     );
 
     Cookies.set("accessToken", res.headers["access-token"]);

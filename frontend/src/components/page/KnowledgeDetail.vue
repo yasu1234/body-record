@@ -1,9 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
-import Cookies from "js-cookie";
 import MarkdownIt from "markdown-it";
+import axiosInstance from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import TabMenu from "../layout/TabMenu.vue";
@@ -40,16 +39,7 @@ onMounted(() => {
 const getDetail = async () => {
   const id = route.params.id;
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/${id}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/knowledges/${id}`);
     knowledgeId.value = res.data.knowledge.id;
     knowledge.value = res.data.knowledge;
     imageUrls.value = res.data.knowledge.image_urls;
@@ -65,19 +55,11 @@ const getDetail = async () => {
 
 const getComments = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/knowledge`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-        params: {
-          knowledge_id: route.params.id,
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/comments/knowledge`, {
+      params: {
+        knowledge_id: route.params.id,
+      },
+    });
     comments.value = res.data.comments;
   } catch (error) {
     if (error.response.status === 404) {
@@ -91,18 +73,11 @@ const bookmarkOn = async () => {
     const formData = new FormData();
     formData.append("bookmark[knowledge_id]", knowledgeId.value);
 
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/bookmarks`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.post(`/api/v1/bookmarks`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     knowledge.value = res.data.knowledge;
     isBookmark.value = res.data.knowledge.isBookmark;
   } catch (error) {
@@ -114,16 +89,8 @@ const bookmarkOn = async () => {
 
 const bookmarkOff = async () => {
   try {
-    const res = await axios.delete(
-      import.meta.env.VITE_APP_API_BASE +
-        `/api/v1/bookmarks/${knowledgeId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
+    const res = await axiosInstance.delete(
+      `/api/v1/bookmarks/${knowledgeId.value}`
     );
     knowledge.value = res.data.knowledge;
     isBookmark.value = res.data.knowledge.isBookmark;
@@ -148,16 +115,9 @@ const addComment = async (comment) => {
     formData.append("knowledge_id", knowledgeId.value);
     formData.append("comment", comment.value);
 
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/knowledge`,
-      formData,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
+    const res = await axiosInstance.post(
+      `/api/v1/comments/knowledge`,
+      formData
     );
     comments.value = res.data.comments;
   } catch (error) {

@@ -1,15 +1,14 @@
 <script setup>
-import axios from "axios";
 import { ref } from "vue";
-import Cookies from "js-cookie";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
+import axiosInstance from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import TabMenu from "../layout/TabMenu.vue";
 
-const contact = ref('');
+const contact = ref("");
 const toast = useToast();
 const toastNotifications = new toastService(toast);
 
@@ -18,17 +17,7 @@ const contactSubmit = async () => {
     const formData = new FormData();
     formData.append("content", contact.value);
 
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/contacts`,
-      formData,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.post(`/api/v1/contacts`, formData);
     console.log({ res });
   } catch (error) {
     let errorMessages = "";

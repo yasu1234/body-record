@@ -9,6 +9,7 @@ import Textarea from "primevue/textarea";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
+import axiosInstance from "../../const/axios.js";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
@@ -40,16 +41,7 @@ const getProfile = async () => {
   const id = route.params.id;
 
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/profiles/${id}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/profiles/${id}`);
 
     goalWeight.value = res.data.user.profile.goal_weight;
     goalFatPercentage.value = res.data.user.profile.goal_fat_percentage;
@@ -71,17 +63,7 @@ const updateProfile = async () => {
     formData.append("goal_weight", goalWeight.value);
     formData.append("goal_fat_percentage", goalFatPercentage.value);
 
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/profiles`,
-      formData,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.post(`/api/v1/profiles`, formData);
     if (file.value !== null) {
       updateProfileImage();
     } else {
@@ -111,18 +93,11 @@ const updateProfileImage = async () => {
       formData.append("image", file.value);
     }
 
-    const res = await axios.put(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/auth`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.put(`/api/v1/auth`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     toastNotifications.displayInfo("プロフィールを更新しました", "");
     setTimeout(async () => {

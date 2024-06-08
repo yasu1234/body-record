@@ -1,10 +1,10 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router'
-import axios from 'axios';
-import Cookies from 'js-cookie'
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import Cookies from "js-cookie";
+import axiosInstance from "../../const/axios.js";
 
-import Header from '../layout/Header.vue'
+import Header from "../layout/Header.vue";
 
 const router = useRouter();
 
@@ -13,69 +13,57 @@ const userId = ref(0);
 const showModal = ref(false);
 
 onMounted(() => {
-    checkLogin();
+  checkLogin();
 });
 
 const checkLogin = async () => {
   try {
-    const res = await axios.get(import.meta.env.VITE_APP_API_BASE + '/api/v1/users/check_login', {
-      headers: {
-        'access-token' : Cookies.get('accessToken'),
-        'client':Cookies.get('client'),
-        'uid': Cookies.get('uid'),
-      },
-    })
-    isLogin.value = res.data.isLogin
-    userId.value = res.data.user.id
+    const res = await axiosInstance.get("/api/v1/users/check_login");
+    isLogin.value = res.data.isLogin;
+    userId.value = res.data.user.id;
   } catch (error) {
-    isLogin.value = false
+    isLogin.value = false;
   }
-}
+};
 
 const deleteAccount = async () => {
   try {
-    const res = await axios.delete(import.meta.env.VITE_APP_API_BASE + '/api/v1/auth', {
-      headers: {
-        'access-token' : Cookies.get('accessToken'),
-        'client':Cookies.get('client'),
-        'uid': Cookies.get('uid'),
-      },
-    })
-    
-    Cookies.remove('accessToken')
-    Cookies.remove('client')
-    Cookies.remove('uid')
-        
-    router.push({ name: 'Home'})
+    const res = await axiosInstance.delete("/api/v1/auth");
+
+    Cookies.remove("accessToken");
+    Cookies.remove("client");
+    Cookies.remove("uid");
+
+    router.push({ name: "Home" });
   } catch (error) {
-    let errorMessages = 'ノウハウの編集に失敗しました\n';
+    let errorMessages = "ノウハウの編集に失敗しました\n";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
-        errorMessages += error.response.data.errors.join('\n');
+        errorMessages += error.response.data.errors.join("\n");
       }
     }
-    errorMessage.value = errorMessages
+    errorMessage.value = errorMessages;
   }
-}
+};
 
 function showEditProfile() {
-  router.push({ name: 'EditProfile', params: { id: userId.value }})
+  router.push({ name: "EditProfile", params: { id: userId.value } });
 }
 
 function showPasswordEdit() {
-  router.push({ name: 'PasswordEdit'})
+  router.push({ name: "PasswordEdit" });
 }
 
 function showMailAddressEdit() {
-  router.push({ name: 'MailAddressEdit'})
+  router.push({ name: "MailAddressEdit" });
 }
 
 function showModala() {
-  showModal.value = true
+  showModal.value = true;
 }
 
 function closeModal() {
-  showModal.value = false
+  showModal.value = false;
 }
 </script>
 
@@ -90,41 +78,51 @@ function closeModal() {
     <span class="section-title">アカウント変更</span>
     <p class="section-message">メールアドレスやパスワードを変更します</p>
     <div class="account-edit-buttons">
-        <button class="setting-button" @click="showMailAddressEdit">メールアドレス編集</button>
-        <button class="setting-button" @click="showPasswordEdit">パスワード編集</button>
-        <button class="account-delete-button" @click="showModala">退会する</button>
-        <div v-if="showModal" class="modal-overlay">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <slot name="header">アカウントを削除します</slot>
-                </div>
-                <div class="modal-body">
-                    <slot name="body"><p>削除すると今までの記録は消去されます<br>よろしいですか？</p></slot>
-                </div>
-                <div class="modal-footer">
-                    <slot name="footer">
-                        <button @click="deleteAccount">退会する</button>
-                        <button @click="closeModal">キャンセル</button>
-                    </slot>
-                </div>
-            </div>
+      <button class="setting-button" @click="showMailAddressEdit">
+        メールアドレス編集
+      </button>
+      <button class="setting-button" @click="showPasswordEdit">
+        パスワード編集
+      </button>
+      <button class="account-delete-button" @click="showModala">
+        退会する
+      </button>
+      <div v-if="showModal" class="modal-overlay">
+        <div class="modal-container">
+          <div class="modal-header">
+            <slot name="header">アカウントを削除します</slot>
+          </div>
+          <div class="modal-body">
+            <slot name="body"
+              ><p>
+                削除すると今までの記録は消去されます<br />よろしいですか？
+              </p></slot
+            >
+          </div>
+          <div class="modal-footer">
+            <slot name="footer">
+              <button @click="deleteAccount">退会する</button>
+              <button @click="closeModal">キャンセル</button>
+            </slot>
+          </div>
         </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .setting-list {
-    text-align: center;
-    padding-top: 40px;
+  text-align: center;
+  padding-top: 40px;
 }
 .section-title {
-    border-bottom: solid 5px #ffa500;
-    font-size:25px;
-    font-weight:bold;
+  border-bottom: solid 5px #ffa500;
+  font-size: 25px;
+  font-weight: bold;
 }
 .section-message {
-    font-size:20px;
+  font-size: 20px;
 }
 .account-edit-buttons {
   display: flex;
@@ -133,17 +131,17 @@ function closeModal() {
   gap: 20px;
   margin-top: 20px;
 }
-.setting-button{
-    background: #ffa500;
-    color: white;
-    font-size:16px;
-    font-weight:bold;
+.setting-button {
+  background: #ffa500;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
 }
-.account-delete-button{
-    background: #d50c05;
-    color: white;
-    font-size:16px;
-    font-weight:bold;
+.account-delete-button {
+  background: #d50c05;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
 }
 .modal-overlay {
   position: fixed;

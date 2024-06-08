@@ -1,12 +1,10 @@
 <script setup>
-import axios from "axios";
-import { ref } from "vue";
-import Cookies from "js-cookie";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
+import axiosInstance from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import PasswordText from "../atom/PasswordText.vue";
@@ -31,17 +29,7 @@ const passwordEdit = async () => {
     formData.append("password", password.value);
     formData.append("password_confirmation", passwordConfirm.value);
 
-    const res = await axios.put(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/auth/password`,
-      formData,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.put(`/api/v1/auth/password`, formData);
     toastNotifications.displayInfo("パスワードを変更しました", "");
   } catch (error) {
     let errorMessages = "";
@@ -50,7 +38,10 @@ const passwordEdit = async () => {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    toastNotifications.displayError("パスワード変更に失敗しました", errorMessages);
+    toastNotifications.displayError(
+      "パスワード変更に失敗しました",
+      errorMessages
+    );
   }
 };
 

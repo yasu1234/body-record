@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
-import axios from "axios";
-import Cookies from "js-cookie";
+import axiosInstance from "../../const/axios.js";
 
 import ListPage from "../layout/ListPage.vue";
 import DatePicker from "../atom/DatePicker.vue";
@@ -66,22 +65,14 @@ const paramChange = () => {
 
 const search = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/my_records",
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-        params: {
-          keyword: keyword.value,
-          startDate: startDate.value,
-          endDate: endDate.value,
-          page: page.value,
-        },
-      }
-    );
+    const res = await axiosInstance.get("/api/v1/my_records", {
+      params: {
+        keyword: keyword.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+        page: page.value,
+      },
+    });
 
     if (res.data && res.data.totalPage) {
       pageCount.value = res.data.totalPage;

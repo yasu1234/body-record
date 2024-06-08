@@ -1,14 +1,13 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
-import axios from "axios";
-import Cookies from "js-cookie";
 import Textarea from "primevue/textarea";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Toast from "primevue/toast";
+import axiosInstance from "../../const/axios.js";
 
 import DatePicker from "../atom/DatePicker.vue";
 import DropFile from "../atom/DropFile.vue";
@@ -52,15 +51,11 @@ const registerRecord = async () => {
       }
     }
 
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/my_records",
+    const res = await axiosInstance.post("/api/v1/my_records",
       formData,
       {
         headers: {
-          'content-type': 'multipart/form-data',
-          'access-token': Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
+          'content-type': 'multipart/form-data'
         },
       }
     );
