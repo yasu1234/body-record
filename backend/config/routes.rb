@@ -11,15 +11,11 @@ Rails.application.routes.draw do
         passwords: "api/v1/passwords"
       }
 
-      resources :records do
-        get "/user/:user_id", on: :collection, to: "records#get_target_user_record", as: "get_target_user_record"
-      end
+      resources :records
       get "/graph_record", to: "records#get_record_month"
       delete "/record/image", to: "records#delete_image"
 
-      resources :knowledges do
-        get "/user/:user_id", on: :collection, to: "knowledges#get_target_user_knowledge", as: "get_target_user_knowledge"
-      end
+      resources :knowledges
       delete "/knowledge/image", to: "knowledges#delete_image"
 
       resources :profiles
@@ -38,6 +34,8 @@ Rails.application.routes.draw do
       resources :contacts
       resources :users
       resources :my_records
+      resources :user_records
+      resources :user_knowledges
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

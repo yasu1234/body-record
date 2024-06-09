@@ -88,17 +88,6 @@ class Api::V1::KnowledgesController < ApplicationController
     render json: { errors: e.message }, status: :internal_server_error
   end
 
-  def get_target_user_knowledge
-    knowledges = Knowledge.where(user_id: params[:user_id])
-
-      # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
-    if knowledges.count > 5
-      knowledges = knowledges.latest_knowledges(5)
-    end
-
-    render json: { knowledges: }, status: :ok
-  end
-
   private
 
     def knowledge_register_params
