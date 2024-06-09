@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter, onBeforeRouteUpdate } from "vue-router";
+import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
 import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import TabMenu from "../layout/TabMenu.vue";
@@ -8,7 +8,9 @@ import Header from "../layout/Header.vue";
 import ListPage from "../layout/ListPage.vue";
 import SearchButton from "../atom/SearchButton.vue";
 import KnowledgeCard from "../layout/KnowledgeCard.vue";
+import ResultEmpty from "../atom/ResultEmpty.vue";
 
+const route = useRoute();
 const router = useRouter();
 setupInterceptors(router);
 
@@ -21,24 +23,29 @@ const pageCount = ref(1);
 const pageNum = ref(1);
 
 onMounted(() => {
+  setQuery(route.query.keyword, route.query.isBookmark);
   search();
 });
 
 onBeforeRouteUpdate(async (to, from) => {
-  if (to.query.keyword != null) {
-    keyword.value = to.query.keyword;
+  setQuery(to.query.keyword, to.query.isBookmark);
+
+  search();
+});
+
+const setQuery = (keywordParam, bookmarkParam) => {
+  if (keywordParam != null) {
+    keyword.value = keywordParam;
   } else {
     keyword.value = "";
   }
 
-  if (to.query.isBookmark != null && to.query.isBookmark === true) {
+  if (bookmarkParam != null && bookmarkParam === "true") {
     isBookmark.value = true;
   } else {
     isBookmark.value = false;
   }
-
-  search();
-});
+};
 
 const targetSearch = () => {
   const query = {};
@@ -59,6 +66,7 @@ const search = async () => {
     const res = await axiosInstance.get("/api/v1/knowledges", {
       params: {
         keyword: keyword.value,
+        is_bookmark: isBookmark.value,
         page: pageNum.value,
       },
     });
@@ -113,28 +121,35 @@ const addKnowledge = () => {
         v-model="isBookmark"
         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
       />
-      <label for="statusSelectName">ブックマークのみ絞り込む</label>
+      <label class="ml-2">ブックマークのみ絞り込む</label>
     </div>
-    <div class="text-center mt-2.5">
+    <div class="text-center mt-5">
       <SearchButton @searchButtonClick="targetSearch" />
     </div>
   </div>
   <div class="add-button-area">
-    <button class="add-button" @click="addKnowledge">ノウハウを追加する</button>
+    <button class="add-button p-2.5" @click="addKnowledge">
+      + ノウハウ記事を追加する
+    </button>
   </div>
-  <KnowledgeCard
-    v-for="knowledge in searchResult"
-    v-bind="knowledge"
-    :knowledgeTitle="knowledge.title"
-    :knowledgeContent="knowledge.content"
-    @click="clickKnowledge(knowledge)"
-  />
-  <div class="mt-12">
-    <ListPage
-      :pageCount="pageCount"
-      v-model="pageNum"
-      @changePage="updatePaginateItems"
+  <div v-if="searchResult.length > 0">
+    <KnowledgeCard
+      v-for="knowledge in searchResult"
+      v-bind="knowledge"
+      :knowledgeTitle="knowledge.title"
+      :knowledgeContent="knowledge.content"
+      @click="clickKnowledge(knowledge)"
     />
+    <div class="mt-12">
+      <ListPage
+        :pageCount="pageCount"
+        v-model="pageNum"
+        @changePage="updatePaginateItems"
+      />
+    </div>
+  </div>
+  <div v-else>
+    <ResultEmpty class="mx-5" />
   </div>
 </template>
 
@@ -160,10 +175,15 @@ input[type="text"] {
   margin-top: 20px;
   padding-right: 20px;
 }
+.add-button {
+  font-size: 16px;
+  font-weight: bold;
+}
 .add-button-area {
-  text-align: right;
+  width: 700px;
+  margin: 0 auto;
   margin-top: 20px;
-  padding-right: 40px;
+  text-align: right;
 }
 .add-button {
   font-size: 16px;
@@ -171,11 +191,21 @@ input[type="text"] {
 }
 
 @media screen and (max-width: 768px) {
+  .add-button-area {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: right;
+  }
+
   .knowledge-search-container {
     width: auto;
     margin-left: 20px;
     margin-right: 20px;
     padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #46c443;
+    border-radius: 5px;
     margin-top: 20px;
   }
 }

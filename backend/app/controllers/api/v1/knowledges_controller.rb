@@ -8,6 +8,10 @@ class Api::V1::KnowledgesController < ApplicationController
       knowledges = knowledges.where("title LIKE ?", "%#{params[:keyword]}%")
     end
 
+    if (params[:is_bookmark].present? && params[:is_bookmark] == "true")
+      knowledges = knowledges.joins(:bookmarks).where(bookmarks: { user_id: current_api_v1_user.id })
+    end
+
     knowledges = if params[:page].present?
                    knowledges.page(params[:page]).per(30)
                  else
@@ -16,7 +20,7 @@ class Api::V1::KnowledgesController < ApplicationController
 
     totalPage = knowledges.total_pages
 
-    render json: { knowledges:, totalPage: }, status: :ok
+    render json: { knowledges: knowledges, totalPage: totalPage }, status: :ok
   end
 
   def create
