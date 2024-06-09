@@ -8,6 +8,7 @@ import Header from "../layout/Header.vue";
 import UserCard from "../layout/UserCard.vue";
 import ListPage from "../layout/ListPage.vue";
 import SearchButton from "../atom/SearchButton.vue";
+import ResultEmpty from "../atom/ResultEmpty.vue";
 
 const router = useRouter();
 setupInterceptors(router);
@@ -91,27 +92,32 @@ const userSelect = (item) => {
         v-model="isDisplayOnlySupport"
         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
       />
-      <label>応援しているユーザーのみ表示</label>
+      <label class="ml-2.5">応援しているユーザーのみ表示</label>
     </div>
     <div class="search-button-area">
       <SearchButton @searchButtonClick="targetSearch" />
     </div>
   </div>
-  <div class="mt-5">
-    <div
-      v-for="user in searchResult"
-      class="user-card"
-      @click="userSelect(user)"
-    >
-      <UserCard :user="user" />
+  <div class="mt-5 pb-5">
+    <div v-if="searchResult.length > 0">
+      <div
+        v-for="user in searchResult"
+        class="user-card"
+        @click="userSelect(user)"
+      >
+        <UserCard :user="user" />
+      </div>
+      <div class="mt-12">
+        <ListPage
+          :pageCount="pageCount"
+          v-model="pageNum"
+          @changePage="updatePaginateItems"
+        />
+      </div>
     </div>
-  </div>
-  <div class="user-list-page">
-    <ListPage
-      :pageCount="pageCount"
-      v-model="pageNum"
-      @changePage="updatePaginateItems"
-    />
+    <div v-else>
+      <ResultEmpty class="mx-5" />
+    </div>
   </div>
 </template>
 
@@ -150,9 +156,7 @@ input[type="text"] {
   background-color: #ffffff;
   cursor: pointer;
 }
-.user-list-page {
-  margin-top: 50px;
-}
+
 @media screen and (max-width: 768px) {
   .user-search-container {
     width: auto;
@@ -163,6 +167,11 @@ input[type="text"] {
     border: 1px solid #46c443;
     border-radius: 5px;
     margin-top: 20px;
+  }
+  .user-card {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 }
 </style>

@@ -13,9 +13,10 @@ class Api::V1::SupportsController < ApplicationController
     render json: { errors: supporting.errors.full_messages }, status: :unprocessable_entity and return if supporting.invalid?
 
     supporting.save!
-    supporters_count = support_user.supporters.count
+
+    supporters_count = support_user.supporter_relationships.count
     supports_count = support_user.supportings.count
-    includes_user = support_user.supporters.exists?(id: current_api_v1_user.id)
+    includes_user = support_user.supporter_relationships.exists?(id: current_api_v1_user.id)
 
     render json: { user: support_user.as_json.merge(isSupport: includes_user, supporterCount: supporters_count, supportCount: supports_count) }, status: :ok
   rescue ActiveRecord::RecordNotFound

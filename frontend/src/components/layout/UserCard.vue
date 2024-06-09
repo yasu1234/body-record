@@ -4,23 +4,43 @@ import { ref, onMounted, watch } from "vue";
 import Button from "primevue/button";
 
 const router = useRouter();
-const user = ref(null);
 
 const props = defineProps(["user"]);
 
+const user = ref(null);
+const latestRecordDate = ref(null);
+const supporterCount = ref(0);
+const isMySuport = ref(false);
+
 onMounted(() => {
   user.value = props.user;
+  if (props.user.latest_record != null) {
+    latestRecordDate.value = props.user.latest_record.formatted_date;
+  }
+  if (props.user != null && props.user.is_support) {
+    isMySuport.value = props.user.is_support;
+  }
+  if (props.user != null) {
+    supporterCount.value = props.user.supporter_count;
+  }
 });
 
-watch(
-  () => props.user,
-  (newUser) => {
-    user.value = newUser;
+watch(props, () => {
+  user.value = props.user;
+  if (props.user.latest_record != null) {
+    latestRecordDate.value = props.user.supporter_count;
   }
-);
+
+  if (props.user != null && props.user.is_support) {
+    isMySuport.value = props.user.is_support;
+  }
+  if (props.user != null) {
+    supporterCount.value = props.user.supporter_count;
+  }
+});
 
 const showUser = (item) => {
-  router.push({ name: "UserProfile", params: { id: item.id } });
+  router.push({ name: "UserProfile", params: { id: user.value.user.id } });
 };
 </script>
 
@@ -28,10 +48,10 @@ const showUser = (item) => {
   <div class="user-container" v-if="user != null">
     <div
       class="user-thumbnail-image"
-      v-if="user.image_url !== null && user.image_url.url !== null"
+      v-if="user.user.image_url !== null && user.user.image_url.url !== null"
     >
       <img
-        :src="user.image_url.url"
+        :src="user.user.image_url.url"
         alt="ユーザー"
         class="user-thumbnail-image"
       />
@@ -39,11 +59,31 @@ const showUser = (item) => {
     <div>
       <Button
         class="user-name-link"
-        :label="user.name"
+        :label="user.user.name"
         @click.stop="showUser(user)"
         link
       />
     </div>
+  </div>
+  <p class="latest-record-date mt-2.5 ml-5">
+    最新の記録： {{ latestRecordDate != null ? latestRecordDate : "記録なし" }}
+  </p>
+  <div class="support-container mt-2.5 ml-5 pb-5">
+    <div v-if="isMySuport" class="support-button">
+      <img
+        src="../../assets/image/support_on.png"
+        alt="サポート中"
+        class="support-image"
+      />
+    </div>
+    <div v-else class="support-button">
+      <img
+        src="../../assets/image/support_off.png"
+        alt="未サポート"
+        class="support-image"
+      />
+    </div>
+    <p class="ml-2.5">{{ supporterCount }}</p>
   </div>
 </template>
 
@@ -64,5 +104,27 @@ const showUser = (item) => {
   background-color: transparent;
   color: #ffa500;
   font-weight: bold;
+}
+.latest-record-date {
+  font-size: 14px;
+}
+.support-container {
+  display: flex;
+  align-items: center;
+}
+.support-button {
+  width: 50px;
+  height: 50px;
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.support-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 </style>
