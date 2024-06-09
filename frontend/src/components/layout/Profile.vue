@@ -1,10 +1,9 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
-import Cookies from "js-cookie";
 
-const props = defineProps(["profile", "support"]);
+const props = defineProps(["user", "support"]);
+const emit = defineEmits(["edit-support"]);
 
 const router = useRouter();
 
@@ -18,19 +17,20 @@ const goalFatPercentage = ref(null);
 const supportCount = ref(0);
 const supporterCount = ref(0);
 const isMyProfile = ref(false);
+const isSupport = ref(false);
 
 onMounted(() => {
-  setProfile(props.profile);
+  setProfile(props.user);
   setSupport(props.support);
 });
 
 watch(props, () => {
-  setProfile(props.profile);
+  setProfile(props.user);
   setSupport(props.support);
 });
 
-const setProfile = (profile) => {
-  if (profile == null) {
+const setProfile = (user) => {
+  if (user == null) {
     profileMessage.value = "";
     userName.value = "";
     userThumbnail.value = null;
@@ -40,24 +40,27 @@ const setProfile = (profile) => {
     return;
   }
 
-  profileMessage.value = profile.profile;
-  userName.value = profile.user.name;
-  userThumbnail.value = profile.user.image_url;
-  profileMessage.value = profile.profile;
-  goalFatPercentage.value = profile.goal_fat_percentage;
-  goalWeight.value = profile.goal_weight;
+  userName.value = user.name;
+  userThumbnail.value = user.image_url;
 
-  if (profile.is_my_profile != null) {
-    isMyProfile.value = profile.is_my_profile;
-  } else {
-    isMyProfile.value = false;
+  if (user.profile != null) {
+    profileMessage.value = user.profile.profile;
+    goalFatPercentage.value = user.profile.goal_fat_percentage;
+    goalWeight.value = user.profile.goal_weight;
   }
+
+  if (user.is_my_profile != null && user.is_my_profile === true) {
+      isMyProfile.value = true
+    } else {
+      isMyProfile.value = false;
+    }
 };
 
 const setSupport = (support) => {
   if (support == null) {
     supportCount.value = 0;
     supporterCount.value = 0;
+    isSupport.value = false;
     return;
   }
 
@@ -72,72 +75,16 @@ const setSupport = (support) => {
   } else {
     supporterCount.value = 0;
   }
-};
 
-const supportOn = async () => {
-  try {
-    const formData = new FormData();
-    formData.append("id", userId.value);
-
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/supports`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
-    user.value = res.data.user;
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessages = "応援に失敗しました\n";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        } else {
-          errorMessages += error.response.data.errors;
-        }
-      }
-      errorMessage.value = errorMessages;
-    }
+  if (support.isSupport != null) {
+    isSupport.value = support.isSupport;
+  } else {
+    isSupport.value = false;
   }
 };
 
-const supportOff = async () => {
-  try {
-    const res = await axios.delete(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/supports/${userId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
-    user.value = res.data.user;
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      errorMessage.value = "";
-      let errorMessages = "応援解除に失敗しました\n";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        } else {
-          errorMessages += error.response.data.errors;
-        }
-      }
-      errorMessage.value = errorMessages;
-    }
-  }
+const editSupport = () => {
+  emit("edit-support", isSupport.value);
 };
 
 const showEditProfile = () => {
@@ -175,13 +122,23 @@ const showEditProfile = () => {
         <div class="support-content">{{ supporterCount }}<br />サポーター</div>
       </div>
       <div class="profile-edit">
-        <button
-          v-if="isMyProfile"
-          class="profile-edit-button"
-          @click="showEditProfile"
-        >
-          プロフィール編集
-        </button>
+        <div v-if="isMyProfile">
+          <button class="profile-edit-button" @click="showEditProfile">
+            プロフィール編集
+          </button>
+        </div>
+        <div v-else>
+          <button
+            v-if="isSupport"
+            class="profile-edit-button"
+            @click="editSupport"
+          >
+            サポーター解除
+          </button>
+          <button v-else class="profile-edit-button" @click="editSupport">
+            サポートする
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -261,7 +218,7 @@ const showEditProfile = () => {
   width: calc(49%);
 }
 .profile-edit {
-  padding-top: 5px;
+  padding-top: 10px;
   padding-bottom: 10px;
   text-align: center;
 }
@@ -270,6 +227,7 @@ const showEditProfile = () => {
   font-size: 16px;
   font-weight: bold;
   margin: 0 auto;
+  padding: 5px 20px;
 }
 
 @media screen and (max-width: 768px) {
