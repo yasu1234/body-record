@@ -27,6 +27,7 @@ const isBookmark = ref(false);
 const isMyKnowledge = ref(false);
 const comments = ref([]);
 const author = ref(null);
+const bookmarkCount = ref(0);
 
 const md = new MarkdownIt();
 
@@ -52,6 +53,7 @@ const getDetail = async () => {
     isBookmark.value = res.data.knowledge.is_bookmark;
     author.value = res.data.knowledge.user;
     isMyKnowledge.value = res.data.knowledge.is_my_knowledge;
+    bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {}
 };
 
@@ -80,6 +82,7 @@ const bookmarkOn = async () => {
     });
     knowledge.value = res.data.knowledge;
     isBookmark.value = res.data.knowledge.isBookmark;
+    bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
     let errorMessages = "";
     if (error.response.status === 422) {
@@ -101,6 +104,7 @@ const bookmarkOff = async () => {
     );
     knowledge.value = res.data.knowledge;
     isBookmark.value = res.data.knowledge.isBookmark;
+    bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
     let errorMessages = "";
     if (error.response.status === 422) {
@@ -195,27 +199,30 @@ const showEdit = () => {
       </div>
     </div>
     <div class="side">
-      <div class="side_content">
-        <button
-          v-if="isBookmark"
-          class="round-button"
-          @click="bookmarkClick(true)"
-        >
-          <img
-            src="../../assets/image/bookmark_on.png"
-            alt="ブックマーク解除"
-            v-tooltip="{ value: 'ブックマーク解除' }"
-            class="side-menu-image"
-          />
-        </button>
-        <button v-else class="round-button" @click="bookmarkClick(false)">
-          <img
-            src="../../assets/image/bookmark_off.png"
-            alt="ブックマーク"
-            v-tooltip="{ value: 'ブックマークする' }"
-            class="side-menu-image"
-          />
-        </button>
+      <div class="side-content">
+        <div class="bookmark-button-container">
+          <button
+            v-if="isBookmark"
+            class="round-button"
+            @click="bookmarkClick(true)"
+          >
+            <img
+              src="../../assets/image/bookmark_on.png"
+              alt="ブックマーク解除"
+              v-tooltip="{ value: 'ブックマーク解除' }"
+              class="side-menu-image"
+            />
+          </button>
+          <button v-else class="round-button" @click="bookmarkClick(false)">
+            <img
+              src="../../assets/image/bookmark_off.png"
+              alt="ブックマーク"
+              v-tooltip="{ value: 'ブックマークする' }"
+              class="side-menu-image"
+            />
+          </button>
+          <p class="text-center">{{ bookmarkCount }}</p>
+        </div>
         <button class="round-button" v-show="isMyKnowledge">
           <img
             src="../../assets/image/edit.png"
@@ -246,16 +253,21 @@ const showEdit = () => {
   background-color: #f5f6f6;
   padding-top: 20px;
 }
-.side_content {
+.side-content {
   position: sticky;
   top: 100px;
   margin-left: 30px;
   display: flex;
   flex-flow: column;
-  gap: 10px;
+  gap: 15px;
 }
 .main {
   margin-left: 20px;
+}
+.bookmark-button-container {
+  padding: 0;
+  background: transparent;
+  width: 60px;
 }
 .round-button {
   padding: 0;
@@ -341,7 +353,7 @@ input[type="text"] {
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   }
 
-  .side_content {
+  .side-content {
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -355,6 +367,10 @@ input[type="text"] {
     border-radius: 50%;
     width: 45px;
     height: 45px;
+  }
+
+  .bookmark-button-container {
+    width: 45px;
   }
 }
 </style>

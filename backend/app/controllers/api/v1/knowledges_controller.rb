@@ -42,7 +42,11 @@ class Api::V1::KnowledgesController < ApplicationController
       include: {
         user: { only: [:name], methods: :image_url }
       }, methods: :image_urls
-    ).merge(is_bookmark: bookmark.present?, is_my_knowledge: knowledge.user_id == current_api_v1_user.id) }, status: :ok
+    ).merge(
+      is_bookmark: bookmark.present?,
+      is_my_knowledge: knowledge.user_id == current_api_v1_user.id,
+      bookmark_count: knowledge.bookmarks.count
+      ) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   end
