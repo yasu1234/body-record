@@ -14,7 +14,7 @@ class Knowledge < ApplicationRecord
             limit: { max: 5 },
             allow_blank: true
 
-  scope :latest_knowledges, ->(limit) { order(created_at: :desc).limit(limit) }
+  scope :latest_knowledges, ->() { order(created_at: :desc) }
 
   def image_urls
     images.map do |image|

@@ -23,6 +23,8 @@ const user = ref(null);
 const support = ref(null);
 const records = ref([]);
 const knowledges = ref([]);
+const isMoreRecords = ref(false);
+const isMoreKnowledges = ref(false);
 const isLogin = ref(false);
 const userId = ref(0);
 const month = ref({
@@ -93,10 +95,18 @@ const getSupport = async () => {
 
 const getUserRecord = async () => {
   try {
-    const res = await axiosInstance.get(`/api/v1/records/user/${userId.value}`);
+    const res = await axiosInstance.get(`/api/v1/user_records`, {
+      params: {
+        user_id: userId.value,
+      },
+    });
 
     records.value = res.data.records;
-  } catch (error) {}
+    isMoreRecords.value = res.data.is_more;
+  } catch (error) {
+    records.value = [];
+    isMoreRecords.value = false;
+  }
 };
 
 const getMonthRecord = async () => {
@@ -126,13 +136,17 @@ const getMonthRecord = async () => {
 
 const getUserKnowledge = async () => {
   try {
-    const res = await axiosInstance.get(
-      `/api/v1/knowledges/user/${userId.value}`
-    );
+    const res = await axiosInstance.get(`/api/v1/user_knowledges`, {
+      params: {
+        user_id: userId.value,
+      },
+    });
 
     knowledges.value = res.data.knowledges;
+    isMoreKnowledges.value = res.data.is_more;
   } catch (error) {
-    knowledges.value = null;
+    knowledges.value = [];
+    isMoreKnowledges.value = false;
   }
 };
 
@@ -153,7 +167,7 @@ const supportOn = async () => {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
-        errorMessages += error.response.data.errors;
+        errorMessages = error.response.data.errors;
       }
     }
 
@@ -174,7 +188,7 @@ const supportOff = async () => {
       if (Array.isArray(error.response.data.errors)) {
         errorMessage += error.response.data.errors.join("\n");
       } else {
-        errorMessage += error.response.data.errors;
+        errorMessage = error.response.data.errors;
       }
     }
 
@@ -198,6 +212,10 @@ const editSupport = (isSupport) => {
 const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
 };
+
+const showMoreRecords = () => {
+  router.push({ name: "OtherRecordList", params: { id: userId.value } });
+};
 </script>
 
 <template>
@@ -215,31 +233,51 @@ const clickRecord = (item) => {
     @update:month="monthChange"
     class="graph-month-picker"
   />
-  <div class="record-list">
-    <span class="section-title">投稿した記録</span>
+  <div class="text-center">
+    <div class="pt-10">
+      <span class="section-title">投稿した記録</span>
+    </div>
+    <div class="mt-5">
+      <RecordCard
+        v-if="records.length > 0"
+        v-for="record in records"
+        v-bind="record"
+        :record="record"
+        @recordClick="clickRecord(record)"
+      />
+      <p v-else>登録された記録はありません</p>
+    </div>
+    <button
+      v-if="isMoreRecords"
+      @click="showMoreRecords"
+      class="more-show-button mt-5"
+    >
+      もっと見る
+    </button>
+    <div class="pt-10">
+      <span class="section-title">投稿した知識</span>
+    </div>
+    <div class="mt-5">
+      <KnowledgeCard
+        v-if="knowledges.length > 0"
+        v-for="knowledge in knowledges"
+        v-bind="knowledge"
+        :knowledgeTitle="knowledge.title"
+        :knowledgeContent="knowledge.content"
+      />
+      <p v-else>記事を作成していません</p>
+    </div>
+    <button
+      v-if="isMoreKnowledges"
+      @click="showMoreRecords"
+      class="more-show-button mt-5"
+    >
+      もっと見る
+    </button>
   </div>
-  <RecordCard
-    v-for="record in records"
-    v-bind="record"
-    :record="record"
-    @recordClick="clickRecord(record)"
-  />
-  <div class="record-list">
-    <span class="section-title">投稿した知識</span>
-  </div>
-  <KnowledgeCard
-    v-for="knowledge in knowledges"
-    v-bind="knowledge"
-    :knowledgeTitle="knowledge.title"
-    :knowledgeContent="knowledge.content"
-  />
 </template>
 
 <style scoped>
-.record-list {
-  text-align: center;
-  padding-top: 40px;
-}
 .section-title {
   border-bottom: solid 5px #ffa500;
   font-size: 25px;
@@ -256,6 +294,15 @@ const clickRecord = (item) => {
   width: 600px;
   margin-left: auto;
   margin-right: auto;
+}
+.more-show-button {
+  background: #fff;
+  color: #000000;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px 50px;
 }
 
 @media screen and (max-width: 768px) {
