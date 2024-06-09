@@ -3,6 +3,9 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import MarkdownIt from "markdown-it";
 import { axiosInstance, setupInterceptors } from "../../const/axios.js";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
+import Toast from "primevue/toast";
 
 import Header from "../layout/Header.vue";
 import TabMenu from "../layout/TabMenu.vue";
@@ -14,6 +17,8 @@ import RelationImage from "../layout/RelationImage.vue";
 const route = useRoute();
 const router = useRouter();
 setupInterceptors(router);
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const knowledge = ref(null);
 const imageUrls = ref([]);
@@ -44,11 +49,10 @@ const getDetail = async () => {
     knowledgeId.value = res.data.knowledge.id;
     knowledge.value = res.data.knowledge;
     imageUrls.value = res.data.knowledge.image_urls;
-    isBookmark.value = res.data.is_bookmark;
+    isBookmark.value = res.data.knowledge.is_bookmark;
     author.value = res.data.knowledge.user;
     isMyKnowledge.value = res.data.knowledge.is_my_knowledge;
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 const getComments = async () => {
@@ -60,6 +64,7 @@ const getComments = async () => {
     });
     comments.value = res.data.comments;
   } catch (error) {
+    comments.value = [];
   }
 };
 
@@ -76,6 +81,16 @@ const bookmarkOn = async () => {
     knowledge.value = res.data.knowledge;
     isBookmark.value = res.data.knowledge.isBookmark;
   } catch (error) {
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      }
+    }
+    toastNotifications.displayError(
+      "ブックマークの登録に失敗しました",
+      errorMessages
+    );
   }
 };
 
@@ -87,6 +102,16 @@ const bookmarkOff = async () => {
     knowledge.value = res.data.knowledge;
     isBookmark.value = res.data.knowledge.isBookmark;
   } catch (error) {
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      }
+    }
+    toastNotifications.displayError(
+      "ブックマークの解除に失敗しました",
+      errorMessages
+    );
   }
 };
 
@@ -110,7 +135,16 @@ const addComment = async (comment) => {
     );
     comments.value = res.data.comments;
   } catch (error) {
-    comments.value = [];
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      }
+    }
+    toastNotifications.displayError(
+      "コメントの追加に失敗しました",
+      errorMessages
+    );
   }
 };
 
@@ -122,6 +156,7 @@ const showEdit = () => {
 <template>
   <Header />
   <TabMenu :currentId="0" />
+  <Toast position="top-center" />
   <div class="wrap">
     <div class="main">
       <div class="editor">
@@ -161,22 +196,24 @@ const showEdit = () => {
     </div>
     <div class="side">
       <div class="side_content">
-        <button v-if="isBookmark" class="round-button">
+        <button
+          v-if="isBookmark"
+          class="round-button"
+          @click="bookmarkClick(true)"
+        >
           <img
             src="../../assets/image/bookmark_on.png"
             alt="ブックマーク解除"
             v-tooltip="{ value: 'ブックマーク解除' }"
             class="side-menu-image"
-            @click="bookmarkClick(true)"
           />
         </button>
-        <button v-else class="round-button">
+        <button v-else class="round-button" @click="bookmarkClick(false)">
           <img
             src="../../assets/image/bookmark_off.png"
             alt="ブックマーク"
             v-tooltip="{ value: 'ブックマークする' }"
             class="side-menu-image"
-            @click="bookmarkClick(false)"
           />
         </button>
         <button class="round-button" v-show="isMyKnowledge">

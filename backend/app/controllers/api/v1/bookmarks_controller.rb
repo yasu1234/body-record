@@ -20,11 +20,9 @@ class Api::V1::BookmarksController < ApplicationController
   def destroy
     knowledge = Knowledge.find(params[:id])
 
-    puts knowledge.bookmarks.first.user_id
+    knowledge.bookmarks.where(user_id: current_api_v1_user.id).destroy_all
 
-    knowledge.bookmarks.where(user_id: params[:user_id]).destroy_all
-
-    bookmark = knowledge.bookmarks.where(user_id: params[:user_id]).first
+    bookmark = knowledge.bookmarks.where(user_id: current_api_v1_user.id).first
 
     render json: { knowledge: knowledge.as_json.merge(isBookmark: bookmark.present?) }, status: :ok
   rescue ActiveRecord::RecordNotFound
