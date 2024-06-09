@@ -14,9 +14,10 @@ class Api::V1::SupportsController < ApplicationController
 
     supporting.save!
     supporters_count = support_user.supporters.count
+    supports_count = support_user.supportings.count
     includes_user = support_user.supporters.exists?(id: current_api_v1_user.id)
 
-    render json: { user: support_user.as_json.merge(isSupport: includes_user, supportCount: supporters_count) }, status: :ok
+    render json: { user: support_user.as_json.merge(isSupport: includes_user, supporterCount: supporters_count, supportCount: supports_count) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のユーザーが見つかりません" }, status: :not_found
   rescue StandardError => e
@@ -40,7 +41,9 @@ class Api::V1::SupportsController < ApplicationController
         ]
       )
       includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == current_api_v1_user.id }
-      render json: { user: user_json.merge(isSupport: includes_user) }, status: :ok
+      supporters_count = support_user.supporters.count
+      supports_count = support_user.supportings.count
+      render json: { user: user_json.merge(isSupport: includes_user, supporterCount: supporters_count, supportCount: supports_count) }, status: :ok
     else
       render json: { errors: supporting.errors.full_messages }, status: :unprocessable_entity
     end
@@ -51,13 +54,13 @@ class Api::V1::SupportsController < ApplicationController
   end
 
   def get_user_support
-    support_user = User.find(params[:user_id])
+    target_user = User.find(params[:user_id])
 
-    supporters_count = support_user.supporters.count
-    supports_count = support_user.supports.count
-    includes_user = support_user.supporters.exists?(id: current_api_v1_user.id)
+    supporters_count = target_user.supporters.count
+    supports_count = target_user.supportings.count
+    includes_user = target_user.supporters.exists?(id: current_api_v1_user.id)
 
-    render json: { user: support_user.as_json.merge(isSupport: includes_user, supporterCount: supporters_count, supportCount: supports_count) }, status: :ok
+    render json: { user: target_user.as_json.merge(isSupport: includes_user, supporterCount: supporters_count, supportCount: supports_count) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のユーザーが見つかりません" }, status: :not_found
   rescue StandardError => e

@@ -12,9 +12,8 @@ class User < ActiveRecord::Base
   has_many :bookmarks, dependent: :destroy
   has_one :profile, dependent: :destroy
 
-  has_many :supports, dependent: :destroy
-  has_many :supporting_relationships, class_name: "Support"
-  has_many :supporter_relationships, class_name: "Support", foreign_key: "support_id"
+  has_many :supporting_relationships, class_name: "Support", dependent: :destroy
+  has_many :supporter_relationships, class_name: "Support", foreign_key: "support_id", dependent: :destroy
   has_many :supportings, through: :supporting_relationships, source: :support
   has_many :supporters, through: :supporter_relationships, source: :user
 
@@ -45,11 +44,11 @@ class User < ActiveRecord::Base
   end
 
   def support(other_user)
-    supports.find_or_create_by(support_id: other_user.id) unless self == other_user
+    supporting_relationships.find_or_create_by(support_id: other_user.id) unless self == other_user
   end
 
   def removeSupport(other_user)
-    support = supports.find_by(support_id: other_user.id)
+    support = supporting_relationships.find_by(support_id: other_user.id)
     support&.destroy
   end
 end
