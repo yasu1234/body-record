@@ -16,6 +16,7 @@ ja:
         content: "お問合せ内容"
       profile:
         image: "プロフィール画像"
+        profile: "紹介文"
     errors:
       messages:
         record_invalid: "バリデーションに失敗しました: %{errors}"
