@@ -54,7 +54,7 @@ const getDetail = async () => {
     record.value = res.data;
     date.value = res.data.record.formatted_date;
     memo.value = res.data.record.memo;
-    isMyRecord.value = res.data.record.isMyRecord;
+    isMyRecord.value = res.data.record.is_my_record;
     imageUrls.value = res.data.record.image_urls;
     recordUserId.value = res.data.record.user_id;
     author.value = res.data.record.user;
@@ -110,19 +110,15 @@ const supportOn = async () => {
     });
     isSupport.value = res.data.isSupport;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessages = "";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        } else {
-          errorMessages += error.response.data.errors;
-        }
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages += error.response.data.errors;
       }
-      toastNotifications.displayError("応援に失敗しました", errorMessages);
     }
+    toastNotifications.displayError("応援に失敗しました", errorMessages);
   }
 };
 

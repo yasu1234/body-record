@@ -137,14 +137,14 @@ const showRecordDetail = () => {
         <InputText v-model="weight" class="w-52 h-10 p-2.5" />
         <label>体重</label>
       </FloatLabel>
-      <label>kg</label>
+      <p class="ml-2">kg</p>
     </div>
     <div class="weight-group mt-7">
       <FloatLabel>
         <InputText v-model="fatPercentage" class="w-52 h-10 p-2.5" />
         <label>体脂肪率</label>
       </FloatLabel>
-      <label>%</label>
+      <p class="ml-2">%</p>
     </div>
     <div class="mt-5">
       <FloatLabel>
@@ -159,7 +159,7 @@ const showRecordDetail = () => {
         v-model="isHidden"
         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
       />
-      <label>非公開記録にする場合にはチェック</label>
+      <label class="ml-2">非公開記録にする場合にはチェック</label>
     </div>
     <div v-if="imageUrls !== null && imageUrls.length !== 0">
       <p class="mt-5">登録済みの画像</p>
@@ -212,6 +212,8 @@ input[type="text"] {
 .record-edit-button {
   font-size: 16px;
   font-weight: bold;
+  padding: 10px 50px;
+  cursor: pointer;
 }
 .thumbnail-container {
   display: flex;

@@ -39,8 +39,12 @@ const registerRecord = async () => {
     const formData = new FormData();
     formData.append("record[memo]", memo.value);
     formData.append("record[date]", recordDate.value);
-    formData.append("record[weight]", weight.value);
-    formData.append("record[fat_percentage]", fatPercentage.value);
+    if (weight.value != null) {
+      formData.append("record[weight]", weight.value);
+    }
+    if (fatPercentage.value != null) {
+      formData.append("record[fat_percentage]", fatPercentage.value);
+    }
 
     if (isAddAsHidden.value === false) {
       formData.append("record[open_status]", 1);
@@ -66,9 +70,11 @@ const registerRecord = async () => {
     }, 3000);
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
     }
     toastNotifications.displayError("記録の追加に失敗しました", errorMessages);
@@ -98,14 +104,14 @@ const showRecordDetail = (item) => {
         <InputText v-model="weight" class="w-52 h-10 p-2.5" />
         <label>体重</label>
       </FloatLabel>
-      <label for="goal-weight" class="unit-label">kg</label>
+      <label for="goal-weight" class="ml-2">kg</label>
     </div>
     <div class="input-group mt-7">
       <FloatLabel>
         <InputText v-model="fatPercentage" class="w-52 h-10 p-2.5" />
         <label>体脂肪率</label>
       </FloatLabel>
-      <label for="goal-fat-percentage" class="unit-label">%</label>
+      <label for="goal-fat-percentage" class="ml-2">%</label>
     </div>
     <div class="mt-7">
       <FloatLabel>
@@ -120,7 +126,7 @@ const showRecordDetail = (item) => {
         v-model="isAddAsHidden"
         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
       />
-      <label for="statusSelectName">非公開記録にする場合にはチェック</label>
+      <label class="ml-2">非公開記録にする場合にはチェック</label>
     </div>
     <div class="mt-7">
       <p>関連画像(3枚まで登録できます)</p>
@@ -128,7 +134,7 @@ const showRecordDetail = (item) => {
         <DropFile @change="onFileChange" :index="i" class="mt-3" />
       </div>
     </div>
-    <div class="record-button-space mt-7">
+    <div class="pb-5 mt-7 text-center">
       <button class="add-record-button">記録を登録する</button>
     </div>
   </form>
@@ -136,15 +142,13 @@ const showRecordDetail = (item) => {
 
 <style scoped>
 .add-record-container {
+  width: 600px;
+  margin: 0 auto;
   margin-top: 20px;
-  margin-left: 30px;
 }
 .input-group {
   display: flex;
   align-items: center;
-}
-.record-button-space {
-  padding-bottom: 20px;
 }
 .add-record-button {
   font-size: 16px;
@@ -158,6 +162,11 @@ const showRecordDetail = (item) => {
 @media (max-width: 768px) {
   .record-memo {
     width: calc(100% - 20px);
+  }
+  .add-record-container {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 }
 </style>
