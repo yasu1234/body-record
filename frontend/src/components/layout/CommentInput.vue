@@ -3,10 +3,10 @@ import { ref } from "vue";
 
 const comment = ref("");
 
-const emit = defineEmits(["addComment"]);
+const emit = defineEmits(["add-comment"]);
 
 const addComment = () => {
-  emit("addComment", comment);
+  emit("add-comment", comment.value);
 };
 </script>
 
@@ -19,7 +19,7 @@ const addComment = () => {
     placeholder="コメントを入力"
   />
   <div class="add-commet-button-container mt-2.5 mr-5">
-    <button class="mb-5" @click="addComment">コメントを投稿する</button>
+    <button class="mb-5 py-1.5 px-2.5" @click="addComment">コメントを投稿する</button>
   </div>
 </template>
 

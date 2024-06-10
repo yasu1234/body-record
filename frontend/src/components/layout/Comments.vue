@@ -19,10 +19,10 @@ watch(props, () => {
     <div class="comment-user">
       <div
         class="comment-thumbnail-image"
-        v-show="comment.user.image_url.url !== null"
+        v-if="comment.user.image_url !== null"
       >
         <img
-          :src="comment.user.image_url.url"
+          :src="comment.user.image_url"
           alt="ユーザー"
           class="comment-thumbnail-image"
         />

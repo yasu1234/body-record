@@ -131,13 +131,13 @@ const addComment = async (comment) => {
   try {
     const formData = new FormData();
     formData.append("knowledge_id", knowledgeId.value);
-    formData.append("comment", comment.value);
+    formData.append("comment", comment);
 
     const res = await axiosInstance.post(
       `/api/v1/comments/knowledge`,
       formData
     );
-    comments.value = res.data.comments;
+    getComments();
   } catch (error) {
     let errorMessages = "";
     if (error.response.status === 422) {
@@ -185,7 +185,7 @@ const showEdit = () => {
       <div v-if="author !== null" class="radius-section pt-2.5">
         <Author :author="author" :userId="knowledge.user_id" />
       </div>
-      <div class="radius-section">
+      <div class="radius-section mb-5">
         <div class="comment-container-title-area">
           <p class="comment-container-title">コメント</p>
         </div>
@@ -195,7 +195,7 @@ const showEdit = () => {
         <div v-else>
           <p class="pt-2.5 pl-5">コメントはありません</p>
         </div>
-        <CommentInput @addComment="addComment" />
+        <CommentInput @add-comment="addComment" />
       </div>
     </div>
     <div class="side">
@@ -336,12 +336,10 @@ input[type="text"] {
     display: flex;
     flex-direction: column;
   }
-
   .main {
-    padding-bottom: 65px;
+    padding-bottom: 85px;
     margin-right: 20px;
   }
-
   .side {
     position: fixed;
     align-items: center;
@@ -352,14 +350,12 @@ input[type="text"] {
     background-color: #fff;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   }
-
   .side-content {
     display: flex;
     flex-direction: row;
     gap: 10px;
     padding: 10px;
   }
-
   .round-button {
     padding: 0;
     background: transparent;
@@ -368,7 +364,6 @@ input[type="text"] {
     width: 45px;
     height: 45px;
   }
-
   .bookmark-button-container {
     width: 45px;
   }

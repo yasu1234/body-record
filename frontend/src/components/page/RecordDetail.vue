@@ -160,8 +160,18 @@ const addComment = async (comment) => {
     formData.append("comment", comment);
 
     const res = await axiosInstance.post(`/api/v1/comments/record`, formData);
-    comments.value = res.data.record.comments;
-  } catch (error) {}
+    getComments();
+  } catch (error) {
+    let errorMessages = "";
+      if (error.response != null && error.response.status === 422) {
+        if (Array.isArray(error.response.data.errors)) {
+          errorMessages += error.response.data.errors.join("\n");
+        } else {
+          errorMessages = error.response.data.errors;
+        }
+      }
+      toastNotifications.displayError("コメント追加に失敗しました", errorMessages);
+  }
 };
 
 const showEdit = () => {
@@ -201,7 +211,7 @@ const showEdit = () => {
           <div v-else>
             <p class="pt-2.5 pl-5">コメントはありません</p>
           </div>
-          <CommentInput @addComment="addComment" />
+          <CommentInput @add-comment="addComment" />
         </div>
       </div>
     </div>
