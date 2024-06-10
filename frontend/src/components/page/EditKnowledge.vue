@@ -5,10 +5,14 @@ import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
 import Button from "primevue/button";
+import FloatLabel from "primevue/floatlabel";
+import InputText from "primevue/inputtext";
+import Textarea from "primevue/textarea";
 import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
+import TabMenu from "../layout/TabMenu.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -107,11 +111,17 @@ const showKnowledgeDetail = (item) => {
 
 <template>
   <Header />
+  <TabMenu />
   <Toast position="top-center" />
   <div class="p-7">
-    <label class="itemLabel">タイトル</label>
-    <input id="title" type="text" v-model="title" />
-    <textarea name="knowledge" rows="20" v-model="knowledge"></textarea>
+    <FloatLabel class="mt-5">
+      <InputText v-model="title" class="input-width" />
+      <label>タイトル</label>
+    </FloatLabel>
+    <FloatLabel class="mt-5">
+      <Textarea v-model="knowledge" rows="20" class="input-width" />
+      <label>詳細</label>
+    </FloatLabel>
   </div>
   <div class="thumbnail-container">
     <div class="thumbnail" v-for="item in imageUrls">
@@ -128,23 +138,21 @@ const showKnowledgeDetail = (item) => {
       </div>
     </div>
   </div>
-  <div class="relationImages">
-    <p class="inputTitle">関連画像</p>
-    <DropFile @change="onFileChange" />
+  <div class="p-5">
+    <p class="inputTitle">関連画像(5枚まで登録できます)</p>
+    <div v-for="i in 5">
+      <DropFile @change="onFileChange" :index="i" class="mt-3" />
+    </div>
   </div>
-  <div class="relationImages">
+  <div class="p-10 text-center">
     <button class="edit-knowledge-button" @click="edit">編集する</button>
   </div>
 </template>
 
 <style scoped>
-input[type="text"] {
+.input-width {
   width: 100%;
-  padding: 12px 12px;
-  margin: 8px 0;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px;
 }
 .time-list {
   display: flex;
@@ -163,12 +171,10 @@ input[type="text"] {
   padding: 0;
   font-size: 16px;
 }
-.relationImages {
-  padding: 20px;
-}
 .edit-knowledge-button {
   font-size: 16px;
   font-weight: bold;
+  padding: 10px 50px;
 }
 .thumbnail-container {
   display: flex;
