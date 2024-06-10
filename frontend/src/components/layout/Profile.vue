@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
+import Button from 'primevue/button';
 
 const props = defineProps(["user", "support"]);
 const emit = defineEmits(["edit-support"]);
@@ -90,6 +91,14 @@ const editSupport = () => {
 const showEditProfile = () => {
   router.push({ name: "EditProfile", params: { id: userId.value } });
 };
+
+const showSupporter = () => {
+  router.push({ name: "SupporterList", params: { id: userId.value } });
+};
+
+const showSupportList = () => {
+  router.push({ name: "SupportList", params: { id: userId.value } });
+};
 </script>
 
 <template>
@@ -109,7 +118,7 @@ const showEditProfile = () => {
       </div>
       <div class="profile-content">
         <span class="profile-name">{{ userName != null ? userName : "" }}</span>
-        <span class="profile-intro">{{
+        <span class="profile-intro break-words">{{
           profileMessage != null ? profileMessage : ""
         }}</span>
         <span class="profile-top-space">目標体重：{{ goalWeight }}kg</span>
@@ -118,8 +127,8 @@ const showEditProfile = () => {
         >
       </div>
       <div class="profile-support-container">
-        <div class="support-content">{{ supportCount }}<br />サポート</div>
-        <div class="support-content">{{ supporterCount }}<br />サポーター</div>
+        <button class="support-content hover:underline" @click="showSupportList">{{ supportCount }}<br />サポート</button>
+        <button class="support-content hover:underline" @click="showSupporter">{{ supporterCount }}<br />サポーター</button>
       </div>
       <div class="profile-edit">
         <div v-if="isMyProfile">
@@ -216,10 +225,11 @@ const showEditProfile = () => {
   line-height: 1.5;
   text-align: center;
   width: calc(49%);
+  background: #f5f6f6;
+  color: #000;
 }
 .profile-edit {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 0px;
   text-align: center;
 }
 
