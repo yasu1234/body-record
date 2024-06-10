@@ -2,12 +2,13 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
-import axios from "axios";
 
 import { HeaderMenuList } from "../../const/const.js";
 import { AccountStatusType } from "../../const/const.js";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 const router = useRouter();
+setupInterceptors(router);
 
 const isLogin = ref(null);
 const userId = ref(0);
@@ -19,45 +20,26 @@ onMounted(() => {
   console.log(router.currentRoute.value.fullPath);
 });
 
-
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
 
 const checkLogin = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/users/check_login",
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get("/api/v1/users/check_login");
 
     isLogin.value = res.data.user !== null;
     userId.value = res.data.user.id;
-    setMenu()
+    setMenu();
   } catch (error) {
     isLogin.value = false;
-    setMenu()
+    setMenu();
   }
 };
 
 const logout = async () => {
   try {
-    const res = await axios.delete(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/auth/sign_out",
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.delete("/api/v1/auth/sign_out");
     Cookies.remove("accessToken");
     Cookies.remove("client");
     Cookies.remove("uid");
@@ -70,11 +52,19 @@ const logout = async () => {
 
 const setMenu = () => {
   if (isLogin.value) {
-    menuList.value = HeaderMenuList.filter(item => item.status === AccountStatusType.shouldLogin || item.status === AccountStatusType.all)
+    menuList.value = HeaderMenuList.filter(
+      (item) =>
+        item.status === AccountStatusType.shouldLogin ||
+        item.status === AccountStatusType.all
+    );
   } else {
-    menuList.value = HeaderMenuList.filter(item => item.status === AccountStatusType.unLogin || item.status === AccountStatusType.all)
+    menuList.value = HeaderMenuList.filter(
+      (item) =>
+        item.status === AccountStatusType.unLogin ||
+        item.status === AccountStatusType.all
+    );
   }
-}
+};
 
 const showMenu = (menu) => {
   switch (menu.id) {
@@ -99,7 +89,7 @@ const showMenu = (menu) => {
 };
 
 const showMyPage = () => {
-  router.push({ name: "UserProfile", params: { id: userId.value } });
+  router.push({ name: "MyPage" });
 };
 
 const showAccountIntroduction = () => {
@@ -192,7 +182,6 @@ header {
   width: 40px;
   height: 40px;
 }
-
 .dropdown-menu {
   position: absolute;
   background-color: #f1f1f1;
@@ -211,8 +200,12 @@ header {
   color: #000000;
   border-radius: 0px;
 }
-
 .menu-item:hover {
   background-color: #eae1e1;
+}
+@media (max-width: 768px) {
+  .account-introducton-button {
+    display: none;
+  }
 }
 </style>

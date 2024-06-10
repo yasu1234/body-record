@@ -68,14 +68,16 @@ const updateProfile = async () => {
     } else {
       toastNotifications.displayInfo("プロフィールを更新しました", "");
       setTimeout(async () => {
-        showProfile(res.data.user.id);
+        showMyPage();
       }, 3000);
     }
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
     }
     toastNotifications.displayError(
@@ -100,11 +102,11 @@ const updateProfileImage = async () => {
 
     toastNotifications.displayInfo("プロフィールを更新しました", "");
     setTimeout(async () => {
-      showProfile(res.data.user.id);
+      showMyPage();
     }, 3000);
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
@@ -116,8 +118,8 @@ const updateProfileImage = async () => {
   }
 };
 
-const showProfile = (id) => {
-  router.push({ name: "UserProfile", params: { id: id } });
+const showMyPage = () => {
+  router.push({ name: "MyPage" });
 };
 </script>
 

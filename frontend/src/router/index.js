@@ -23,6 +23,7 @@ import UserList from '/src/components/page/UserList.vue';
 import ConfirmAccountDelete from '/src/components/page/ConfirmAccountDelete.vue';
 import SupportList from '/src/components/page/SupportList.vue';
 import SupporterList from '/src/components/page/SupporterList.vue';
+import MyPage from '/src/components/page/MyPage.vue';
 
 const routes = [
   {
@@ -139,6 +140,11 @@ const routes = [
     path: '/supporterList/:id',
     name: 'SupporterList',
     component: SupporterList 
+  },
+  { 
+    path: '/myPage',
+    name: 'MyPage',
+    component: MyPage 
   },
   { 
     path: '/:pathMatch(.*)*',
