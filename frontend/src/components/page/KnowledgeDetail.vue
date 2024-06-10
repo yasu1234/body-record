@@ -23,11 +23,13 @@ const toastNotifications = new toastService(toast);
 const knowledge = ref(null);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
+const knowledgeUserId = ref(0);
 const isBookmark = ref(false);
 const isMyKnowledge = ref(false);
 const comments = ref([]);
 const author = ref(null);
 const bookmarkCount = ref(0);
+const support = ref(null);
 
 const md = new MarkdownIt();
 
@@ -49,12 +51,34 @@ const getDetail = async () => {
     const res = await axiosInstance.get(`/api/v1/knowledges/${id}`);
     knowledgeId.value = res.data.knowledge.id;
     knowledge.value = res.data.knowledge;
+    knowledgeUserId.value = res.data.knowledge.user_id;
     imageUrls.value = res.data.knowledge.image_urls;
     isBookmark.value = res.data.knowledge.is_bookmark;
     author.value = res.data.knowledge.user;
     isMyKnowledge.value = res.data.knowledge.is_my_knowledge;
     bookmarkCount.value = res.data.knowledge.bookmark_count;
-  } catch (error) {}
+
+    getSupport();
+  } catch (error) {
+    toastNotifications.displayError(
+      "記事の情報の取得に失敗しました",
+      ""
+    );
+  }
+};
+
+const getSupport = async () => {
+  try {
+    const res = await axiosInstance.get(`/api/v1/support_counts`, {
+      params: {
+        user_id: knowledgeUserId.value,
+      },
+    });
+
+    support.value = res.data.user;
+  } catch (error) {
+    support.value = null;
+  }
 };
 
 const getComments = async () => {
@@ -85,7 +109,7 @@ const bookmarkOn = async () => {
     bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
@@ -107,7 +131,7 @@ const bookmarkOff = async () => {
     bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
@@ -140,7 +164,7 @@ const addComment = async (comment) => {
     getComments();
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
@@ -149,6 +173,49 @@ const addComment = async (comment) => {
       "コメントの追加に失敗しました",
       errorMessages
     );
+  }
+};
+
+const supportOn = async () => {
+  try {
+    const formData = new FormData();
+    formData.append("id", knowledgeUserId.value);
+
+    const res = await axiosInstance.post(`/api/v1/supports`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    getSupport();
+  } catch (error) {
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
+      }
+    }
+    toastNotifications.displayError("応援に失敗しました", errorMessages);
+  }
+};
+
+const supportOff = async () => {
+  try {
+    const res = await axiosInstance.delete(
+      `/api/v1/supports/${knowledgeUserId.value}`
+    );
+    getSupport();
+  } catch (error) {
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
+      }
+    }
+    toastNotifications.displayError("応援解除に失敗しました", errorMessages);
   }
 };
 
@@ -183,7 +250,12 @@ const showEdit = () => {
         </div>
       </div>
       <div v-if="author !== null" class="radius-section pt-2.5">
-        <Author :author="author" :userId="knowledge.user_id" />
+        <Author
+          :author="author"
+          :support="support"
+          @suport-on="supportOn"
+          @support-off="supportOff"
+        />
       </div>
       <div class="radius-section mb-5">
         <div class="comment-container-title-area">

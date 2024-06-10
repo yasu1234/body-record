@@ -1,124 +1,37 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import axios from "axios";
-import Cookies from "js-cookie";
 
-const props = defineProps(["author", "userId"]);
+const props = defineProps(["author", "support"]);
+
+const emit = defineEmits(["suport-on", "support-off"]);
+
+const onChange = (e) => {
+  file.value = e.target.files[0];
+  emit("change", file.value, index.value);
+};
 
 const author = ref(null);
-const userId = ref(null);
-const user = ref(null);
+const support = ref(null);
 
 onMounted(() => {
-  author.value = props.author;
-
-  getSupport();
+  setProps();
 });
 
 watch(props, () => {
-  author.value = props.author;
+  setProps();
 });
 
-const getSupport = async () => {
-  userId.value = props.userId;
-  if (userId.value == null) {
-    return;
-  }
-  try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE +
-        `/api/v1/supports/user/${userId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
-    user.value = res.data.user;
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessages = "応援に失敗しました\n";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        } else {
-          errorMessages += error.response.data.errors;
-        }
-      }
-      errorMessage.value = errorMessages;
-    }
-  }
+const setProps = () => {
+  author.value = props.author;
+  support.value = props.support;
 };
 
-const supportOn = async () => {
-  try {
-    const formData = new FormData();
-    formData.append("id", userId.value);
-
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/supports`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
-    user.value = res.data.user;
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessages = "応援に失敗しました\n";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        } else {
-          errorMessages += error.response.data.errors;
-        }
-      }
-      errorMessage.value = errorMessages;
-    }
-  }
+const supportOn = () => {
+  emit("suport-on");
 };
 
-const supportOff = async () => {
-  try {
-    const res = await axios.delete(
-      import.meta.env.VITE_APP_API_BASE +
-        `/api/v1/supports/${userId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
-    user.value = res.data.user;
-  } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      errorMessage.value = "";
-      let errorMessages = "応援解除に失敗しました\n";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        } else {
-          errorMessages += error.response.data.errors;
-        }
-      }
-      errorMessage.value = errorMessages;
-    }
-  }
+const supportOff = () => {
+  emit("suport-off");
 };
 </script>
 
@@ -138,7 +51,7 @@ const supportOff = async () => {
         class="author-thumbnail-image"
       />
     </div>
-    <p class="author-name" v-if="author !== null">{{ author.name }}</p>
+    <p class="ml-2.5" v-if="author !== null">{{ author.name }}</p>
   </div>
   <div class="support-container mt-2.5 ml-5 pb-5">
     <button v-if="author !== null && author.isSupport" class="support-button">
@@ -146,7 +59,7 @@ const supportOff = async () => {
         src="../../assets/image/support_on.png"
         alt="ユーザー"
         class="support-image"
-        @click="supportOff()"
+        @click="supportOff"
       />
     </button>
     <button v-else class="support-button">
@@ -154,10 +67,10 @@ const supportOff = async () => {
         src="../../assets/image/support_off.png"
         alt="ユーザー"
         class="support-image"
-        @click="supportOn()"
+        @click="supportOn"
       />
     </button>
-    <p class="author-name" v-if="user !== null">{{ user.supportCount }}</p>
+    <p class="ml-2.5" v-if="support !== null">{{ support.supporterCount }}</p>
   </div>
 </template>
 
@@ -173,9 +86,6 @@ const supportOff = async () => {
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
-}
-.author-name {
-  margin-left: 10px;
 }
 .support-container {
   display: flex;

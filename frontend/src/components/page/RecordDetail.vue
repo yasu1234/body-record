@@ -30,6 +30,7 @@ const isSupport = ref(false);
 const comments = ref([]);
 const author = ref(null);
 const record = ref(null);
+const support = ref(null);
 
 const md = new MarkdownIt();
 
@@ -58,8 +59,24 @@ const getDetail = async () => {
     imageUrls.value = res.data.record.image_urls;
     recordUserId.value = res.data.record.user_id;
     author.value = res.data.record.user;
+
+    getSupport();
   } catch (error) {
     console.log(error);
+  }
+};
+
+const getSupport = async () => {
+  try {
+    const res = await axiosInstance.get(`/api/v1/support_counts`, {
+      params: {
+        user_id: recordUserId.value,
+      },
+    });
+
+    support.value = res.data.user;
+  } catch (error) {
+    support.value = null;
   }
 };
 
@@ -71,7 +88,9 @@ const getComments = async () => {
       },
     });
     comments.value = res.data.comments;
-  } catch (error) {}
+  } catch (error) {
+    comments.value = [];
+  }
 };
 
 const deleteRecord = async () => {
@@ -84,17 +103,13 @@ const deleteRecord = async () => {
       router.back();
     }, 3000);
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessages = "";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        }
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
       }
-      toastNotifications.displayError("記録削除に失敗しました", errorMessages);
     }
+    toastNotifications.displayError("記録削除に失敗しました", errorMessages);
   }
 };
 
@@ -109,13 +124,14 @@ const supportOn = async () => {
       },
     });
     isSupport.value = res.data.isSupport;
+    getSupport();
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
-        errorMessages += error.response.data.errors;
+        errorMessages = error.response.data.errors;
       }
     }
     toastNotifications.displayError("応援に失敗しました", errorMessages);
@@ -128,30 +144,19 @@ const supportOff = async () => {
       `/api/v1/supports/${recordUserId.value}`
     );
     isSupport.value = res.data.isSupport;
+    getSupport();
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      let errorMessages = "";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        } else {
-          errorMessages += error.response.data.errors;
-        }
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
-      toastNotifications.displayError("応援解除に失敗しました", errorMessages);
     }
+    toastNotifications.displayError("応援解除に失敗しました", errorMessages);
   }
 };
-
-function supportClick(isSupport) {
-  if (isSupport === true) {
-    supportOff();
-  } else {
-    supportOn();
-  }
-}
 
 const addComment = async (comment) => {
   try {
@@ -163,14 +168,17 @@ const addComment = async (comment) => {
     getComments();
   } catch (error) {
     let errorMessages = "";
-      if (error.response != null && error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        } else {
-          errorMessages = error.response.data.errors;
-        }
+    if (error.response != null && error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
-      toastNotifications.displayError("コメント追加に失敗しました", errorMessages);
+    }
+    toastNotifications.displayError(
+      "コメント追加に失敗しました",
+      errorMessages
+    );
   }
 };
 
@@ -199,7 +207,12 @@ const showEdit = () => {
           </div>
         </div>
         <div v-if="author !== null" class="radius-section pt-2.5">
-          <Author :author="author" :userId="record.user_id" />
+          <Author
+            :author="author"
+            :support="support"
+            @suport-on="supportOn"
+            @support-off="supportOff"
+          />
         </div>
         <div class="radius-section">
           <div class="comment-container-title-area">
@@ -223,7 +236,7 @@ const showEdit = () => {
             alt="応援解除"
             v-tooltip="{ value: '応援解除' }"
             class="side-menu-image"
-            @click="supportClick(true)"
+            @click="supportOff"
           />
         </button>
         <button v-else class="round-button">
@@ -232,7 +245,7 @@ const showEdit = () => {
             alt="応援"
             v-tooltip="{ value: '応援する' }"
             class="side-menu-image"
-            @click="supportClick(false)"
+            @click="supportOn"
           />
         </button>
         <button class="round-button" v-show="isMyRecord">
