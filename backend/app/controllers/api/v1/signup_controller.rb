@@ -13,7 +13,11 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
     render json: { errors: e.message }, status: :internal_server_error
   end
 
-  def destory
+  def destroy
+    if current_api_v1_user.status == 1 
+      render json: { errors: "ゲストユーザーは削除できません" }, status: :unprocessable_entity and return
+    end
+
     current_api_v1_user.destroy!
     render json: { user: nil }, status: :ok
   rescue ActiveRecord::RecordNotFound
