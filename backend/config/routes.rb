@@ -18,11 +18,7 @@ Rails.application.routes.draw do
       resources :knowledges
       delete "/knowledge/image", to: "knowledges#delete_image"
 
-      resources :profiles
-      resources :bookmarks
-      resources :supports do
-        get "/user/:user_id", on: :collection, to: "supports#get_user_support", as: "get_user_support"
-      end
+      
 
       resources :comments do
         post "/knowledge", on: :collection, to: "comments#create_knowledge_comment", as: "create_knowledge_comment"
@@ -31,11 +27,15 @@ Rails.application.routes.draw do
         get "/record", on: :collection, to: "comments#get_record_comment", as: "get_record_comment"
       end
 
+      resources :profiles
+      resources :bookmarks
+      resources :supports
       resources :contacts
       resources :users
       resources :my_records
       resources :user_records
       resources :user_knowledges
+      resources :support_counts
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

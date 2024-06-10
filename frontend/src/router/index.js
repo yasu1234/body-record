@@ -21,6 +21,7 @@ import ContactDetail from '/src/components/page/ContactDetail.vue';
 import NotFound from '/src/components/page/PageNotFoundError.vue';
 import UserList from '/src/components/page/UserList.vue';
 import ConfirmAccountDelete from '/src/components/page/ConfirmAccountDelete.vue';
+import SupportList from '/src/components/page/SupportList.vue';
 
 const routes = [
   {
@@ -127,6 +128,11 @@ const routes = [
     path: '/confirm-account-delete',
     name: 'ConfirmAccountDelete',
     component: ConfirmAccountDelete 
+  },
+  { 
+    path: '/supportList/:id',
+    name: 'SupportList',
+    component: SupportList 
   },
   { 
     path: '/:pathMatch(.*)*',

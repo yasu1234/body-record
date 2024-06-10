@@ -1,6 +1,32 @@
 class Api::V1::SupportsController < ApplicationController
   before_action :check_login
 
+  def index
+    target_user = User.find(params[:user_id])
+
+    if (params[:is_support].present? && params[:is_support] == "true")
+      support_list = if params[:page].present?
+        target_user.supportings.page(params[:page]).per(30)
+      else
+        target_user.supportings.page(1).per(30)
+      end
+      
+      render json: {
+        user: target_user.as_json({ only: [:id, :name] }).merge(
+          support: support_list.map { |support|
+            support.as_json({ only: [:id, :name], methods: :image_url }).merge(
+              profile: support.profile.as_json({ only: [:profile] })
+            )
+          }
+        )
+      }, status: :ok and return
+    end
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "対象のユーザーが見つかりません" }, status: :not_found
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
+
   def create
     support_user = User.find(params[:id])
 
@@ -48,20 +74,6 @@ class Api::V1::SupportsController < ApplicationController
     else
       render json: { errors: supporting.errors.full_messages }, status: :unprocessable_entity
     end
-  rescue ActiveRecord::RecordNotFound
-    render json: { errors: "対象のユーザーが見つかりません" }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
-  end
-
-  def get_user_support
-    target_user = User.find(params[:user_id])
-
-    supporters_count = target_user.supporters.count
-    supports_count = target_user.supportings.count
-    includes_user = target_user.supporters.exists?(id: current_api_v1_user.id)
-
-    render json: { user: target_user.as_json.merge(isSupport: includes_user, supporterCount: supporters_count, supportCount: supports_count) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のユーザーが見つかりません" }, status: :not_found
   rescue StandardError => e

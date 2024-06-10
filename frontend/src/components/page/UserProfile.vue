@@ -35,7 +35,7 @@ const month = ref({
 onMounted(() => {
   userId.value = route.params.id;
   getProfile();
-  getSupport();
+  getSupportCount();
   getUserRecord();
   getUserKnowledge();
   getMonthRecord();
@@ -73,23 +73,24 @@ const getProfile = async () => {
   }
 };
 
-const getSupport = async () => {
+const getSupportCount = async () => {
   try {
-    const res = await axiosInstance.get(
-      `/api/v1/supports/user/${userId.value}`
-    );
+    const res = await axiosInstance.get(`/api/v1/support_counts`, {
+      params: {
+        user_id: userId.value,
+      },
+    });
 
     support.value = res.data.user;
   } catch (error) {
-    let errorMessages = "応援に失敗しました\n";
+    let errorMessages = "";
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
-        errorMessages += error.response.data.errors;
+        errorMessages = error.response.data.errors;
       }
     }
-    errorMessage.value = errorMessages;
   }
 };
 
