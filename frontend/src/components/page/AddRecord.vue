@@ -30,7 +30,7 @@ function dateChange(event) {
   recordDate.value = event;
 }
 
-function onFileChange(event, index) {
+const onFileChange = (event, index) => {
   files.value[index - 1] = event;
 }
 

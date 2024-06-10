@@ -94,5 +94,6 @@ const showKnowledgeDetail = (item) => {
 .add-knowledge-button {
   font-size: 16px;
   font-weight: bold;
+  padding: 10px 50px;
 }
 </style>

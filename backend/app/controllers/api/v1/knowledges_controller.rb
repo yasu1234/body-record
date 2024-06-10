@@ -46,7 +46,7 @@ class Api::V1::KnowledgesController < ApplicationController
       is_bookmark: bookmark.present?,
       is_my_knowledge: knowledge.user_id == current_api_v1_user.id,
       bookmark_count: knowledge.bookmarks.count
-      ) }, status: :ok
+    )}, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   end
@@ -91,6 +91,6 @@ class Api::V1::KnowledgesController < ApplicationController
   private
 
     def knowledge_register_params
-      params.require(:knowledge).permit(:title, :content, :images)
+      params.require(:knowledge).permit(:title, :content, images: [])
     end
 end

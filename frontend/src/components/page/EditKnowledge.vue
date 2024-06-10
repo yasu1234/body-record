@@ -22,7 +22,7 @@ setupInterceptors(router);
 
 const title = ref("");
 const knowledge = ref("");
-const files = ref([]);
+const files = ref([...Array(5)]);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
 
@@ -30,9 +30,9 @@ onMounted(() => {
   getDetail();
 });
 
-function onFileChange(event) {
-  files.value = [...event];
-}
+const onFileChange = (event, index) => {
+  files.value[index - 1] = event;
+};
 
 const deleteImage = async (item) => {
   try {
@@ -44,13 +44,15 @@ const deleteImage = async (item) => {
     });
     console.log({ res });
   } catch (error) {
-    let errorMessages = "画像の削除に失敗しました\n";
-    if (error.response.status === 422) {
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("画像の削除に失敗しました", errorMessages);
   }
 };
 
@@ -61,8 +63,10 @@ const getDetail = async () => {
     knowledgeId.value = res.data.knowledge.id;
     title.value = res.data.knowledge.title;
     knowledge.value = res.data.knowledge.content;
-    imageUrls.value = res.data.imageUrls;
-  } catch (error) {}
+    imageUrls.value = res.data.knowledge.image_urls;
+  } catch (error) {
+    toastNotifications.displayError("登録データの取得に失敗しました", "");
+  }
 };
 
 const edit = async () => {
@@ -72,7 +76,9 @@ const edit = async () => {
     formData.append("knowledge[content]", knowledge.value);
 
     for (const file of files.value) {
-      formData.append("images", file);
+      if (file != null) {
+        formData.append("knowledge[images][]", file);
+      }
     }
 
     const res = await axiosInstance.patch(
@@ -123,18 +129,22 @@ const showKnowledgeDetail = (item) => {
       <label>詳細</label>
     </FloatLabel>
   </div>
-  <div class="thumbnail-container">
-    <div class="thumbnail" v-for="item in imageUrls">
-      <div class="thumbnail-image">
-        <img :src="item.url" alt="" />
-      </div>
-      <div class="thumbnail-actions">
-        <Button
-          label=""
-          icon="pi pi-trash"
-          class="delete-button"
-          @click="deleteImage(item)"
-        />
+  <div v-if="imageUrls !== null && imageUrls.length !== 0">
+    <p class="mt-5 ml-5">登録済みの画像</p>
+    <div class="thumbnail-container">
+      <div class="thumbnail" v-for="item in imageUrls">
+        <div class="thumbnail-image">
+          <img :src="item.url" alt="" />
+        </div>
+        <div class="thumbnail-actions">
+          <Button
+            label=""
+            icon="pi pi-trash"
+            v-tooltip="{ value: '画像削除' }"
+            class="delete-button"
+            @click="deleteImage(item)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -154,23 +164,6 @@ const showKnowledgeDetail = (item) => {
   width: 100%;
   padding: 10px;
 }
-.time-list {
-  display: flex;
-  justify-content: space-between;
-  padding-left: 30px;
-  padding-right: 30px;
-}
-.time-list .item {
-  width: 50%;
-  margin: 0;
-  padding: 10px;
-  box-sizing: border-box;
-}
-.time-list .item .inputTitle {
-  margin: 5px 0 0;
-  padding: 0;
-  font-size: 16px;
-}
 .edit-knowledge-button {
   font-size: 16px;
   font-weight: bold;
@@ -185,19 +178,18 @@ const showKnowledgeDetail = (item) => {
 .thumbnail {
   position: relative;
   display: inline-block;
-  height: 200px;
   margin-right: 15px;
   margin-bottom: 15px;
   padding-left: 20px;
 }
-.thumbnail img {
-  height: 100%;
-}
 .thumbnail-image {
-  height: 100%;
+  height: 200px;
+  width: 200px;
 }
 .thumbnail-image img {
-  height: 100%;
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
 }
 .thumbnail-actions {
   position: absolute;
