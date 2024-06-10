@@ -14,31 +14,31 @@ const profile = ref("");
 const isSupport = ref(false);
 
 onMounted(() => {
+  setProps(props);
+});
+
+watch(props, () => {
+  setProps(props);
+});
+
+const setProps = (props) => {
   user.value = props.user;
   isSupport.value = props.isSupport;
   if (props.user.latest_record != null) {
     latestRecordDate.value = props.user.latest_record.formatted_date;
+  } else {
+    latestRecordDate.value = null;
   }
 
   if (props.user.profile != null && props.user.profile.profile != null) {
     profile.value = props.user.profile.profile;
+  } else {
+    profile.value = "";
   }
-});
+};
 
-watch(props, () => {
-  user.value = props.user;
-  isSupport.value = props.isSupport;
-  if (props.user.latest_record != null) {
-    latestRecordDate.value = props.user.supporter_count;
-  }
-
-  if (props.user.profile != null && props.user.profile.profile != null) {
-    profile.value = props.user.profile.profile;
-  }
-});
-
-const showUser = (item) => {
-  router.push({ name: "UserProfile", params: { id: user.value.user.id } });
+const showUser = () => {
+  router.push({ name: "UserProfile", params: { id: user.value.id } });
 };
 
 const supportOn = () => {
@@ -66,12 +66,12 @@ const supportOff = () => {
       <Button
         class="user-name-link"
         :label="user.name"
-        @click.stop="showUser(user)"
+        @click.stop="showUser"
         link
       />
     </div>
   </div>
-  <p class="mt-2.5 ml-5">
+  <p class="text-left mt-2.5 ml-5">
     {{ profile }}
   </p>
   <div class="text-right mt-2.5 mr-2.5 pb-5">

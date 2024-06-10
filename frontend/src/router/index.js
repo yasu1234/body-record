@@ -22,6 +22,7 @@ import NotFound from '/src/components/page/PageNotFoundError.vue';
 import UserList from '/src/components/page/UserList.vue';
 import ConfirmAccountDelete from '/src/components/page/ConfirmAccountDelete.vue';
 import SupportList from '/src/components/page/SupportList.vue';
+import SupporterList from '/src/components/page/SupporterList.vue';
 
 const routes = [
   {
@@ -133,6 +134,11 @@ const routes = [
     path: '/supportList/:id',
     name: 'SupportList',
     component: SupportList 
+  },
+  { 
+    path: '/supporterList/:id',
+    name: 'SupporterList',
+    component: SupporterList 
   },
   { 
     path: '/:pathMatch(.*)*',

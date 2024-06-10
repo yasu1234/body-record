@@ -4,7 +4,11 @@ class Api::V1::SupportsController < ApplicationController
   def index
     target_user = User.find(params[:user_id])
 
-    if (params[:is_support].present? && params[:is_support] == "true")
+    if params[:is_support].nil?
+      render json: { errors: "パラメータがありません" }, status: :bad_request and return
+    end 
+
+    if (params[:is_support] == "true")
       support_list = if params[:page].present?
         target_user.supportings.page(params[:page]).per(30)
       else
@@ -16,6 +20,25 @@ class Api::V1::SupportsController < ApplicationController
           support: support_list.map { |support|
             support.as_json({ only: [:id, :name], methods: :image_url }).merge(
               profile: support.profile.as_json({ only: [:profile] })
+            )
+          }
+        )
+      }, status: :ok and return
+    end
+
+    if (params[:is_support] == "false")
+      supporter_list = if params[:page].present?
+        target_user.supporters.page(params[:page]).per(30)
+      else
+        target_user.supporters.page(1).per(30)
+      end
+      
+      render json: {
+        user: target_user.as_json({ only: [:id, :name] }).merge(
+          support: supporter_list.map { |support|
+            support.as_json({ only: [:id, :name], methods: :image_url }).merge(
+              profile: support.profile.as_json({ only: [:profile] }),
+              is_support_mine: support.supporter_relationships.exists?(user_id: current_api_v1_user.id)
             )
           }
         )
