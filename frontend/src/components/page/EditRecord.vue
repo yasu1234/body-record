@@ -28,6 +28,7 @@ const fatPercentage = ref(null);
 const files = ref([]);
 const imageUrls = ref([]);
 const recordId = ref(null);
+const isHidden = ref(false);
 
 onMounted(() => {
   getDetail();
@@ -65,7 +66,10 @@ const getDetail = async () => {
     fatPercentage.value = res.data.record.fat_percentage;
     memo.value = res.data.record.memo;
     imageUrls.value = res.data.record.image_urls;
-  } catch (error) {}
+    isHidden.value = !res.data.record.is_open;
+  } catch (error) {
+    toastNotifications.displayError("記録の取得に失敗しました", errorMessages);
+  }
 };
 
 const edit = async () => {
@@ -78,6 +82,10 @@ const edit = async () => {
     }
     if (fatPercentage.value !== null) {
       formData.append("record[fat_percentage]", fatPercentage.value);
+    }
+
+    if (isHidden.value === false) {
+      formData.append("record[open_status]", 1);
     }
 
     for (const file of files.value) {
@@ -94,9 +102,11 @@ const edit = async () => {
       }
     );
     recordId.value = res.data.record.id;
-    memo.value = res.data.record.memo;
-    recordDate.value = res.data.record.calendar_date;
-    imageUrls.value = res.data.imageUrls;
+
+    toastNotifications.displayInfo("編集しました", "");
+    setTimeout(async () => {
+      showRecordDetail(res.data.record);
+    }, 3000);
   } catch (error) {
     let errorMessages = "";
     if (error.response.status === 422) {
@@ -107,13 +117,17 @@ const edit = async () => {
     toastNotifications.displayError("記録の更新に失敗しました", errorMessages);
   }
 };
+
+const showRecordDetail = () => {
+  router.push({ name: "RecordDetail", params: { id: recordId.value } });
+};
 </script>
 
 <template>
   <Header />
   <TabMenu />
   <Toast position="top-center" />
-  <div class="edit-container">
+  <form class="edit-container" @submit.prevent="edit">
     <div class="w-52">
       <p class="inputTitle">記録日</p>
       <DatePicker isStart="true" :date="recordDate" @update:date="dateChange" />
@@ -137,6 +151,15 @@ const edit = async () => {
         <Textarea v-model="memo" rows="10" class="record-memo p-2.5" />
         <label>メモ</label>
       </FloatLabel>
+    </div>
+    <div class="mt-7">
+      <input
+        type="checkbox"
+        id="statusSelect"
+        v-model="isHidden"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
+      <label>非公開記録にする場合にはチェック</label>
     </div>
     <div v-if="imageUrls !== null && imageUrls.length !== 0">
       <p class="mt-5">登録済みの画像</p>
@@ -162,10 +185,10 @@ const edit = async () => {
         <DropFile @change="onFileChange" :index="i" class="mt-3" />
       </div>
     </div>
-    <div class="p-5">
-      <button class="record-edit-button" @click="edit">編集する</button>
+    <div class="p-5 text-center">
+      <button class="record-edit-button">編集する</button>
     </div>
-  </div>
+  </form>
 </template>
 
 <style scoped>

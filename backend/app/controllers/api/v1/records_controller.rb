@@ -31,17 +31,23 @@ class Api::V1::RecordsController < ApplicationController
 
   def show
     record = Record.find(params[:id])
-
-    render json: { record: record.as_json(
-      include: {
-        user: { only: [:name], methods: :image_url }
-      }, methods: [:image_urls, :formatted_date, :calendar_date]
-    ).merge(isMyRecord: record.user_id == current_api_v1_user.id,
-            myProfile: current_api_v1_user.profile.as_json(
-              include: {
-                user: { only: [:name], methods: :image_url }
-              }
-            )) }, status: :ok
+  
+    render json: {
+      record: record.as_json(
+        include: {
+          user: { only: [:name], methods: :image_url }
+        },
+        methods: [:image_urls, :formatted_date, :calendar_date]
+      ).merge(
+        is_my_record: record.user_id == current_api_v1_user.id,
+        is_open: record.open_status == 1,
+        myProfile: current_api_v1_user.profile.as_json(
+          include: {
+            user: { only: [:name], methods: :image_url }
+          }
+        )
+      )
+    }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { error: "対象のデータが見つかりません" }, status: :not_found
   rescue StandardError => e
