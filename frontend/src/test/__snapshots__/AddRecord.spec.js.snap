@@ -14,13 +14,12 @@ exports[`AddRecord SnapShotテスト初期表示 1`] = `
     class="add-record-container"
   >
     <div
-      class="record-add-space"
+      class="w-52"
     >
       <p>
         記録日
       </p>
       <date-picker-stub
-        class="input-width"
         date=""
         isstart="false"
       />
@@ -30,7 +29,7 @@ exports[`AddRecord SnapShotテスト初期表示 1`] = `
     >
       <float-label-stub />
       <label
-        class="unit-label"
+        class="ml-2"
         for="goal-weight"
       >
         kg
@@ -41,7 +40,7 @@ exports[`AddRecord SnapShotテスト初期表示 1`] = `
     >
       <float-label-stub />
       <label
-        class="unit-label"
+        class="ml-2"
         for="goal-fat-percentage"
       >
         %
@@ -61,7 +60,7 @@ exports[`AddRecord SnapShotテスト初期表示 1`] = `
         type="checkbox"
       />
       <label
-        for="statusSelectName"
+        class="ml-2"
       >
         非公開記録にする場合にはチェック
       </label>
@@ -70,12 +69,31 @@ exports[`AddRecord SnapShotテスト初期表示 1`] = `
       class="mt-7"
     >
       <p>
-        関連画像
+        関連画像(3枚まで登録できます)
       </p>
-      <drop-file-stub />
+      
+      <div>
+        <drop-file-stub
+          class="mt-3"
+          index="1"
+        />
+      </div>
+      <div>
+        <drop-file-stub
+          class="mt-3"
+          index="2"
+        />
+      </div>
+      <div>
+        <drop-file-stub
+          class="mt-3"
+          index="3"
+        />
+      </div>
+      
     </div>
     <div
-      class="record-button-space mt-7"
+      class="pb-5 mt-7 text-center"
     >
       <button
         class="add-record-button"

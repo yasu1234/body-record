@@ -6,49 +6,123 @@ exports[`EditKnowledge SnapShotテスト初期表示 1`] = `
 >
   
   <header-stub />
+  <tab-menu-stub />
   <toast-stub
     position="top-center"
   />
   <div
     class="p-7"
   >
-    <label
-      class="itemLabel"
+    <float-label-stub
+      class="mt-5"
+    />
+    <float-label-stub
+      class="mt-5"
+    />
+  </div>
+  <div>
+    <p
+      class="mt-5 ml-5"
     >
-      タイトル
-    </label>
-    <input
-      id="title"
-      type="text"
-    />
-    <textarea
-      name="knowledge"
-      rows="20"
-    />
+      登録済みの画像
+    </p>
+    <div
+      class="thumbnail-container"
+    >
+      
+      <div
+        class="thumbnail"
+      >
+        <div
+          class="thumbnail-image"
+        >
+          <img
+            alt=""
+            src="https://example.com/image1.jpg"
+          />
+        </div>
+        <div
+          class="thumbnail-actions"
+        >
+          <button-stub
+            class="delete-button"
+            icon="pi pi-trash"
+            label=""
+          />
+        </div>
+      </div>
+      <div
+        class="thumbnail"
+      >
+        <div
+          class="thumbnail-image"
+        >
+          <img
+            alt=""
+            src="https://example.com/image2.jpg"
+          />
+        </div>
+        <div
+          class="thumbnail-actions"
+        >
+          <button-stub
+            class="delete-button"
+            icon="pi pi-trash"
+            label=""
+          />
+        </div>
+      </div>
+      
+    </div>
   </div>
   <div
-    class="thumbnail-container"
-  >
-    
-    
-  </div>
-  <div
-    class="relationImages"
+    class="p-5"
   >
     <p
       class="inputTitle"
     >
-      関連画像
+      関連画像(5枚まで登録できます)
     </p>
-    <drop-file-stub />
+    
+    <div>
+      <drop-file-stub
+        class="mt-3"
+        index="1"
+      />
+    </div>
+    <div>
+      <drop-file-stub
+        class="mt-3"
+        index="2"
+      />
+    </div>
+    <div>
+      <drop-file-stub
+        class="mt-3"
+        index="3"
+      />
+    </div>
+    <div>
+      <drop-file-stub
+        class="mt-3"
+        index="4"
+      />
+    </div>
+    <div>
+      <drop-file-stub
+        class="mt-3"
+        index="5"
+      />
+    </div>
+    
   </div>
   <div
-    class="relationImages"
+    class="p-10 text-center"
   >
     <button
       class="edit-knowledge-button"
     >
-      登録する
+      編集する
     </button>
   </div>
   
