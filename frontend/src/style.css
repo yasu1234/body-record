@@ -57,6 +57,10 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 } */
 
+img {
+  object-fit: cover;
+}
+
 textarea {
   resize: vertical;
 }
@@ -120,7 +124,4 @@ p.validation-error-message {
   a:hover {
     color: #f58505;
   }
-  /* button {
-    background-color: #f9f9f9;
-  } */
 }

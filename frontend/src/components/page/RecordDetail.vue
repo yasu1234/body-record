@@ -325,7 +325,6 @@ input[type="text"] {
 .side-menu-image {
   max-width: 100%;
   height: auto;
-  object-fit: cover;
 }
 .comment-container-title-area {
   border-bottom: 1px solid rgba(6, 6, 6, 0.17);

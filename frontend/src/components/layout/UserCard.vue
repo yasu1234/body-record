@@ -97,7 +97,6 @@ const showUser = (item) => {
 .user-thumbnail-image {
   width: 40px;
   height: 40px;
-  object-fit: cover;
   border-radius: 50%;
 }
 .user-name-link {
@@ -125,6 +124,5 @@ const showUser = (item) => {
 .support-image {
   width: 100%;
   height: auto;
-  object-fit: cover;
 }
 </style>

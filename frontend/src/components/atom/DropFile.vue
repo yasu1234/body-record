@@ -133,7 +133,6 @@ const drop = (e) => {
 .preview-img {
   width: 100px;
   height: 100px;
-  object-fit: cover;
   border-radius: 5px;
   border: 1px solid #a2a2a2;
 }

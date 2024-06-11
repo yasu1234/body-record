@@ -98,7 +98,6 @@ const supportOff = () => {
 .user-thumbnail-image {
   width: 40px;
   height: 40px;
-  object-fit: cover;
   border-radius: 50%;
 }
 .user-name-link {

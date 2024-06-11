@@ -58,7 +58,6 @@ const guestLogin = async () => {
 .home-logo {
   width: 100%;
   height: 400px;
-  object-fit: cover;
   display: block;
 }
 .account-buttons {
@@ -88,7 +87,6 @@ const guestLogin = async () => {
   .home-logo {
     width: 100%;
     height: 200px;
-    object-fit: cover;
     display: block;
   }
 }

@@ -84,7 +84,6 @@ const supportOff = () => {
 .author-thumbnail-image {
   width: 40px;
   height: 40px;
-  object-fit: cover;
   border-radius: 50%;
 }
 .support-container {
@@ -101,6 +100,5 @@ const supportOff = () => {
 .support-image {
   width: 100%;
   height: auto;
-  object-fit: cover;
 }
 </style>

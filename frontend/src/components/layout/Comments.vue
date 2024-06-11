@@ -46,7 +46,6 @@ watch(props, () => {
 .comment-thumbnail-image {
   width: 40px;
   height: 40px;
-  object-fit: cover;
   border-radius: 50%;
 }
 .comment-name {

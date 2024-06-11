@@ -352,7 +352,6 @@ const showEdit = () => {
 .side-menu-image {
   max-width: 100%;
   height: auto;
-  object-fit: cover;
 }
 .editor {
   padding: 30px;

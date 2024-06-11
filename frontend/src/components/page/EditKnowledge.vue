@@ -189,7 +189,6 @@ const showKnowledgeDetail = (item) => {
 .thumbnail-image img {
   height: 200px;
   width: 200px;
-  object-fit: cover;
 }
 .thumbnail-actions {
   position: absolute;
