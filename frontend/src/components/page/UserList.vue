@@ -70,7 +70,7 @@ const updatePaginateItems = function (page) {
 };
 
 const userSelect = (item) => {
-  router.push({ name: "OtherRecordList", params: { id: item.id } });
+  router.push({ name: "OtherRecordList", params: { id: item.user.id } });
 };
 </script>
 
