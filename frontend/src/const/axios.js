@@ -1,6 +1,5 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useRouter } from 'vue-router'
 
 const baseURL = import.meta.env.VITE_APP_API_BASE;
 
