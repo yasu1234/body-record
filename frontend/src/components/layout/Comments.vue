@@ -19,17 +19,17 @@ watch(props, () => {
     <div class="comment-user">
       <div
         class="comment-thumbnail-image"
-        v-show="comment.user.image_url.url !== null"
+        v-if="comment.user.image_url !== null"
       >
         <img
-          :src="comment.user.image_url.url"
+          :src="comment.user.image_url"
           alt="ユーザー"
           class="comment-thumbnail-image"
         />
       </div>
       <p class="comment-name">{{ comment.user.name }}</p>
     </div>
-    <p>{{ comment.comment }}</p>
+    <p class="pt-2.5 mb-1.5">{{ comment.comment }}</p>
   </div>
 </template>
 
@@ -46,7 +46,6 @@ watch(props, () => {
 .comment-thumbnail-image {
   width: 40px;
   height: 40px;
-  object-fit: cover;
   border-radius: 50%;
 }
 .comment-name {

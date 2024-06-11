@@ -8,6 +8,10 @@ class Api::V1::KnowledgesController < ApplicationController
       knowledges = knowledges.where("title LIKE ?", "%#{params[:keyword]}%")
     end
 
+    if (params[:is_bookmark].present? && params[:is_bookmark] == "true")
+      knowledges = knowledges.joins(:bookmarks).where(bookmarks: { user_id: current_api_v1_user.id })
+    end
+
     knowledges = if params[:page].present?
                    knowledges.page(params[:page]).per(30)
                  else
@@ -16,7 +20,7 @@ class Api::V1::KnowledgesController < ApplicationController
 
     totalPage = knowledges.total_pages
 
-    render json: { knowledges:, totalPage: }, status: :ok
+    render json: { knowledges: knowledges, totalPage: totalPage }, status: :ok
   end
 
   def create
@@ -38,10 +42,11 @@ class Api::V1::KnowledgesController < ApplicationController
       include: {
         user: { only: [:name], methods: :image_url }
       }, methods: :image_urls
-    ).merge(isBookmark: bookmark.present?,
-            myProfile: current_api_v1_user.profile.as_json(include: {
-                                                             user: { only: [:name], methods: :image_url }
-                                                           })) }, status: :ok
+    ).merge(
+      is_bookmark: bookmark.present?,
+      is_my_knowledge: knowledge.user_id == current_api_v1_user.id,
+      bookmark_count: knowledge.bookmarks.count
+    )}, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   end
@@ -83,20 +88,9 @@ class Api::V1::KnowledgesController < ApplicationController
     render json: { errors: e.message }, status: :internal_server_error
   end
 
-  def get_target_user_knowledge
-    knowledges = Knowledge.where(user_id: params[:user_id])
-
-      # ユーザーページで表示するデータを取得する処理なので、最大5件分のみレスポンスとしてレンダリングする
-    if knowledges.count > 5
-      knowledges = knowledges.latest_knowledges(5)
-    end
-
-    render json: { knowledges: }, status: :ok
-  end
-
   private
 
     def knowledge_register_params
-      params.require(:knowledge).permit(:title, :content, :images)
+      params.require(:knowledge).permit(:title, :content, images: [])
     end
 end

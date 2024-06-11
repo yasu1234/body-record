@@ -13,7 +13,6 @@ import RecordDetail from '/src/components/page/RecordDetail.vue';
 import EditRecord from '/src/components/page/EditRecord.vue';
 import UserProfile from '/src/components/page/UserProfile.vue';
 import EditProfile from '/src/components/page/EditProfile.vue';
-import Setting from '/src/components/page/Setting.vue';
 import PasswordEdit from '/src/components/page/PasswordEdit.vue';
 import MailAddressEdit from '/src/components/page/MailAddressEdit.vue';
 import Contact from '/src/components/page/Contact.vue';
@@ -21,6 +20,10 @@ import ContactList from '/src/components/page/ContactList.vue';
 import ContactDetail from '/src/components/page/ContactDetail.vue';
 import NotFound from '/src/components/page/PageNotFoundError.vue';
 import UserList from '/src/components/page/UserList.vue';
+import ConfirmAccountDelete from '/src/components/page/ConfirmAccountDelete.vue';
+import SupportList from '/src/components/page/SupportList.vue';
+import SupporterList from '/src/components/page/SupporterList.vue';
+import MyPage from '/src/components/page/MyPage.vue';
 
 const routes = [
   {
@@ -94,11 +97,6 @@ const routes = [
     component: EditProfile 
   },
   { 
-    path: '/setting',
-    name: 'Setting',
-    component: Setting 
-  },
-  { 
     path: '/passwordEdit',
     name: 'PasswordEdit',
     component: PasswordEdit 
@@ -127,6 +125,26 @@ const routes = [
     path: '/users',
     name: 'UserList',
     component: UserList 
+  },
+  { 
+    path: '/confirm-account-delete',
+    name: 'ConfirmAccountDelete',
+    component: ConfirmAccountDelete 
+  },
+  { 
+    path: '/supportList/:id',
+    name: 'SupportList',
+    component: SupportList 
+  },
+  { 
+    path: '/supporterList/:id',
+    name: 'SupporterList',
+    component: SupporterList 
+  },
+  { 
+    path: '/myPage',
+    name: 'MyPage',
+    component: MyPage 
   },
   { 
     path: '/:pathMatch(.*)*',

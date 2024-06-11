@@ -1,26 +1,35 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
-import Cookies from "js-cookie";
 import MarkdownIt from "markdown-it";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../const/toast.js";
+import Toast from "primevue/toast";
 
 import Header from "../layout/Header.vue";
 import TabMenu from "../layout/TabMenu.vue";
 import Comments from "../layout/Comments.vue";
 import CommentInput from "../layout/CommentInput.vue";
 import Author from "../layout/Author.vue";
+import RelationImage from "../layout/RelationImage.vue";
 
 const route = useRoute();
 const router = useRouter();
+setupInterceptors(router);
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
 const knowledge = ref(null);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
+const knowledgeUserId = ref(0);
 const isBookmark = ref(false);
 const isMyKnowledge = ref(false);
 const comments = ref([]);
 const author = ref(null);
+const bookmarkCount = ref(0);
+const support = ref(null);
 
 const md = new MarkdownIt();
 
@@ -39,48 +48,49 @@ onMounted(() => {
 const getDetail = async () => {
   const id = route.params.id;
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/${id}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/knowledges/${id}`);
     knowledgeId.value = res.data.knowledge.id;
     knowledge.value = res.data.knowledge;
+    knowledgeUserId.value = res.data.knowledge.user_id;
     imageUrls.value = res.data.knowledge.image_urls;
-    isBookmark.value = res.data.isBookmark;
+    isBookmark.value = res.data.knowledge.is_bookmark;
     author.value = res.data.knowledge.user;
+    isMyKnowledge.value = res.data.knowledge.is_my_knowledge;
+    bookmarkCount.value = res.data.knowledge.bookmark_count;
+
+    getSupport();
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
+    toastNotifications.displayError(
+      "記事の情報の取得に失敗しました",
+      ""
+    );
+  }
+};
+
+const getSupport = async () => {
+  try {
+    const res = await axiosInstance.get(`/api/v1/support_counts`, {
+      params: {
+        user_id: knowledgeUserId.value,
+      },
+    });
+
+    support.value = res.data.user;
+  } catch (error) {
+    support.value = null;
   }
 };
 
 const getComments = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/knowledge`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-        params: {
-          knowledge_id: route.params.id,
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/comments/knowledge`, {
+      params: {
+        knowledge_id: route.params.id,
+      },
+    });
     comments.value = res.data.comments;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
+    comments.value = [];
   }
 };
 
@@ -89,46 +99,47 @@ const bookmarkOn = async () => {
     const formData = new FormData();
     formData.append("bookmark[knowledge_id]", knowledgeId.value);
 
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/bookmarks`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.post(`/api/v1/bookmarks`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     knowledge.value = res.data.knowledge;
     isBookmark.value = res.data.knowledge.isBookmark;
+    bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      }
     }
+    toastNotifications.displayError(
+      "ブックマークの登録に失敗しました",
+      errorMessages
+    );
   }
 };
 
 const bookmarkOff = async () => {
   try {
-    const res = await axios.delete(
-      import.meta.env.VITE_APP_API_BASE +
-        `/api/v1/bookmarks/${knowledgeId.value}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
+    const res = await axiosInstance.delete(
+      `/api/v1/bookmarks/${knowledgeId.value}`
     );
     knowledge.value = res.data.knowledge;
     isBookmark.value = res.data.knowledge.isBookmark;
+    bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      }
     }
+    toastNotifications.displayError(
+      "ブックマークの解除に失敗しました",
+      errorMessages
+    );
   }
 };
 
@@ -144,30 +155,68 @@ const addComment = async (comment) => {
   try {
     const formData = new FormData();
     formData.append("knowledge_id", knowledgeId.value);
-    formData.append("comment", comment.value);
+    formData.append("comment", comment);
 
-    const res = await axios.post(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/comments/knowledge`,
-      formData,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
+    const res = await axiosInstance.post(
+      `/api/v1/comments/knowledge`,
+      formData
     );
-    comments.value = res.data.comments;
+    getComments();
   } catch (error) {
-    comments.value = [];
-    if (error.response.status === 404) {
-      showNotFound();
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      }
     }
+    toastNotifications.displayError(
+      "コメントの追加に失敗しました",
+      errorMessages
+    );
   }
 };
 
-const showNotFound = () => {
-  router.push({ name: "NotFound" });
+const supportOn = async () => {
+  try {
+    const formData = new FormData();
+    formData.append("id", knowledgeUserId.value);
+
+    const res = await axiosInstance.post(`/api/v1/supports`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    getSupport();
+  } catch (error) {
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
+      }
+    }
+    toastNotifications.displayError("応援に失敗しました", errorMessages);
+  }
+};
+
+const supportOff = async () => {
+  try {
+    const res = await axiosInstance.delete(
+      `/api/v1/supports/${knowledgeUserId.value}`
+    );
+    getSupport();
+  } catch (error) {
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
+      }
+    }
+    toastNotifications.displayError("応援解除に失敗しました", errorMessages);
+  }
 };
 
 const showEdit = () => {
@@ -178,6 +227,7 @@ const showEdit = () => {
 <template>
   <Header />
   <TabMenu :currentId="0" />
+  <Toast position="top-center" />
   <div class="wrap">
     <div class="main">
       <div class="editor">
@@ -191,20 +241,23 @@ const showEdit = () => {
         </p>
         <p class="knowledge-content" v-html="renderedMarkdown"></p>
         <div v-if="imageUrls.length !== 0">
-          <p class="inputTitle">関連画像</p>
+          <p class="mt-5">関連画像</p>
           <div class="thumbnail-container">
             <div class="thumbnail" v-for="item in imageUrls">
-              <div class="thumbnail-image">
-                <img :src="item.url" alt="" />
-              </div>
+              <RelationImage :item="item" />
             </div>
           </div>
         </div>
       </div>
-      <div v-if="author !== null" class="radius-section">
-        <Author :author="author" :userId="knowledge.user_id" />
+      <div v-if="author !== null" class="radius-section pt-2.5">
+        <Author
+          :author="author"
+          :support="support"
+          @suport-on="supportOn"
+          @support-off="supportOff"
+        />
       </div>
-      <div class="radius-section">
+      <div class="radius-section mb-5">
         <div class="comment-container-title-area">
           <p class="comment-container-title">コメント</p>
         </div>
@@ -212,33 +265,41 @@ const showEdit = () => {
           <Comments :comments="comments" />
         </div>
         <div v-else>
-          <p>コメントはありません</p>
+          <p class="pt-2.5 pl-5">コメントはありません</p>
         </div>
-        <CommentInput @addComment="addComment" />
+        <CommentInput @add-comment="addComment" />
       </div>
     </div>
     <div class="side">
-      <div class="side_content">
-        <button v-if="isBookmark" class="round-button">
-          <img
-            src="../../assets/image/bookmark_on.png"
-            alt="ブックマーク"
-            class="side-menu-image"
+      <div class="side-content">
+        <div class="bookmark-button-container">
+          <button
+            v-if="isBookmark"
+            class="round-button"
             @click="bookmarkClick(true)"
-          />
-        </button>
-        <button v-else class="round-button">
-          <img
-            src="../../assets/image/bookmark_off.png"
-            alt="ブックマーク"
-            class="side-menu-image"
-            @click="bookmarkClick(false)"
-          />
-        </button>
+          >
+            <img
+              src="../../assets/image/bookmark_on.png"
+              alt="ブックマーク解除"
+              v-tooltip="{ value: 'ブックマーク解除' }"
+              class="side-menu-image"
+            />
+          </button>
+          <button v-else class="round-button" @click="bookmarkClick(false)">
+            <img
+              src="../../assets/image/bookmark_off.png"
+              alt="ブックマーク"
+              v-tooltip="{ value: 'ブックマークする' }"
+              class="side-menu-image"
+            />
+          </button>
+          <p class="text-center">{{ bookmarkCount }}</p>
+        </div>
         <button class="round-button" v-show="isMyKnowledge">
           <img
             src="../../assets/image/edit.png"
             alt="編集"
+            v-tooltip="{ value: '編集' }"
             class="side-menu-image"
             @click="showEdit"
           />
@@ -247,6 +308,7 @@ const showEdit = () => {
           <img
             src="../../assets/image/delete.png"
             alt="削除"
+            v-tooltip="{ value: '削除' }"
             class="side-menu-image"
             @click=""
           />
@@ -263,17 +325,21 @@ const showEdit = () => {
   background-color: #f5f6f6;
   padding-top: 20px;
 }
-.side_content {
+.side-content {
   position: sticky;
   top: 100px;
   margin-left: 30px;
   display: flex;
   flex-flow: column;
-  gap: 10px;
+  gap: 15px;
 }
-
 .main {
   margin-left: 20px;
+}
+.bookmark-button-container {
+  padding: 0;
+  background: transparent;
+  width: 60px;
 }
 .round-button {
   padding: 0;
@@ -286,15 +352,12 @@ const showEdit = () => {
 .side-menu-image {
   max-width: 100%;
   height: auto;
-  object-fit: cover;
 }
-
 .editor {
   padding: 30px;
   border-radius: 8px;
   background-color: #ffffff;
 }
-
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -325,17 +388,6 @@ input[type="text"] {
   margin-bottom: 15px;
   padding-left: 20px;
 }
-.thumbnail-image {
-  height: 100%;
-}
-.thumbnail-image img {
-  height: 100%;
-}
-.thumbnail-actions {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-}
 .radius-section {
   margin-top: 20px;
   border-radius: 8px;
@@ -348,5 +400,43 @@ input[type="text"] {
   margin-left: 20px;
   padding-top: 20px;
   font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    display: flex;
+    flex-direction: column;
+  }
+  .main {
+    padding-bottom: 85px;
+    margin-right: 20px;
+  }
+  .side {
+    position: fixed;
+    align-items: center;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-color: #fff;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .side-content {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px;
+  }
+  .round-button {
+    padding: 0;
+    background: transparent;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+  }
+  .bookmark-button-container {
+    width: 45px;
+  }
 }
 </style>

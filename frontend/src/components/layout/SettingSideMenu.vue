@@ -54,6 +54,7 @@ const showMenu = (menu) => {
       showPasswordEdit();
       break;
     case 4:
+    showConfirmAccountDelete();
       break;
     default:
       break;
@@ -70,6 +71,9 @@ const showMailAddressEdit = () => {
 
 const showPasswordEdit = () => {
   router.push({ name: "PasswordEdit" });
+};
+const showConfirmAccountDelete = () => {
+  router.push({ name: "ConfirmAccountDelete" });
 };
 </script>
 

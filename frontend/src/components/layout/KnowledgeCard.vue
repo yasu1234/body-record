@@ -16,7 +16,7 @@ const renderedMarkdown = computed(() => {
 
 <template>
   <div class="knowledge-card">
-    <h4 class="knowledge-title">
+    <h4 class="m-2.5">
       <b>{{ props.knowledgeTitle }}</b>
     </h4>
     <div>
@@ -26,10 +26,6 @@ const renderedMarkdown = computed(() => {
 </template>
 
 <style scoped>
-.knowledge-title {
-  margin: 10px 12px 12px 10px;
-}
-
 .knowledge-card {
   margin: 2em auto;
   position: relative;
@@ -37,8 +33,8 @@ const renderedMarkdown = computed(() => {
   padding: 3em 1em 2em;
   width: 100%;
   max-width: 600px;
+  cursor: pointer;
 }
-
 .knowledge-card::before {
   position: absolute;
   content: "";
@@ -53,5 +49,13 @@ const renderedMarkdown = computed(() => {
 }
 .knowledge-content {
   margin: 10px 0px 10px 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .knowledge-card {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 }
 </style>

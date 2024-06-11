@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SearchPage SnapShotテスト初期表示 1`] = `
+exports[`SignUp SnapShotテスト初期表示 1`] = `
 <div
   data-v-app=""
 >
@@ -9,11 +9,11 @@ exports[`SearchPage SnapShotテスト初期表示 1`] = `
   <toast-stub
     position="top-center"
   />
-  <h1
-    class="signup-title"
+  <p
+    class="view-title mt-7"
   >
     会員登録
-  </h1>
+  </p>
   <div
     class="signup-container"
   >
@@ -83,7 +83,7 @@ exports[`SearchPage SnapShotテスト初期表示 1`] = `
         />
       </div>
       <div
-        class="signUpTitle"
+        class="text-center"
       >
         <button
           class="signup-button"

@@ -13,21 +13,56 @@ exports[`AddKnowledge SnapShotテスト初期表示 1`] = `
   <div
     class="p-7"
   >
-    <float-label-stub />
-    <float-label-stub />
+    <float-label-stub
+      class="mt-5"
+    />
+    <float-label-stub
+      class="mt-5"
+    />
   </div>
   <div
-    class="relationImages"
+    class="p-5"
   >
     <p
       class="inputTitle"
     >
-      関連画像
+      関連画像(5枚まで登録できます)
     </p>
-    <drop-file-stub />
+    
+    <div>
+      <drop-file-stub
+        class="mt-3"
+        index="1"
+      />
+    </div>
+    <div>
+      <drop-file-stub
+        class="mt-3"
+        index="2"
+      />
+    </div>
+    <div>
+      <drop-file-stub
+        class="mt-3"
+        index="3"
+      />
+    </div>
+    <div>
+      <drop-file-stub
+        class="mt-3"
+        index="4"
+      />
+    </div>
+    <div>
+      <drop-file-stub
+        class="mt-3"
+        index="5"
+      />
+    </div>
+    
   </div>
   <div
-    class="relationImages"
+    class="p-5 text-center"
   >
     <button
       class="add-knowledge-button"

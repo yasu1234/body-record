@@ -5,10 +5,11 @@ class Record < ApplicationRecord
   belongs_to :user
 
   attr_accessor :formatted_date
+  attr_accessor :calendar_date
 
   validates :date, presence: true
-  validates :weight, numericality: { allow_nil: true }
-  validates :fat_percentage, numericality: { allow_nil: true }
+  validates :weight, allow_nil: true, numericality: { allow_blank: true }
+  validates :fat_percentage, allow_nil: true, numericality: { allow_blank: true }
 
   validates :images,
             content_type: { in: %w[image/jpeg image/png image/jpg] },
@@ -88,5 +89,9 @@ class Record < ApplicationRecord
 
   def formatted_date
     self.formatted_date = date&.strftime("%Y年%-m月%-d日")
+  end
+
+  def calendar_date
+    self.calendar_date = date&.strftime("%Y/%m/%d")
   end
 end

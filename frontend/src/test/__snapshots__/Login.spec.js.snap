@@ -6,8 +6,11 @@ exports[`SearchPage SnapShotテスト初期表示 1`] = `
 >
   
   <header-stub />
+  <toast-stub
+    position="top-center"
+  />
   <h1
-    class="signUpTitle"
+    class="view-title mt-7"
   >
     ログイン
   </h1>

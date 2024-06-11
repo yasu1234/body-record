@@ -1,8 +1,6 @@
-import { shallowMount, flushPromises } from '@vue/test-utils'
-import axios from 'axios'
+import { shallowMount } from '@vue/test-utils'
 import Signup from '@/components/page/Signup.vue'
 
-jest.mock('axios')
 jest.mock('vue-router', () => {
     const router = {
       push: jest.fn(),
@@ -28,7 +26,7 @@ jest.mock('vue-router', () => {
     }))
   }))
 
-describe('SearchPage', () => {
+describe('SignUp', () => {
   let wrapper
 
   beforeEach(() => {

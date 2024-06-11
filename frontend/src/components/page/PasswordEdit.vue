@@ -1,12 +1,10 @@
 <script setup>
-import axios from "axios";
-import { ref } from "vue";
-import Cookies from "js-cookie";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
+import { axiosInstance } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import PasswordText from "../atom/PasswordText.vue";
@@ -31,17 +29,7 @@ const passwordEdit = async () => {
     formData.append("password", password.value);
     formData.append("password_confirmation", passwordConfirm.value);
 
-    const res = await axios.put(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/auth/password`,
-      formData,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.put(`/api/v1/auth/password`, formData);
     toastNotifications.displayInfo("パスワードを変更しました", "");
   } catch (error) {
     let errorMessages = "";
@@ -50,7 +38,10 @@ const passwordEdit = async () => {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    toastNotifications.displayError("パスワード変更に失敗しました", errorMessages);
+    toastNotifications.displayError(
+      "パスワード変更に失敗しました",
+      errorMessages
+    );
   }
 };
 
@@ -105,10 +96,10 @@ const updatePassword = (inputPassword, passwordType) => {
   <div class="setting-container">
     <SettingSideMenu :currentIndex="3" />
     <main>
-      <h1 class="signUpTitle">パスワード変更</h1>
+      <h1 class="view-title pt-10">パスワード変更</h1>
       <div class="password-edit-container">
         <form class="form" @submit.prevent="checkValidate">
-          <div class="item">
+          <div class="pt-10">
             <label for="password">現在のパスワード</label>
             <PasswordText
               :password="currentPassword"
@@ -117,7 +108,7 @@ const updatePassword = (inputPassword, passwordType) => {
             />
             <p class="validation-error-message">{{ currentPasswordError }}</p>
           </div>
-          <div class="item">
+          <div class="pt-10">
             <label for="password">パスワード</label>
             <PasswordText
               :password="password"
@@ -126,7 +117,7 @@ const updatePassword = (inputPassword, passwordType) => {
             />
             <p class="validation-error-message">{{ passwordError }}</p>
           </div>
-          <div class="item">
+          <div class="pt-10">
             <label for="passwordConfirm">パスワード(確認)</label>
             <PasswordText
               :password="passwordConfirm"
@@ -135,8 +126,8 @@ const updatePassword = (inputPassword, passwordType) => {
             />
             <p class="validation-error-message">{{ passwordConfirmError }}</p>
           </div>
-          <div class="signUpTitle">
-            <button class="password-edit-button">更新</button>
+          <div class="text-center">
+            <button class="password-edit-button mt-5">更新</button>
           </div>
         </form>
       </div>
@@ -153,23 +144,11 @@ const updatePassword = (inputPassword, passwordType) => {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
 .form {
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
 }
-
-.signUpTitle {
-  padding-top: 40px;
-  text-align: center;
-}
-
-.item {
-  padding-top: 40px;
-  margin: 0 auto;
-}
-
 .password-edit-button {
   font-size: 16px;
   font-weight: bold;
@@ -177,6 +156,9 @@ const updatePassword = (inputPassword, passwordType) => {
 }
 
 @media screen and (max-width: 768px) {
+  main {
+    flex: 1;
+  }
   .password-edit-container {
     width: auto;
     margin-left: 20px;

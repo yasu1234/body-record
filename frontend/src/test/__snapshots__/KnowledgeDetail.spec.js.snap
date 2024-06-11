@@ -9,6 +9,9 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントあり) 1`] = `
   <tab-menu-stub
     currentid="0"
   />
+  <toast-stub
+    position="top-center"
+  />
   <div
     class="wrap"
   >
@@ -36,7 +39,7 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントあり) 1`] = `
         </p>
         <div>
           <p
-            class="inputTitle"
+            class="mt-5"
           >
             関連画像
           </p>
@@ -47,38 +50,28 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントあり) 1`] = `
             <div
               class="thumbnail"
             >
-              <div
-                class="thumbnail-image"
-              >
-                <img
-                  alt=""
-                  src="https://example.com/image1.jpg"
-                />
-              </div>
+              <relation-image-stub
+                item="[object Object]"
+              />
             </div>
             <div
               class="thumbnail"
             >
-              <div
-                class="thumbnail-image"
-              >
-                <img
-                  alt=""
-                  src="https://example.com/image2.jpg"
-                />
-              </div>
+              <relation-image-stub
+                item="[object Object]"
+              />
             </div>
             
           </div>
         </div>
       </div>
       <div
-        class="radius-section"
+        class="radius-section pt-2.5"
       >
         <author-stub />
       </div>
       <div
-        class="radius-section"
+        class="radius-section mb-5"
       >
         <div
           class="comment-container-title-area"
@@ -101,17 +94,24 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントあり) 1`] = `
       class="side"
     >
       <div
-        class="side_content"
+        class="side-content"
       >
-        <button
-          class="round-button"
+        <div
+          class="bookmark-button-container"
         >
-          <img
-            alt="ブックマーク"
-            class="side-menu-image"
-            src=""
+          <button
+            class="round-button"
+          >
+            <img
+              alt="ブックマーク"
+              class="side-menu-image"
+              src=""
+            />
+          </button>
+          <p
+            class="text-center"
           />
-        </button>
+        </div>
         <button
           class="round-button"
           style="display: none;"
@@ -148,6 +148,9 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントなし) 1`] = `
   <tab-menu-stub
     currentid="0"
   />
+  <toast-stub
+    position="top-center"
+  />
   <div
     class="wrap"
   >
@@ -175,7 +178,7 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントなし) 1`] = `
         </p>
         <div>
           <p
-            class="inputTitle"
+            class="mt-5"
           >
             関連画像
           </p>
@@ -186,38 +189,28 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントなし) 1`] = `
             <div
               class="thumbnail"
             >
-              <div
-                class="thumbnail-image"
-              >
-                <img
-                  alt=""
-                  src="https://example.com/image1.jpg"
-                />
-              </div>
+              <relation-image-stub
+                item="[object Object]"
+              />
             </div>
             <div
               class="thumbnail"
             >
-              <div
-                class="thumbnail-image"
-              >
-                <img
-                  alt=""
-                  src="https://example.com/image2.jpg"
-                />
-              </div>
+              <relation-image-stub
+                item="[object Object]"
+              />
             </div>
             
           </div>
         </div>
       </div>
       <div
-        class="radius-section"
+        class="radius-section pt-2.5"
       >
         <author-stub />
       </div>
       <div
-        class="radius-section"
+        class="radius-section mb-5"
       >
         <div
           class="comment-container-title-area"
@@ -240,17 +233,24 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントなし) 1`] = `
       class="side"
     >
       <div
-        class="side_content"
+        class="side-content"
       >
-        <button
-          class="round-button"
+        <div
+          class="bookmark-button-container"
         >
-          <img
-            alt="ブックマーク"
-            class="side-menu-image"
-            src=""
+          <button
+            class="round-button"
+          >
+            <img
+              alt="ブックマーク"
+              class="side-menu-image"
+              src=""
+            />
+          </button>
+          <p
+            class="text-center"
           />
-        </button>
+        </div>
         <button
           class="round-button"
           style="display: none;"

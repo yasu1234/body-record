@@ -1,7 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import { useRouter } from "vue-router";
 import Header from '@/components/layout/Header.vue'
-import axios from 'axios'
 import Cookies from 'js-cookie'
 
 jest.mock("axios")
@@ -25,8 +23,21 @@ jest.mock('vue-router', () => {
   };
 });
 
+jest.mock('@/const/axios.js', () => ({
+  axiosInstance: {
+    get: jest.fn(),
+    delete: jest.fn(),
+    interceptors: {
+      request: { use: jest.fn() },
+      response: { use: jest.fn() },
+    },
+  },
+  setupInterceptors: jest.fn(),
+}));
+
 describe('Header.vue', () => {
-  let wrapper
+  let wrapper;
+  let mockedAxiosInstance;
 
   beforeEach(() => {
     wrapper = shallowMount(Header, {
@@ -41,14 +52,46 @@ describe('Header.vue', () => {
   })
 
   it('未ログインの場合には会員登録・ログインボタンが表示される', async () => {
-    axios.get.mockResolvedValueOnce({ data: { user: null } })
+    jest.mock("@/const/axios.js", () => ({
+      axiosInstance: {
+        get: jest.fn(),
+        post: jest.fn(),
+        delete: jest.fn(),
+        interceptors: {
+          request: { use: jest.fn() },
+          response: { use: jest.fn() },
+        },
+      },
+      setupInterceptors: jest.fn(),
+    }));
+
+    // モックされたaxiosInstanceを取得
+    const axiosModule = require("@/const/axios.js");
+    mockedAxiosInstance = axiosModule.axiosInstance;
+    mockedAxiosInstance.get.mockResolvedValueOnce({ data: { user: null } })
 
     expect(wrapper.find('.account-introducton-button').exists()).toBe(true)
   })
 
   it('ログイン済みの場合には会員登録・ログインボタンが表示されない', async () => {
     const user = { id: 1 }
-    axios.get.mockResolvedValue({ data: { user: user } })
+
+    jest.mock("@/const/axios.js", () => ({
+      axiosInstance: {
+        get: jest.fn(),
+        post: jest.fn(),
+        delete: jest.fn(),
+        interceptors: {
+          request: { use: jest.fn() },
+          response: { use: jest.fn() },
+        },
+      },
+      setupInterceptors: jest.fn(),
+    }));
+
+    const axiosModule = require("@/const/axios.js");
+    mockedAxiosInstance = axiosModule.axiosInstance;
+    mockedAxiosInstance.get.mockResolvedValue({ data: { user: user } })
 
     expect(wrapper.find('.user-button').exists()).toBe(true)
   })
@@ -56,7 +99,23 @@ describe('Header.vue', () => {
   it('ログイン済みの場合にはドロップダウンメニューが4つ表示される', async () => {
     const user = { id: 1 }
 
-    axios.get.mockResolvedValue({ data: { user: user } })
+    jest.mock("@/const/axios.js", () => ({
+      axiosInstance: {
+        get: jest.fn(),
+        post: jest.fn(),
+        delete: jest.fn(),
+        interceptors: {
+          request: { use: jest.fn() },
+          response: { use: jest.fn() },
+        },
+      },
+      setupInterceptors: jest.fn(),
+    }));
+
+    const axiosModule = require("@/const/axios.js");
+    mockedAxiosInstance = axiosModule.axiosInstance;
+
+    mockedAxiosInstance.get.mockResolvedValue({ data: { user: user } })
 
     await wrapper.vm.checkLogin()
     await wrapper.find('.user-button').trigger('click')
@@ -68,7 +127,24 @@ describe('Header.vue', () => {
 
   it('ログアウトするとCookieのトークン情報がなくなる', async () => {
     const user = { id: 1 }
-    axios.get.mockResolvedValueOnce({ data: { user: user } })
+
+    jest.mock("@/const/axios.js", () => ({
+      axiosInstance: {
+        get: jest.fn(),
+        post: jest.fn(),
+        delete: jest.fn(),
+        interceptors: {
+          request: { use: jest.fn() },
+          response: { use: jest.fn() },
+        },
+      },
+      setupInterceptors: jest.fn(),
+    }));
+
+    const axiosModule = require("@/const/axios.js");
+    mockedAxiosInstance = axiosModule.axiosInstance;
+
+    mockedAxiosInstance.get.mockResolvedValueOnce({ data: { user: user } })
     
     await wrapper.vm.checkLogin()
     await wrapper.find('.user-button').trigger('click')
@@ -78,7 +154,7 @@ describe('Header.vue', () => {
   
     await menuItems.at(3).trigger('click')
 
-    axios.delete.mockResolvedValueOnce({})
+    mockedAxiosInstance.delete.mockResolvedValueOnce({})
   
     expect(Cookies.get('accessToken')).toBeUndefined()
     expect(Cookies.get('client')).toBeUndefined()

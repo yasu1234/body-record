@@ -10,7 +10,7 @@ class Api::V1::BookmarksController < ApplicationController
 
     bookmark.save!
 
-    render json: { knowledge: knowledge.as_json.merge(isBookmark: true) }, status: :ok
+    render json: { knowledge: knowledge.as_json.merge(isBookmark: true, bookmark_count: knowledge.bookmarks.count) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   rescue StandardError => e
@@ -20,13 +20,11 @@ class Api::V1::BookmarksController < ApplicationController
   def destroy
     knowledge = Knowledge.find(params[:id])
 
-    puts knowledge.bookmarks.first.user_id
+    knowledge.bookmarks.where(user_id: current_api_v1_user.id).destroy_all
 
-    knowledge.bookmarks.where(user_id: params[:user_id]).destroy_all
+    bookmark = knowledge.bookmarks.where(user_id: current_api_v1_user.id).first
 
-    bookmark = knowledge.bookmarks.where(user_id: params[:user_id]).first
-
-    render json: { knowledge: knowledge.as_json.merge(isBookmark: bookmark.present?) }, status: :ok
+    render json: { knowledge: knowledge.as_json.merge(isBookmark: bookmark.present?, bookmark_count: knowledge.bookmarks.count) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   rescue StandardError => e

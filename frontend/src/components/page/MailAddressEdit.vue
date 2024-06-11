@@ -1,12 +1,13 @@
 <script setup>
-import axios from "axios";
-import { ref } from "vue";
 import Cookies from "js-cookie";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
+import FloatLabel from "primevue/floatlabel";
+import InputText from "primevue/inputtext";
+import { axiosInstance } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import SettingSideMenu from "../layout/SettingSideMenu.vue";
@@ -27,17 +28,7 @@ const mailAddressEdit = async () => {
     const formData = new FormData();
     formData.append("email", newMailAddres.value);
 
-    const res = await axios.put(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/auth`,
-      formData,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.put(`/api/v1/auth`, formData);
 
     Cookies.set("accessToken", res.headers["access-token"]);
     Cookies.set("client", res.headers["client"]);
@@ -51,7 +42,10 @@ const mailAddressEdit = async () => {
         errorMessages += error.response.data.errors.join("\n");
       }
     }
-    toastNotifications.displayError("メールアドレス変更に失敗しました", errorMessages);
+    toastNotifications.displayError(
+      "メールアドレス変更に失敗しました",
+      errorMessages
+    );
   }
 };
 
@@ -80,12 +74,17 @@ const { value: newMailAddres, errorMessage: emailError } =
   <div class="setting-container">
     <SettingSideMenu :currentIndex="2" />
     <main>
-      <h1 class="mailaddress-edit-content-center">メールアドレス変更</h1>
+      <h1 class="view-title pt-10">メールアドレス変更</h1>
       <div class="mailaddress-edit-container">
         <form class="form" @submit.prevent="checkValidate">
           <div class="form-item">
-            <label for="email">変更後のメールアドレス</label>
-            <input id="email" type="email" v-model="newMailAddres" />
+            <FloatLabel>
+              <InputText
+                v-model="newMailAddres"
+                class="email-edit-input h-10 p-2.5"
+              />
+              <label>変更後のメールアドレス</label>
+            </FloatLabel>
             <p class="validation-error-message">{{ emailError }}</p>
           </div>
           <div class="mailaddress-edit-content-center">
@@ -120,17 +119,31 @@ const { value: newMailAddres, errorMessage: emailError } =
 
 .form-item {
   padding-top: 40px;
-  margin: 0 auto;
 }
 
-.form input[type="email"] {
-  padding: 10px;
+.email-edit-input {
   width: 100%;
+  border: #ccc 1px solid;
 }
 
 .mailaddress-edit-button {
   font-size: 16px;
   font-weight: bold;
   padding: 10px 50px;
+}
+
+@media screen and (max-width: 768px) {
+  main {
+    flex: 1;
+  }
+  .mailaddress-edit-container {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
 }
 </style>

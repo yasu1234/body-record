@@ -16,6 +16,9 @@ ja:
         content: "お問合せ内容"
       profile:
         image: "プロフィール画像"
+        profile: "紹介文"
+        goal_weight: "目標体重"
+        goal_fat_percentage: "目標体脂肪率"
     errors:
       messages:
         record_invalid: "バリデーションに失敗しました: %{errors}"

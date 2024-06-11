@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter, onBeforeRouteUpdate } from "vue-router";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import TabMenu from "../layout/TabMenu.vue";
 import Header from "../layout/Header.vue";
@@ -10,28 +9,42 @@ import ListPage from "../layout/ListPage.vue";
 import DatePicker from "../atom/DatePicker.vue";
 import RecordCard from "../layout/RecordCard.vue";
 import SearchButton from "../atom/SearchButton.vue";
+import ResultEmpty from "../atom/ResultEmpty.vue";
 
 const router = useRouter();
+const route = useRoute();
+setupInterceptors(router);
 
-const keyword = ref('');
-const startDate = ref('');
-const endDate = ref('');
-const isDisplayOnlyOpen = ref(false);
+const userId = ref(0);
+const user = ref(null);
+const keyword = ref("");
+const startDate = ref("");
+const endDate = ref("");
 const isLogin = ref(false);
 const searchResult = ref([]);
 const currentId = ref(2);
-
 const pageCount = ref(1);
 const page = ref(1);
 
 onMounted(() => {
+  userId.value = route.params.id;
+  setQuery(
+    route.query.keyword,
+    route.query.startDate,
+    route.query.endDate,
+    route.query.page
+  );
+  getUser();
   search();
 });
 
 onBeforeRouteUpdate(async (to, from) => {
-  keyword.value = to.query.keyword;
-  startDate.value = to.query.startDate;
-  endDate.value = to.query.endDate;
+  setQuery(
+    to.query.keyword,
+    to.query.startDate,
+    to.query.endDate,
+    to.query.page
+  );
   search();
 });
 
@@ -50,28 +63,64 @@ const searchParamChange = () => {
     query.endDate = endDate.value;
   }
 
-  router.push({ path: "/recordList", query: query });
+  router.push({
+    name: "OtherRecordList",
+    params: { id: userId.value },
+    query: query,
+  });
+};
+
+const setQuery = (keywordParam, startDateParam, endDateParam, pageParam) => {
+  if (keywordParam != null) {
+    keyword.value = keywordParam;
+  } else {
+    keyword.value = "";
+  }
+  if (startDateParam != null) {
+    startDate.value = startDateParam;
+  } else {
+    startDate.value = "";
+  }
+  if (endDateParam != null) {
+    endDate.value = endDateParam;
+  } else {
+    endDate.value = "";
+  }
+  if (pageParam != null) {
+    page.value = pageParam;
+  } else {
+    page.value = 1;
+  }
+};
+
+const getUser = async () => {
+  try {
+    const res = await axiosInstance.get(`/api/v1/users/${userId.value}`, {
+      params: {
+        keyword: keyword.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+        page: page,
+      },
+    });
+
+    user.value = res.data.user;
+  } catch (error) {
+    user.value = null;
+  }
 };
 
 const search = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/records",
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-
-        params: {
-          keyword: keyword.value,
-          startDate: startDate.value,
-          endDate: endDate.value,
-          page: page,
-        },
-      }
-    );
+    const res = await axiosInstance.get("/api/v1/records", {
+      params: {
+        user_id: userId.value,
+        keyword: keyword.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+        page: page,
+      },
+    });
 
     if (res.data && res.data.totalPage) {
       pageCount.value = res.data.totalPage;
@@ -110,7 +159,10 @@ const clickRecord = (item) => {
 <template>
   <Header />
   <TabMenu :currentId="currentId" />
-  <div class="user-record-search-container">
+  <div class="record-search-container">
+    <p class="inputTitle font-bold" v-if="user != null">
+      {{ user.name }}さんの記録検索
+    </p>
     <input
       type="text"
       id="keyword"
@@ -118,9 +170,9 @@ const clickRecord = (item) => {
       placeholder="キーワードで検索"
       v-model="keyword"
     />
-    <div class="time-list">
+    <div class="record-search-time-list">
       <div class="item">
-        <p class="inputTitle">開始日</p>
+        <p class="inputTitle">検索開始日</p>
         <DatePicker
           isStart="true"
           :date="startDate"
@@ -128,7 +180,7 @@ const clickRecord = (item) => {
         />
       </div>
       <div class="item">
-        <p class="inputTitle">終了日</p>
+        <p class="inputTitle">検索終了日</p>
         <DatePicker
           isStart="false"
           :date="endDate"
@@ -140,47 +192,42 @@ const clickRecord = (item) => {
       <SearchButton @searchButtonClick="searchParamChange" />
     </div>
   </div>
-  <RecordCard
-    v-for="record in searchResult"
-    v-bind="record"
-    :record="record"
-    @recordClick="clickRecord(record)"
-  />
-  <div class="record-list-page">
-    <ListPage
-      :pageCount="pageCount"
-      v-model="page"
-      @changePage="updatePaginateItems"
-    />
+  <div class="mt-5">
+    <div v-if="searchResult.length > 0">
+      <RecordCard
+        v-for="record in searchResult"
+        v-bind="record"
+        :record="record"
+        @recordClick="clickRecord(record)"
+      />
+      <div class="record-list-page">
+        <ListPage
+          :pageCount="pageCount"
+          v-model="page"
+          @changePage="updatePaginateItems"
+        />
+      </div>
+    </div>
+    <div v-else>
+      <ResultEmpty class="mx-5" />
+    </div>
   </div>
 </template>
 
 <style scoped>
-.user-record-search-container {
-  width: 700px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border: 1.5px solid #46c443;
-  border-radius: 5px;
-  margin-top: 20px;
-}
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
-  margin: 8px 0;
+  margin: 10px 0;
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-.time-list {
-  display: flex;
-}
-.time-list .item {
+.record-search-time-list .item {
   padding: 5px;
   box-sizing: border-box;
 }
-.time-list .item .inputTitle {
+.record-search-time-list .item .inputTitle {
   margin: 5px 0 0;
   padding: 0;
   font-size: 16px;
@@ -192,18 +239,5 @@ input[type="text"] {
 .search-button {
   font-size: 16px;
   font-weight: bold;
-}
-
-@media screen and (max-width: 768px) {
-  .user-record-search-container {
-    width: auto;
-    margin-left: 20px;
-    margin-right: 20px;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #46c443;
-    border-radius: 5px;
-    margin-top: 20px;
-  }
 }
 </style>

@@ -1,23 +1,28 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
-import Cookies from "js-cookie";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
+import Button from "primevue/button";
+import FloatLabel from "primevue/floatlabel";
+import InputText from "primevue/inputtext";
+import Textarea from "primevue/textarea";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import DropFile from "../atom/DropFile.vue";
 import Header from "../layout/Header.vue";
+import TabMenu from "../layout/TabMenu.vue";
 
 const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
+setupInterceptors(router);
 
-const title = ref('');
-const knowledge = ref('');
-const files = ref([]);
+const title = ref("");
+const knowledge = ref("");
+const files = ref([...Array(5)]);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
 
@@ -25,67 +30,42 @@ onMounted(() => {
   getDetail();
 });
 
-function dateChange(event) {
-  recordDate.value = event;
-}
-
-function onFileChange(event) {
-  files.value = [...event];
-}
-
-const showNotFound = () => {
-  router.push({ name: "NotFound" });
+const onFileChange = (event, index) => {
+  files.value[index - 1] = event;
 };
 
 const deleteImage = async (item) => {
   try {
-    const res = await axios.delete(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/knowledges/image",
-      {
-        params: {
-          id: knowledgeId.value,
-          image_id: item.id,
-        },
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.delete("/api/v1/knowledges/image", {
+      params: {
+        id: knowledgeId.value,
+        image_id: item.id,
+      },
+    });
     console.log({ res });
   } catch (error) {
-    let errorMessages = "画像の削除に失敗しました\n";
-    if (error.response.status === 422) {
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
     }
-    errorMessage.value = errorMessages;
+    toastNotifications.displayError("画像の削除に失敗しました", errorMessages);
   }
 };
 
 const getDetail = async () => {
   const id = route.params.id;
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + `/api/v1/knowledges/${id}`,
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get(`/api/v1/knowledges/${id}`);
     knowledgeId.value = res.data.knowledge.id;
     title.value = res.data.knowledge.title;
     knowledge.value = res.data.knowledge.content;
-    imageUrls.value = res.data.imageUrls;
+    imageUrls.value = res.data.knowledge.image_urls;
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    }
+    toastNotifications.displayError("登録データの取得に失敗しました", "");
   }
 };
 
@@ -96,19 +76,17 @@ const edit = async () => {
     formData.append("knowledge[content]", knowledge.value);
 
     for (const file of files.value) {
-      formData.append("images", file);
+      if (file != null) {
+        formData.append("knowledge[images][]", file);
+      }
     }
 
-    const res = await axios.patch(
-      import.meta.env.VITE_APP_API_BASE +
-        `/api/v1/knowledges/${knowledgeId.value}`,
+    const res = await axiosInstance.patch(
+      `/api/v1/knowledges/${knowledgeId.value}`,
       formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
         },
       }
     );
@@ -118,19 +96,17 @@ const edit = async () => {
       showKnowledgeDetail(res.data.knowledge);
     }, 3000);
   } catch (error) {
-    if (error.response.status === 404) {
-      showNotFound();
-    } else {
-      errorMessage.value = "";
-      let errorMessages = "ノウハウの編集に失敗しました\n";
-      if (error.response.status === 422) {
-        if (Array.isArray(error.response.data.errors)) {
-          errorMessages += error.response.data.errors.join("\n");
-        }
+    let errorMessage = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessage += error.response.data.errors.join("\n");
       }
-      toastNotifications.displayError("編集しました", "");
-      errorMessage.value = errorMessages;
     }
+
+    toastNotifications.displayError(
+      "ノウハウの編集に失敗しました",
+      errorMessage
+    );
   }
 };
 
@@ -141,63 +117,57 @@ const showKnowledgeDetail = (item) => {
 
 <template>
   <Header />
+  <TabMenu />
   <Toast position="top-center" />
   <div class="p-7">
-    <label class="itemLabel">タイトル</label>
-    <input id="title" type="text" v-model="title" />
-    <textarea name="knowledge" rows="20" v-model="knowledge"></textarea>
+    <FloatLabel class="mt-5">
+      <InputText v-model="title" class="input-width" />
+      <label>タイトル</label>
+    </FloatLabel>
+    <FloatLabel class="mt-5">
+      <Textarea v-model="knowledge" rows="20" class="input-width" />
+      <label>詳細</label>
+    </FloatLabel>
   </div>
-  <div class="thumbnail-container">
-    <div class="thumbnail" v-for="item in imageUrls">
-      <div class="thumbnail-image">
-        <img :src="item.url" alt="" />
-      </div>
-      <div class="thumbnail-actions">
-        <button class="delete-button" @click="deleteImage(item)">X</button>
+  <div v-if="imageUrls !== null && imageUrls.length !== 0">
+    <p class="mt-5 ml-5">登録済みの画像</p>
+    <div class="thumbnail-container">
+      <div class="thumbnail" v-for="item in imageUrls">
+        <div class="thumbnail-image">
+          <img :src="item.url" alt="" />
+        </div>
+        <div class="thumbnail-actions">
+          <Button
+            label=""
+            icon="pi pi-trash"
+            v-tooltip="{ value: '画像削除' }"
+            class="delete-button"
+            @click="deleteImage(item)"
+          />
+        </div>
       </div>
     </div>
   </div>
-  <div class="relationImages">
-    <p class="inputTitle">関連画像</p>
-    <DropFile @change="onFileChange" />
+  <div class="p-5">
+    <p class="inputTitle">関連画像(5枚まで登録できます)</p>
+    <div v-for="i in 5">
+      <DropFile @change="onFileChange" :index="i" class="mt-3" />
+    </div>
   </div>
-  <div class="relationImages">
-    <button class="edit-knowledge-button" @click="edit">登録する</button>
+  <div class="p-10 text-center">
+    <button class="edit-knowledge-button" @click="edit">編集する</button>
   </div>
 </template>
 
 <style scoped>
-input[type="text"] {
+.input-width {
   width: 100%;
-  padding: 12px 12px;
-  margin: 8px 0;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.time-list {
-  display: flex;
-  justify-content: space-between;
-  padding-left: 30px;
-  padding-right: 30px;
-}
-.time-list .item {
-  width: 50%;
-  margin: 0;
   padding: 10px;
-  box-sizing: border-box;
-}
-.time-list .item .inputTitle {
-  margin: 5px 0 0;
-  padding: 0;
-  font-size: 16px;
-}
-.relationImages {
-  padding: 20px;
 }
 .edit-knowledge-button {
   font-size: 16px;
   font-weight: bold;
+  padding: 10px 50px;
 }
 .thumbnail-container {
   display: flex;
@@ -208,19 +178,17 @@ input[type="text"] {
 .thumbnail {
   position: relative;
   display: inline-block;
-  height: 200px;
   margin-right: 15px;
   margin-bottom: 15px;
   padding-left: 20px;
 }
-.thumbnail img {
-  height: 100%;
-}
 .thumbnail-image {
-  height: 100%;
+  height: 200px;
+  width: 200px;
 }
 .thumbnail-image img {
-  height: 100%;
+  height: 200px;
+  width: 200px;
 }
 .thumbnail-actions {
   position: absolute;

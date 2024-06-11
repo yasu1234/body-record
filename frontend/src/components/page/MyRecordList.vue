@@ -1,34 +1,45 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter, onBeforeRouteUpdate } from "vue-router";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
+import { axiosInstance } from "../../const/axios.js";
 
 import ListPage from "../layout/ListPage.vue";
 import DatePicker from "../atom/DatePicker.vue";
 import SearchButton from "../atom/SearchButton.vue";
 import RecordCard from "../layout/RecordCard.vue";
+import ResultEmpty from "../atom/ResultEmpty.vue";
 
 const router = useRouter();
+const route = useRoute();
 
-const keyword = ref('');
-const startDate = ref('');
-const endDate = ref('');
-const isDisplayOnlyOpen = ref(false);
+const keyword = ref("");
+const startDate = ref("");
+const endDate = ref("");
+const isOnlyOpen = ref(false);
 const isLogin = ref(false);
 const searchResult = ref([]);
 const pageCount = ref(1);
-const pageNum = ref(1);
+const page = ref(1);
 
 onMounted(() => {
+  setQuery(
+    route.query.keyword,
+    route.query.startDate,
+    route.query.endDate,
+    route.query.page,
+    route.query.isOnlyOpen
+  );
   search();
 });
 
 onBeforeRouteUpdate(async (to, from) => {
-  keyword.value = to.query.keyword;
-  startDate.value = to.query.startDate;
-  endDate.value = to.query.endDate;
-  pageNum.value = to.query.page;
+  setQuery(
+    to.query.keyword,
+    to.query.startDate,
+    to.query.endDate,
+    to.query.page,
+    to.query.isOnlyOpen
+  );
   search();
 });
 
@@ -47,8 +58,12 @@ const paramChange = () => {
     query.endDate = endDate.value;
   }
 
-  if (pageNum.value > 1) {
-    query.page = pageNum.value;
+  if (page.value > 1) {
+    query.page = page.value;
+  }
+
+  if (isOnlyOpen.value != null && isOnlyOpen.value === true) {
+    query.isOnlyOpen = isOnlyOpen.value;
   }
 
   router.push({ path: "/", query: query });
@@ -56,22 +71,15 @@ const paramChange = () => {
 
 const search = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/myRecord",
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-        params: {
-          keyword: keyword.value,
-          startDate: startDate.value,
-          endDate: endDate.value,
-          page: pageNum,
-        },
-      }
-    );
+    const res = await axiosInstance.get("/api/v1/my_records", {
+      params: {
+        keyword: keyword.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+        is_only_open: isOnlyOpen.value,
+        page: page.value,
+      },
+    });
 
     if (res.data && res.data.totalPage) {
       pageCount.value = res.data.totalPage;
@@ -89,8 +97,37 @@ const search = async () => {
   }
 };
 
-const updatePaginateItems = function (page) {
-  pageNum.value = page;
+const setQuery = (keywordParam, startDateParam, endDateParam, pageParam, isOnlyOpenParam) => {
+  if (keywordParam != null) {
+    keyword.value = keywordParam;
+  } else {
+    keyword.value = "";
+  }
+  if (startDateParam != null) {
+    startDate.value = startDateParam;
+  } else {
+    startDate.value = "";
+  }
+  if (endDateParam != null) {
+    endDate.value = endDateParam;
+  } else {
+    endDate.value = "";
+  }
+  if (pageParam != null) {
+    page.value = pageParam;
+  } else {
+    page.value = 1;
+  }
+
+  if (isOnlyOpenParam != null && isOnlyOpenParam === 'true') {
+    isOnlyOpen.value = true;
+  } else {
+    isOnlyOpen.value = false;
+  }
+};
+
+const updatePaginateItems = function (pageParam) {
+  page.value = pageParam;
   paramChange();
 };
 
@@ -106,13 +143,13 @@ const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
 };
 
-function addRecord() {
-  router.push("/addRecord");
-}
+const addRecord = () => {
+  router.push({ name: "AddRecord" });
+};
 </script>
 
 <template>
-  <div class="my-record-search-container">
+  <div class="record-search-container">
     <input
       type="text"
       id="keyword"
@@ -120,9 +157,9 @@ function addRecord() {
       placeholder="キーワードで検索"
       v-model="keyword"
     />
-    <div class="time-list">
+    <div class="record-search-time-list">
       <div class="item">
-        <p class="input-title">開始日</p>
+        <p class="input-title">検索開始日</p>
         <DatePicker
           isStart="true"
           :date="startDate"
@@ -130,7 +167,7 @@ function addRecord() {
         />
       </div>
       <div class="item">
-        <p class="input-title">終了日</p>
+        <p class="input-title">検索終了日</p>
         <DatePicker
           isStart="false"
           :date="endDate"
@@ -142,45 +179,43 @@ function addRecord() {
       <input
         type="checkbox"
         id="statusSelect"
-        v-model="isDisplayOnlyOpen"
+        v-model="isOnlyOpen"
         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
       />
-      <label>非公開記録は表示しない</label>
+      <label class="ml-2">非公開記録は表示しない</label>
     </div>
     <div class="search-button-area">
       <SearchButton @searchButtonClick="paramChange" />
     </div>
   </div>
   <div class="add-button-area">
-    <button class="add-button" @click="addRecord">記録を追加する</button>
+    <button class="add-button p-2.5" @click="addRecord">
+      + 記録を追加する
+    </button>
   </div>
   <div class="mt-5">
-    <RecordCard
-      v-for="record in searchResult"
-      v-bind="record"
-      :record="record"
-      @recordClick="clickRecord(record)"
-    />
-  </div>
-  <div class="mt-12">
-    <ListPage
-      :pageCount="pageCount"
-      v-model="pageNum"
-      @changePage="updatePaginateItems"
-    />
+    <div v-if="searchResult.length > 0">
+      <RecordCard
+        v-for="record in searchResult"
+        v-bind="record"
+        :record="record"
+        @recordClick="clickRecord(record)"
+      />
+      <div class="record-list-page">
+        <ListPage
+          :pageCount="pageCount"
+          v-model="page"
+          @changePage="updatePaginateItems"
+        />
+      </div>
+    </div>
+    <div v-else>
+      <ResultEmpty class="mx-5" />
+    </div>
   </div>
 </template>
 
 <style scoped>
-.my-record-search-container {
-  width: 700px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border: 1.5px solid #46c443;
-  border-radius: 5px;
-  margin-top: 20px;
-}
 input[type="text"] {
   width: 100%;
   padding: 12px 12px;
@@ -189,14 +224,11 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-.time-list {
-  display: flex;
-}
-.time-list .item {
+.record-search-time-list .item {
   padding: 5px;
   box-sizing: border-box;
 }
-.time-list .item .input-title {
+.record-search-time-list .item .input-title {
   margin: 5px 0 0;
   padding: 0;
   font-size: 16px;
@@ -206,24 +238,22 @@ input[type="text"] {
   margin-top: 20px;
 }
 .add-button-area {
-  text-align: right;
+  width: 700px;
+  margin: 0 auto;
   margin-top: 20px;
-  padding-right: 40px;
+  text-align: right;
 }
 .add-button {
   font-size: 16px;
   font-weight: bold;
 }
+
 @media screen and (max-width: 768px) {
-  .my-record-search-container {
+  .add-button-area {
     width: auto;
     margin-left: 20px;
     margin-right: 20px;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #46c443;
-    border-radius: 5px;
-    margin-top: 20px;
+    text-align: right;
   }
 }
 </style>
