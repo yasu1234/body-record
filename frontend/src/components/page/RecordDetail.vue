@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import MarkdownIt from "markdown-it";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
@@ -20,8 +19,6 @@ const toast = useToast();
 const toastNotifications = new toastService(toast);
 setupInterceptors(router);
 
-const date = ref("");
-const memo = ref("");
 const imageUrls = ref([]);
 const recordId = ref(null);
 const recordUserId = ref(0);
@@ -31,15 +28,6 @@ const comments = ref([]);
 const author = ref(null);
 const record = ref(null);
 const support = ref(null);
-
-const md = new MarkdownIt();
-
-const renderedMarkdown = computed(() => {
-  if (memo.value !== null && memo.value !== "") {
-    return md.render(memo.value);
-  }
-  return "";
-});
 
 onMounted(() => {
   getDetail();
@@ -52,9 +40,7 @@ const getDetail = async () => {
     const res = await axiosInstance.get(`/api/v1/records/${id}`);
 
     recordId.value = res.data.record.id;
-    record.value = res.data;
-    date.value = res.data.record.formatted_date;
-    memo.value = res.data.record.memo;
+    record.value = res.data.record;
     isMyRecord.value = res.data.record.is_my_record;
     imageUrls.value = res.data.record.image_urls;
     recordUserId.value = res.data.record.user_id;
@@ -195,8 +181,10 @@ const showEdit = () => {
     <div class="main ml-5">
       <div class="main_content">
         <div class="editor">
-          <p class="record-title">{{ date }}の記録</p>
-          <p class="record-content" v-html="renderedMarkdown" />
+          <p class="record-title">{{ (record != null && record.formatted_date != null) ? record.formatted_date : "" }}の記録</p>
+          <p class="mt-5">体重：{{ (record != null && record.weight != null) ? record.weight : "-" }} kg</p>
+          <p class="mt-2.5">体脂肪率：{{ (record != null && record.fat_percentage != null) ? record.fat_percentage : "-" }} %</p>
+          <p class="record-content">{{ (record != null && record.memo != null) ? record.memo : '' }} %</p>
           <div v-if="imageUrls !== null && imageUrls.length !== 0">
             <p class="mt-5">関連画像</p>
             <div class="thumbnail-container">
