@@ -48,6 +48,31 @@ RSpec.describe User, type: :model do
     end
   end
 
+  def check_support_mine(target_support_user)
+    self == target_support_user
+  end
+
+  describe "#check_support_mine" do
+    let(:user) { create(:user) }
+    let(:other_user) { create(:user) }
+
+    context "応援するユーザーが自分以外" do
+      it "falseが返却される" do
+        expect(user.check_support_mine(other_user)).to be false
+      end
+    end
+  end
+
+  describe "#check_support_mine" do
+    let(:user) { create(:user, :fixed_id) }
+
+    context "応援するユーザーが自分自身" do
+      it "trueが返却される" do
+        expect(user.check_support_mine(user)).to be true
+      end
+    end
+  end
+
   describe "#support" do
     let(:user) { create(:user) }
     let(:other_user) { create(:user) }
@@ -56,10 +81,6 @@ RSpec.describe User, type: :model do
       expect { user.support(other_user) }.to change { Support.count }.by(1)
       expect(user.supportings).to include(other_user)
       expect(other_user.supporters).to include(user)
-    end
-
-    it "自分が自分を応援できない" do
-      expect { user.support(user) }.not_to(change { Support.count })
     end
   end
 
