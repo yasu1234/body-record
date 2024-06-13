@@ -9,7 +9,7 @@ class Knowledge < ApplicationRecord
   validates :content, length: { maximum: 5000 }, allow_blank: true
 
   validates :images,
-            content_type: { in: %w[image/jpeg image/png image/jpg] },
+            content_type: ['image/jpeg' 'image/png' 'image/jpg'],
             size: { less_than: 5.megabytes },
             limit: { max: 5 },
             allow_blank: true
