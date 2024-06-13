@@ -113,7 +113,7 @@ const getUserRecord = async () => {
 
 const getMonthRecord = async () => {
   try {
-    const res = await axiosInstance.get(`/api/v1/graph_record`, {
+    const res = await axiosInstance.get(`/api/v1/graph_records`, {
       params: {
         user_id: userId.value,
         targetYear: month.value.year,
