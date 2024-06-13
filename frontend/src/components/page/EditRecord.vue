@@ -25,7 +25,7 @@ const recordDate = ref("");
 const memo = ref("");
 const weight = ref(null);
 const fatPercentage = ref(null);
-const files = ref([]);
+const files = ref([...Array(3)]);
 const imageUrls = ref([]);
 const recordId = ref(null);
 const isHidden = ref(false);
@@ -38,8 +38,8 @@ function dateChange(event) {
   recordDate.value = event;
 }
 
-function onFileChange(event) {
-  files.value = [...event];
+const onFileChange = (event, index) => {
+  files.value[index - 1] = event;
 }
 
 const deleteImage = async (item) => {
@@ -109,9 +109,11 @@ const edit = async () => {
     }, 3000);
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
     }
     toastNotifications.displayError("記録の更新に失敗しました", errorMessages);
