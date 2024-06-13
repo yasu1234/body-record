@@ -82,6 +82,19 @@ Rails.application.configure do
   # require "syslog/logger"
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
+  credentials = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
+  Aws::Rails.add_action_mailer_delivery_method(
+    :ses, 
+    credentials:,
+    region: ENV['AWS_REGION']
+  )
+
+  config.action_mailer.default_url_options = { host: ENV['HOST'] }
+  config.action_mailer.delivery_method = :ses
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.perform_caching = false
+  config.action_mailer.raise_delivery_errors = true
+
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
