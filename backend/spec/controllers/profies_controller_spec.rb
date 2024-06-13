@@ -31,9 +31,9 @@ RSpec.describe Api::V1::ProfilesController, type: :controller do
 
       it "プロフィールが登録されている" do
         json_response = JSON.parse(response.body)
-        expect(json_response["user"]["profile"]).to eq "よろしくお願いします"
-        expect(json_response["user"]["goal_weight"]).to eq 65.1
-        expect(json_response["user"]["goal_fat_percentage"]).to eq 11.2
+        expect(json_response["user"]["profile"]["profile"]).to eq "よろしくお願いします"
+        expect(json_response["user"]["profile"]["goal_weight"]).to eq 65.1
+        expect(json_response["user"]["profile"]["goal_fat_percentage"]).to eq 11.2
       end
     end
   end

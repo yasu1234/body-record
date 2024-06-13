@@ -17,7 +17,7 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
     end
 
     context "既に応援済の場合" do
-      let(:user) { create(:user, :with_supporting) }
+      let(:user) { create(:user, :fixed_id, :with_supporting) }
 
       before do
         request.headers.merge!(headers)
@@ -31,12 +31,14 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
       it "パラメータで指定したユーザーを応援している" do
         json_response = JSON.parse(response.body)
         expect(json_response["user"]["id"]).to eq other_user.id
-        expect(json_response["user"]["supportCount"]).to eq 1
+        expect(json_response["user"]["supporterCount"]).to eq 1
+        expect(json_response["user"]["supportCount"]).to eq 0
         expect(json_response["user"]["isSupport"]).to eq true
       end
     end
 
     context "応援登録完了" do
+      let(:user) { create(:user, :fixed_id) }
       before do
         request.headers.merge!(headers)
         post :create, format: :json, params: { id: other_user.id }
@@ -49,7 +51,8 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
       it "応援データが取得できる" do
         json_response = JSON.parse(response.body)
         expect(json_response["user"]["id"]).to eq other_user.id
-        expect(json_response["user"]["supportCount"]).to eq 1
+        expect(json_response["user"]["supporterCount"]).to eq 1
+        expect(json_response["user"]["supportCount"]).to eq 0
         expect(json_response["user"]["isSupport"]).to eq true
       end
     end

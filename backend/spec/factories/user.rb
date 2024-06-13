@@ -7,6 +7,10 @@ FactoryBot.define do
     password_confirmation { "Password1" }
     name { "test" }
 
+    trait :fixed_id do
+      id { 100 }
+    end
+
       # knowledgeデータを関連付け
     trait :without_knowledges do
       transient do

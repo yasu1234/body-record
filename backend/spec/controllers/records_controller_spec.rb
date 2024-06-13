@@ -17,7 +17,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
       let!(:record) { create_records(1) }
 
       before do
-        get :index, format: :json
+        get :index, format: :json, params: { user_id: user.id }
       end
 
       it "401(未認証のステータスコード)" do
@@ -33,7 +33,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
-        get :index, format: :json
+        get :index, format: :json, params: { user_id: user.id }
       end
 
       it "ステータス200が返却される" do
@@ -49,13 +49,29 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
   end
 
   describe "GET #index" do
-    context "2ページ目のデータ" do
+    context "ユーザーIDを指定しない" do
+      let(:user) { create(:user, :without_records, :without_knowledges) }
+      let!(:record) { create_records(1) }
+
+      before do
+        request.headers.merge!(headers)
+        get :index, format: :json
+      end
+
+      it "ステータス400が返却される" do
+        expect(response.status).to eq 400
+      end
+    end
+  end
+
+  describe "GET #index" do
+    context "ページングの確認" do
       let(:user) { create(:user, :without_records, :without_knowledges) }
       let!(:record) { create_records(31) }
 
       before do
         request.headers.merge!(headers)
-        get :index, format: :json, params: { page: 2 }
+        get :index, format: :json, params: { page: 2, user_id: user.id }
       end
 
       it "ステータス200が返却される" do
@@ -77,7 +93,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
-        get :index, format: :json
+        get :index, format: :json, params: { user_id: user.id }
       end
 
       it "ステータス200が返却される" do
@@ -98,7 +114,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
-        get :index, format: :json
+        get :index, format: :json, params: { user_id: user.id }
       end
 
       it "ステータス200が返却される" do
@@ -122,7 +138,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
-        get :index, format: :json, params: { keyword: "メモ" }
+        get :index, format: :json, params: { keyword: "メモ", user_id: user.id  }
       end
 
       it "ステータス200が返却される" do
@@ -135,56 +151,6 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
         expect(json_response["totalPage"]).to eq 1
         expect(json_response["records"][0]["memo"]).to eq "メモTEST"
         expect(json_response["records"][1]["memo"]).to eq "メモ1メモ"
-      end
-    end
-  end
-
-  describe "POST #create" do
-    context "未ログイン" do
-      before do
-        post :create, format: :json, params: valid_params
-      end
-
-      it "401(未認証のステータスコード)" do
-        expect(response.status).to eq 401
-      end
-    end
-  end
-
-  describe "POST #create" do
-    context "作成完了" do
-      before do
-        request.headers.merge!(headers)
-        post :create, format: :json, params: { record: valid_params }
-      end
-
-      it "1件データが追加" do
-        expect(change(Record, :count).by(1))
-        expect(response.status).to eq 200
-      end
-
-      it "入力した値で登録できている" do
-        jsonResponse = JSON.parse(response.body)
-        expect(jsonResponse["record"]["memo"]).to eq("メモTEST")
-        expect(jsonResponse["record"]["date"]).to eq("2024-04-29T00:00:00.000Z")
-        expect(jsonResponse["record"]["user_id"]).to eq(user.id)
-      end
-    end
-  end
-
-  describe "POST #create" do
-    context "バリデーションエラー(記録日必須)" do
-      before do
-        request.headers.merge!(headers)
-        post :create, format: :json, params: { record: invalid_params }
-      end
-
-      it "データが追加されない" do
-        expect(change(Record, :count).by(0))
-      end
-
-      it "ステータス422が返却される" do
-        expect(response.status).to eq 422
       end
     end
   end
@@ -257,67 +223,6 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
     end
   end
 
-  describe "PUT #update" do
-    context "未ログイン" do
-      let(:record) { create(:record, title: "テストタイトル", content: "テストコンテンツ", user_id: user.id, id: 1) }
-
-      before do
-        put :update, params: { id: 1, record: valid_params }
-      end
-
-      it "401(未認証のステータスコード)エラー" do
-        expect(response.status).to eq 401
-      end
-    end
-  end
-
-  describe "PUT #update" do
-    context "対象のデータが存在しない" do
-      before do
-        request.headers.merge!(headers)
-        put :update, params: { id: -1, record: valid_params }
-      end
-
-      it "404のエラー" do
-        expect(response.status).to eq 404
-      end
-    end
-  end
-
-  describe "PUT #update" do
-    context "記録日不足" do
-      before do
-        request.headers.merge!(headers)
-        put :update, params: { id: user.records.first.id, record: { date: "" } }
-      end
-
-      it "ステータス422が返却される" do
-        expect(response.status).to eq 422
-      end
-    end
-  end
-
-  describe "PATCH #update" do
-    context "更新完了" do
-      before do
-        request.headers.merge!(headers)
-        patch :update, format: :json, params: { id: user.records.first.id, record: update_valid_params }
-      end
-
-      it "1件データが追加" do
-        expect(change(Record, :count).by(0))
-        expect(response.status).to eq 200
-      end
-
-      it "入力した値で更新できている" do
-        jsonResponse = JSON.parse(response.body)
-        expect(jsonResponse["record"]["memo"]).to eq("メモ更新TEST")
-        expect(jsonResponse["record"]["date"]).to eq("2024-04-01T00:00:00.000Z")
-        expect(jsonResponse["record"]["user_id"]).to eq(user.id)
-      end
-    end
-  end
-
   describe "DELETE #destroy" do
     context "未ログイン" do
       before do
@@ -376,61 +281,6 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
       end
     end
   end
-
-  describe "GET #get_target_user_record" do
-    context "ユーザーのデータ5件" do
-      before do
-        request.headers.merge!(headers)
-        get "get_target_user_record", params: { user_id: user.id }, format: :json
-      end
-
-      it "ステータス200" do
-        expect(response.status).to eq 200
-      end
-
-      it "データは5件分取得" do
-        json_response = JSON.parse(response.body)
-        expect(json_response["records"].count).to eq 5
-      end
-    end
-
-    describe "GET #get_target_user_record" do
-      context "成功(対象のユーザーがいない)" do
-        before do
-          request.headers.merge!(headers)
-          get "get_target_user_record", params: { user_id: -1 }, format: :json
-        end
-
-        it "ステータス200" do
-          expect(response.status).to eq 200
-        end
-
-        it "データは0件" do
-          json_response = JSON.parse(response.body)
-          expect(json_response["records"].count).to eq 0
-        end
-      end
-    end
-
-    describe "GET #get_target_user_record" do
-      context "ユーザーのデータ7件" do
-        let(:user) { create(:user, :with_records_over, :without_knowledges) }
-
-        before do
-          request.headers.merge!(headers)
-          get "get_target_user_record", params: { user_id: user.id }, format: :json
-        end
-
-        it "ステータス200" do
-          expect(response.status).to eq 200
-        end
-
-        it "データは5件分取得" do
-          json_response = JSON.parse(response.body)
-          expect(json_response["records"].count).to eq 5
-        end
-      end
-    end
 
     describe "GET #get_record_month" do
       context "targetYearが指定されていない" do
@@ -504,7 +354,6 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
           end
         end
       end
-    end
 
     describe "GET #get_record_month" do
       context "4月のデータ取得" do

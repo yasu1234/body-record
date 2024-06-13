@@ -32,7 +32,6 @@ RSpec.describe Api::V1::SignupController, type: :request do
 
       it "エラーメッセージが返却される" do
         json_response = JSON.parse(response.body)
-        puts json_response
         expect(json_response["errors"]["full_messages"][0]).to eq "Eメール は有効ではありません"
       end
     end

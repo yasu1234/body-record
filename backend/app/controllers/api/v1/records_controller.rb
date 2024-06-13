@@ -2,6 +2,10 @@ class Api::V1::RecordsController < ApplicationController
   before_action :check_login
 
   def index
+    if params[:user_id].nil?
+      render json: { errors: "ユーザー情報が特定できません" }, status: :bad_request and return 
+    end
+
     base_scope = Record.where(open_status: 1).where(user_id: params[:user_id])
     records, total_pages = Record.search_and_paginate(params, base_scope)
 
@@ -12,7 +16,7 @@ class Api::V1::RecordsController < ApplicationController
     render json: { errors: e.message }, status: :internal_server_error
   end
 
-    # 指定した年月1ヶ月分の記録を取得する
+  # 指定した年月1ヶ月分の記録を取得する
   def get_record_month
     user = User.find(params[:user_id])
 

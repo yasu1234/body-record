@@ -65,9 +65,15 @@ class Api::V1::SupportsController < ApplicationController
 
     supporters_count = support_user.supporter_relationships.count
     supports_count = support_user.supportings.count
-    includes_user = support_user.supporter_relationships.exists?(id: current_api_v1_user.id)
+    includes_user = support_user.supporter_relationships.exists?(user_id: current_api_v1_user.id)
 
-    render json: { user: support_user.as_json.merge(isSupport: includes_user, supporterCount: supporters_count, supportCount: supports_count) }, status: :ok
+    render json: {
+      user: support_user.as_json.merge(
+        isSupport: includes_user,
+        supporterCount: supporters_count,
+        supportCount: supports_count
+      )
+    }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のユーザーが見つかりません" }, status: :not_found
   rescue StandardError => e
@@ -93,7 +99,13 @@ class Api::V1::SupportsController < ApplicationController
       includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == current_api_v1_user.id }
       supporters_count = support_user.supporters.count
       supports_count = support_user.supportings.count
-      render json: { user: user_json.merge(isSupport: includes_user, supporterCount: supporters_count, supportCount: supports_count) }, status: :ok
+      render json: { 
+        user: user_json.merge(
+          isSupport: includes_user,
+          supporterCount: supporters_count,
+          upportCount: supports_count
+        )
+      }, status: :ok
     else
       render json: { errors: supporting.errors.full_messages }, status: :unprocessable_entity
     end
