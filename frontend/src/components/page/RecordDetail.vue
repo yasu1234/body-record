@@ -68,7 +68,7 @@ const getSupport = async () => {
 
 const getComments = async () => {
   try {
-    const res = await axiosInstance.get(`/api/v1/comments/record`, {
+    const res = await axiosInstance.get(`/api/v1/record_comments`, {
       params: {
         record_id: route.params.id,
       },
@@ -150,7 +150,7 @@ const addComment = async (comment) => {
     formData.append("record_id", recordId.value);
     formData.append("comment", comment);
 
-    const res = await axiosInstance.post(`/api/v1/comments/record`, formData);
+    const res = await axiosInstance.post(`/api/v1/record_comments`, formData);
     getComments();
   } catch (error) {
     let errorMessages = "";

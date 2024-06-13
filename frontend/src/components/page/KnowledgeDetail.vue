@@ -83,7 +83,7 @@ const getSupport = async () => {
 
 const getComments = async () => {
   try {
-    const res = await axiosInstance.get(`/api/v1/comments/knowledge`, {
+    const res = await axiosInstance.get(`/api/v1/knowledge_comments`, {
       params: {
         knowledge_id: route.params.id,
       },
@@ -158,7 +158,7 @@ const addComment = async (comment) => {
     formData.append("comment", comment);
 
     const res = await axiosInstance.post(
-      `/api/v1/comments/knowledge`,
+      `/api/v1/knowledge_comments`,
       formData
     );
     getComments();
