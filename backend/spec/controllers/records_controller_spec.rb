@@ -201,7 +201,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
   describe "GET #show" do
     context "対象のデータを取得できる" do
-      let(:record) { create(:record, user:) }
+      let(:record) { create(:record, :fixed_date, user:) }
 
       before do
         request.headers.merge!(headers)
