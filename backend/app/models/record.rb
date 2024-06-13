@@ -12,7 +12,7 @@ class Record < ApplicationRecord
   validates :fat_percentage, allow_nil: true, numericality: { allow_blank: true }
 
   validates :images,
-            content_type: ['image/jpeg' 'image/png' 'image/jpg'],
+            content_type: { in: %w[image/jpeg image/png image/jpg] },
             size: { less_than: 5.megabytes },
             limit: { max: 3 }
 
