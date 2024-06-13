@@ -97,6 +97,12 @@ p.validation-error-message {
   margin-top: 20px;
 }
 
+/* ファイル登録編集ではエリアをPCの場合には横２つ表示 */
+.file-input-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
 @media screen and (max-width: 768px) {
   .record-search-container {
     width: auto;
@@ -113,6 +119,10 @@ p.validation-error-message {
 @media screen and (min-width: 768px) {
   .record-search-time-list {
     display: flex;
+  }
+
+  .file-input-container {
+    grid-template-columns: repeat(1, 1fr);
   }
 }
 

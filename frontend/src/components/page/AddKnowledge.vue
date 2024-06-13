@@ -19,11 +19,11 @@ const toastNotifications = new toastService(toast);
 
 const title = ref("");
 const knowledge = ref("");
-const files = ref([]);
+const files = ref([...Array(5)]);
 
-function onFileChange(event) {
-  files.value = [...event];
-}
+const onFileChange = (event, index) => {
+  files.value[index - 1] = event;
+};
 
 const registerKnowledge = async () => {
   try {
@@ -74,9 +74,11 @@ const showKnowledgeDetail = (item) => {
     </FloatLabel>
   </div>
   <div class="p-5">
-    <p class="inputTitle">関連画像(5枚まで登録できます)</p>
-    <div v-for="i in 5">
-      <DropFile @change="onFileChange" :index="i" class="mt-3" />
+    <h2>関連画像(5枚まで登録できます)</h2>
+    <div class="file-container">
+      <div v-for="i in 5">
+        <DropFile @change="onFileChange" :index="i" class="mt-3" />
+      </div>
     </div>
   </div>
   <div class="p-5 text-center">
@@ -91,9 +93,19 @@ const showKnowledgeDetail = (item) => {
   width: 100%;
   padding: 10px;
 }
+.file-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
 .add-knowledge-button {
   font-size: 16px;
   font-weight: bold;
   padding: 10px 50px;
+}
+
+@media (max-width: 768px) {
+  .file-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 </style>
