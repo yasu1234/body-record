@@ -72,7 +72,7 @@ FactoryBot.define do
     trait :with_supporting do
       after(:create) do |user, _evaluator|
         other_user = create(:user)
-        user.support(other_user)
+        user.support!(other_user)
       end
     end
 

@@ -30,7 +30,7 @@ RSpec.describe User, type: :model do
     let(:other_user) { create(:user) }
 
     before do
-      user.support(other_user)
+      user.support!(other_user)
     end
 
     it "紐づく応援データも削除される" do
@@ -46,10 +46,6 @@ RSpec.describe User, type: :model do
       expect(guest_user.name).to eq "ゲストユーザー"
       expect(guest_user.status).to eq 1
     end
-  end
-
-  def check_support_mine(target_support_user)
-    self == target_support_user
   end
 
   describe "#check_support_mine" do
@@ -78,7 +74,7 @@ RSpec.describe User, type: :model do
     let(:other_user) { create(:user) }
 
     it "応援ができる" do
-      expect { user.support(other_user) }.to change { Support.count }.by(1)
+      expect { user.support!(other_user) }.to change { Support.count }.by(1)
       expect(user.supportings).to include(other_user)
       expect(other_user.supporters).to include(user)
     end
@@ -89,7 +85,7 @@ RSpec.describe User, type: :model do
     let(:other_user) { create(:user) }
 
     before do
-      user.support(other_user)
+      user.support!(other_user)
     end
 
     it "応援解除が行われる" do

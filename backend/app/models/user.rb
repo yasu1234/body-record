@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def support(other_user)
+  def support!(other_user)
     supporting_relationships.find_or_create_by!(support_id: other_user.id)
   end
 
