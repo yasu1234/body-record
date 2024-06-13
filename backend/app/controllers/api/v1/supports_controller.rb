@@ -53,15 +53,11 @@ class Api::V1::SupportsController < ApplicationController
   def create
     support_user = User.find(params[:id])
 
-    supporting = current_api_v1_user.support(support_user)
-
-    if supporting.nil?
+    if current_api_v1_user.check_support_mine(support_user)
       return render json: { errors: "自分自身を応援することはできません" }, status: :unprocessable_entity
     end
 
-    render json: { errors: supporting.errors.full_messages }, status: :unprocessable_entity and return if supporting.invalid?
-
-    supporting.save!
+    current_api_v1_user.support!(support_user)
 
     supporters_count = support_user.supporter_relationships.count
     supports_count = support_user.supportings.count
@@ -76,6 +72,8 @@ class Api::V1::SupportsController < ApplicationController
     }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のユーザーが見つかりません" }, status: :not_found
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
   rescue StandardError => e
     render json: { errors: e.message }, status: :internal_server_error
   end
