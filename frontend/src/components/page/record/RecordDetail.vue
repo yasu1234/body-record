@@ -3,15 +3,15 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../const/toast.js";
-import { axiosInstance, setupInterceptors } from "../../const/axios.js";
+import { toastService } from "../../../const/toast.js";
+import { axiosInstance, setupInterceptors } from "../../../const/axios.js";
 
-import Header from "../layout/Header.vue";
-import Comments from "../layout/Comments.vue";
-import CommentInput from "../layout/CommentInput.vue";
-import TabMenu from "../layout/TabMenu.vue";
-import Author from "../layout/Author.vue";
-import RelationImage from "../layout/RelationImage.vue";
+import Header from "../../layout/Header.vue";
+import Comments from "../../layout/Comments.vue";
+import CommentInput from "../../layout/CommentInput.vue";
+import TabMenu from "../../layout/TabMenu.vue";
+import Author from "../../layout/Author.vue";
+import RelationImage from "../../layout/RelationImage.vue";
 
 const route = useRoute();
 const router = useRouter();

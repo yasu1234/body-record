@@ -1,13 +1,13 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
-import { axiosInstance } from "../../const/axios.js";
+import { axiosInstance } from "../../../const/axios.js";
 
-import ListPage from "../layout/ListPage.vue";
-import DatePicker from "../atom/DatePicker.vue";
-import SearchButton from "../atom/SearchButton.vue";
-import RecordCard from "../layout/RecordCard.vue";
-import ResultEmpty from "../atom/ResultEmpty.vue";
+import ListPage from "../../layout/ListPage.vue";
+import DatePicker from "../../atom/DatePicker.vue";
+import SearchButton from "../../atom/SearchButton.vue";
+import RecordCard from "../../layout/RecordCard.vue";
+import ResultEmpty from "../../atom/ResultEmpty.vue";
 
 const router = useRouter();
 const route = useRoute();

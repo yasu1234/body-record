@@ -3,14 +3,17 @@ import Home from '/src/components/page/Home.vue';
 import AccountInteroduction from '/src/components/page/AccountIntroduction.vue';
 import Signup from '/src/components/page/Signup.vue';
 import Login from '/src/components/page/Login.vue';
-import AddRecord from '/src/components/page/AddRecord.vue';
+import AddRecord from '/src/components/page/record/AddRecord.vue';
+import EditRecord from '/src/components/page/record/EditRecord.vue';
+import RecordDetail from '/src/components/page/record/RecordDetail.vue';
+import OtherRecordList from '/src/components/page/record/OtherRecordList.vue';
+
 import KnowledgeList from '/src/components/page/KnowledgeList.vue';
 import AddKnowledge from '/src/components/page/AddKnowledge.vue';
 import EditKnowledge from '/src/components/page/EditKnowledge.vue';
 import KnowledgeDetail from '/src/components/page/KnowledgeDetail.vue';
-import OtherRecordList from '/src/components/page/OtherRecordList.vue';
-import RecordDetail from '/src/components/page/RecordDetail.vue';
-import EditRecord from '/src/components/page/EditRecord.vue';
+
+
 import UserProfile from '/src/components/page/UserProfile.vue';
 import EditProfile from '/src/components/page/EditProfile.vue';
 import PasswordEdit from '/src/components/page/PasswordEdit.vue';
