@@ -6,6 +6,7 @@ FactoryBot.define do
     password { "Password1" }
     password_confirmation { "Password1" }
     name { "test" }
+    status { 0 }
 
     trait :fixed_id do
       id { 100 }
@@ -41,7 +42,7 @@ FactoryBot.define do
       end
     end
 
-      # recordデータを関連付ける
+    # recordデータを関連付ける
     trait :without_records do
       transient do
         records_count { 0 }
