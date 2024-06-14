@@ -3,8 +3,8 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../../const/toast.js";
-import { axiosInstance, setupInterceptors } from "../../../const/axios.js";
+import { toastService } from "../../../js/toast.js";
+import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
 
 import Header from "../../layout/Header.vue";
 import Comments from "../../layout/Comments.vue";

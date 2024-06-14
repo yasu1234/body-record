@@ -32,7 +32,7 @@ jest.mock("primevue/usetoast", () => ({
   })),
 }));
 
-jest.mock("@/const/axios.js", () => ({
+jest.mock("@/js/axios.js", () => ({
   axiosInstance: {
     get: jest.fn(),
     interceptors: {
@@ -57,7 +57,7 @@ describe("EditRecord", () => {
   };
 
   beforeEach(() => {
-    jest.mock("@/const/axios.js", () => ({
+    jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
         get: jest.fn(),
         post: jest.fn(),
@@ -71,7 +71,7 @@ describe("EditRecord", () => {
     }));
 
     // モックされたaxiosInstanceを取得
-    const axiosModule = require("@/const/axios.js");
+    const axiosModule = require("@/js/axios.js");
     mockedAxiosInstance = axiosModule.axiosInstance;
 
     // onMounted内でaxios.getが呼ばれるため、このタイミングでモック設定

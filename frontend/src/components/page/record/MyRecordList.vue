@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
-import { axiosInstance } from "../../../const/axios.js";
+import { axiosInstance } from "../../../js/axios.js";
 
 import ListPage from "../../layout/ListPage.vue";
 import DatePicker from "../../atom/DatePicker.vue";

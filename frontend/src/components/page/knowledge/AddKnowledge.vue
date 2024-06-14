@@ -3,11 +3,11 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../../const/toast.js";
+import { toastService } from "../../../js/toast.js";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
-import { axiosInstance } from "../../../const/axios.js";
+import { axiosInstance } from "../../../js/axios.js";
 
 import DropFile from "../../atom/DropFile.vue";
 import Header from "../../layout/Header.vue";

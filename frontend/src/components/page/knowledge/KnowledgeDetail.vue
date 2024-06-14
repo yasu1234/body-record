@@ -2,9 +2,9 @@
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import MarkdownIt from "markdown-it";
-import { axiosInstance, setupInterceptors } from "../../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../../const/toast.js";
+import { toastService } from "../../../js/toast.js";
 import Toast from "primevue/toast";
 
 import Header from "../../layout/Header.vue";

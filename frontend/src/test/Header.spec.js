@@ -23,7 +23,7 @@ jest.mock('vue-router', () => {
   };
 });
 
-jest.mock('@/const/axios.js', () => ({
+jest.mock('@/js/axios.js', () => ({
   axiosInstance: {
     get: jest.fn(),
     delete: jest.fn(),
@@ -52,7 +52,7 @@ describe('Header.vue', () => {
   })
 
   it('未ログインの場合には会員登録・ログインボタンが表示される', async () => {
-    jest.mock("@/const/axios.js", () => ({
+    jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
         get: jest.fn(),
         post: jest.fn(),
@@ -66,7 +66,7 @@ describe('Header.vue', () => {
     }));
 
     // モックされたaxiosInstanceを取得
-    const axiosModule = require("@/const/axios.js");
+    const axiosModule = require("@/js/axios.js");
     mockedAxiosInstance = axiosModule.axiosInstance;
     mockedAxiosInstance.get.mockResolvedValueOnce({ data: { user: null } })
 
@@ -76,7 +76,7 @@ describe('Header.vue', () => {
   it('ログイン済みの場合には会員登録・ログインボタンが表示されない', async () => {
     const user = { id: 1 }
 
-    jest.mock("@/const/axios.js", () => ({
+    jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
         get: jest.fn(),
         post: jest.fn(),
@@ -89,7 +89,7 @@ describe('Header.vue', () => {
       setupInterceptors: jest.fn(),
     }));
 
-    const axiosModule = require("@/const/axios.js");
+    const axiosModule = require("@/js/axios.js");
     mockedAxiosInstance = axiosModule.axiosInstance;
     mockedAxiosInstance.get.mockResolvedValue({ data: { user: user } })
 
@@ -99,7 +99,7 @@ describe('Header.vue', () => {
   it('ログイン済みの場合にはドロップダウンメニューが4つ表示される', async () => {
     const user = { id: 1 }
 
-    jest.mock("@/const/axios.js", () => ({
+    jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
         get: jest.fn(),
         post: jest.fn(),
@@ -112,7 +112,7 @@ describe('Header.vue', () => {
       setupInterceptors: jest.fn(),
     }));
 
-    const axiosModule = require("@/const/axios.js");
+    const axiosModule = require("@/js/axios.js");
     mockedAxiosInstance = axiosModule.axiosInstance;
 
     mockedAxiosInstance.get.mockResolvedValue({ data: { user: user } })
@@ -128,7 +128,7 @@ describe('Header.vue', () => {
   it('ログアウトするとCookieのトークン情報がなくなる', async () => {
     const user = { id: 1 }
 
-    jest.mock("@/const/axios.js", () => ({
+    jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
         get: jest.fn(),
         post: jest.fn(),
@@ -141,7 +141,7 @@ describe('Header.vue', () => {
       setupInterceptors: jest.fn(),
     }));
 
-    const axiosModule = require("@/const/axios.js");
+    const axiosModule = require("@/js/axios.js");
     mockedAxiosInstance = axiosModule.axiosInstance;
 
     mockedAxiosInstance.get.mockResolvedValueOnce({ data: { user: user } })

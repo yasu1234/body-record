@@ -2,9 +2,9 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../../const/toast.js";
+import { toastService } from "../../../js/toast.js";
 import Toast from "primevue/toast";
-import { axiosInstance, setupInterceptors } from "../../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
 
 import Header from "../../layout/Header.vue";
 import RecordCard from "../../layout/RecordCard.vue";

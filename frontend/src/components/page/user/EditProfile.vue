@@ -6,8 +6,8 @@ import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../../const/toast.js";
-import { axiosInstance, setupInterceptors } from "../../../const/axios.js";
+import { toastService } from "../../../js/toast.js";
+import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
 
 import DropFile from "../../atom/DropFile.vue";
 import Header from "../../layout/Header.vue";
