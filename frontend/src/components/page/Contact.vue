@@ -4,9 +4,14 @@ import { useToast } from "primevue/usetoast";
 import { toastService } from "../../const/toast.js";
 import Toast from "primevue/toast";
 import { axiosInstance } from "../../const/axios.js";
+import { useRouter } from "vue-router";
+import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import Header from "../layout/Header.vue";
 import TabMenu from "../layout/TabMenu.vue";
+
+const router = useRouter();
+setupInterceptors(router);
 
 const contact = ref("");
 const toast = useToast();
@@ -18,12 +23,17 @@ const contactSubmit = async () => {
     formData.append("content", contact.value);
 
     const res = await axiosInstance.post(`/api/v1/contacts`, formData);
-    console.log({ res });
+    toastNotifications.displayError("お問合せを送信しました", "");
+    setTimeout(async () => {
+      showContactList();
+    }, 3000);
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
     }
     toastNotifications.displayError(
@@ -32,6 +42,10 @@ const contactSubmit = async () => {
     );
   }
 };
+
+const showContactList = () => {
+  router.push({ name: "ContactList" });
+}
 </script>
 
 <template>
@@ -42,7 +56,7 @@ const contactSubmit = async () => {
   <div class="contact-area">
     <form class="contact-form" @submit.prevent="contactSubmit">
       <div class="contact-item">
-        <label class="itemLabel"
+        <label class="contact-require-label"
           >要望や不適切な表現がある場合にはお問合せフォームを入力してください</label
         >
         <textarea
@@ -67,17 +81,14 @@ const contactSubmit = async () => {
   flex-direction: column;
   align-items: center;
 }
-
 .contact-form {
   width: 100%;
   box-sizing: border-box;
 }
-
 .contact-top-margin {
   padding-top: 40px;
   text-align: center;
 }
-
 .contact-item {
   padding-top: 40px;
   width: 80%;
@@ -86,12 +97,10 @@ const contactSubmit = async () => {
 .contact-text-area {
   width: 100%;
 }
-
-.itemLabel {
+.contact-require-label {
   display: block;
   text-align: left;
 }
-
 .submit-button {
   font-size: 16px;
   font-weight: bold;
