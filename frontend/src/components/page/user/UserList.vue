@@ -68,7 +68,7 @@ const searchUser = async () => {
     const res = await axiosInstance.get("/api/v1/users", {
       params: {
         keyword: keyword.value,
-        page: pageNum,
+        page: page.value,
         isSupportOnly: isDisplayOnlySupport.value,
       },
     });

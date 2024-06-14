@@ -1,5 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '/src/components/page/Home.vue';
+import AccountInteroduction from '/src/components/page/account/AccountIntroduction.vue';
+import ConfirmAccountDelete from '/src/components/page/account/ConfirmAccountDelete.vue';
+import Signup from '/src/components/page/account/Signup.vue';
+import Login from '/src/components/page/account/Login.vue';
+import PasswordEdit from '/src/components/page/account/PasswordEdit.vue';
+import MailAddressEdit from '/src/components/page/account/MailAddressEdit.vue';
 import Contact from '/src/components/page/contact/Contact.vue';
 import ContactList from '/src/components/page/contact/ContactList.vue';
 import ContactDetail from '/src/components/page/contact/ContactDetail.vue';
@@ -15,14 +21,7 @@ import UserProfile from '/src/components/page/user/UserProfile.vue';
 import EditProfile from '/src/components/page/user/EditProfile.vue';
 import UserList from '/src/components/page/user/UserList.vue';
 import MyPage from '/src/components/page/user/MyPage.vue';
-
-import AccountInteroduction from '/src/components/page/AccountIntroduction.vue';
-import Signup from '/src/components/page/Signup.vue';
-import Login from '/src/components/page/Login.vue';
-import PasswordEdit from '/src/components/page/PasswordEdit.vue';
-import MailAddressEdit from '/src/components/page/MailAddressEdit.vue';
 import NotFound from '/src/components/page/PageNotFoundError.vue';
-import ConfirmAccountDelete from '/src/components/page/ConfirmAccountDelete.vue';
 import SupportList from '/src/components/page/SupportList.vue';
 import SupporterList from '/src/components/page/SupporterList.vue';
 

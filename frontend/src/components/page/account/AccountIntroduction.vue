@@ -2,9 +2,9 @@
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../const/toast.js";
+import { toastService } from "../../../const/toast.js";
 import Toast from "primevue/toast";
-import { axiosInstance } from "../../const/axios.js";
+import { axiosInstance } from "../../../const/axios.js";
 
 const router = useRouter();
 const toast = useToast();

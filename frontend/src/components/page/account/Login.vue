@@ -1,16 +1,15 @@
 <script setup>
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../const/toast.js";
+import { toastService } from "../../../const/toast.js";
 import Toast from "primevue/toast";
-import { axiosInstance, setupInterceptors } from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../../const/axios.js";
 
-import Header from "../layout/Header.vue";
-import PasswordText from "../atom/PasswordText.vue";
+import Header from "../../layout/Header.vue";
+import PasswordText from "../../atom/PasswordText.vue";
 
 const router = useRouter();
 const toast = useToast();

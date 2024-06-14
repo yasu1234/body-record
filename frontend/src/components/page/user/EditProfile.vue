@@ -161,7 +161,7 @@ const showMyPage = () => {
             />
             <img
               v-else
-              src="../../assets/image/user-placeholder.png"
+              src="../../../assets/image/user-placeholder.png"
               alt="ユーザーアイコン"
             />
           </div>
