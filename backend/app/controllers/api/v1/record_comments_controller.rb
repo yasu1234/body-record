@@ -2,12 +2,14 @@ class Api::V1::RecordCommentsController < ApplicationController
     before_action :check_login
 
     def index
+        if params[:record_id].nil?
+            render json:{ errors: "記録を指定してください" }, status: :bad_request and return
+        end
         comments = Comment.where(record_id: params[:record_id])
         render json: { comments: comments.as_json(include: { user: { only: [:name], methods: :image_url } }) }, status: :ok
-    rescue ActiveRecord::RecordNotFound
-        render json: { error: "対象のデータが見つかりません" }, status: :not_found
+    rescue StandardError => e
+        render json: { errors: e.message }, status: :internal_server_error
     end
-    
     
     def create
         record = Record.find(record_comment_params[:record_id])

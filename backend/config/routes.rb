@@ -12,11 +12,7 @@ Rails.application.routes.draw do
       }
 
       resources :records
-      delete "/record/image", to: "records#delete_image"
-
       resources :knowledges
-      delete "/knowledge/image", to: "knowledges#delete_image"
-
       resources :profiles
       resources :bookmarks
       resources :supports
@@ -29,6 +25,8 @@ Rails.application.routes.draw do
       resources :graph_records
       resources :knowledge_comments
       resources :record_comments
+      resources :record_images
+      resources :knowledge_images
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

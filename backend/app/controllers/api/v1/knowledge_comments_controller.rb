@@ -2,10 +2,13 @@ class Api::V1::KnowledgeCommentsController < ApplicationController
     before_action :check_login
 
     def index
+        if params[:knowledge_id].nil?
+            render json:{ errors: "記録を指定してください" }, status: :bad_request and return
+        end
         comments = Comment.where(knowledge_id: params[:knowledge_id])
         render json: { comments: comments.as_json(include: { user: { only: [:name], methods: :image_url } }) }, status: :ok
-    rescue ActiveRecord::RecordNotFound
-        render json: { error: "対象のデータが見つかりません" }, status: :not_found
+    rescue StandardError => e
+        render json: { errors: e.message }, status: :internal_server_error
     end
     
     
@@ -19,7 +22,7 @@ class Api::V1::KnowledgeCommentsController < ApplicationController
     
         comment.save!
     
-        render json: { comments: knowledge.comments.as_json(include: { user: { only: [:name], methods: :image_url } }) }, status: :ok
+        render json: { knowledge: knowledge.as_json(include: [:comments])}, status: :ok
     rescue ActiveRecord::RecordNotFound
         render json: { error: "対象のデータが見つかりません" }, status: :not_found
     rescue StandardError => e

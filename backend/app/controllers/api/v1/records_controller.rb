@@ -54,18 +54,6 @@ class Api::V1::RecordsController < ApplicationController
       render json: { errors: e.message }, status: :internal_server_error
   end
 
-  def delete_image
-    record = current_api_v1_user.record.find(params[:id])
-    image = record.images.find(params[:image_id])
-    image.purge
-    render json: { imageUrls: record.image_urls }, status: :ok
-
-  rescue ActiveRecord::RecordNotFound
-    render json: { errors: '対象のデータが見つかりません' }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
-  end
-
   private
 
     def record_register_params
