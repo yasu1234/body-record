@@ -5,7 +5,7 @@ class Api::V1::UsersController < ApplicationController
         users = User.all
     
         if params[:isSupportOnly].present? && params[:isSupportOnly] == "true"
-          users = users.supporing
+          users = current_api_v1_user.supportings
         end
     
         if params[:keyword].present?
