@@ -20,11 +20,10 @@ import KnowledgeDetail from '/src/components/page/knowledge/KnowledgeDetail.vue'
 import UserProfile from '/src/components/page/user/UserProfile.vue';
 import EditProfile from '/src/components/page/user/EditProfile.vue';
 import UserList from '/src/components/page/user/UserList.vue';
+import SupportList from '/src/components/page/user/SupportList.vue';
+import SupporterList from '/src/components/page/user/SupporterList.vue';
 import MyPage from '/src/components/page/user/MyPage.vue';
 import NotFound from '/src/components/page/PageNotFoundError.vue';
-import SupportList from '/src/components/page/SupportList.vue';
-import SupporterList from '/src/components/page/SupporterList.vue';
-
 
 const routes = [
   {
