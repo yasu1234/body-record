@@ -6,13 +6,13 @@ import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../const/toast.js";
-import { axiosInstance, setupInterceptors } from "../../const/axios.js";
+import { toastService } from "../../../const/toast.js";
+import { axiosInstance, setupInterceptors } from "../../../const/axios.js";
 
-import DropFile from "../atom/DropFile.vue";
-import Header from "../layout/Header.vue";
-import SettingSideMenu from "../layout/SettingSideMenu.vue";
-import TabMenu from "../layout/TabMenu.vue";
+import DropFile from "../../atom/DropFile.vue";
+import Header from "../../layout/Header.vue";
+import SettingSideMenu from "../../layout/SettingSideMenu.vue";
+import TabMenu from "../../layout/TabMenu.vue";
 
 const route = useRoute();
 const router = useRouter();

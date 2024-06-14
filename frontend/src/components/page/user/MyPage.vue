@@ -2,17 +2,17 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../const/toast.js";
+import { toastService } from "../../../const/toast.js";
 import Toast from "primevue/toast";
-import { axiosInstance, setupInterceptors } from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../../const/axios.js";
 
-import Header from "../layout/Header.vue";
-import RecordCard from "../layout/RecordCard.vue";
-import KnowledgeCard from "../layout/KnowledgeCard.vue";
-import Chart from "../atom/Chart.vue";
-import MonthPicker from "../atom/MonthPicker.vue";
-import Profile from "../layout/Profile.vue";
-import TabMenu from "../layout/TabMenu.vue";
+import Header from "../../layout/Header.vue";
+import RecordCard from "../../layout/RecordCard.vue";
+import KnowledgeCard from "../../layout/KnowledgeCard.vue";
+import Chart from "../../atom/Chart.vue";
+import MonthPicker from "../../atom/MonthPicker.vue";
+import Profile from "../../layout/Profile.vue";
+import TabMenu from "../../layout/TabMenu.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -26,7 +26,6 @@ const records = ref([]);
 const knowledges = ref([]);
 const isMoreRecords = ref(false);
 const isMoreKnowledges = ref(false);
-const isLogin = ref(false);
 const userId = ref(0);
 const month = ref({
   month: new Date().getMonth(),
@@ -34,12 +33,7 @@ const month = ref({
 });
 
 onMounted(() => {
-  userId.value = route.params.id;
-  getProfile();
-  getSupportCount();
-  getUserRecord();
-  getUserKnowledge();
-  getMonthRecord();
+  checkLogin();
 });
 
 var weigtData = ref({
@@ -63,6 +57,20 @@ var fatPercentageData = ref({
     },
   ],
 });
+
+const checkLogin = async () => {
+  try {
+    const res = await axiosInstance.get("/api/v1/users/check_login");
+    userId.value = res.data.user.id;
+    getProfile();
+    getSupportCount();
+    getUserRecord();
+    getUserKnowledge();
+    getMonthRecord();
+  } catch (error) {
+    toastNotifications.displayError("ユーザー情報を取得できません", "");
+  }
+};
 
 const getProfile = async () => {
   try {
@@ -152,71 +160,17 @@ const getUserKnowledge = async () => {
   }
 };
 
-const supportOn = async () => {
-  try {
-    const formData = new FormData();
-    formData.append("id", userId.value);
-
-    const res = await axiosInstance.post(`/api/v1/supports`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    support.value = res.data.user;
-  } catch (error) {
-    let errorMessages = "";
-    if (error.response.status === 422) {
-      if (Array.isArray(error.response.data.errors)) {
-        errorMessages += error.response.data.errors.join("\n");
-      } else {
-        errorMessages = error.response.data.errors;
-      }
-    }
-
-    toastNotifications.displayError(
-      "サポート登録に失敗しました",
-      errorMessages
-    );
-  }
-};
-
-const supportOff = async () => {
-  try {
-    const res = await axiosInstance.delete(`/api/v1/supports/${userId.value}`);
-    support.value = res.data.user;
-  } catch (error) {
-    let errorMessage = "";
-    if (error.response.status === 422) {
-      if (Array.isArray(error.response.data.errors)) {
-        errorMessage += error.response.data.errors.join("\n");
-      } else {
-        errorMessage = error.response.data.errors;
-      }
-    }
-
-    toastNotifications.displayError("サポート解除に失敗しました", errorMessage);
-  }
-};
-
 function monthChange(event) {
   month.value = event;
   getMonthRecord();
 }
-
-const editSupport = (isSupport) => {
-  if (isSupport) {
-    supportOff();
-  } else {
-    supportOn();
-  }
-};
 
 const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
 };
 
 const showMoreRecords = () => {
-  router.push({ name: "OtherRecordList", params: { id: userId.value } });
+  router.push({ name: "MyRecordList" });
 };
 </script>
 
@@ -224,7 +178,7 @@ const showMoreRecords = () => {
   <Toast position="top-center" />
   <Header />
   <TabMenu />
-  <Profile :user="user" :support="support" @edit-support="editSupport" />
+  <Profile :user="user" :support="support" />
   <div class="weight-graph">
     <Chart :data="weigtData" />
   </div>

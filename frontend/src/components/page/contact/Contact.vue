@@ -1,13 +1,13 @@
 <script setup>
 import { ref } from "vue";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../const/toast.js";
+import { toastService } from "../../../const/toast.js";
 import Toast from "primevue/toast";
 import { useRouter } from "vue-router";
-import { axiosInstance, setupInterceptors } from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../../const/axios.js";
 
-import Header from "../layout/Header.vue";
-import TabMenu from "../layout/TabMenu.vue";
+import Header from "../../layout/Header.vue";
+import TabMenu from "../../layout/TabMenu.vue";
 
 const router = useRouter();
 setupInterceptors(router);

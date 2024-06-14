@@ -1,10 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { axiosInstance } from "../../const/axios.js";
+import { axiosInstance } from "../../../const/axios.js";
 
-import Header from "../layout/Header.vue";
-import TabMenu from "../layout/TabMenu.vue";
+import Header from "../../layout/Header.vue";
+import TabMenu from "../../layout/TabMenu.vue";
 
 const router = useRouter();
 
@@ -23,7 +23,7 @@ const getContactList = async () => {
       searchResult.value.push(item);
     }
   } catch (error) {
-    console.log({ error });
+    searchResult.value = [];
   }
 };
 
