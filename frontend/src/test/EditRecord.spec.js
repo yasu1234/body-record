@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import EditRecord from "@/components/page/EditRecord.vue";
+import EditRecord from "@/components/page/record/EditRecord.vue";
 
 jest.mock("axios");
 jest.mock("vue-router", () => {

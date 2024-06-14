@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import EditKnowledge from "@/components/page/EditKnowledge.vue";
+import EditKnowledge from "@/components/page/knowledge/EditKnowledge.vue";
 
 jest.mock("axios");
 jest.mock("vue-router", () => {

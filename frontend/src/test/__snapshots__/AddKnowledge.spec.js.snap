@@ -23,43 +23,45 @@ exports[`AddKnowledge SnapShotテスト初期表示 1`] = `
   <div
     class="p-5"
   >
-    <p
-      class="inputTitle"
-    >
+    <h2>
       関連画像(5枚まで登録できます)
-    </p>
-    
-    <div>
-      <drop-file-stub
-        class="mt-3"
-        index="1"
-      />
+    </h2>
+    <div
+      class="file-input-container"
+    >
+      
+      <div>
+        <drop-file-stub
+          class="mt-3"
+          index="1"
+        />
+      </div>
+      <div>
+        <drop-file-stub
+          class="mt-3"
+          index="2"
+        />
+      </div>
+      <div>
+        <drop-file-stub
+          class="mt-3"
+          index="3"
+        />
+      </div>
+      <div>
+        <drop-file-stub
+          class="mt-3"
+          index="4"
+        />
+      </div>
+      <div>
+        <drop-file-stub
+          class="mt-3"
+          index="5"
+        />
+      </div>
+      
     </div>
-    <div>
-      <drop-file-stub
-        class="mt-3"
-        index="2"
-      />
-    </div>
-    <div>
-      <drop-file-stub
-        class="mt-3"
-        index="3"
-      />
-    </div>
-    <div>
-      <drop-file-stub
-        class="mt-3"
-        index="4"
-      />
-    </div>
-    <div>
-      <drop-file-stub
-        class="mt-3"
-        index="5"
-      />
-    </div>
-    
   </div>
   <div
     class="p-5 text-center"

@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import RecordDetail from "@/components/page/RecordDetail.vue";
+import RecordDetail from "@/components/page/record/RecordDetail.vue";
 
 jest.mock("axios");
 jest.mock("vue-router", () => {
