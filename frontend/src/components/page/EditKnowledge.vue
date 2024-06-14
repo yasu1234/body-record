@@ -149,7 +149,7 @@ const showKnowledgeDetail = (item) => {
     </div>
   </div>
   <div class="p-5">
-    <p class="inputTitle">関連画像(5枚まで登録できます)</p>
+    <p>関連画像(5枚まで登録できます)</p>
     <div class="file-input-container">
       <div v-for="i in 5">
         <DropFile @change="onFileChange" :index="i" class="mt-3" />

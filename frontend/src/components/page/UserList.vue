@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter, onBeforeRouteUpdate } from "vue-router";
+import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
 import { axiosInstance, setupInterceptors } from "../../const/axios.js";
 
 import TabMenu from "../layout/TabMenu.vue";
@@ -10,6 +10,7 @@ import ListPage from "../layout/ListPage.vue";
 import SearchButton from "../atom/SearchButton.vue";
 import ResultEmpty from "../atom/ResultEmpty.vue";
 
+const route = useRoute();
 const router = useRouter();
 setupInterceptors(router);
 
@@ -21,11 +22,12 @@ const pageCount = ref(1);
 const pageNum = ref(1);
 
 onMounted(() => {
+  setQuery(route.query.keyword, route.query.onlySupport, route.query.page);
   searchUser();
 });
 
 onBeforeRouteUpdate(async (to, from) => {
-  keyword.value = to.query.keyword;
+  setQuery(to.query.keyword, to.query.onlySupport, to.query.page);
   searchUser();
 });
 
@@ -36,7 +38,29 @@ const targetSearch = () => {
     query.keyword = keyword.value;
   }
 
+  if (isDisplayOnlySupport.value) {
+    query.onlySupport = true;
+  }
+
   router.push({ path: "/users", query: query });
+};
+
+const setQuery = (keywordParam, onlySupportParam, pageParam) => {
+  if (keywordParam != null) {
+    keyword.value = keywordParam;
+  } else {
+    keyword.value = "";
+  }
+  if (onlySupportParam != null && onlySupportParam) {
+    isDisplayOnlySupport.value = true;
+  } else {
+    isDisplayOnlySupport.value = false;
+  }
+  if (pageParam != null) {
+    page.value = pageParam;
+  } else {
+    page.value = 1;
+  }
 };
 
 const searchUser = async () => {
@@ -45,6 +69,7 @@ const searchUser = async () => {
       params: {
         keyword: keyword.value,
         page: pageNum,
+        isSupportOnly: isDisplayOnlySupport.value,
       },
     });
 
