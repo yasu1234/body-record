@@ -7,6 +7,10 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
+  module Status
+    GUEST_USER = 1
+  end
+
   has_one_attached :image
 
   has_many :bookmarks, dependent: :destroy
