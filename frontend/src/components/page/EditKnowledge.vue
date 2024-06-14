@@ -36,13 +36,13 @@ const onFileChange = (event, index) => {
 
 const deleteImage = async (item) => {
   try {
-    const res = await axiosInstance.delete("/api/v1/knowledges/image", {
+    const res = await axiosInstance.delete("/api/v1/knowledge_images", {
       params: {
         id: knowledgeId.value,
         image_id: item.id,
       },
     });
-    console.log({ res });
+    imageUrls.value = res.data.imageUrls;
   } catch (error) {
     let errorMessages = "";
     if (error.response != null && error.response.status === 422) {

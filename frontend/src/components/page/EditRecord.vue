@@ -44,7 +44,7 @@ const onFileChange = (event, index) => {
 
 const deleteImage = async (item) => {
   try {
-    const res = await axiosInstance.delete("/api/v1/record/image", {
+    const res = await axiosInstance.delete("/api/v1/record_images", {
       params: {
         id: recordId.value,
         image_id: item.id,
