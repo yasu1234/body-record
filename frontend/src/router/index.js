@@ -7,11 +7,10 @@ import AddRecord from '/src/components/page/record/AddRecord.vue';
 import EditRecord from '/src/components/page/record/EditRecord.vue';
 import RecordDetail from '/src/components/page/record/RecordDetail.vue';
 import OtherRecordList from '/src/components/page/record/OtherRecordList.vue';
-
-import KnowledgeList from '/src/components/page/KnowledgeList.vue';
-import AddKnowledge from '/src/components/page/AddKnowledge.vue';
-import EditKnowledge from '/src/components/page/EditKnowledge.vue';
-import KnowledgeDetail from '/src/components/page/KnowledgeDetail.vue';
+import KnowledgeList from '/src/components/page/knowledge/KnowledgeList.vue';
+import AddKnowledge from '/src/components/page/knowledge/AddKnowledge.vue';
+import EditKnowledge from '/src/components/page/knowledge/EditKnowledge.vue';
+import KnowledgeDetail from '/src/components/page/knowledge/KnowledgeDetail.vue';
 
 
 import UserProfile from '/src/components/page/UserProfile.vue';

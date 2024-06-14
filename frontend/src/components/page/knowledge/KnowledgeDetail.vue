@@ -2,17 +2,17 @@
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import MarkdownIt from "markdown-it";
-import { axiosInstance, setupInterceptors } from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../../const/axios.js";
 import { useToast } from "primevue/usetoast";
-import { toastService } from "../../const/toast.js";
+import { toastService } from "../../../const/toast.js";
 import Toast from "primevue/toast";
 
-import Header from "../layout/Header.vue";
-import TabMenu from "../layout/TabMenu.vue";
-import Comments from "../layout/Comments.vue";
-import CommentInput from "../layout/CommentInput.vue";
-import Author from "../layout/Author.vue";
-import RelationImage from "../layout/RelationImage.vue";
+import Header from "../../layout/Header.vue";
+import TabMenu from "../../layout/TabMenu.vue";
+import Comments from "../../layout/Comments.vue";
+import CommentInput from "../../layout/CommentInput.vue";
+import Author from "../../layout/Author.vue";
+import RelationImage from "../../layout/RelationImage.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -279,7 +279,7 @@ const showEdit = () => {
             @click="bookmarkClick(true)"
           >
             <img
-              src="../../assets/image/bookmark_on.png"
+              src="../../../assets/image/bookmark_on.png"
               alt="ブックマーク解除"
               v-tooltip="{ value: 'ブックマーク解除' }"
               class="side-menu-image"
@@ -287,7 +287,7 @@ const showEdit = () => {
           </button>
           <button v-else class="round-button" @click="bookmarkClick(false)">
             <img
-              src="../../assets/image/bookmark_off.png"
+              src="../../../assets/image/bookmark_off.png"
               alt="ブックマーク"
               v-tooltip="{ value: 'ブックマークする' }"
               class="side-menu-image"
@@ -297,7 +297,7 @@ const showEdit = () => {
         </div>
         <button class="round-button" v-show="isMyKnowledge">
           <img
-            src="../../assets/image/edit.png"
+            src="../../../assets/image/edit.png"
             alt="編集"
             v-tooltip="{ value: '編集' }"
             class="side-menu-image"
@@ -306,7 +306,7 @@ const showEdit = () => {
         </button>
         <button class="round-button" v-show="isMyKnowledge">
           <img
-            src="../../assets/image/delete.png"
+            src="../../../assets/image/delete.png"
             alt="削除"
             v-tooltip="{ value: '削除' }"
             class="side-menu-image"

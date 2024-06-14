@@ -1,14 +1,14 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
-import { axiosInstance, setupInterceptors } from "../../const/axios.js";
+import { axiosInstance, setupInterceptors } from "../../../const/axios.js";
 
-import TabMenu from "../layout/TabMenu.vue";
-import Header from "../layout/Header.vue";
-import ListPage from "../layout/ListPage.vue";
-import SearchButton from "../atom/SearchButton.vue";
-import KnowledgeCard from "../layout/KnowledgeCard.vue";
-import ResultEmpty from "../atom/ResultEmpty.vue";
+import TabMenu from "../../layout/TabMenu.vue";
+import Header from "../../layout/Header.vue";
+import ListPage from "../../layout/ListPage.vue";
+import SearchButton from "../../atom/SearchButton.vue";
+import KnowledgeCard from "../../layout/KnowledgeCard.vue";
+import ResultEmpty from "../../atom/ResultEmpty.vue";
 
 const route = useRoute();
 const router = useRouter();
