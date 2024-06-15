@@ -23,6 +23,7 @@ jobs:
     timeout-minutes: 10
     env:
       API_DOMAIN: "http://localhost"
+      GUEST_USER_ADDRESS: "test@text.com"
     services:
       postgres:
         image: postgres:15.2
