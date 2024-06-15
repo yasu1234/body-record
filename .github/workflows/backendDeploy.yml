@@ -31,29 +31,29 @@ jobs:
           POSTGRES_PASSWORD: postgres
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: "3.2.2"
-        bundler-cache: true
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2.2"
+          bundler-cache: true
     
-    - name: Bundler and gem install
-      run: |
-        gem install bundler
-        bundle install
+      - name: Bundler and gem install
+        run: |
+          gem install bundler
+          bundle install
 
-    - name: Database migration
-      run: |
-        cp config/database.yml.ci config/database.yml
-        bundle exec rails db:create RAILS_ENV=test
-        bundle exec rails db:migrate RAILS_ENV=test
+      - name: Database migration
+        run: |
+          cp config/database.yml.ci config/database.yml
+          bundle exec rails db:create RAILS_ENV=test
+          bundle exec rails db:migrate RAILS_ENV=test
 
-    - name: Run rspec
-      run: bundle exec rspec
+      - name: Run rspec
+        run: bundle exec rspec
 
   deploy:
     name: deploy
