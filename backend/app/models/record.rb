@@ -8,6 +8,7 @@ class Record < ApplicationRecord
   attr_accessor :calendar_date
 
   validates :date, presence: true, uniqueness: { scope: :user_id }
+  validates :memo, length: { maximum: 400 }, allow_blank: true
   validates :weight, allow_nil: true, numericality: { allow_blank: true }
   validates :fat_percentage, allow_nil: true, numericality: { allow_blank: true }
 
