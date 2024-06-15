@@ -1,8 +1,12 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import { axiosInstance, setupInterceptors } from "../../js/axios.js";
 
+const route = useRoute();
 const router = useRouter();
+setupInterceptors(router);
+
 
 const isOpen = ref(false);
 const isLogin = ref(false);
@@ -25,16 +29,7 @@ onMounted(() => {
 
 const checkLogin = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/users/check_login",
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get("/api/v1/users/check_login");
     isLogin.value = res.data.isLogin;
     userId.value = res.data.user.id;
   } catch (error) {
