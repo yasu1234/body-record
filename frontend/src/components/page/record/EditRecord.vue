@@ -4,7 +4,6 @@ import { useRoute, useRouter } from "vue-router";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../../js/toast.js";
-import Textarea from "primevue/textarea";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
@@ -14,12 +13,13 @@ import DropFile from "../../atom/DropFile.vue";
 import DatePicker from "../../atom/DatePicker.vue";
 import Header from "../../layout/Header.vue";
 import TabMenu from "../../layout/TabMenu.vue";
+import RecordMemoInput from "../../layout/RecordMemoInput.vue";
 
 const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
-setupInterceptors(router)
+setupInterceptors(router);
 
 const recordDate = ref("");
 const memo = ref("");
@@ -33,14 +33,6 @@ const isHidden = ref(false);
 onMounted(() => {
   getDetail();
 });
-
-function dateChange(event) {
-  recordDate.value = event;
-}
-
-const onFileChange = (event, index) => {
-  files.value[index - 1] = event;
-}
 
 const deleteImage = async (item) => {
   try {
@@ -89,7 +81,9 @@ const edit = async () => {
     }
 
     for (const file of files.value) {
-      formData.append("record[images][]", file);
+      if (file != null) {
+        formData.append("record[images][]", file);
+      }
     }
 
     const res = await axiosInstance.patch(
@@ -120,6 +114,18 @@ const edit = async () => {
   }
 };
 
+const dateChange = (event) => {
+  recordDate.value = event;
+}
+
+const onFileChange = (event, index) => {
+  files.value[index - 1] = event;
+};
+
+const memoEdit = (editingMemo) => {
+  memo.value = editingMemo
+}
+
 const showRecordDetail = () => {
   router.push({ name: "RecordDetail", params: { id: recordId.value } });
 };
@@ -131,7 +137,7 @@ const showRecordDetail = () => {
   <Toast position="top-center" />
   <form class="edit-container" @submit.prevent="edit">
     <div class="w-52">
-      <p class="inputTitle">記録日</p>
+      <p>記録日</p>
       <DatePicker isStart="true" :date="recordDate" @update:date="dateChange" />
     </div>
     <div class="weight-group mt-7">
@@ -149,10 +155,7 @@ const showRecordDetail = () => {
       <p class="ml-2">%</p>
     </div>
     <div class="mt-5">
-      <FloatLabel>
-        <Textarea v-model="memo" rows="10" class="record-memo p-2.5" />
-        <label>メモ</label>
-      </FloatLabel>
+      <RecordMemoInput :memo="memo" @memo-edit="memoEdit" />
     </div>
     <div class="mt-7">
       <input
@@ -257,13 +260,7 @@ input[type="text"] {
   height: 30px;
   cursor: pointer;
 }
-.record-memo {
-  width: 500px;
-}
 @media (max-width: 768px) {
-  .record-memo {
-    width: calc(100% - 20px);
-  }
   .edit-container {
     width: auto;
     margin-left: 20px;

@@ -3,7 +3,6 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../../js/toast.js";
-import Textarea from "primevue/textarea";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Toast from "primevue/toast";
@@ -13,6 +12,7 @@ import DatePicker from "../../atom/DatePicker.vue";
 import DropFile from "../../atom/DropFile.vue";
 import Header from "../../layout/Header.vue";
 import TabMenu from "../../layout/TabMenu.vue";
+import RecordMemoInput from "../../layout/RecordMemoInput.vue";
 
 const toast = useToast();
 const toastNotifications = new toastService(toast);
@@ -25,14 +25,6 @@ const weight = ref(null);
 const fatPercentage = ref(null);
 const files = ref([...Array(3)]);
 const isAddAsHidden = ref(false);
-
-function dateChange(event) {
-  recordDate.value = event;
-}
-
-const onFileChange = (event, index) => {
-  files.value[index - 1] = event;
-}
 
 const registerRecord = async () => {
   try {
@@ -81,6 +73,18 @@ const registerRecord = async () => {
   }
 };
 
+const dateChange = (date) => {
+  recordDate.value = date;
+}
+
+const onFileChange = (file, index) => {
+  files.value[index - 1] = file;
+}
+
+const memoEdit = (editingMemo) => {
+  memo.value = editingMemo
+}
+
 const showRecordDetail = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
 };
@@ -114,10 +118,7 @@ const showRecordDetail = (item) => {
       <label for="goal-fat-percentage" class="ml-2">%</label>
     </div>
     <div class="mt-7">
-      <FloatLabel>
-        <Textarea v-model="memo" rows="10" class="record-memo p-2.5" />
-        <label>メモ</label>
-      </FloatLabel>
+      <RecordMemoInput :memo="memo" @memo-edit="memoEdit" />
     </div>
     <div class="mt-7">
       <input
@@ -156,13 +157,7 @@ const showRecordDetail = (item) => {
   padding: 10px 50px;
   text-align: center;
 }
-.record-memo {
-  width: 500px;
-}
 @media (max-width: 768px) {
-  .record-memo {
-    width: calc(100% - 20px);
-  }
   .add-record-container {
     width: auto;
     margin-left: 20px;

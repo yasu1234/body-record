@@ -3,6 +3,7 @@ ja:
     attributes:
       record:
         date: "記録日"
+        memo: "メモ"
         images: "関連画像"
         weight: "体重"
         fat_percentage: "体脂肪率"
