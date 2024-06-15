@@ -3,9 +3,6 @@ require "rails_helper"
 RSpec.describe Api::V1::RecordCommentsController, type: :controller do
   let!(:user) { create(:user, :with_records, :without_knowledges) }
   let(:headers) { user.create_new_auth_token }
-  let!(:record) { create(:record, user:, id: 100, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
-  let(:comment) { create(:comment, user:, comment: "メモTEST", record_id: record.id) }
-  let(:valid_params) { { record_id: record.id, comment: "TESTコメント成功" } }
   let(:record_id_lack_param) { { comment: "TESTコメント" } }
   let(:update_valid_params) { { memo: "メモ更新TEST", date: "2024-04-01", images: [image] } }
 
@@ -36,6 +33,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
     end
 
     context "コメントが取得できる" do
+      let!(:record) { create(:record, user:, id: 100, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
       let!(:comment1) { create(:comment, user:, comment: "メモTEST1", record_id: 100) }
       let!(:comment2) { create(:comment, user:, comment: "メモTEST2", record_id: 100) }
       let!(:comment3) { create(:comment, user:, comment: "メモTEST3", record_id: 100) }
@@ -57,13 +55,14 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
     end
 
     context "コメントが取得できる" do
-        let!(:comment1) { create(:comment, user:, comment: "メモTEST1", record_id: 100) }
-        let!(:comment2) { create(:comment, user:, comment: "メモTEST2", record_id: 100) }
-        let!(:comment3) { create(:comment, user:, comment: "メモTEST3", record_id: 100) }
+        let!(:record) { create(:record, user:, id: 101, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
+        let!(:comment1) { create(:comment, user:, comment: "メモTEST1", record_id: 101) }
+        let!(:comment2) { create(:comment, user:, comment: "メモTEST2", record_id: 101) }
+        let!(:comment3) { create(:comment, user:, comment: "メモTEST3", record_id: 101) }
   
         before do
           request.headers.merge!(headers)
-          post :index, format: :json, params: { record_id: 101 }
+          post :index, format: :json, params: { record_id: 102 }
         end
       
         it "ステータスコード200が返却" do
@@ -79,6 +78,8 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
 
   describe "POST #create" do
     context "未ログイン" do
+      let!(:record) { create(:record, user:, id: 102, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
+      let(:valid_params) { { record_id: 102, comment: "TESTコメント成功" } }
       before do
         post :create, format: :json, params: valid_params
       end
@@ -89,6 +90,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
     end
 
     context "record_idが不足" do
+      let!(:record) { create(:record, user:, id: 103, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
       before do
         request.headers.merge!(headers)
         post :create, format: :json, params: record_id_lack_param
@@ -100,6 +102,8 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
     end
 
     context "コメント追加完了" do
+      let!(:record) { create(:record, user:, id: 104, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
+      let(:valid_params) { { record_id: 104, comment: "TESTコメント成功" } }
       before do
         request.headers.merge!(headers)
         post :create, format: :json, params: valid_params
