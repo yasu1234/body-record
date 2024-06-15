@@ -38,7 +38,7 @@ function updatePassword(currentText) {
   display: block;
   border: 1px solid #ccc;
 }
-:deep input[type="password"] {
+:deep(input[type="password"]) {
   padding: 10px;
   width: 100%;
 }
