@@ -21,6 +21,8 @@ jobs:
       run:
         working-directory: backend
     timeout-minutes: 10
+    env:
+      API_DOMAIN: "http://localhost"
     services:
       postgres:
         image: postgres:15.2
