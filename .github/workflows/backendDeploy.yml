@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  rspec:
     runs-on: ubuntu-latest
     defaults:
       run:
