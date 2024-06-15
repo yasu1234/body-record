@@ -5,7 +5,7 @@ on:
     branches:
       - develop
 env:
-  AWS_REGION: ap-northeast-1
+  AWS_REGION: us-east-1
   WEBAPP_CONTAINER_NAME: body-record-rails
   WEBAPP_TAG: latest
   ECS_CLUSTER: body-record2
