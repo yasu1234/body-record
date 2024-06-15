@@ -7,7 +7,7 @@ class Record < ApplicationRecord
   attr_accessor :formatted_date
   attr_accessor :calendar_date
 
-  validates :date, presence: true
+  validates :date, presence: true, uniqueness: { scope: :user_id }
   validates :weight, allow_nil: true, numericality: { allow_blank: true }
   validates :fat_percentage, allow_nil: true, numericality: { allow_blank: true }
 

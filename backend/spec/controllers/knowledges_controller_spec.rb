@@ -4,10 +4,10 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
   let!(:user) { create(:user, :with_knowledges, :without_records) }
   let(:headers) { user.create_new_auth_token }
   let(:image) { file_fixture("image.png") }
-  let(:valid_params) { { title: "テストタイトル", content: "テストコンテンツ", user_id: user.id, images: [image] } }
+  let(:valid_params) { { title: "テストタイトル", content: "テストコンテンツ", user_id: user.id, "images[]": [image] } }
   let(:invalid_params) { { title: "", content: "テストコンテンツ", user_id: user.id } }
   let(:over_content_invalid_params) { { title: "test", content: "a" * 5001, user_id: user.id } }
-  let(:update_valid_params) { { title: "テストタイトル更新", content: "テストコンテンツ更新", user_id: user.id, images: [image] } }
+  let(:update_valid_params) { { title: "テストタイトル更新", content: "テストコンテンツ更新", user_id: user.id, "images[]": [image] } }
 
   def create_knowledges(count)
     create_list(:knowledge, count, user:)
@@ -374,62 +374,6 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
 
       it "ステータス200" do
         expect(response.status).to eq 200
-      end
-    end
-  end
-
-  describe "GET #get_target_user_knowledge" do
-    context "ユーザーのデータ5件" do
-      before do
-        request.headers.merge!(headers)
-        get "get_target_user_knowledge", params: { user_id: user.id }, format: :json
-      end
-
-      it "ステータス200" do
-        expect(response.status).to eq 200
-      end
-
-      it "データは5件分取得" do
-        json_response = JSON.parse(response.body)
-        expect(json_response["knowledges"].count).to eq 5
-      end
-    end
-
-    describe "GET #get_target_user_knowledge" do
-      context "成功(対象のユーザーがいない)" do
-        before do
-          request.headers.merge!(headers)
-          get "get_target_user_knowledge", params: { user_id: -1 }, format: :json
-        end
-
-        it "ステータス200" do
-          expect(response.status).to eq 200
-        end
-
-        it "データは0件" do
-          json_response = JSON.parse(response.body)
-          expect(json_response["knowledges"].count).to eq 0
-        end
-      end
-    end
-
-    describe "GET #get_target_user_knowledge" do
-      context "ユーザーのデータ7件" do
-        let(:user) { create(:user, :with_knowledges_over, :without_records) }
-
-        before do
-          request.headers.merge!(headers)
-          get "get_target_user_knowledge", params: { user_id: user.id }, format: :json
-        end
-
-        it "ステータス200" do
-          expect(response.status).to eq 200
-        end
-
-        it "データは5件分取得" do
-          json_response = JSON.parse(response.body)
-          expect(json_response["knowledges"].count).to eq 5
-        end
       end
     end
   end

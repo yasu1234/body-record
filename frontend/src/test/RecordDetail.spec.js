@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import RecordDetail from "@/components/page/RecordDetail.vue";
+import RecordDetail from "@/components/page/record/RecordDetail.vue";
 
 jest.mock("axios");
 jest.mock("vue-router", () => {
@@ -32,7 +32,7 @@ jest.mock("primevue/usetoast", () => ({
   })),
 }));
 
-jest.mock("@/const/axios.js", () => ({
+jest.mock("@/js/axios.js", () => ({
   axiosInstance: {
     get: jest.fn(),
     interceptors: {
@@ -64,7 +64,7 @@ describe("RecordDetail", () => {
   ];
 
   beforeEach(() => {
-    jest.mock("@/const/axios.js", () => ({
+    jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
         get: jest.fn(),
         interceptors: {
@@ -76,7 +76,7 @@ describe("RecordDetail", () => {
     }));
 
     // モックされたaxiosInstanceを取得
-    const axiosModule = require("@/const/axios.js");
+    const axiosModule = require("@/js/axios.js");
     mockedAxiosInstance = axiosModule.axiosInstance;
 
     // onMounted内でaxios.getが呼ばれるため、このタイミングでモック設定
@@ -112,7 +112,7 @@ describe("RecordDetail", () => {
 
     const mockComments = [];
 
-    jest.mock("@/const/axios.js", () => ({
+    jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
         get: jest.fn(),
         interceptors: {
@@ -123,7 +123,7 @@ describe("RecordDetail", () => {
       setupInterceptors: jest.fn(),
     }));
 
-    const axiosModule = require("@/const/axios.js");
+    const axiosModule = require("@/js/axios.js");
     mockedAxiosInstance = axiosModule.axiosInstance;
 
     // onMounted内でaxios.getが呼ばれるため、このタイミングでモック設定
@@ -148,7 +148,7 @@ describe("RecordDetail", () => {
 
     const mockComments = [];
 
-    jest.mock("@/const/axios.js", () => ({
+    jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
         get: jest.fn(),
         interceptors: {
@@ -159,7 +159,7 @@ describe("RecordDetail", () => {
       setupInterceptors: jest.fn(),
     }));
 
-    const axiosModule = require("@/const/axios.js");
+    const axiosModule = require("@/js/axios.js");
     mockedAxiosInstance = axiosModule.axiosInstance;
 
     // onMounted内でaxios.getが呼ばれるため、このタイミングでモック設定

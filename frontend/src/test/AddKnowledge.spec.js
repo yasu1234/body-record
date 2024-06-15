@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import AddKnowledge from "@/components/page/AddKnowledge.vue";
+import AddKnowledge from "@/components/page/knowledge/AddKnowledge.vue";
 
 jest.mock("axios");
 jest.mock("vue-router", () => {
@@ -32,7 +32,7 @@ jest.mock("primevue/usetoast", () => ({
   })),
 }));
 
-jest.mock("@/const/axios.js", () => ({
+jest.mock("@/js/axios.js", () => ({
   axiosInstance: {
     get: jest.fn(),
     interceptors: {

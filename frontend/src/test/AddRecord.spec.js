@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import AddRecord from "@/components/page/AddRecord.vue";
+import AddRecord from "@/components/page/record/AddRecord.vue";
 
 jest.mock("axios");
 jest.mock("vue-router", () => {
@@ -27,7 +27,7 @@ jest.mock("primevue/usetoast", () => ({
   })),
 }));
 
-jest.mock("@/const/axios.js", () => ({
+jest.mock("@/js/axios.js", () => ({
   axiosInstance: {
     get: jest.fn(),
     interceptors: {

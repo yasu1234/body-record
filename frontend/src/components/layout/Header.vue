@@ -3,9 +3,9 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
 
-import { HeaderMenuList } from "../../const/const.js";
-import { AccountStatusType } from "../../const/const.js";
-import { axiosInstance, setupInterceptors } from "../../const/axios.js";
+import { HeaderMenuList } from "../../js/const.js";
+import { AccountStatusType } from "../../js/const.js";
+import { axiosInstance, setupInterceptors } from "../../js/axios.js";
 
 const router = useRouter();
 setupInterceptors(router);

@@ -7,6 +7,10 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
+  module Status
+    GUEST_USER = 1
+  end
+
   has_one_attached :image
 
   has_many :bookmarks, dependent: :destroy
@@ -23,7 +27,10 @@ class User < ActiveRecord::Base
 
   has_one_attached :image
 
-  validates :image, content_type: { in: %w[image/jpeg image/png image/jpg] }, size: { less_than: 5.megabytes }
+  validates :image,
+  content_type: { in: %w[image/jpeg image/png image/jpg] },
+  size: { less_than: 5.megabytes },
+  allow_blank: true
 
   def image_url
     return unless image.attached?
@@ -43,8 +50,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  def support(other_user)
-    supporting_relationships.find_or_create_by(support_id: other_user.id) unless self == other_user
+  def support!(other_user)
+    supporting_relationships.find_or_create_by!(support_id: other_user.id)
+  end
+
+  def check_support_mine(target_support_user)
+    self == target_support_user
   end
 
   def removeSupport(other_user)

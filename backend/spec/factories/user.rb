@@ -6,6 +6,11 @@ FactoryBot.define do
     password { "Password1" }
     password_confirmation { "Password1" }
     name { "test" }
+    status { 0 }
+
+    trait :fixed_id do
+      id { 100 }
+    end
 
       # knowledgeデータを関連付け
     trait :without_knowledges do
@@ -37,7 +42,7 @@ FactoryBot.define do
       end
     end
 
-      # recordデータを関連付ける
+    # recordデータを関連付ける
     trait :without_records do
       transient do
         records_count { 0 }
@@ -68,7 +73,7 @@ FactoryBot.define do
     trait :with_supporting do
       after(:create) do |user, _evaluator|
         other_user = create(:user)
-        user.support(other_user)
+        user.support!(other_user)
       end
     end
 

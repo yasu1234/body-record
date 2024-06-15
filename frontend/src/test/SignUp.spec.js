@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import Signup from '@/components/page/Signup.vue'
+import Signup from '@/components/page/account/Signup.vue'
 
 jest.mock('vue-router', () => {
     const router = {

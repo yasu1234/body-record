@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import KnowledgeDetail from "@/components/page/KnowledgeDetail.vue";
+import KnowledgeDetail from "@/components/page/knowledge/KnowledgeDetail.vue";
 
 jest.mock("axios");
 jest.mock("vue-router", () => {
@@ -32,7 +32,7 @@ jest.mock("primevue/usetoast", () => ({
   })),
 }));
 
-jest.mock("@/const/axios.js", () => ({
+jest.mock("@/js/axios.js", () => ({
   axiosInstance: {
     get: jest.fn(),
     interceptors: {
@@ -63,7 +63,7 @@ describe("EditKnowledge", () => {
   ];
 
   beforeEach(() => {
-    jest.mock("@/const/axios.js", () => ({
+    jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
         get: jest.fn(),
         interceptors: {
@@ -75,7 +75,7 @@ describe("EditKnowledge", () => {
     }));
   
     // モックされたaxiosInstanceを取得
-    const axiosModule = require("@/const/axios.js");
+    const axiosModule = require("@/js/axios.js");
     mockedAxiosInstance = axiosModule.axiosInstance;
   
     // onMounted内でaxios.getが呼ばれるため、このタイミングでモック設定
@@ -111,7 +111,7 @@ describe("EditKnowledge", () => {
 
     const mockComments = [];
 
-    jest.mock("@/const/axios.js", () => ({
+    jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
         get: jest.fn(),
         interceptors: {
@@ -123,7 +123,7 @@ describe("EditKnowledge", () => {
     }));
   
     // モックされたaxiosInstanceを取得
-    const axiosModule = require("@/const/axios.js");
+    const axiosModule = require("@/js/axios.js");
     mockedAxiosInstance = axiosModule.axiosInstance;
 
     // onMounted内でaxios.getが呼ばれるため、このタイミングでモック設定
