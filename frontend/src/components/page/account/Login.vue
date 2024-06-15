@@ -84,7 +84,7 @@ const updatePassword = (inputPassword, passwordType) => {
       </div>
       <div class="item">
         <label>パスワード</label>
-        <PasswordText :password="password" @updatePassword="updatePassword" />
+        <PasswordText :password="password" @update-password="updatePassword" />
         <p class="validation-error-message">{{ passwordError }}</p>
       </div>
       <div class="login-button-container">
@@ -103,28 +103,18 @@ const updatePassword = (inputPassword, passwordType) => {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
-.form {
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
 .item {
   padding-top: 40px;
   margin: 0 auto;
 }
-
 .form input[type="email"] {
   padding: 10px;
   width: 100%;
 }
-
 .login-button-container {
   padding-top: 40px;
   text-align: center;
 }
-
 .login-button {
   font-size: 16px;
   font-weight: bold;

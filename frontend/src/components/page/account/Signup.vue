@@ -111,7 +111,7 @@ const updatePassword = (inputPassword, passwordType) => {
         <PasswordText
           :password="password"
           :passwordType="PasswordType.password"
-          @updatePassword="updatePassword"
+          @update-password="updatePassword"
         />
         <p class="validation-error-message">{{ passwordError }}</p>
       </div>
@@ -120,7 +120,7 @@ const updatePassword = (inputPassword, passwordType) => {
         <PasswordText
           :password="passwordConfirm"
           :passwordType="PasswordType.passwordConfirm"
-          @updatePassword="updatePassword"
+          @update-password="updatePassword"
         />
         <p class="validation-error-message">{{ passwordConfirmError }}</p>
       </div>
@@ -144,11 +144,6 @@ const updatePassword = (inputPassword, passwordType) => {
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-.form {
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
 }
 .item {
   padding-top: 40px;

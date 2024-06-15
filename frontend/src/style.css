@@ -103,6 +103,12 @@ p.validation-error-message {
   grid-template-columns: repeat(2, 1fr);
 }
 
+.form {
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
 @media screen and (max-width: 768px) {
   .record-search-container {
     width: auto;
