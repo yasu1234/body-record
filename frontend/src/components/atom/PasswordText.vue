@@ -11,7 +11,7 @@ const props = defineProps({
   passwordType: Number,
 });
 
-const emit = defineEmits(["updatePassword"]);
+const emit = defineEmits(["update-password"]);
 
 onMounted(() => {
   passwordType.value = props.passwordType;
@@ -19,7 +19,7 @@ onMounted(() => {
 });
 
 function updatePassword(currentText) {
-  emit("updatePassword", currentText, passwordType.value);
+  emit("update-password", currentText, passwordType.value);
 }
 </script>
 
