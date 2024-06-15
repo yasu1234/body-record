@@ -43,7 +43,7 @@ const guestLogin = async () => {
 
 <template>
   <Toast position="top-center" />
-  <img src="../../assets/image/home_image.jpg" alt="Logo" class="home-logo" />
+  <img src="../../../assets/image/home_image.jpg" alt="Logo" class="home-logo" />
   <h1 class="text-center mt-5">In-body.comへようこそ！</h1>
   <div class="account-buttons mt-5">
     <button class="account-button" @click="showSignup">会員登録</button>
