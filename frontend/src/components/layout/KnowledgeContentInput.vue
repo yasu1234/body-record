@@ -10,7 +10,7 @@
   </FloatLabel>
   <div class="mt-2 text-right">
     <p v-if="knowledgeContent.length > 5000" class="text-red-500">
-      400文字以上入力しています
+      5000文字以上入力しています
     </p>
     <p v-else>残り{{ 5000 - knowledgeContent.length }}文字入力できます</p>
   </div>
