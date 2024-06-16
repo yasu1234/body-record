@@ -44,7 +44,7 @@ const contactSubmit = async () => {
 
 const showContactList = () => {
   router.push({ name: "ContactList" });
-}
+};
 </script>
 
 <template>
@@ -64,13 +64,20 @@ const showContactList = () => {
           v-model="contact"
           class="contact-text-area"
         />
+        <div class="mt-2 text-right profile-input-width">
+          <p v-if="contact.length > 5000" class="text-red-500">
+            5000文字以上入力しています
+          </p>
+          <p v-else>残り{{ 5000 - contact.length }}文字入力できます</p>
+        </div>
         <p>※あくまでもポートフォリオなのでご了承ください</p>
+        <p>※問い合わせが完了したら開発者にメールが届くようになっています</p>
       </div>
       <div class="contact-top-margin">
         <button class="submit-button">送信</button>
       </div>
     </form>
-    <router-link :to="'contact-list'">問い合わせ一覧はこちら</router-link>
+    <router-link :to="'contact-list'" class="mt-5 pb-10">問い合わせ一覧はこちら</router-link>
   </div>
 </template>
 
