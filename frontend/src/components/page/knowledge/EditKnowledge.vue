@@ -7,12 +7,12 @@ import Toast from "primevue/toast";
 import Button from "primevue/button";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
-import Textarea from "primevue/textarea";
 import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
 
 import DropFile from "../../atom/DropFile.vue";
 import Header from "../../layout/Header.vue";
 import TabMenu from "../../layout/TabMenu.vue";
+import KnowledgeContentInput from "../../layout/KnowledgeContentInput.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -29,10 +29,6 @@ const knowledgeId = ref(null);
 onMounted(() => {
   getDetail();
 });
-
-const onFileChange = (event, index) => {
-  files.value[index - 1] = event;
-};
 
 const deleteImage = async (item) => {
   try {
@@ -110,6 +106,14 @@ const edit = async () => {
   }
 };
 
+const onFileChange = (event, index) => {
+  files.value[index - 1] = event;
+};
+
+const contentEdit = (editContent) => {
+  knowledge.value = editContent;
+}
+
 const showKnowledgeDetail = (item) => {
   router.push({ name: "KnowledgeDetail", params: { id: item.id } });
 };
@@ -124,10 +128,9 @@ const showKnowledgeDetail = (item) => {
       <InputText v-model="title" class="input-width" />
       <label>タイトル</label>
     </FloatLabel>
-    <FloatLabel class="mt-5">
-      <Textarea v-model="knowledge" rows="20" class="input-width" />
-      <label>詳細</label>
-    </FloatLabel>
+    <div class="mt=2.5">
+      <KnowledgeContentInput :knowledgeContent="knowledge" @content-edit="contentEdit" />
+    </div>
   </div>
   <div v-if="imageUrls !== null && imageUrls.length !== 0">
     <p class="mt-5 ml-5">登録済みの画像</p>
