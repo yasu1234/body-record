@@ -18,7 +18,7 @@ const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
-setupInterceptors(router)
+setupInterceptors(router);
 
 const goalWeight = ref(null);
 const goalFatPercentage = ref(null);
@@ -37,10 +37,9 @@ onMounted(() => {
 
 const getProfile = async () => {
   userId.value = route.params.id;
-  const id = route.params.id;
 
   try {
-    const res = await axiosInstance.get(`/api/v1/profiles/${id}`);
+    const res = await axiosInstance.get(`/api/v1/profiles/${userId.value}`);
 
     goalWeight.value = res.data.user.profile.goal_weight;
     goalFatPercentage.value = res.data.user.profile.goal_fat_percentage;
@@ -49,9 +48,9 @@ const getProfile = async () => {
       profile.value = res.data.user.profile.profile;
     }
 
-    userThumbnail.value = res.data.user.user.image_url;
+    userThumbnail.value = res.data.user.image_url;
   } catch (error) {
-    console.log({ error });
+    toastNotifications.displayError("プロフィール情報取得にに失敗しました", "");
   }
 };
 
@@ -109,6 +108,8 @@ const updateProfileImage = async () => {
     if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
     }
     toastNotifications.displayError(
@@ -147,9 +148,19 @@ const showMyPage = () => {
         </div>
         <div class="mt-5">
           <FloatLabel>
-            <Textarea v-model="profile" rows="10" class="profile-text p-2.5" />
+            <Textarea
+              v-model="profile"
+              rows="10"
+              class="profile-input-width h-full p-2.5"
+            />
             <label>紹介文</label>
           </FloatLabel>
+          <div class="mt-2 text-right profile-input-width">
+            <p v-if="profile.length > 200" class="text-red-500">
+              200文字以上入力しています
+            </p>
+            <p v-else>残り{{ 200 - profile.length }}文字入力できます</p>
+          </div>
         </div>
         <div class="mt-5">
           <label>プロフィール画像変更</label>
@@ -179,8 +190,7 @@ const showMyPage = () => {
   align-items: center;
   margin-top: 20px;
 }
-.profile-text {
-  height: 100px;
+.profile-input-width {
   width: calc(100% - 40px);
 }
 .setting-side-menu {
