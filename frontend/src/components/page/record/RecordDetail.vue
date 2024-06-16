@@ -184,7 +184,7 @@ const showEdit = () => {
           <p class="record-title">{{ (record != null && record.formatted_date != null) ? record.formatted_date : "" }}の記録</p>
           <p class="mt-5">体重：{{ (record != null && record.weight != null) ? record.weight : "-" }} kg</p>
           <p class="mt-2.5">体脂肪率：{{ (record != null && record.fat_percentage != null) ? record.fat_percentage : "-" }} %</p>
-          <p class="record-content">{{ (record != null && record.memo != null) ? record.memo : '' }} %</p>
+          <p class="record-content">{{ (record != null && record.memo != null) ? record.memo : '' }}</p>
           <div v-if="imageUrls !== null && imageUrls.length !== 0">
             <p class="mt-5">関連画像</p>
             <div class="thumbnail-container">
