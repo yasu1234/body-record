@@ -48,42 +48,48 @@ const registerRecord = async () => {
       }
     }
 
-    const res = await axiosInstance.post("/api/v1/my_records",
-      formData,
-      {
-        headers: {
-          'content-type': 'multipart/form-data'
-        },
-      }
-    );
+    const res = await axiosInstance.post("/api/v1/my_records", formData, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
     toastNotifications.displayInfo("登録しました", "");
     setTimeout(async () => {
       showRecordDetail(res.data.record);
     }, 3000);
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("記録の追加に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("記録の追加に失敗しました", errorMessages);
   }
 };
 
 const dateChange = (date) => {
   recordDate.value = date;
-}
+};
 
 const onFileChange = (file, index) => {
   files.value[index - 1] = file;
-}
+};
 
 const memoEdit = (editingMemo) => {
-  memo.value = editingMemo
-}
+  memo.value = editingMemo;
+};
 
 const showRecordDetail = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });

@@ -17,9 +17,6 @@ const toast = useToast();
 const toastNotifications = new toastService(toast);
 setupInterceptors(router)
 
-defineProps({
-  msg: String,
-});
 
 const checkValidate = async () => {
   const result = await validate();
@@ -43,9 +40,11 @@ const signup = async () => {
     router.push({ name: "Home" });
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors.full_messages)) {
         errorMessages += error.response.data.errors.full_messages.join("\n");
+      } else {
+        errorMessages = error.response.data.errors.full_messages;
       }
     }
     toastNotifications.displayError("会員登録に失敗しました", errorMessages);

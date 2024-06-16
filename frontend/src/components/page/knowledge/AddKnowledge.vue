@@ -37,14 +37,23 @@ const registerKnowledge = async () => {
       showKnowledgeDetail(res.data.knowledge);
     }, 3000);
   } catch (error) {
-    let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
-      if (Array.isArray(error.response.data.errors)) {
-        errorMessages += error.response.data.errors.join("\n");
-      } else {
-        errorMessages = error.response.data.errors;
-      }
+    if (error.response == null) {
+      toastNotifications.displayError("ノウハウの編集に失敗しました", "");
+      return;
     }
+
+    let errorMessage = "";
+
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessage += error.response.data.errors.join("\n");
+      } else {
+        errorMessage = error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessage = "ログインしてください";
+    }
+
     toastNotifications.displayError(
       "ノウハウの追加に失敗しました",
       errorMessages

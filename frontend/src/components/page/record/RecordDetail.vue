@@ -48,7 +48,12 @@ const getDetail = async () => {
 
     getSupport();
   } catch (error) {
-    console.log(error);
+    let errorMessage = "";
+    if (error.response != null && error.response.status === 40) {
+      errorMessage = "ログインしてください";
+    }
+
+    toastNotifications.displayError("記録の取得に失敗しました", errorMessage);
   }
 };
 
@@ -63,6 +68,13 @@ const getSupport = async () => {
     support.value = res.data.user;
   } catch (error) {
     support.value = null;
+
+    let errorMessage = "";
+    if (error.response != null && error.response.status === 40) {
+      errorMessage = "ログインしてください";
+    }
+
+    toastNotifications.displayError("記録の取得に失敗しました", errorMessage);
   }
 };
 
@@ -89,12 +101,23 @@ const deleteRecord = async () => {
       router.back();
     }, 3000);
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("記録削除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
+
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("記録削除に失敗しました", errorMessages);
   }
 };
@@ -112,14 +135,23 @@ const supportOn = async () => {
     isSupport.value = res.data.isSupport;
     getSupport();
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("応援に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("応援に失敗しました", errorMessages);
   }
 };
@@ -132,14 +164,23 @@ const supportOff = async () => {
     isSupport.value = res.data.isSupport;
     getSupport();
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("応援解除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("応援解除に失敗しました", errorMessages);
   }
 };
@@ -153,14 +194,23 @@ const addComment = async (comment) => {
     const res = await axiosInstance.post(`/api/v1/record_comments`, formData);
     getComments();
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント追加に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "コメント追加に失敗しました",
       errorMessages

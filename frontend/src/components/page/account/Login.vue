@@ -25,25 +25,25 @@ const handleSubmit = async () => {
 
 const login = async () => {
   try {
-    const res = await axiosInstance.post("/api/v1/auth/sign_in",
-      {
-        email: email.value,
-        password: password.value,
-      }
-    );
+    const res = await axiosInstance.post("/api/v1/auth/sign_in", {
+      email: email.value,
+      password: password.value,
+    });
     Cookies.set("accessToken", res.headers["access-token"]);
     Cookies.set("client", res.headers["client"]);
     Cookies.set("uid", res.headers["uid"]);
 
-    router.push({ name: "Home" });
+    showHome();
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 401) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
     }
-    toastNotifications.displayError("ログインに失敗しました", errorMessages)
+    toastNotifications.displayError("ログインに失敗しました", errorMessages);
   }
 };
 
@@ -68,6 +68,10 @@ const { value: email, errorMessage: emailError } = useField("email", "");
 
 const updatePassword = (inputPassword, passwordType) => {
   password.value = inputPassword;
+};
+
+const showHome = () => {
+  router.push({ name: "Home" });
 };
 </script>
 

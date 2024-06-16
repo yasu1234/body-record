@@ -44,7 +44,11 @@ const deleteImage = async (item) => {
     });
     imageUrls.value = res.data.imageUrls;
   } catch (error) {
-    toastNotifications.displayError("画像の削除に失敗しました", "");
+    let errorMessage = "";
+    if (error.response != null && error.response.status == 401) {
+      errorMessage = "ログインしてください";
+    }
+    toastNotifications.displayError("画像の削除に失敗しました", errorMessage);
   }
 };
 
@@ -60,7 +64,11 @@ const getDetail = async () => {
     imageUrls.value = res.data.record.image_urls;
     isHidden.value = !res.data.record.is_open;
   } catch (error) {
-    toastNotifications.displayError("記録の取得に失敗しました", errorMessages);
+    let errorMessage = "";
+    if (error.response != null && error.response.status == 401) {
+      errorMessage = "ログインしてください";
+    }
+    toastNotifications.displayError("記録の取得に失敗しました", errorMessage);
   }
 };
 
@@ -102,29 +110,38 @@ const edit = async () => {
       showRecordDetail(res.data.record);
     }, 3000);
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("記録の更新に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("記録の更新に失敗しました", errorMessages);
   }
 };
 
 const dateChange = (event) => {
   recordDate.value = event;
-}
+};
 
 const onFileChange = (event, index) => {
   files.value[index - 1] = event;
 };
 
 const memoEdit = (editingMemo) => {
-  memo.value = editingMemo
-}
+  memo.value = editingMemo;
+};
 
 const showRecordDetail = () => {
   router.push({ name: "RecordDetail", params: { id: recordId.value } });

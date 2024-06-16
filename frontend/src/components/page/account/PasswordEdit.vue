@@ -32,12 +32,23 @@ const passwordEdit = async () => {
     const res = await axiosInstance.put(`/api/v1/auth/password`, formData);
     toastNotifications.displayInfo("パスワードを変更しました", "");
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("パスワード変更に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
+
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "パスワード変更に失敗しました",
       errorMessages

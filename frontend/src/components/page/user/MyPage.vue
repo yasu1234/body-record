@@ -79,6 +79,7 @@ const getProfile = async () => {
     user.value = res.data.user;
   } catch (error) {
     user.value = null;
+    toastNotifications.displayError("プロフィールの取得に失敗しました", "");
   }
 };
 
@@ -92,14 +93,7 @@ const getSupportCount = async () => {
 
     support.value = res.data.user;
   } catch (error) {
-    let errorMessages = "";
-    if (error.response.status === 422) {
-      if (Array.isArray(error.response.data.errors)) {
-        errorMessages += error.response.data.errors.join("\n");
-      } else {
-        errorMessages = error.response.data.errors;
-      }
-    }
+    support.value = null;
   }
 };
 
@@ -170,7 +164,7 @@ const clickRecord = (item) => {
 };
 
 const showMoreRecords = () => {
-  router.push({ name: "MyRecordList" });
+  router.push({ name: "Home" });
 };
 </script>
 

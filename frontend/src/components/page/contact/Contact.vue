@@ -27,8 +27,12 @@ const contactSubmit = async () => {
       showContactList();
     }, 3000);
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("お問合せ送信に失敗しました", "");
+      return;
+    }
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {

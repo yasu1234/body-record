@@ -60,10 +60,12 @@ const getDetail = async () => {
 
     getSupport();
   } catch (error) {
-    toastNotifications.displayError(
-      "記事の情報の取得に失敗しました",
-      ""
-    );
+    let errorMessage = ""
+    if (error.response != null && error.response.status === 401) {
+      errorMessage = "ログインしてください";
+    }
+
+    toastNotifications.displayError("記事データの取得に失敗しました", "");
   }
 };
 
