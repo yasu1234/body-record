@@ -46,4 +46,7 @@ function handleClick(menuId) {
   background: #ffa500;
   margin-top: 3px;
 }
+button:hover {
+  opacity: 1;
+}
 </style>

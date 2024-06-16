@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import MarkdownIt from "markdown-it";
 
 const props = defineProps({

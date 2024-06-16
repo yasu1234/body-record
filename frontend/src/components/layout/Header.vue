@@ -202,6 +202,7 @@ header {
 }
 .menu-item:hover {
   background-color: #eae1e1;
+  opacity: 1;
 }
 @media (max-width: 768px) {
   .account-introducton-button {
