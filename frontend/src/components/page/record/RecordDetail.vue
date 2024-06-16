@@ -98,7 +98,7 @@ const deleteRecord = async () => {
 
     toastNotifications.displayInfo("記録を削除しました", "");
     setTimeout(async () => {
-      router.back();
+      showMyRecordList();
     }, 3000);
   } catch (error) {
     if (error.response == null) {
@@ -220,6 +220,10 @@ const addComment = async (comment) => {
 
 const showEdit = () => {
   router.push({ name: "EditRecord", params: { id: recordId.value } });
+};
+
+const showMyRecordList = () => {
+  router.push({ name: "Home" });
 };
 </script>
 
