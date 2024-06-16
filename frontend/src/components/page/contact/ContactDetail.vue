@@ -35,9 +35,9 @@ const statusChange = async (isComplete) => {
   try {
     const formData = new FormData();
     if (isComplete) {
-      formData.append("status", null);
+      formData.append("contact[status]", null);
     } else {
-      formData.append("status", 1);
+      formData.append("contact[status]", 1);
     }
 
     const res = await axiosInstance.put(

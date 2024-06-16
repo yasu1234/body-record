@@ -19,7 +19,7 @@ const toastNotifications = new toastService(toast);
 const contactSubmit = async () => {
   try {
     const formData = new FormData();
-    formData.append("content", contact.value);
+    formData.append("contact[content]", contact.value);
 
     const res = await axiosInstance.post(`/api/v1/contacts`, formData);
     toastNotifications.displayError("お問合せを送信しました", "");
