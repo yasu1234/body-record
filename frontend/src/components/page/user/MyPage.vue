@@ -68,7 +68,14 @@ const checkLogin = async () => {
     getUserKnowledge();
     getMonthRecord();
   } catch (error) {
-    toastNotifications.displayError("ユーザー情報を取得できません", "");
+    let errorMessage = "";
+    if (error.response != null && error.response.status === 401) {
+      errorMessage = "ログインしてください";
+    }
+    toastNotifications.displayError(
+      "ユーザー情報を取得できません",
+      errorMessage
+    );
   }
 };
 
@@ -154,7 +161,7 @@ const getUserKnowledge = async () => {
   }
 };
 
-function monthChange(event) {
+const monthChange = (event) => {
   month.value = event;
   getMonthRecord();
 }

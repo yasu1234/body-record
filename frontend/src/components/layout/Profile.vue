@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
-import Button from 'primevue/button';
+import Button from "primevue/button";
 
 const props = defineProps(["user", "support"]);
 const emit = defineEmits(["edit-support"]);
@@ -12,7 +12,6 @@ const profileMessage = ref("");
 const userName = ref("");
 const userThumbnail = ref(null);
 const userId = ref(null);
-const user = ref(null);
 const goalWeight = ref(null);
 const goalFatPercentage = ref(null);
 const supportCount = ref(0);
@@ -43,6 +42,7 @@ const setProfile = (user) => {
 
   userName.value = user.name;
   userThumbnail.value = user.image_url;
+  userId.value = user.id;
 
   if (user.profile != null) {
     profileMessage.value = user.profile.profile;
@@ -51,10 +51,10 @@ const setProfile = (user) => {
   }
 
   if (user.is_my_profile != null && user.is_my_profile === true) {
-      isMyProfile.value = true
-    } else {
-      isMyProfile.value = false;
-    }
+    isMyProfile.value = true;
+  } else {
+    isMyProfile.value = false;
+  }
 };
 
 const setSupport = (support) => {
@@ -117,18 +117,23 @@ const showSupportList = () => {
         />
       </div>
       <div class="profile-content">
-        <span class="profile-name">{{ userName != null ? userName : "" }}</span>
-        <span class="profile-intro break-words">{{
-          profileMessage != null ? profileMessage : ""
-        }}</span>
-        <span class="profile-top-space">目標体重：{{ goalWeight }}kg</span>
-        <span class="profile-top-space"
-          >目標体脂肪率：{{ goalFatPercentage }}%</span
-        >
+        <p class="profile-name">{{ userName != null ? userName : "" }}</p>
+        <p class="profile-intro break-words">
+          {{ profileMessage != null ? profileMessage : "" }}
+        </p>
+        <p class="mt-2.5">目標体重：{{ goalWeight }}kg</p>
+        <p class="mt-2.5">目標体脂肪率：{{ goalFatPercentage }}%</p>
       </div>
       <div class="profile-support-container">
-        <button class="support-content hover:underline" @click="showSupportList">{{ supportCount }}<br />サポート</button>
-        <button class="support-content hover:underline" @click="showSupporter">{{ supporterCount }}<br />サポーター</button>
+        <button
+          class="support-content hover:underline"
+          @click="showSupportList"
+        >
+          {{ supportCount }}<br />サポート
+        </button>
+        <button class="support-content hover:underline" @click="showSupporter">
+          {{ supporterCount }}<br />サポーター
+        </button>
       </div>
       <div class="profile-edit">
         <div v-if="isMyProfile">
@@ -197,12 +202,8 @@ const showSupportList = () => {
   margin: 0 0 20px;
   padding: 15px;
 }
-
 .profile-content span {
   display: block;
-}
-.profile-top-space {
-  margin-top: 10px;
 }
 .profile-name {
   margin-bottom: 3px;
