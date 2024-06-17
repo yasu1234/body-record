@@ -16,7 +16,6 @@ setupInterceptors(router);
 
 const keyword = ref("");
 const isBookmark = ref(false);
-const isLogin = ref(false);
 const searchResult = ref([]);
 const currentId = ref(3);
 const pageCount = ref(1);
@@ -80,10 +79,16 @@ const search = async () => {
     searchResult.value = [];
 
     for (let item of res.data.knowledges) {
-      searchResult.value.push(item);
+      searchResult.value.push(item.knowledge);
     }
   } catch (error) {
     searchResult.value = [];
+    if (error.response != null && error.response.status === 401) {
+      toastNotifications.displayError(
+        "記事一覧取得に失敗しました",
+        "ログインしてください"
+      );
+    }
   }
 };
 
@@ -136,8 +141,7 @@ const addKnowledge = () => {
     <KnowledgeCard
       v-for="knowledge in searchResult"
       v-bind="knowledge"
-      :knowledgeTitle="knowledge.title"
-      :knowledgeContent="knowledge.content"
+      :knowledge="knowledge"
       @click="clickKnowledge(knowledge)"
     />
     <div class="mt-12">

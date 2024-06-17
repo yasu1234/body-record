@@ -1,8 +1,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import { axiosInstance, setupInterceptors } from "../../js/axios.js";
 
+const route = useRoute();
 const router = useRouter();
+setupInterceptors(router);
 
 const isOpen = ref(false);
 const isLogin = ref(false);
@@ -25,16 +28,7 @@ onMounted(() => {
 
 const checkLogin = async () => {
   try {
-    const res = await axios.get(
-      import.meta.env.VITE_APP_API_BASE + "/api/v1/users/check_login",
-      {
-        headers: {
-          "access-token": Cookies.get("accessToken"),
-          client: Cookies.get("client"),
-          uid: Cookies.get("uid"),
-        },
-      }
-    );
+    const res = await axiosInstance.get("/api/v1/users/check_login");
     isLogin.value = res.data.isLogin;
     userId.value = res.data.user.id;
   } catch (error) {
@@ -103,7 +97,6 @@ const showConfirmAccountDelete = () => {
   display: none;
   cursor: pointer;
 }
-
 .toggle-line {
   display: block;
   width: 25px;
@@ -111,54 +104,41 @@ const showConfirmAccountDelete = () => {
   margin: 5px auto;
   background-color: #333;
 }
-
 .sidebar {
   width: 250px;
   padding: 20px;
   margin-right: 20px;
 }
-
 .menu {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-
 .menu-container {
   display: flex;
 }
-
 main {
   flex: 1;
   padding: 20px;
 }
-
 .close-btn {
   font-size: 24px;
   cursor: pointer;
 }
-
 .side-menu-item {
   padding: 6px;
   background: #f5f6f6;
   color: #000000;
   border-radius: 0px;
 }
-
-.side-menu-item:hover {
-  background-color: #eae1e1;
-}
-
 .menu-select {
   width: 3px;
   background-color: #ffa500;
 }
-
 @media (max-width: 768px) {
   .menu-toggle {
     display: block;
   }
-
   .sidebar {
     position: fixed;
     top: 0;
@@ -170,18 +150,15 @@ main {
     transform: translateX(-200px);
     transition: transform 0.3s ease-in-out;
   }
-
   .sidebar.open {
     transform: translateX(0);
     z-index: 100;
   }
-
   .sidebar-header {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 20px;
   }
-
   .close-btn {
     display: block;
   }

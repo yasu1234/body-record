@@ -7,12 +7,12 @@ import Toast from "primevue/toast";
 import Button from "primevue/button";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
-import Textarea from "primevue/textarea";
 import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
 
 import DropFile from "../../atom/DropFile.vue";
 import Header from "../../layout/Header.vue";
 import TabMenu from "../../layout/TabMenu.vue";
+import KnowledgeContentInput from "../../layout/KnowledgeContentInput.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -30,10 +30,6 @@ onMounted(() => {
   getDetail();
 });
 
-const onFileChange = (event, index) => {
-  files.value[index - 1] = event;
-};
-
 const deleteImage = async (item) => {
   try {
     const res = await axiosInstance.delete("/api/v1/knowledge_images", {
@@ -44,14 +40,22 @@ const deleteImage = async (item) => {
     });
     imageUrls.value = res.data.imageUrls;
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("画像の削除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("画像の削除に失敗しました", errorMessages);
   }
 };
@@ -65,7 +69,11 @@ const getDetail = async () => {
     knowledge.value = res.data.knowledge.content;
     imageUrls.value = res.data.knowledge.image_urls;
   } catch (error) {
-    toastNotifications.displayError("登録データの取得に失敗しました", "");
+    let errorMessage = "";
+    if (error.response != null && error.response.status === 401) {
+      errorMessage = "ログインしてください";
+    }
+    toastNotifications.displayError("登録データの取得に失敗しました", errorMessage);
   }
 };
 
@@ -96,11 +104,21 @@ const edit = async () => {
       showKnowledgeDetail(res.data.knowledge);
     }, 3000);
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("ノウハウの編集に失敗しました", "");
+      return;
+    }
+
     let errorMessage = "";
+
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessage += error.response.data.errors.join("\n");
+      } else {
+        errorMessage = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessage = "ログインしてください";
     }
 
     toastNotifications.displayError(
@@ -108,6 +126,14 @@ const edit = async () => {
       errorMessage
     );
   }
+};
+
+const onFileChange = (event, index) => {
+  files.value[index - 1] = event;
+};
+
+const contentEdit = (editContent) => {
+  knowledge.value = editContent;
 };
 
 const showKnowledgeDetail = (item) => {
@@ -124,10 +150,12 @@ const showKnowledgeDetail = (item) => {
       <InputText v-model="title" class="input-width" />
       <label>タイトル</label>
     </FloatLabel>
-    <FloatLabel class="mt-5">
-      <Textarea v-model="knowledge" rows="20" class="input-width" />
-      <label>詳細</label>
-    </FloatLabel>
+    <div class="mt=2.5">
+      <KnowledgeContentInput
+        :knowledgeContent="knowledge"
+        @content-edit="contentEdit"
+      />
+    </div>
   </div>
   <div v-if="imageUrls !== null && imageUrls.length !== 0">
     <p class="mt-5 ml-5">登録済みの画像</p>

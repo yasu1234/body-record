@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::RecordsController, type: :controller do
   let!(:user) { create(:user, :with_records, :without_knowledges) }
   let(:headers) { user.create_new_auth_token }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:image) { file_fixture("image.png") }
   let(:valid_params) { { memo: "メモTEST", date: "2024-04-29", images: [image] } }
   let(:invalid_params) { { memo: "", content: "テストコンテンツ", user_id: user.id } }
@@ -17,6 +18,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
       let!(:record) { create_records(1) }
 
       before do
+        request.headers.merge!(common_header)
         get :index, format: :json, params: { user_id: user.id }
       end
 
@@ -33,6 +35,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, format: :json, params: { user_id: user.id }
       end
 
@@ -55,6 +58,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, format: :json
       end
 
@@ -71,6 +75,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, format: :json, params: { page: 2, user_id: user.id }
       end
 
@@ -93,6 +98,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, format: :json, params: { user_id: user.id }
       end
 
@@ -114,6 +120,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, format: :json, params: { user_id: user.id }
       end
 
@@ -138,7 +145,8 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
-        get :index, format: :json, params: { keyword: "メモ", user_id: user.id  }
+        request.headers.merge!(common_header)
+        get :index, format: :json, params: { keyword: "メモ", user_id: user.id }
       end
 
       it "ステータス200が返却される" do
@@ -160,6 +168,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
       let!(:record) { create_records(1).first }
 
       before do
+        request.headers.merge!(common_header)
         get :show, params: { id: record.id }, format: :json
       end
 
@@ -175,6 +184,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: "" }, format: :json
       end
 
@@ -190,6 +200,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: 150 }, format: :json
       end
 
@@ -205,6 +216,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: record.id }, format: :json
       end
 
@@ -226,6 +238,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
   describe "DELETE #destroy" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         delete :destroy, params: { id: user.records.first.id }, format: :json
       end
 
@@ -241,6 +254,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         delete :destroy, params: { id: "" }, format: :json
       end
 
@@ -256,6 +270,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         delete :destroy, params: { id: -1 }, format: :json
       end
 
@@ -269,6 +284,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
     context "削除成功" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         delete :destroy, params: { id: user.records.first.id }, format: :json
       end
 

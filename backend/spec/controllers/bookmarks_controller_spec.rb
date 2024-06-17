@@ -4,6 +4,7 @@ RSpec.describe Api::V1::BookmarksController, type: :controller do
   let!(:user) { create(:user, :without_records, :without_knowledges) }
   let!(:knowledge) { create(:knowledge) }
   let(:headers) { user.create_new_auth_token }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:valid_params) { { user_id: user.id, knowledge_id: knowledge.id } }
   let(:invalid_param_lack_knowledge) { { user_id: user.id } }
   let(:invalid_param_lack_user) { {  knowledge_id: knowledge.id } }
@@ -16,6 +17,7 @@ RSpec.describe Api::V1::BookmarksController, type: :controller do
   describe "POST #create" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { bookmark: valid_params }
       end
 
@@ -29,6 +31,7 @@ RSpec.describe Api::V1::BookmarksController, type: :controller do
     context "バリデーションエラー(knowledge_idが指定されていない)" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { bookmark: invalid_param_lack_knowledge }
       end
 
@@ -42,6 +45,7 @@ RSpec.describe Api::V1::BookmarksController, type: :controller do
     context "ブックマーク完了" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { bookmark: valid_params }
       end
 
@@ -61,6 +65,7 @@ RSpec.describe Api::V1::BookmarksController, type: :controller do
   describe "DELETE #destroy" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         delete :destroy, params: { id: knowledge.id }, format: :json
       end
 
@@ -76,6 +81,7 @@ RSpec.describe Api::V1::BookmarksController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         delete :destroy, params: { id: -1 }, format: :json
       end
 
@@ -91,6 +97,7 @@ RSpec.describe Api::V1::BookmarksController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         delete :destroy, params: { id: knowledge.id, user_id: user.id }, format: :json
       end
 

@@ -42,8 +42,7 @@ const clickCallback = function (pageNum) {
   margin-top: 20px;
   list-style: none;
 }
-
-:deep .page-item {
+:deep(.page-item) {
   color: #333;
   text-decoration: none;
   transition: background-color 0.3s;
@@ -53,8 +52,7 @@ const clickCallback = function (pageNum) {
   height: 30px;
   padding: 20px;
 }
-
-:deep .page-link {
+:deep(.page-link) {
   width: 100%;
   height: 100%;
   display: flex;
@@ -63,23 +61,19 @@ const clickCallback = function (pageNum) {
   padding: 0;
   margin: 0;
 }
-
-:deep .page-item.active {
+:deep(.page-item.active) {
   background-color: #ffa500;
   color: white;
   border: 1px solid #ffa500;
 }
-
-:deep .page-item.disabled {
+:deep(.page-item.disabled) {
   cursor: not-allowed;
   color: #332;
 }
-
-:deep .page-item:hover:not(.disabled):not(.active) {
+:deep(.page-item:hover:not(.disabled):not(.active)) {
   background-color: #f5c977;
 }
-
-:deep .page-link.disabled {
+:deep(.page-link.disabled) {
   color: #ccc;
   cursor: not-allowed;
 }

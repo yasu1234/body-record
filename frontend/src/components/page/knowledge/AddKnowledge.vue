@@ -6,12 +6,12 @@ import { useToast } from "primevue/usetoast";
 import { toastService } from "../../../js/toast.js";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
-import Textarea from "primevue/textarea";
 import { axiosInstance } from "../../../js/axios.js";
 
 import DropFile from "../../atom/DropFile.vue";
 import Header from "../../layout/Header.vue";
 import TabMenu from "../../layout/TabMenu.vue";
+import KnowledgeContentInput from "../../layout/KnowledgeContentInput.vue";
 
 const router = useRouter();
 const toast = useToast();
@@ -20,10 +20,6 @@ const toastNotifications = new toastService(toast);
 const title = ref("");
 const knowledge = ref("");
 const files = ref([...Array(5)]);
-
-const onFileChange = (event, index) => {
-  files.value[index - 1] = event;
-};
 
 const registerKnowledge = async () => {
   try {
@@ -41,17 +37,36 @@ const registerKnowledge = async () => {
       showKnowledgeDetail(res.data.knowledge);
     }, 3000);
   } catch (error) {
-    let errorMessages = "";
+    if (error.response == null) {
+      toastNotifications.displayError("ノウハウの編集に失敗しました", "");
+      return;
+    }
+
+    let errorMessage = "";
+
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
-        errorMessages += error.response.data.errors.join("\n");
+        errorMessage += error.response.data.errors.join("\n");
+      } else {
+        errorMessage = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessage = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "ノウハウの追加に失敗しました",
       errorMessages
     );
   }
+};
+
+const onFileChange = (event, index) => {
+  files.value[index - 1] = event;
+};
+
+const contentEdit = (editContent) => {
+  knowledge.value = editContent;
 };
 
 const showKnowledgeDetail = (item) => {
@@ -68,10 +83,12 @@ const showKnowledgeDetail = (item) => {
       <InputText v-model="title" class="input-width" />
       <label>タイトル</label>
     </FloatLabel>
-    <FloatLabel class="mt-5">
-      <Textarea v-model="knowledge" rows="20" class="input-width" />
-      <label>詳細</label>
-    </FloatLabel>
+    <div class="mt=2.5">
+      <KnowledgeContentInput
+        :knowledgeContent="knowledge"
+        @content-edit="contentEdit"
+      />
+    </div>
   </div>
   <div class="p-5">
     <h2>関連画像(5枚まで登録できます)</h2>

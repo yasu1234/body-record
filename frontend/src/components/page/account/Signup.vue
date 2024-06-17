@@ -17,9 +17,6 @@ const toast = useToast();
 const toastNotifications = new toastService(toast);
 setupInterceptors(router)
 
-defineProps({
-  msg: String,
-});
 
 const checkValidate = async () => {
   const result = await validate();
@@ -43,9 +40,11 @@ const signup = async () => {
     router.push({ name: "Home" });
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors.full_messages)) {
         errorMessages += error.response.data.errors.full_messages.join("\n");
+      } else {
+        errorMessages = error.response.data.errors.full_messages;
       }
     }
     toastNotifications.displayError("会員登録に失敗しました", errorMessages);
@@ -111,7 +110,7 @@ const updatePassword = (inputPassword, passwordType) => {
         <PasswordText
           :password="password"
           :passwordType="PasswordType.password"
-          @updatePassword="updatePassword"
+          @update-password="updatePassword"
         />
         <p class="validation-error-message">{{ passwordError }}</p>
       </div>
@@ -120,7 +119,7 @@ const updatePassword = (inputPassword, passwordType) => {
         <PasswordText
           :password="passwordConfirm"
           :passwordType="PasswordType.passwordConfirm"
-          @updatePassword="updatePassword"
+          @update-password="updatePassword"
         />
         <p class="validation-error-message">{{ passwordConfirmError }}</p>
       </div>
@@ -144,11 +143,6 @@ const updatePassword = (inputPassword, passwordType) => {
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-.form {
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
 }
 .item {
   padding-top: 40px;

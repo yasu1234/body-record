@@ -6,41 +6,41 @@ class Api::V1::SupportsController < ApplicationController
 
     if params[:is_support].nil?
       render json: { errors: "パラメータがありません" }, status: :bad_request and return
-    end 
+    end
 
-    if (params[:is_support] == "true")
+    if params[:is_support] == "true"
       support_list = if params[:page].present?
-        target_user.supportings.page(params[:page]).per(30)
-      else
-        target_user.supportings.page(1).per(30)
-      end
-      
+                       target_user.supportings.page(params[:page]).per(30)
+                     else
+                       target_user.supportings.page(1).per(30)
+                     end
+
       render json: {
-        user: target_user.as_json({ only: [:id, :name] }).merge(
-          support: support_list.map { |support|
-            support.as_json({ only: [:id, :name], methods: :image_url }).merge(
+        user: target_user.as_json({ only: %i[id name] }).merge(
+          support: support_list.map do |support|
+            support.as_json({ only: %i[id name], methods: :image_url }).merge(
               profile: support.profile.as_json({ only: [:profile] })
             )
-          }
+          end
         )
       }, status: :ok and return
     end
 
-    if (params[:is_support] == "false")
+    if params[:is_support] == "false"
       supporter_list = if params[:page].present?
-        target_user.supporters.page(params[:page]).per(30)
-      else
-        target_user.supporters.page(1).per(30)
-      end
-      
+                         target_user.supporters.page(params[:page]).per(30)
+                       else
+                         target_user.supporters.page(1).per(30)
+                       end
+
       render json: {
-        user: target_user.as_json({ only: [:id, :name] }).merge(
-          support: supporter_list.map { |support|
-            support.as_json({ only: [:id, :name], methods: :image_url }).merge(
+        user: target_user.as_json({ only: %i[id name] }).merge(
+          support: supporter_list.map do |support|
+            support.as_json({ only: %i[id name], methods: :image_url }).merge(
               profile: support.profile.as_json({ only: [:profile] }),
               is_support_mine: support.supporter_relationships.exists?(user_id: current_api_v1_user.id)
             )
-          }
+          end
         )
       }, status: :ok and return
     end
@@ -97,7 +97,7 @@ class Api::V1::SupportsController < ApplicationController
       includes_user = user_json["supporters"].any? { |supporter| supporter["id"] == current_api_v1_user.id }
       supporters_count = support_user.supporters.count
       supports_count = support_user.supportings.count
-      render json: { 
+      render json: {
         user: user_json.merge(
           isSupport: includes_user,
           supporterCount: supporters_count,

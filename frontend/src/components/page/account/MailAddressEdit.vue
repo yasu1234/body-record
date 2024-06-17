@@ -36,12 +36,23 @@ const mailAddressEdit = async () => {
 
     toastNotifications.displayInfo("メールアドレスを変更しました", "");
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("メールアドレス変更に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
+
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "メールアドレス変更に失敗しました",
       errorMessages
@@ -77,7 +88,7 @@ const { value: newMailAddres, errorMessage: emailError } =
       <h1 class="view-title pt-10">メールアドレス変更</h1>
       <div class="mailaddress-edit-container">
         <form class="form" @submit.prevent="checkValidate">
-          <div class="form-item">
+          <div class="pt-10">
             <FloatLabel>
               <InputText
                 v-model="newMailAddres"
@@ -105,27 +116,14 @@ const { value: newMailAddres, errorMessage: emailError } =
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
-.form {
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
 .mailaddress-edit-content-center {
   padding-top: 40px;
   text-align: center;
 }
-
-.form-item {
-  padding-top: 40px;
-}
-
 .email-edit-input {
   width: 100%;
   border: #ccc 1px solid;
 }
-
 .mailaddress-edit-button {
   font-size: 16px;
   font-weight: bold;

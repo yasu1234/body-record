@@ -18,8 +18,14 @@ const addComment = () => {
     class="comment-textarea"
     placeholder="コメントを入力"
   />
-  <div class="add-commet-button-container mt-2.5 mr-5">
-    <button class="mb-5 py-1.5 px-2.5" @click="addComment">コメントを投稿する</button>
+  <div class="add-comment-container mt-2.5 mr-5">
+    <div class="mr-5">
+      <p v-if="comment.length > 300" class="text-red-500">300文字以上入力しています</p>
+      <p v-else>残り{{ 300 - comment.length }}文字入力できます</p>
+    </div>
+    <button class="mb-5 py-1.5 px-2.5" @click="addComment">
+      コメントを投稿する
+    </button>
   </div>
 </template>
 
@@ -31,8 +37,14 @@ const addComment = () => {
   padding-left: 10px;
   border: 1px solid #ccc;
 }
-.add-commet-button-container {
+.add-comment-container {
   display: flex;
   justify-content: flex-end;
+}
+
+@media screen and (max-width: 768px) {
+  .add-comment-container {
+    flex-direction: column;
+  }
 }
 </style>

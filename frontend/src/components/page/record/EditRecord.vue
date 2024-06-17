@@ -4,7 +4,6 @@ import { useRoute, useRouter } from "vue-router";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../../js/toast.js";
-import Textarea from "primevue/textarea";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
@@ -14,12 +13,13 @@ import DropFile from "../../atom/DropFile.vue";
 import DatePicker from "../../atom/DatePicker.vue";
 import Header from "../../layout/Header.vue";
 import TabMenu from "../../layout/TabMenu.vue";
+import RecordMemoInput from "../../layout/RecordMemoInput.vue";
 
 const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
-setupInterceptors(router)
+setupInterceptors(router);
 
 const recordDate = ref("");
 const memo = ref("");
@@ -34,14 +34,6 @@ onMounted(() => {
   getDetail();
 });
 
-function dateChange(event) {
-  recordDate.value = event;
-}
-
-const onFileChange = (event, index) => {
-  files.value[index - 1] = event;
-}
-
 const deleteImage = async (item) => {
   try {
     const res = await axiosInstance.delete("/api/v1/record_images", {
@@ -52,7 +44,11 @@ const deleteImage = async (item) => {
     });
     imageUrls.value = res.data.imageUrls;
   } catch (error) {
-    toastNotifications.displayError("画像の削除に失敗しました", "");
+    let errorMessage = "";
+    if (error.response != null && error.response.status == 401) {
+      errorMessage = "ログインしてください";
+    }
+    toastNotifications.displayError("画像の削除に失敗しました", errorMessage);
   }
 };
 
@@ -68,7 +64,11 @@ const getDetail = async () => {
     imageUrls.value = res.data.record.image_urls;
     isHidden.value = !res.data.record.is_open;
   } catch (error) {
-    toastNotifications.displayError("記録の取得に失敗しました", errorMessages);
+    let errorMessage = "";
+    if (error.response != null && error.response.status == 401) {
+      errorMessage = "ログインしてください";
+    }
+    toastNotifications.displayError("記録の取得に失敗しました", errorMessage);
   }
 };
 
@@ -89,7 +89,9 @@ const edit = async () => {
     }
 
     for (const file of files.value) {
-      formData.append("record[images][]", file);
+      if (file != null) {
+        formData.append("record[images][]", file);
+      }
     }
 
     const res = await axiosInstance.patch(
@@ -108,16 +110,37 @@ const edit = async () => {
       showRecordDetail(res.data.record);
     }, 3000);
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("記録の更新に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("記録の更新に失敗しました", errorMessages);
   }
+};
+
+const dateChange = (event) => {
+  recordDate.value = event;
+};
+
+const onFileChange = (event, index) => {
+  files.value[index - 1] = event;
+};
+
+const memoEdit = (editingMemo) => {
+  memo.value = editingMemo;
 };
 
 const showRecordDetail = () => {
@@ -131,7 +154,7 @@ const showRecordDetail = () => {
   <Toast position="top-center" />
   <form class="edit-container" @submit.prevent="edit">
     <div class="w-52">
-      <p class="inputTitle">記録日</p>
+      <p>記録日</p>
       <DatePicker isStart="true" :date="recordDate" @update:date="dateChange" />
     </div>
     <div class="weight-group mt-7">
@@ -149,10 +172,7 @@ const showRecordDetail = () => {
       <p class="ml-2">%</p>
     </div>
     <div class="mt-5">
-      <FloatLabel>
-        <Textarea v-model="memo" rows="10" class="record-memo p-2.5" />
-        <label>メモ</label>
-      </FloatLabel>
+      <RecordMemoInput :memo="memo" @memo-edit="memoEdit" />
     </div>
     <div class="mt-7">
       <input
@@ -257,13 +277,7 @@ input[type="text"] {
   height: 30px;
   cursor: pointer;
 }
-.record-memo {
-  width: 500px;
-}
 @media (max-width: 768px) {
-  .record-memo {
-    width: calc(100% - 20px);
-  }
   .edit-container {
     width: auto;
     margin-left: 20px;

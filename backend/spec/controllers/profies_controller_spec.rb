@@ -3,12 +3,14 @@ require "rails_helper"
 RSpec.describe Api::V1::ProfilesController, type: :controller do
   let!(:user) { create(:user, :with_profile) }
   let(:headers) { user.create_new_auth_token }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:image) { file_fixture("image.png") }
   let(:valid_params) { { profile: "プロファイルテスト", goal_weight: 60, goal_fat_percentage: 10 } }
 
   describe "GET #show" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         get :show, params: { id: user.id }, format: :json
       end
 
@@ -22,6 +24,7 @@ RSpec.describe Api::V1::ProfilesController, type: :controller do
     context "ログイン済" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: user.id }, format: :json
       end
 
@@ -41,6 +44,7 @@ RSpec.describe Api::V1::ProfilesController, type: :controller do
   describe "POST #create" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         post :create, format: :json, params: valid_params
       end
 
@@ -56,7 +60,7 @@ RSpec.describe Api::V1::ProfilesController, type: :controller do
 
       before do
         request.headers.merge!(headers)
-        puts image
+        request.headers.merge!(common_header)
         post :create, format: :json, params: valid_params
       end
 

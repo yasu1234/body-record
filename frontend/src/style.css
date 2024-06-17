@@ -42,20 +42,14 @@ button {
   color: white;
   border-radius: 8px;
   border: 0px solid transparent;
-  /* padding: 0.6em 1.2em; */
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  /* background-color: #1a1a1a; */
   cursor: pointer;
-  /* transition: border-color 0.25s; */
 }
 button:hover {
+  opacity: 0.6;
 }
-/* button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-} */
 
 img {
   object-fit: cover;
@@ -101,6 +95,12 @@ p.validation-error-message {
 .file-input-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+}
+
+.form {
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 @media screen and (max-width: 768px) {

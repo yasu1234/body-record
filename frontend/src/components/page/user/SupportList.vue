@@ -19,7 +19,6 @@ const toastNotifications = new toastService(toast);
 
 const userId = ref(0);
 const user = ref(null);
-const isLogin = ref(false);
 const supportList = ref([]);
 const pageCount = ref(1);
 const pageNum = ref(1);
@@ -48,9 +47,17 @@ const getSupport = async () => {
 
     user.value = res.data.user.support;
   } catch (error) {
+    supportList.value = [];
+
+    let message = "";
+
+    if (error.response != null && error.response.status === 401) {
+      message = "ログインしてください";
+    }
+
     toastNotifications.displayError(
       "応援ユーザーの取得に失敗しました",
-      ""
+      message
     );
   }
 };
@@ -60,14 +67,23 @@ const supportOff = async (userId) => {
     const res = await axiosInstance.delete(`/api/v1/supports/${userId}`);
     getSupport();
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("応援解除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("応援解除に失敗しました", errorMessages);
   }
 };

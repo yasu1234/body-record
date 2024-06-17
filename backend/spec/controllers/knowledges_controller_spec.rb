@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::KnowledgesController, type: :controller do
   let!(:user) { create(:user, :with_knowledges, :without_records) }
   let(:headers) { user.create_new_auth_token }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:image) { file_fixture("image.png") }
   let(:valid_params) { { title: "テストタイトル", content: "テストコンテンツ", user_id: user.id, "images[]": [image] } }
   let(:invalid_params) { { title: "", content: "テストコンテンツ", user_id: user.id } }
@@ -18,6 +19,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
       let!(:knowledge) { create_knowledges(1) }
 
       before do
+        request.headers.merge!(common_header)
         get :index, format: :json
       end
 
@@ -34,6 +36,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, format: :json
       end
 
@@ -56,6 +59,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, format: :json, params: { page: 2 }
       end
 
@@ -77,6 +81,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, format: :json
       end
 
@@ -100,6 +105,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, format: :json, params: { keyword: "Know" }
       end
 
@@ -118,6 +124,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
   describe "POST #create" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         post :create, format: :json, params: valid_params
       end
 
@@ -131,6 +138,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     context "作成完了" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { knowledge: valid_params }
       end
 
@@ -152,6 +160,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     context "バリデーションエラー(タイトル不足)" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { knowledge: invalid_params }
       end
 
@@ -169,6 +178,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     context "バリデーションエラー(内容の文字数オーバー)" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { knowledge: over_content_invalid_params }
       end
 
@@ -187,6 +197,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
       let!(:knowledge) { create_knowledges(1).first }
 
       before do
+        request.headers.merge!(common_header)
         get :show, params: { id: knowledge.id }, format: :json
       end
 
@@ -202,6 +213,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: "" }, format: :json
       end
 
@@ -217,6 +229,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: 150 }, format: :json
       end
 
@@ -232,6 +245,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: knowledge.id }, format: :json
       end
 
@@ -254,6 +268,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
       let(:knowledge) { create(:knowledge, title: "テストタイトル", content: "テストコンテンツ", user_id: user.id, id: 1) }
 
       before do
+        request.headers.merge!(common_header)
         patch :update, params: { id: 1, knowledge: valid_params }
       end
 
@@ -267,6 +282,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     context "対象のデータが存在しない" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         put :update, params: { id: -1, knowledge: valid_params }
       end
 
@@ -280,6 +296,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     context "バリデーションエラー(タイトル不足)" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         put :update, params: { id: user.knowledges.first.id, knowledge: { title: "" } }
       end
 
@@ -293,6 +310,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     context "バリデーションエラー(内容の文字数オーバー)" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         put :update, params: { id: user.knowledges.first.id, knowledge: over_content_invalid_params }
       end
 
@@ -306,6 +324,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     context "更新完了" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         patch :update, format: :json, params: { id: user.knowledges.first.id, knowledge: update_valid_params }
       end
 
@@ -326,6 +345,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
   describe "DELETE #destroy" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         delete :destroy, params: { id: user.knowledges.first.id }, format: :json
       end
 
@@ -339,6 +359,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     context "ID 不足" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         delete :destroy, params: { id: "" }, format: :json
       end
 
@@ -352,6 +373,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     context "対象のデータが存在しない" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         delete :destroy, params: { id: -1 }, format: :json
       end
 
@@ -365,6 +387,7 @@ RSpec.describe Api::V1::KnowledgesController, type: :controller do
     context "削除成功" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         delete :destroy, params: { id: user.knowledges.first.id }, format: :json
       end
 

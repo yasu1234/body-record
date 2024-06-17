@@ -8,7 +8,7 @@ class Api::V1::KnowledgesController < ApplicationController
       knowledges = knowledges.where("title LIKE ?", "%#{params[:keyword]}%")
     end
 
-    if (params[:is_bookmark].present? && params[:is_bookmark] == "true")
+    if params[:is_bookmark].present? && params[:is_bookmark] == "true"
       knowledges = knowledges.joins(:bookmarks).where(bookmarks: { user_id: current_api_v1_user.id })
     end
 
@@ -18,9 +18,18 @@ class Api::V1::KnowledgesController < ApplicationController
                    knowledges.page(1).per(30)
                  end
 
+    knowledges_with_bookmarks_count = knowledges.map do |knowledge|
+      {
+        knowledge: knowledge.as_json.merge(
+          bookmark_count: knowledge.bookmarks.count,
+          is_bookmark: knowledge.bookmarks.where(user_id: current_api_v1_user.id).present?
+        )
+      }
+    end
+
     totalPage = knowledges.total_pages
 
-    render json: { knowledges: knowledges, totalPage: totalPage }, status: :ok
+    render json: { knowledges: knowledges_with_bookmarks_count, totalPage: }, status: :ok
   end
 
   def create
@@ -46,18 +55,7 @@ class Api::V1::KnowledgesController < ApplicationController
       is_bookmark: bookmark.present?,
       is_my_knowledge: knowledge.user_id == current_api_v1_user.id,
       bookmark_count: knowledge.bookmarks.count
-    )}, status: :ok
-  rescue ActiveRecord::RecordNotFound
-    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
-  end
-
-  def delete_image
-    knowledge = Knowledge.find(params[:id])
-
-    image = knowledge.images.find(params[:image_id])
-    image.purge
-
-    render json: { knowledge: knowledge.as_json(methods: :image_urls) }, status: :ok
+    ) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   end

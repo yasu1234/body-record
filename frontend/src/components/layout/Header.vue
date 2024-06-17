@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
+import Button from "primevue/button";
 
 import { HeaderMenuList } from "../../js/const.js";
 import { AccountStatusType } from "../../js/const.js";
@@ -125,13 +126,20 @@ const showHomeThenRelaod = async () => {
           会員登録・ログイン
         </button>
         <div @click="toggleDropdown">
-          <button class="user-button">
-            <img
-              src="../../assets/image/user-placeholder.png"
-              alt="ユーザー"
-              class="user-image"
-            />
-          </button>
+          <Button
+            icon="pi pi-user"
+            severity="info"
+            rounded
+            aria-label="ユーザー"
+            class="user-button"
+            :pt="{
+              root: {
+                style: {
+                  background: '#4264ec',
+                },
+              },
+            }"
+          />
         </div>
       </div>
       <div v-if="showDropdown" class="dropdown-menu">
@@ -174,13 +182,8 @@ header {
 }
 .user-button {
   padding: 0;
-  background: transparent;
   border: 1px solid #ccc;
   border-radius: 50%;
-}
-.user-image {
-  width: 40px;
-  height: 40px;
 }
 .dropdown-menu {
   position: absolute;
@@ -202,6 +205,7 @@ header {
 }
 .menu-item:hover {
   background-color: #eae1e1;
+  opacity: 1;
 }
 @media (max-width: 768px) {
   .account-introducton-button {

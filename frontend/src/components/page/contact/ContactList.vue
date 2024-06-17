@@ -2,13 +2,17 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { axiosInstance } from "../../../js/axios.js";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../../js/toast.js";
+import Toast from "primevue/toast";
 
 import Header from "../../layout/Header.vue";
 import TabMenu from "../../layout/TabMenu.vue";
 
 const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
 
-const isLogin = ref(false);
 const searchResult = ref([]);
 
 onMounted(() => {
@@ -24,6 +28,14 @@ const getContactList = async () => {
     }
   } catch (error) {
     searchResult.value = [];
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+    toastNotifications.displayError(
+      "お問合せ送信に失敗しました",
+      errorMessages
+    );
   }
 };
 
@@ -35,6 +47,7 @@ function clickContact(item) {
 <template>
   <Header />
   <TabMenu />
+  <Toast position="top-center" />
   <div
     class="contact-card"
     v-for="item of searchResult"

@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::MyRecordsController, type: :controller do
   let!(:user) { create(:user, :with_records, :without_knowledges) }
   let(:headers) { user.create_new_auth_token }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:image) { file_fixture("image.png") }
   let(:valid_params) { { memo: "メモTEST", date: "2024-04-29", 'images[]': [image] } }
   let(:invalid_params) { { memo: "", content: "テストコンテンツ", user_id: user.id } }
@@ -15,6 +16,7 @@ RSpec.describe Api::V1::MyRecordsController, type: :controller do
   describe "POST #create" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         post :create, format: :json, params: valid_params
       end
 
@@ -28,6 +30,7 @@ RSpec.describe Api::V1::MyRecordsController, type: :controller do
     context "作成完了" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { record: valid_params }
       end
 
@@ -49,6 +52,7 @@ RSpec.describe Api::V1::MyRecordsController, type: :controller do
     context "バリデーションエラー(記録日必須)" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { record: invalid_params }
       end
 
@@ -67,6 +71,7 @@ RSpec.describe Api::V1::MyRecordsController, type: :controller do
       let(:record) { create(:record, title: "テストタイトル", content: "テストコンテンツ", user_id: user.id, id: 1) }
 
       before do
+        request.headers.merge!(common_header)
         put :update, params: { id: 1, record: valid_params }
       end
 
@@ -80,6 +85,7 @@ RSpec.describe Api::V1::MyRecordsController, type: :controller do
     context "対象のデータが存在しない" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         put :update, params: { id: -1, record: valid_params }
       end
 
@@ -93,6 +99,7 @@ RSpec.describe Api::V1::MyRecordsController, type: :controller do
     context "記録日不足" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         put :update, params: { id: user.records.first.id, record: { date: "" } }
       end
 
@@ -106,6 +113,7 @@ RSpec.describe Api::V1::MyRecordsController, type: :controller do
     context "更新完了" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         patch :update, format: :json, params: { id: user.records.first.id, record: update_valid_params }
       end
 

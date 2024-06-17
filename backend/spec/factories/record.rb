@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :record do
-    sequence(:date) { |n| Date.today - rand(100000) }
+    sequence(:date) { |_n| Date.today - rand(100_000) }
     weight { 65.1 }
     fat_percentage { 11.2 }
     memo { "サンプルメモ" }

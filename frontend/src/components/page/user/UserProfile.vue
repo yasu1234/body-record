@@ -26,7 +26,6 @@ const records = ref([]);
 const knowledges = ref([]);
 const isMoreRecords = ref(false);
 const isMoreKnowledges = ref(false);
-const isLogin = ref(false);
 const userId = ref(0);
 const month = ref({
   month: new Date().getMonth(),
@@ -70,7 +69,11 @@ const getProfile = async () => {
 
     user.value = res.data.user;
   } catch (error) {
-    user.value = null;
+    if (error.response != null && error.response.status === 401) {
+      toastNotifications.displayError("ログインしてください", "");
+    } else {
+      user.value = null;
+    }
   }
 };
 
@@ -84,13 +87,9 @@ const getSupportCount = async () => {
 
     support.value = res.data.user;
   } catch (error) {
-    let errorMessages = "";
-    if (error.response.status === 422) {
-      if (Array.isArray(error.response.data.errors)) {
-        errorMessages += error.response.data.errors.join("\n");
-      } else {
-        errorMessages = error.response.data.errors;
-      }
+    support.value = null;
+    if (error.response != null && error.response.status === 401) {
+      toastNotifications.displayError("ログインしてください", "");
     }
   }
 };
@@ -108,6 +107,10 @@ const getUserRecord = async () => {
   } catch (error) {
     records.value = [];
     isMoreRecords.value = false;
+
+    if (error.response != null && error.response.status === 401) {
+      toastNotifications.displayError("ログインしてください", "");
+    }
   }
 };
 
@@ -133,7 +136,11 @@ const getMonthRecord = async () => {
     fatPercentageData.value.datasets[0].data = res.data.records.map(
       (record) => record.fat_percentage
     );
-  } catch (error) {}
+  } catch (error) {
+    if (error.response != null && error.response.status === 401) {
+      toastNotifications.displayError("ログインしてください", "");
+    }
+  }
 };
 
 const getUserKnowledge = async () => {
@@ -149,6 +156,10 @@ const getUserKnowledge = async () => {
   } catch (error) {
     knowledges.value = [];
     isMoreKnowledges.value = false;
+
+    if (error.response != null && error.response.status === 401) {
+      toastNotifications.displayError("ログインしてください", "");
+    }
   }
 };
 
@@ -165,11 +176,18 @@ const supportOn = async () => {
     support.value = res.data.user;
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
-      if (Array.isArray(error.response.data.errors)) {
-        errorMessages += error.response.data.errors.join("\n");
-      } else {
-        errorMessages = error.response.data.errors;
+
+    if (error.response != null) {
+      if (error.response.status === 401) {
+        toastNotifications.displayError("ログインしてください", "");
+        return;
+      }
+      if (error.response.status === 422) {
+        if (Array.isArray(error.response.data.errors)) {
+          errorMessages += error.response.data.errors.join("\n");
+        } else {
+          errorMessages = error.response.data.errors;
+        }
       }
     }
 
@@ -185,12 +203,19 @@ const supportOff = async () => {
     const res = await axiosInstance.delete(`/api/v1/supports/${userId.value}`);
     support.value = res.data.user;
   } catch (error) {
-    let errorMessage = "";
-    if (error.response.status === 422) {
-      if (Array.isArray(error.response.data.errors)) {
-        errorMessage += error.response.data.errors.join("\n");
-      } else {
-        errorMessage = error.response.data.errors;
+    let errorMessages = "";
+
+    if (error.response != null) {
+      if (error.response.status === 401) {
+        toastNotifications.displayError("ログインしてください", "");
+        return;
+      }
+      if (error.response.status === 422) {
+        if (Array.isArray(error.response.data.errors)) {
+          errorMessages += error.response.data.errors.join("\n");
+        } else {
+          errorMessages = error.response.data.errors;
+        }
       }
     }
 
@@ -198,10 +223,10 @@ const supportOff = async () => {
   }
 };
 
-function monthChange(event) {
+const monthChange = (event) => {
   month.value = event;
   getMonthRecord();
-}
+};
 
 const editSupport = (isSupport) => {
   if (isSupport) {
@@ -265,8 +290,7 @@ const showMoreRecords = () => {
         v-if="knowledges.length > 0"
         v-for="knowledge in knowledges"
         v-bind="knowledge"
-        :knowledgeTitle="knowledge.title"
-        :knowledgeContent="knowledge.content"
+        :knowledge="knowledge"
       />
       <p v-else>記事を作成していません</p>
     </div>

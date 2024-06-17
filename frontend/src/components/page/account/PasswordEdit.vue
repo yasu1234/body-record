@@ -32,12 +32,23 @@ const passwordEdit = async () => {
     const res = await axiosInstance.put(`/api/v1/auth/password`, formData);
     toastNotifications.displayInfo("パスワードを変更しました", "");
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("パスワード変更に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
+
     if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "パスワード変更に失敗しました",
       errorMessages
@@ -104,7 +115,7 @@ const updatePassword = (inputPassword, passwordType) => {
             <PasswordText
               :password="currentPassword"
               :passwordType="PasswordType.password"
-              @updatePassword="updatePassword"
+              @update-password="updatePassword"
             />
             <p class="validation-error-message">{{ currentPasswordError }}</p>
           </div>
@@ -113,7 +124,7 @@ const updatePassword = (inputPassword, passwordType) => {
             <PasswordText
               :password="password"
               :passwordType="PasswordType.newPassword"
-              @updatePassword="updatePassword"
+              @update-password="updatePassword"
             />
             <p class="validation-error-message">{{ passwordError }}</p>
           </div>
@@ -122,7 +133,7 @@ const updatePassword = (inputPassword, passwordType) => {
             <PasswordText
               :password="passwordConfirm"
               :passwordType="PasswordType.newPasswordConfirm"
-              @updatePassword="updatePassword"
+              @update-password="updatePassword"
             />
             <p class="validation-error-message">{{ passwordConfirmError }}</p>
           </div>
@@ -143,11 +154,6 @@ const updatePassword = (inputPassword, passwordType) => {
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-.form {
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
 }
 .password-edit-button {
   font-size: 16px;

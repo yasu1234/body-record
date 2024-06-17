@@ -1,44 +1,44 @@
 class Api::V1::MyRecordsController < ApplicationController
-    before_action :check_login
+  before_action :check_login
 
-    def index
-        base_scope = Record.where(user_id: current_api_v1_user.id)
-        if (params[:is_only_open].present? && params[:is_only_open] == "true")
-            base_scope = base_scope.where(open_status: 1)
-        end
-
-        records, total_pages = Record.search_and_paginate(params, base_scope)
-   
-        render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: 200
+  def index
+    base_scope = Record.where(user_id: current_api_v1_user.id)
+    if params[:is_only_open].present? && params[:is_only_open] == "true"
+      base_scope = base_scope.where(open_status: 1)
     end
 
-    def create
-        record = current_api_v1_user.records.build(record_register_params)
+    records, total_pages = Record.search_and_paginate(params, base_scope)
 
-        render json: { errors: record.errors.full_messages }, status: 422 and return if record.invalid?
+    render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: :ok
+  end
 
-        record.save!
-        render json: { record: record }, status: 200
-    rescue StandardError => e
-        render json: { errors: e.message }, status: 500
-    end
+  def create
+    record = current_api_v1_user.records.build(record_register_params)
 
-    def update        
-        record = current_api_v1_user.records.find(params[:id])
-        record.update!(record_register_params)
+    render json: { errors: record.errors.full_messages }, status: :unprocessable_entity and return if record.invalid?
 
-        render json: { record: record }, status: 200
-    rescue ActiveRecord::RecordNotFound
-        render json: { errors: '対象のデータが見つかりません' }, status: 404
-    rescue ActiveRecord::RecordInvalid => e
-        render json: { errors: e.record.errors.full_messages }, status: 422
-    rescue StandardError => e
-        render json: { errors: e.message }, status: 500
-    end
+    record.save!
+    render json: { record: }, status: :ok
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
 
-    private
+  def update
+    record = current_api_v1_user.records.find(params[:id])
+    record.update!(record_register_params)
+
+    render json: { record: }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
+
+  private
 
     def record_register_params
-        params.require(:record).permit(:memo, :date, :user_id, :weight, :fat_percentage, :open_status, images: [])
+      params.require(:record).permit(:memo, :date, :user_id, :weight, :fat_percentage, :open_status, images: [])
     end
 end

@@ -68,7 +68,14 @@ const checkLogin = async () => {
     getUserKnowledge();
     getMonthRecord();
   } catch (error) {
-    toastNotifications.displayError("ユーザー情報を取得できません", "");
+    let errorMessage = "";
+    if (error.response != null && error.response.status === 401) {
+      errorMessage = "ログインしてください";
+    }
+    toastNotifications.displayError(
+      "ユーザー情報を取得できません",
+      errorMessage
+    );
   }
 };
 
@@ -79,6 +86,7 @@ const getProfile = async () => {
     user.value = res.data.user;
   } catch (error) {
     user.value = null;
+    toastNotifications.displayError("プロフィールの取得に失敗しました", "");
   }
 };
 
@@ -92,14 +100,7 @@ const getSupportCount = async () => {
 
     support.value = res.data.user;
   } catch (error) {
-    let errorMessages = "";
-    if (error.response.status === 422) {
-      if (Array.isArray(error.response.data.errors)) {
-        errorMessages += error.response.data.errors.join("\n");
-      } else {
-        errorMessages = error.response.data.errors;
-      }
-    }
+    support.value = null;
   }
 };
 
@@ -160,7 +161,7 @@ const getUserKnowledge = async () => {
   }
 };
 
-function monthChange(event) {
+const monthChange = (event) => {
   month.value = event;
   getMonthRecord();
 }
@@ -170,7 +171,7 @@ const clickRecord = (item) => {
 };
 
 const showMoreRecords = () => {
-  router.push({ name: "MyRecordList" });
+  router.push({ name: "Home" });
 };
 </script>
 
@@ -219,8 +220,7 @@ const showMoreRecords = () => {
         v-if="knowledges.length > 0"
         v-for="knowledge in knowledges"
         v-bind="knowledge"
-        :knowledgeTitle="knowledge.title"
-        :knowledgeContent="knowledge.content"
+        :knowledge="knowledge"
       />
       <p v-else>記事を作成していません</p>
     </div>

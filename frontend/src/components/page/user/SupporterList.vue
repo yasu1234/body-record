@@ -48,9 +48,15 @@ const getSupporter = async () => {
 
     user.value = res.data.user.support;
   } catch (error) {
+    let message = "";
+
+    if (error.response != null && error.response.status === 401) {
+      message = "ログインしてください";
+    }
+
     toastNotifications.displayError(
-      "サポーターの取得に失敗しました",
-      ""
+      "サポーター一覧の取得に失敗しました",
+      message
     );
   }
 };
@@ -60,14 +66,23 @@ const supportOff = async (userId) => {
     const res = await axiosInstance.delete(`/api/v1/supports/${userId}`);
     getSupporter();
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("応援解除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "応援解除に失敗しました",
       errorMessages
@@ -87,19 +102,28 @@ const supportOn = async (userId) => {
     });
     getSupporter();
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("応援に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("応援に失敗しました", errorMessages);
   }
 };
 
-const updatePaginateItems = function (page) {
+const updatePaginateItems = (page) => {
   pageNum.value = page;
   searchUser();
 };

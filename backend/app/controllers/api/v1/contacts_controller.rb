@@ -1,5 +1,5 @@
 class Api::V1::ContactsController < ApplicationController
-  before_action :check_login, only: %i[index show update]
+  before_action :check_login, only: %i[show update]
 
   def index
     contacts = Contact.all.order(created_at: :desc)
@@ -49,6 +49,6 @@ class Api::V1::ContactsController < ApplicationController
   private
 
     def contact_register_params
-      params.permit(:content, :status)
+      params.require(:contact).permit(:content, :status)
     end
 end

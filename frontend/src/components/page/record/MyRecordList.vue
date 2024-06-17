@@ -16,7 +16,6 @@ const keyword = ref("");
 const startDate = ref("");
 const endDate = ref("");
 const isOnlyOpen = ref(false);
-const isLogin = ref(false);
 const searchResult = ref([]);
 const pageCount = ref(1);
 const page = ref(1);
@@ -97,7 +96,13 @@ const search = async () => {
   }
 };
 
-const setQuery = (keywordParam, startDateParam, endDateParam, pageParam, isOnlyOpenParam) => {
+const setQuery = (
+  keywordParam,
+  startDateParam,
+  endDateParam,
+  pageParam,
+  isOnlyOpenParam
+) => {
   if (keywordParam != null) {
     keyword.value = keywordParam;
   } else {
@@ -119,7 +124,7 @@ const setQuery = (keywordParam, startDateParam, endDateParam, pageParam, isOnlyO
     page.value = 1;
   }
 
-  if (isOnlyOpenParam != null && isOnlyOpenParam === 'true') {
+  if (isOnlyOpenParam != null && isOnlyOpenParam === "true") {
     isOnlyOpen.value = true;
   } else {
     isOnlyOpen.value = false;

@@ -89,7 +89,7 @@ const searchUser = async () => {
   }
 };
 
-const updatePaginateItems = function (page) {
+const updatePaginateItems = (page) => {
   pageNum.value = page;
   searchUser();
 };

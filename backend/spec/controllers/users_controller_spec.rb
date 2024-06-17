@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::UsersController, type: :controller do
   let(:user) { create(:user, :with_records, :without_knowledges) }
   let(:headers) { user.create_new_auth_token }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
 
   def create_records(count)
     create_list(:record, count, user:)
@@ -17,6 +18,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, format: :json
       end
 
@@ -34,8 +36,10 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       let!(:user1) { create(:user, id: 1, name: "test1") }
       let!(:user2) { create(:user, id: 2, name: "test23") }
       let!(:user3) { create(:user, id: 3, name: "test3") }
+
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, format: :json, params: { keyword: "3" }
       end
 
@@ -56,25 +60,26 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         let!(:user1) { create(:user, id: 1, name: "test1") }
         let!(:user2) { create(:user, id: 2, name: "test23") }
         let!(:user3) { create(:user, id: 3, name: "test3") }
+
         before do
-            request.headers.merge!(headers)
-            user.support!(user1)
-            get :index, format: :json, params: { isSupportOnly: true }
+          request.headers.merge!(headers)
+          request.headers.merge!(common_header)
+          user.support!(user1)
+          get :index, format: :json, params: { isSupportOnly: true }
         end
-        
+
         it "ステータス200" do
-            expect(response.status).to eq 200
+          expect(response.status).to eq 200
         end
-        
+
         it "データは1件取得" do
-            json_response = JSON.parse(response.body)
-            expect(json_response["users"].count).to eq 1
-            expect(json_response["users"][0]["user"]["id"]).to eq 1
+          json_response = JSON.parse(response.body)
+          expect(json_response["users"].count).to eq 1
+          expect(json_response["users"][0]["user"]["id"]).to eq 1
         end
       end
     end
   end
-  
 
   describe "GET #show" do
     context "対象のユーザーを取得できるパターン" do
@@ -82,6 +87,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: user1.id }, format: :json
       end
 
@@ -98,6 +104,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     context "対象のユーザーがいないパターン" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: -1 }, format: :json
       end
 
