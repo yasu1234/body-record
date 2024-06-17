@@ -26,7 +26,6 @@ const records = ref([]);
 const knowledges = ref([]);
 const isMoreRecords = ref(false);
 const isMoreKnowledges = ref(false);
-const isLogin = ref(false);
 const userId = ref(0);
 const month = ref({
   month: new Date().getMonth(),
@@ -291,8 +290,7 @@ const showMoreRecords = () => {
         v-if="knowledges.length > 0"
         v-for="knowledge in knowledges"
         v-bind="knowledge"
-        :knowledgeTitle="knowledge.title"
-        :knowledgeContent="knowledge.content"
+        :knowledge="knowledge"
       />
       <p v-else>記事を作成していません</p>
     </div>

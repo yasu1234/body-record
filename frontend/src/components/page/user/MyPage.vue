@@ -220,8 +220,7 @@ const showMoreRecords = () => {
         v-if="knowledges.length > 0"
         v-for="knowledge in knowledges"
         v-bind="knowledge"
-        :knowledgeTitle="knowledge.title"
-        :knowledgeContent="knowledge.content"
+        :knowledge="knowledge"
       />
       <p v-else>記事を作成していません</p>
     </div>

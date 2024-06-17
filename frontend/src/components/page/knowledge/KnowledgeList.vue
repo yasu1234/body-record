@@ -79,7 +79,7 @@ const search = async () => {
     searchResult.value = [];
 
     for (let item of res.data.knowledges) {
-      searchResult.value.push(item);
+      searchResult.value.push(item.knowledge);
     }
   } catch (error) {
     searchResult.value = [];
@@ -141,8 +141,7 @@ const addKnowledge = () => {
     <KnowledgeCard
       v-for="knowledge in searchResult"
       v-bind="knowledge"
-      :knowledgeTitle="knowledge.title"
-      :knowledgeContent="knowledge.content"
+      :knowledge="knowledge"
       @click="clickKnowledge(knowledge)"
     />
     <div class="mt-12">

@@ -1,23 +1,47 @@
 <script setup>
-import { computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import MarkdownIt from "markdown-it";
-
-const props = defineProps({
-  knowledgeTitle: String,
-  knowledgeContent: String,
-});
 
 const md = new MarkdownIt();
 
+const props = defineProps(['knowledge']);
+
+const knowledgeTitle = ref("");
+const knowledgeContent = ref("");
+
+onMounted(() => {
+  setProps(props.knowledge);
+});
+
+watch(props, () => {
+  setProps(props.knowledge);
+});
+
+const setProps = (knowledge) => {
+  knowledgeTitle.value = "";
+  knowledgeContent.value = "";
+
+  if (knowledge != null) {
+    knowledgeTitle.value = knowledge.title;
+    knowledgeContent.value = knowledge.content;
+  }
+};
+
 const renderedMarkdown = computed(() => {
-  return md.render(props.knowledgeContent);
+  var slicedContent = ""
+  if (knowledgeContent.value.length > 100) {
+    slicedContent = knowledgeContent.value.slice(0, 100) + '...';
+  } else {
+    slicedContent = knowledgeContent.value;
+  }
+  return md.render(slicedContent);
 });
 </script>
 
 <template>
   <div class="knowledge-card">
     <h4 class="m-2.5">
-      <b>{{ props.knowledgeTitle }}</b>
+      <b>{{ knowledgeTitle }}</b>
     </h4>
     <div>
       <p class="knowledge-content" v-html="renderedMarkdown" />
