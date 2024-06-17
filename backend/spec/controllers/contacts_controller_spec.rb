@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::ContactsController, type: :controller do
   let!(:user) { create(:user) }
   let(:headers) { user.create_new_auth_token }
+  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
   let(:valid_params) { { content: "問い合わせTEST"} }
   let(:invalid_params) { { content: "" } }
   let(:valid_status_params) { { content: "問い合わせTEST", status: 1} }
@@ -15,6 +16,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
       let!(:contact3) { create(:contact) }
 
       before do
+        request.headers.merge!(common_header)
         get :index, format: :json
       end
 
@@ -34,6 +36,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
       let!(:contact1) { create(:contact) }
 
       before do
+        request.headers.merge!(common_header)
         get :show, params: { id: contact1.id }, format: :json
       end
 
@@ -49,6 +52,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: "" }, format: :json
       end
 
@@ -64,6 +68,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: -1 }, format: :json
       end
 
@@ -79,6 +84,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :show, params: { id: contact1.id }, format: :json
       end
 
@@ -96,6 +102,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
   describe "POST #create" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { contact: valid_params }
       end
 
@@ -115,6 +122,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
     context "バリデーションエラー" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { contact: invalid_params }
       end
 
@@ -128,6 +136,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
     context "作成完了" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { contact: valid_params }
       end
 
@@ -148,6 +157,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
     context "未ログイン" do
       let!(:contact1) { create(:contact) }
       before do
+        request.headers.merge!(common_header)
         put :update, format: :json, params: {id: contact1.id, contact: valid_params }
       end
 
@@ -162,6 +172,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
       let!(:contact1) { create(:contact) }
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         put :update, format: :json, params: { id: contact1.id, contact: invalid_params }
       end
 
@@ -176,6 +187,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
       let!(:contact1) { create(:contact) }
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         put :update, format: :json, params: { id: contact1.id, contact: valid_status_params }
       end
 

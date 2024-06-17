@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::GraphRecordsController, type: :controller do
   let!(:user) { create(:user, :with_records, :without_knowledges) }
   let(:headers) { user.create_new_auth_token }
+  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
   let(:image) { file_fixture("image.png") }
   let(:valid_params) { { memo: "メモTEST", date: "2024-04-29", images: [image] } }
   let(:invalid_params) { { memo: "", content: "テストコンテンツ", user_id: user.id } }
@@ -18,6 +19,7 @@ RSpec.describe Api::V1::GraphRecordsController, type: :controller do
 
         before do
           request.headers.merge!(headers)
+          request.headers.merge!(common_header)
           get :index, params: { user_id: user.id, targetMonth: 4 }, format: :json
         end
 
@@ -33,6 +35,7 @@ RSpec.describe Api::V1::GraphRecordsController, type: :controller do
 
         before do
           request.headers.merge!(headers)
+          request.headers.merge!(common_header)
           get :index, params: { user_id: user.id, targetYear: 2024 }, format: :json
         end
 
@@ -48,6 +51,7 @@ RSpec.describe Api::V1::GraphRecordsController, type: :controller do
 
         before do
           request.headers.merge!(headers)
+          request.headers.merge!(common_header)
           get :index, params: { targetYear: 2024, targetMonth: 4 }, format: :json
         end
 
@@ -63,6 +67,7 @@ RSpec.describe Api::V1::GraphRecordsController, type: :controller do
 
         before do
           request.headers.merge!(headers)
+          request.headers.merge!(common_header)
           get :index, params: { user_id: user.id, targetYear: 1200, targetMonth: 4 }, format: :json
         end
 
@@ -94,6 +99,7 @@ RSpec.describe Api::V1::GraphRecordsController, type: :controller do
 
         before do
           request.headers.merge!(headers)
+          request.headers.merge!(common_header)
           get :index, params: { user_id: user.id, targetYear: 2024, targetMonth: 4 }, format: :json
         end
 

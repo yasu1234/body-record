@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::PasswordsController, type: :controller do
+  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+
   before do
     @request.env["devise.mapping"] = Devise.mappings[:api_v1_user]
   end
@@ -12,6 +14,7 @@ RSpec.describe Api::V1::PasswordsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         put :update, params: { password: 'new_password', password_confirmation: 'new_password' }
       end
 
@@ -31,6 +34,7 @@ RSpec.describe Api::V1::PasswordsController, type: :controller do
       context "パスワードが正しい場合" do
         before do
           request.headers.merge!(headers)
+          request.headers.merge!(common_header)
           put :update, params: { password: 'new_password', password_confirmation: 'new_password', current_password: user1.password }
         end
 
@@ -47,6 +51,7 @@ RSpec.describe Api::V1::PasswordsController, type: :controller do
       context "現在のパスワードが間違っている場合" do
         before do
           request.headers.merge!(headers)
+          request.headers.merge!(common_header)
           patch :update, params: { password: 'new_password', password_confirmation: 'new_password', current_password: 'wrong_password' }
         end
 

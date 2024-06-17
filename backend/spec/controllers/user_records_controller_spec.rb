@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::UserRecordsController, type: :controller do
   let!(:user) { create(:user, :with_records, :without_knowledges) }
   let(:headers) { user.create_new_auth_token }
+  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
 
   def create_records(count)
     create_list(:record, count, user:)
@@ -12,6 +13,7 @@ RSpec.describe Api::V1::UserRecordsController, type: :controller do
     context "ユーザーのデータ5件あるパターン" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, params: { user_id: user.id }, format: :json
       end
 
@@ -28,6 +30,7 @@ RSpec.describe Api::V1::UserRecordsController, type: :controller do
     context "対象のユーザーがいないパターン" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, params: { user_id: -1 }, format: :json
       end
 
@@ -44,6 +47,7 @@ RSpec.describe Api::V1::UserRecordsController, type: :controller do
     context "対象のユーザーがいないパターン" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         get :index, params: { user_id: -1 }, format: :json
       end
           
@@ -63,6 +67,7 @@ RSpec.describe Api::V1::UserRecordsController, type: :controller do
 
         before do
           request.headers.merge!(headers)
+          request.headers.merge!(common_header)
           get :index, params: { user_id: user.id }, format: :json
         end
 
@@ -83,6 +88,7 @@ RSpec.describe Api::V1::UserRecordsController, type: :controller do
 
         before do
           request.headers.merge!(headers)
+          request.headers.merge!(common_header)
           get :index, params: { user_id: user.id }, format: :json
         end
 

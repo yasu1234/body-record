@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Api::V1::SignupController, type: :controller do
+  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+
   before do
     @request.env["devise.mapping"] = Devise.mappings[:api_v1_user]
   end
@@ -10,6 +12,7 @@ RSpec.describe Api::V1::SignupController, type: :controller do
       let(:valid_params) { { email: "test@example.com", password: "Password1", password_confirmation: "Password1" } }
 
       before do
+        request.headers.merge!(common_header)
         post :create, as: :json, params: valid_params
       end
 
@@ -27,6 +30,7 @@ RSpec.describe Api::V1::SignupController, type: :controller do
       let(:email_type_invalid_params) { { email: "test@com", password: "Password1", password_confirmation: "Password1" } }
 
       before do
+        request.headers.merge!(common_header)
         post :create, as: :json, params: email_type_invalid_params
       end
 
@@ -44,6 +48,7 @@ RSpec.describe Api::V1::SignupController, type: :controller do
       let(:password_different_invalid_params) { { email: "test@example.com", password: "Passowrd3", password_confirmation: "Password1" } }
 
       before do
+        request.headers.merge!(common_header)
         post :create, as: :json, params: password_different_invalid_params
       end
 
@@ -61,6 +66,7 @@ RSpec.describe Api::V1::SignupController, type: :controller do
       let(:lack_password_invalid_params) { { email: "test@example.com", password: "pass", password_confirmation: "pass" } }
 
       before do
+        request.headers.merge!(common_header)
         post :create, as: :json, params: lack_password_invalid_params
       end
 
@@ -78,6 +84,7 @@ RSpec.describe Api::V1::SignupController, type: :controller do
       let(:email_empty_invalid_params) { { email: "", password: "Password1", password_confirmation: "Password1" } }
 
       before do
+        request.headers.merge!(common_header)
         post :create, as: :json, params: email_empty_invalid_params
       end
 
@@ -95,6 +102,7 @@ RSpec.describe Api::V1::SignupController, type: :controller do
       let(:password_empty_invalid_params) { { email: "test@example.com", password: "", password_confirmation: "Password1" } }
 
       before do
+        request.headers.merge!(common_header)
         post :create, as: :json, params: password_empty_invalid_params
       end
 
@@ -112,6 +120,7 @@ RSpec.describe Api::V1::SignupController, type: :controller do
       let(:email_empty_invalid_params) { { email: "test@example.com", password: "a" * 5001, password_confirmation: "a" * 5001 } }
 
       before do
+        request.headers.merge!(common_header)
         post :create, as: :json, params: email_empty_invalid_params
       end
 
@@ -133,6 +142,7 @@ RSpec.describe Api::V1::SignupController, type: :controller do
     context "ゲストユーザー退会" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         delete :destroy, as: :json
       end
 
@@ -154,6 +164,7 @@ RSpec.describe Api::V1::SignupController, type: :controller do
     context "ユーザー退会" do
       before do
         request.headers.merge!(headers1)
+        request.headers.merge!(common_header)
         delete :destroy, as: :json
       end
 

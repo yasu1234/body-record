@@ -2,13 +2,14 @@ require "rails_helper"
 
 RSpec.describe Api::V1::SessionsController, type: :request do
   let(:user) { create(:user) }
+  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
 
   describe "POST #create" do
     context "ログイン成功" do
       let(:valid_params) { { email: user.email, password: "Password1" } }
 
       before do
-        post "/api/v1/auth/sign_in", as: :json, params: valid_params
+        post "/api/v1/auth/sign_in", as: :json, params: valid_params, headers: common_header
       end
 
       it "ステータス200が返却される" do
@@ -25,7 +26,7 @@ RSpec.describe Api::V1::SessionsController, type: :request do
       let(:email_type_invalid_params) { { email: "test@com", password: "Password1" } }
 
       before do
-        post "/api/v1/auth", as: :json, params: email_type_invalid_params
+        post "/api/v1/auth", as: :json, params: email_type_invalid_params, headers: common_header
       end
 
       it "ステータス422が返却される" do
@@ -42,7 +43,7 @@ RSpec.describe Api::V1::SessionsController, type: :request do
       let(:lack_password_invalid_params) { { email: "test@example.com", password: "pass" } }
 
       before do
-        post "/api/v1/auth", as: :json, params: lack_password_invalid_params
+        post "/api/v1/auth", as: :json, params: lack_password_invalid_params, headers: common_header
       end
 
       it "ステータス422が返却される" do
@@ -59,7 +60,7 @@ RSpec.describe Api::V1::SessionsController, type: :request do
       let(:email_empty_invalid_params) { { email: "", password: "Password1" } }
 
       before do
-        post "/api/v1/auth", as: :json, params: email_empty_invalid_params
+        post "/api/v1/auth", as: :json, params: email_empty_invalid_params, headers: common_header
       end
 
       it "ステータス422が返却される" do

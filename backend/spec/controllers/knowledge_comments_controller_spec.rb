@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
   let!(:user) { create(:user) }
   let(:headers) { user.create_new_auth_token }
+  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
   let!(:knowledge) { create(:knowledge, user:, id: 100, title: "Title") }
   let(:comment) { create(:comment, user:, comment: "メモTEST", knowledge_id: knowledge.id) }
   let(:valid_params) { { knowledge_id: knowledge.id, comment: "TESTコメント成功" } }
@@ -15,6 +16,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
   describe "GET #index" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         post :index, format: :json
       end
 
@@ -26,6 +28,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
     context "knowledge_idのパラメータがない" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :index, format: :json
       end
   
@@ -41,6 +44,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :index, format: :json, params: { knowledge_id: 100 }
       end
     
@@ -61,6 +65,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
   
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :index, format: :json, params: { knowledge_id: 101 }
       end
       
@@ -78,6 +83,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
   describe "POST #create" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         post :create, format: :json, params: valid_params
       end
 
@@ -89,6 +95,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
     context "record_idが不足" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: knowledge_id_lack_param
       end
   
@@ -100,6 +107,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
     context "コメント追加完了" do
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: valid_params
       end
     

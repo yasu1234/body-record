@@ -4,10 +4,12 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
   let(:headers) { user.create_new_auth_token }
+  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
 
   describe "POST #create" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { id: other_user.id }
       end
 
@@ -21,6 +23,7 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { id: other_user.id }
       end
 
@@ -41,6 +44,7 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
       let(:user) { create(:user, :fixed_id) }
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         post :create, format: :json, params: { id: other_user.id }
       end
 
@@ -61,6 +65,7 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
   describe "DELETE #destroy" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         delete :destroy, format: :json, params: { id: other_user.id }
       end
 
@@ -74,6 +79,7 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         delete :destroy, format: :json, params: { id: user.supportings.first.id }
       end
 
@@ -93,6 +99,7 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
 
       before do
         request.headers.merge!(headers)
+        request.headers.merge!(common_header)
         delete :destroy, format: :json, params: { id: other_user.id }
       end
 

@@ -3,10 +3,12 @@ require 'rails_helper'
 RSpec.describe Api::V1::KnowledgeImagesController, type: :controller do  
   let!(:user) { create(:user, :without_records, :with_knowledges) }
   let(:header) { user.create_new_auth_token }
+  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
     
   describe "DELETE #destroy" do
     context "未ログイン" do
       before do
+        request.headers.merge!(common_header)
         delete :destroy, format: :json, params: { id: 100 }
       end
 
@@ -18,6 +20,7 @@ RSpec.describe Api::V1::KnowledgeImagesController, type: :controller do
     context "image_idが指定されていない" do
       before do
         request.headers.merge!(header)
+        request.headers.merge!(common_header)
         delete :destroy, format: :json, params: { id: user.knowledges.first.id, image_id: -1 }
       end
   
@@ -31,6 +34,7 @@ RSpec.describe Api::V1::KnowledgeImagesController, type: :controller do
   
       before do
         request.headers.merge!(header)
+        request.headers.merge!(common_header)
         user.knowledges.first.images.attach(image1)
         delete :destroy, format: :json, params: { id: user.knowledges.first.id, image_id: user.knowledges.first.images.first.id }
       end
