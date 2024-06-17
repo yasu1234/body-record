@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::RecordsController, type: :controller do
   let!(:user) { create(:user, :with_records, :without_knowledges) }
   let(:headers) { user.create_new_auth_token }
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:image) { file_fixture("image.png") }
   let(:valid_params) { { memo: "メモTEST", date: "2024-04-29", images: [image] } }
   let(:invalid_params) { { memo: "", content: "テストコンテンツ", user_id: user.id } }
@@ -146,7 +146,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
-        get :index, format: :json, params: { keyword: "メモ", user_id: user.id  }
+        get :index, format: :json, params: { keyword: "メモ", user_id: user.id }
       end
 
       it "ステータス200が返却される" do

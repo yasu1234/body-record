@@ -4,7 +4,7 @@ RSpec.describe Api::V1::SupportCountsController, type: :controller do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
   let(:headers) { user.create_new_auth_token }
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
 
   describe "GET #index" do
     context "未ログイン" do

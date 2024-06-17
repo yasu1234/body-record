@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::KnowledgesController, type: :controller do
   let!(:user) { create(:user, :with_knowledges, :without_records) }
   let(:headers) { user.create_new_auth_token }
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:image) { file_fixture("image.png") }
   let(:valid_params) { { title: "テストタイトル", content: "テストコンテンツ", user_id: user.id, "images[]": [image] } }
   let(:invalid_params) { { title: "", content: "テストコンテンツ", user_id: user.id } }

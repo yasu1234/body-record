@@ -4,12 +4,12 @@ class Api::V1::ContactsController < ApplicationController
   def index
     contacts = Contact.all.order(created_at: :desc)
 
-    render json: { contacts: contacts }, status: :ok
+    render json: { contacts: }, status: :ok
   end
 
   def show
     contact = Contact.find(params[:id])
-    render json: { contact: contact }, status: :ok
+    render json: { contact: }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   rescue StandardError => e
@@ -28,7 +28,7 @@ class Api::V1::ContactsController < ApplicationController
 
     ContactMailer.complete.deliver_later
 
-    render json: { contact: contact }, status: :ok
+    render json: { contact: }, status: :ok
   rescue StandardError => e
     render json: { errors: e.message }, status: :internal_server_error
   end
@@ -37,7 +37,7 @@ class Api::V1::ContactsController < ApplicationController
     contact = Contact.find(params[:id])
     contact.update!(contact_register_params)
 
-    render json: { contact: contact }, status: :ok
+    render json: { contact: }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { error: "対象のデータが見つかりません" }, status: :not_found
   rescue ActiveRecord::RecordInvalid => e

@@ -4,7 +4,7 @@ RSpec.describe Api::V1::BookmarksController, type: :controller do
   let!(:user) { create(:user, :without_records, :without_knowledges) }
   let!(:knowledge) { create(:knowledge) }
   let(:headers) { user.create_new_auth_token }
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:valid_params) { { user_id: user.id, knowledge_id: knowledge.id } }
   let(:invalid_param_lack_knowledge) { { user_id: user.id } }
   let(:invalid_param_lack_user) { {  knowledge_id: knowledge.id } }

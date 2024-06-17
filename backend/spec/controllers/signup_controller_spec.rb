@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Api::V1::SignupController, type: :controller do
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
 
   before do
     @request.env["devise.mapping"] = Devise.mappings[:api_v1_user]

@@ -1,7 +1,7 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Api::V1::PasswordsController, type: :controller do
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
 
   before do
     @request.env["devise.mapping"] = Devise.mappings[:api_v1_user]
@@ -15,7 +15,7 @@ RSpec.describe Api::V1::PasswordsController, type: :controller do
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
-        put :update, params: { password: 'new_password', password_confirmation: 'new_password' }
+        put :update, params: { password: "new_password", password_confirmation: "new_password" }
       end
 
       it "ステータス422が返却される" do
@@ -23,7 +23,7 @@ RSpec.describe Api::V1::PasswordsController, type: :controller do
       end
 
       it "エラーメッセージが返却される" do
-        expect(JSON.parse(response.body)['errors']).to eq 'ゲストユーザーはパスワード変更できません'
+        expect(JSON.parse(response.body)["errors"]).to eq "ゲストユーザーはパスワード変更できません"
       end
     end
 
@@ -35,7 +35,7 @@ RSpec.describe Api::V1::PasswordsController, type: :controller do
         before do
           request.headers.merge!(headers)
           request.headers.merge!(common_header)
-          put :update, params: { password: 'new_password', password_confirmation: 'new_password', current_password: user1.password }
+          put :update, params: { password: "new_password", password_confirmation: "new_password", current_password: user1.password }
         end
 
         it "ステータス200が返却される" do
@@ -43,8 +43,8 @@ RSpec.describe Api::V1::PasswordsController, type: :controller do
         end
 
         it "ユーザー情報が存在する" do
-            json_response = JSON.parse(response.body)
-            expect(json_response["user"]).to be_present
+          json_response = JSON.parse(response.body)
+          expect(json_response["user"]).to be_present
         end
       end
 
@@ -52,7 +52,7 @@ RSpec.describe Api::V1::PasswordsController, type: :controller do
         before do
           request.headers.merge!(headers)
           request.headers.merge!(common_header)
-          patch :update, params: { password: 'new_password', password_confirmation: 'new_password', current_password: 'wrong_password' }
+          patch :update, params: { password: "new_password", password_confirmation: "new_password", current_password: "wrong_password" }
         end
 
         it "ステータス422が返却される" do
@@ -60,7 +60,7 @@ RSpec.describe Api::V1::PasswordsController, type: :controller do
         end
 
         it "エラーメッセージが返却される" do
-          expect(JSON.parse(response.body)['errors'][0]).to eq '現在のパスワード は不正な値です'
+          expect(JSON.parse(response.body)["errors"][0]).to eq "現在のパスワード は不正な値です"
         end
       end
     end

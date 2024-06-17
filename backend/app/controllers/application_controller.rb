@@ -11,10 +11,10 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # 固有のヘッダが指定されている場合のみ許可(CSRF対策) 
-  def check_xhr_header
-    return if request.xhr?
+  # 固有のヘッダが指定されている場合のみ許可(CSRF対策)
+    def check_xhr_header
+      return if request.xhr?
 
-    render json: { errors: 'forbidden' }, status: :forbidden
-  end
+      render json: { errors: "forbidden" }, status: :forbidden
+    end
 end

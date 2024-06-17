@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Api::V1::SessionsController, type: :request do
   let(:user) { create(:user) }
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
 
   describe "POST #create" do
     context "ログイン成功" do

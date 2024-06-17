@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::MyRecordsController, type: :controller do
   let!(:user) { create(:user, :with_records, :without_knowledges) }
   let(:headers) { user.create_new_auth_token }
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:image) { file_fixture("image.png") }
   let(:valid_params) { { memo: "メモTEST", date: "2024-04-29", 'images[]': [image] } }
   let(:invalid_params) { { memo: "", content: "テストコンテンツ", user_id: user.id } }

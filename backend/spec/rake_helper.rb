@@ -1,5 +1,5 @@
-require 'rails_helper'
-require 'rake'
+require "rails_helper"
+require "rake"
 
 RSpec.configure do |config|
   config.before(:suite) do
@@ -7,7 +7,7 @@ RSpec.configure do |config|
   end
 
   # 全てのタスクが呼ばれた履歴を抹消する
-  config.before(:each) do
+  config.before do
     Rake.application.tasks.each(&:reenable)
   end
 end

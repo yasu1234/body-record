@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::RecordCommentsController, type: :controller do
   let!(:user) { create(:user, :with_records, :without_knowledges) }
   let(:headers) { user.create_new_auth_token }
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:record_id_lack_param) { { comment: "TESTコメント" } }
   let(:update_valid_params) { { memo: "メモ更新TEST", date: "2024-04-01", images: [image] } }
 
@@ -29,7 +29,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
         request.headers.merge!(common_header)
         post :index, format: :json
       end
-  
+
       it "ステータスコード400が返却" do
         expect(response.status).to eq 400
       end
@@ -46,7 +46,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
         request.headers.merge!(common_header)
         post :index, format: :json, params: { record_id: record.id }
       end
-    
+
       it "ステータスコード200が返却" do
         expect(response.status).to eq 200
       end
@@ -58,25 +58,25 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
     end
 
     context "コメントが取得できる" do
-        let!(:record) { create(:record, user:, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
-        let!(:comment1) { create(:comment, user:, comment: "メモTEST1", record_id: record.id) }
-        let!(:comment2) { create(:comment, user:, comment: "メモTEST2", record_id: record.id) }
-        let!(:comment3) { create(:comment, user:, comment: "メモTEST3", record_id: record.id) }
-  
-        before do
-          request.headers.merge!(headers)
-          request.headers.merge!(common_header)
-          post :index, format: :json, params: { record_id: -1 }
-        end
-      
-        it "ステータスコード200が返却" do
-          expect(response.status).to eq 200
-        end
-  
-        it "0件のデータが取得される" do
-          json_response = JSON.parse(response.body)
-          expect(json_response["comments"].count).to eq 0
-        end
+      let!(:record) { create(:record, user:, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
+      let!(:comment1) { create(:comment, user:, comment: "メモTEST1", record_id: record.id) }
+      let!(:comment2) { create(:comment, user:, comment: "メモTEST2", record_id: record.id) }
+      let!(:comment3) { create(:comment, user:, comment: "メモTEST3", record_id: record.id) }
+
+      before do
+        request.headers.merge!(headers)
+        request.headers.merge!(common_header)
+        post :index, format: :json, params: { record_id: -1 }
+      end
+
+      it "ステータスコード200が返却" do
+        expect(response.status).to eq 200
+      end
+
+      it "0件のデータが取得される" do
+        json_response = JSON.parse(response.body)
+        expect(json_response["comments"].count).to eq 0
+      end
     end
   end
 
@@ -84,6 +84,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
     context "未ログイン" do
       let!(:record) { create(:record, user:, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
       let(:valid_params) { { record_id: record.id, comment: "TESTコメント成功" } }
+
       before do
         request.headers.merge!(common_header)
         post :create, format: :json, params: valid_params
@@ -96,12 +97,13 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
 
     context "record_idが不足" do
       let!(:record) { create(:record, user:, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
+
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
         post :create, format: :json, params: record_id_lack_param
       end
-  
+
       it "404エラーが発生" do
         expect(response.status).to eq 404
       end
@@ -110,12 +112,13 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
     context "コメント追加完了" do
       let!(:record) { create(:record, user:, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
       let(:valid_params) { { record_id: record.id, comment: "TESTコメント成功" } }
+
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
         post :create, format: :json, params: valid_params
       end
-    
+
       it "ステータスコードが200" do
         expect(response.status).to eq 200
       end

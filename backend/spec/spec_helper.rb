@@ -14,8 +14,8 @@
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require 'active_storage_validations/matchers'
-require 'database_cleaner/active_record'
+require "active_storage_validations/matchers"
+require "database_cleaner/active_record"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -45,11 +45,11 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :truncation
   end
 
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
+  config.after do
     DatabaseCleaner.clean
   end
 

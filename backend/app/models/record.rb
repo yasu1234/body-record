@@ -4,8 +4,7 @@ class Record < ApplicationRecord
 
   belongs_to :user
 
-  attr_accessor :formatted_date
-  attr_accessor :calendar_date
+  attr_accessor :formatted_date, :calendar_date
 
   validates :date, presence: true, uniqueness: { scope: :user_id }
   validates :memo, length: { maximum: 400 }, allow_blank: true

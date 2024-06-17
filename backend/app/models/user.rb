@@ -28,9 +28,9 @@ class User < ActiveRecord::Base
   has_one_attached :image
 
   validates :image,
-  content_type: { in: %w[image/jpeg image/png image/jpg] },
-  size: { less_than: 5.megabytes },
-  allow_blank: true
+            content_type: { in: %w[image/jpeg image/png image/jpg] },
+            size: { less_than: 5.megabytes },
+            allow_blank: true
 
   def image_url
     return unless image.attached?

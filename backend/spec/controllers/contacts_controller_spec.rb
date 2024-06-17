@@ -3,11 +3,10 @@ require "rails_helper"
 RSpec.describe Api::V1::ContactsController, type: :controller do
   let!(:user) { create(:user) }
   let(:headers) { user.create_new_auth_token }
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
-  let(:valid_params) { { content: "問い合わせTEST"} }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
+  let(:valid_params) { { content: "問い合わせTEST" } }
   let(:invalid_params) { { content: "" } }
-  let(:valid_status_params) { { content: "問い合わせTEST", status: 1} }
-
+  let(:valid_status_params) { { content: "問い合わせTEST", status: 1 } }
 
   describe "GET #index" do
     context "未ログイン" do
@@ -156,9 +155,10 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
   describe "PUT #update" do
     context "未ログイン" do
       let!(:contact1) { create(:contact) }
+
       before do
         request.headers.merge!(common_header)
-        put :update, format: :json, params: {id: contact1.id, contact: valid_params }
+        put :update, format: :json, params: { id: contact1.id, contact: valid_params }
       end
 
       it "ステータス401が返却される" do
@@ -170,6 +170,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
   describe "PUT #update" do
     context "バリデーションエラー" do
       let!(:contact1) { create(:contact) }
+
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
@@ -185,6 +186,7 @@ RSpec.describe Api::V1::ContactsController, type: :controller do
   describe "PUT #update" do
     context "バリデーションエラー" do
       let!(:contact1) { create(:contact) }
+
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)

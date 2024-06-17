@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
   let!(:user) { create(:user) }
   let(:headers) { user.create_new_auth_token }
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let!(:knowledge) { create(:knowledge, user:, id: 100, title: "Title") }
   let(:comment) { create(:comment, user:, comment: "メモTEST", knowledge_id: knowledge.id) }
   let(:valid_params) { { knowledge_id: knowledge.id, comment: "TESTコメント成功" } }
@@ -31,7 +31,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
         request.headers.merge!(common_header)
         post :index, format: :json
       end
-  
+
       it "ステータスコード400が返却" do
         expect(response.status).to eq 400
       end
@@ -47,7 +47,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
         request.headers.merge!(common_header)
         post :index, format: :json, params: { knowledge_id: 100 }
       end
-    
+
       it "ステータスコード200が返却" do
         expect(response.status).to eq 200
       end
@@ -62,17 +62,17 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
       let!(:comment1) { create(:comment, user:, comment: "メモTEST1", knowledge_id: 100) }
       let!(:comment2) { create(:comment, user:, comment: "メモTEST2", knowledge_id: 100) }
       let!(:comment3) { create(:comment, user:, comment: "メモTEST3", knowledge_id: 100) }
-  
+
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
         post :index, format: :json, params: { knowledge_id: 101 }
       end
-      
+
       it "ステータスコード200が返却" do
         expect(response.status).to eq 200
       end
-  
+
       it "0件のデータが取得される" do
         json_response = JSON.parse(response.body)
         expect(json_response["comments"].count).to eq 0
@@ -98,7 +98,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
         request.headers.merge!(common_header)
         post :create, format: :json, params: knowledge_id_lack_param
       end
-  
+
       it "404エラーが発生" do
         expect(response.status).to eq 404
       end
@@ -110,7 +110,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
         request.headers.merge!(common_header)
         post :create, format: :json, params: valid_params
       end
-    
+
       it "ステータスコードが200" do
         expect(response.status).to eq 200
       end

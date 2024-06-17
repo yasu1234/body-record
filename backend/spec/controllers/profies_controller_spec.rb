@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::ProfilesController, type: :controller do
   let!(:user) { create(:user, :with_profile) }
   let(:headers) { user.create_new_auth_token }
-  let(:common_header) { {'X-Requested-With': 'XMLHttpRequest' } }
+  let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:image) { file_fixture("image.png") }
   let(:valid_params) { { profile: "プロファイルテスト", goal_weight: 60, goal_fat_percentage: 10 } }
 
