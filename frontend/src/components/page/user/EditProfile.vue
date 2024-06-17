@@ -164,19 +164,16 @@ const showMyPage = () => {
         </div>
         <div class="mt-5">
           <label>プロフィール画像変更</label>
-          <div class="current-thumbnail">
+          <div v-if="userThumbnail !== null" class="current-thumbnail">
             <img
-              v-if="userThumbnail !== null"
               :src="userThumbnail.url"
               alt="ユーザーアイコン"
             />
-            <img
-              v-else
-              src="../../../assets/image/user-placeholder.png"
-              alt="ユーザーアイコン"
-            />
           </div>
-          <DropFile @change="onFileChange" />
+          <div v-else class="edit-profile-thumb-image">
+            <i class="pi pi-user" style="font-size: 40px; color: white" />
+          </div>
+          <DropFile @change="onFileChange" class="mt-5" />
         </div>
         <button class="edit-profile-button">更新する</button>
       </form>
@@ -217,6 +214,15 @@ const showMyPage = () => {
   border-radius: 50%;
   margin-top: 20px;
   margin-bottom: 20px;
+}
+.edit-profile-thumb-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #4264ec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .current-thumbnail img {
   width: 100%;

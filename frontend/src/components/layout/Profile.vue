@@ -110,11 +110,9 @@ const showSupportList = () => {
           :src="userThumbnail.url"
           alt="ユーザーアイコン"
         />
-        <img
-          v-else
-          src="../../assets/image/user-placeholder.png"
-          alt="ユーザーアイコン"
-        />
+        <div v-else class="profile-thumb-image">
+          <i class="pi pi-user" style="font-size: 60px; color: white" ></i>
+        </div>
       </div>
       <div class="profile-content">
         <p class="profile-name">{{ userName != null ? userName : "" }}</p>
@@ -193,10 +191,14 @@ const showSupportList = () => {
   margin-right: auto;
   margin-top: 20px;
 }
-.profile-thumb img {
+.profile-thumb-image {
   width: 100%;
   height: 100%;
   border-radius: 50%;
+  background: #4264ec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .profile-content {
   margin: 0 0 20px;
