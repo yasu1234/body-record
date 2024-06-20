@@ -1,7 +1,3 @@
-# __generated__ by Terraform
-# Please review these resources and move them into your main configuration files.
-
-# __generated__ by Terraform
 resource "aws_vpc" "vpc" {
   assign_generated_ipv6_cidr_block     = false
   cidr_block                           = "10.0.0.0/16"

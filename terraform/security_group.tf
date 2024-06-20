@@ -1,5 +1,5 @@
 resource "aws_security_group" "security-group-rds" {
-  description = "RDS-SG"
+  description            = "RDS-SG"
   name                   = "RDS-SG"
   name_prefix            = null
   revoke_rules_on_delete = null
@@ -9,7 +9,7 @@ resource "aws_security_group" "security-group-rds" {
 }
 
 resource "aws_security_group" "security-group-ecs" {
-  description = "ECS-SG"
+  description            = "ECS-SG"
   name                   = "ECS-SG"
   name_prefix            = null
   revoke_rules_on_delete = null

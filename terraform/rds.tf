@@ -1,7 +1,3 @@
-# __generated__ by Terraform
-# Please review these resources and move them into your main configuration files.
-
-# __generated__ by Terraform
 resource "aws_db_instance" "body-record-db" {
   allocated_storage                     = 20
   allow_major_version_upgrade           = null
@@ -63,6 +59,6 @@ resource "aws_db_instance" "body-record-db" {
   tags                                  = {}
   tags_all                              = {}
   timezone                              = null
-  username                              = data.aws_ssm_parameter.db_username.value
+  username                              = data.aws_ssm_parameter.db-username.value
   vpc_security_group_ids                = ["sg-05f85a822bf4fef78"]
 }

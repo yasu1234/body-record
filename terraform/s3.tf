@@ -1,7 +1,3 @@
-# __generated__ by Terraform
-# Please review these resources and move them into your main configuration files.
-
-# __generated__ by Terraform from "body-record"
 resource "aws_s3_bucket_cors_configuration" "backet-cors" {
   bucket                = "body-record"
   expected_bucket_owner = null
@@ -15,7 +11,6 @@ resource "aws_s3_bucket_cors_configuration" "backet-cors" {
   }
 }
 
-# __generated__ by Terraform from "body-record"
 resource "aws_s3_bucket_acl" "backet-acl" {
   acl                   = null
   bucket                = "body-record"
@@ -37,7 +32,6 @@ resource "aws_s3_bucket_acl" "backet-acl" {
   }
 }
 
-# __generated__ by Terraform from "body-record"
 resource "aws_s3_bucket_server_side_encryption_configuration" "s3-encryption-configuration" {
   bucket                = "body-record"
   expected_bucket_owner = null
@@ -50,8 +44,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "s3-encryption-con
   }
 }
 
-# __generated__ by Terraform from "body-record"
-resource "aws_s3_bucket" "s3_bucket" {
+resource "aws_s3_bucket" "s3-bucket" {
   bucket              = "body-record"
   bucket_prefix       = null
   force_destroy       = null

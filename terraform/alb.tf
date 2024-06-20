@@ -110,7 +110,7 @@ resource "aws_lb_listener" "listener-https" {
   tags              = {}
   tags_all          = {}
   default_action {
-    type             = "forward"
+    type = "forward"
     forward {
       stickiness {
         duration = 3600
