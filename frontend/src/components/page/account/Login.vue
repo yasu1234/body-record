@@ -81,12 +81,12 @@ const showHome = () => {
   <h1 class="view-title mt-7">ログイン</h1>
   <div class="login-container">
     <form class="form" @submit.prevent="handleSubmit">
-      <div class="item">
+      <div class="login-item">
         <label>メールアドレス</label>
         <input id="email" type="email" v-model="email" />
         <p class="validation-error-message">{{ emailError }}</p>
       </div>
-      <div class="item">
+      <div class="login-item">
         <label>パスワード</label>
         <PasswordText :password="password" @update-password="updatePassword" />
         <p class="validation-error-message">{{ passwordError }}</p>
@@ -107,13 +107,14 @@ const showHome = () => {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-.item {
+.login-item {
   padding-top: 40px;
   margin: 0 auto;
 }
 .form input[type="email"] {
   padding: 10px;
   width: 100%;
+  border: 1px solid #ccc;
 }
 .login-button-container {
   padding-top: 40px;
