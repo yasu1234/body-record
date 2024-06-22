@@ -29,6 +29,7 @@ const comments = ref([]);
 const author = ref(null);
 const record = ref(null);
 const support = ref(null);
+const isShowRecordDeleteConfirmDialog = ref(false);
 const isShowCommentDeleteConfirmDialog = ref(false);
 const deleteCommentId = ref(0);
 const isEditing = ref(false);
@@ -264,6 +265,15 @@ const showCommentDeleteDialog = (comment) => {
   deleteCommentId.value = comment.id;
 };
 
+const recordDelete = () => {
+  isShowRecordDeleteConfirmDialog.value = false;
+  deleteRecord();
+};
+
+const cancelRecordDelete = () => {
+  isShowRecordDeleteConfirmDialog.value = false;
+};
+
 const cancelCommentDelete = () => {
   isShowCommentDeleteConfirmDialog.value = false;
   deleteCommentId.value = 0;
@@ -396,6 +406,15 @@ const showMyRecordList = () => {
           />
         </button>
       </div>
+    </div>
+    <div v-if="isShowRecordDeleteConfirmDialog" class="modal-overlay">
+      <ConfirmDialog
+        :title="'記録を削除します'"
+        :message="'よろしいですか？'"
+        :positiveButtonTitle="'削除'"
+        @handle-positive="recordDelete"
+        @cancel="cancelRecordDelete"
+      />
     </div>
   </div>
 </template>
