@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { vOnClickOutside } from '@vueuse/components'
 import Cookies from "js-cookie";
 import Button from "primevue/button";
 
@@ -20,10 +21,6 @@ onMounted(() => {
   checkLogin();
   console.log(router.currentRoute.value.fullPath);
 });
-
-const toggleDropdown = () => {
-  showDropdown.value = !showDropdown.value;
-};
 
 const checkLogin = async () => {
   try {
@@ -50,6 +47,14 @@ const logout = async () => {
     console.log({ error });
   }
 };
+
+const toggleDropdown = () => {
+  showDropdown.value = !showDropdown.value;
+};
+
+const onClickOutsideHandler = () => {
+  showDropdown.value = false;
+}
 
 const setMenu = () => {
   if (isLogin.value) {
@@ -125,7 +130,7 @@ const showHomeThenRelaod = async () => {
         >
           会員登録・ログイン
         </button>
-        <div @click="toggleDropdown">
+        <div @click="toggleDropdown" v-on-click-outside="onClickOutsideHandler">
           <Button
             icon="pi pi-user"
             severity="info"
@@ -159,7 +164,7 @@ const showHomeThenRelaod = async () => {
 header {
   width: 100%;
   height: 80px;
-  background: #f6f8fa;
+  background: #fbf3dc;
   padding-left: 30px;
   padding-right: 30px;
   box-sizing: border-box;
