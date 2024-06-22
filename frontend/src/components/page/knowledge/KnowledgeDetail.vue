@@ -13,6 +13,7 @@ import Comments from "../../layout/Comments.vue";
 import CommentInput from "../../layout/CommentInput.vue";
 import Author from "../../layout/Author.vue";
 import RelationImage from "../../layout/RelationImage.vue";
+import ConfirmDialog from "../../layout/ConfirmDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -30,12 +31,15 @@ const comments = ref([]);
 const author = ref(null);
 const bookmarkCount = ref(0);
 const support = ref(null);
+const isShowCommentDeleteConfirmDialog = ref(false);
+const isEditing = ref(false);
 
 const md = new MarkdownIt();
 
 const renderedMarkdown = computed(() => {
-  if (knowledge.value && knowledge.value.content) {
-    return md.render(knowledge.value.content);
+  if (knowledge.value != null && knowledge.value.content != null) {
+    let replacedContent = knowledge.value.content.replace(/\n/g, '<br>');
+    return md.render(replacedContent);
   }
   return "";
 });
@@ -46,9 +50,11 @@ onMounted(() => {
 });
 
 const getDetail = async () => {
-  const id = route.params.id;
+  knowledgeId.value = route.params.id;
   try {
-    const res = await axiosInstance.get(`/api/v1/knowledges/${id}`);
+    const res = await axiosInstance.get(
+      `/api/v1/knowledges/${knowledgeId.value}`
+    );
     knowledgeId.value = res.data.knowledge.id;
     knowledge.value = res.data.knowledge;
     knowledgeUserId.value = res.data.knowledge.user_id;
@@ -60,7 +66,7 @@ const getDetail = async () => {
 
     getSupport();
   } catch (error) {
-    let errorMessage = ""
+    let errorMessage = "";
     if (error.response != null && error.response.status === 401) {
       errorMessage = "ログインしてください";
     }
@@ -156,8 +162,8 @@ function bookmarkClick(isBookmarkOn) {
 const addComment = async (comment) => {
   try {
     const formData = new FormData();
-    formData.append("knowledge_id", knowledgeId.value);
-    formData.append("comment", comment);
+    formData.append("comment[knowledge_id]", knowledgeId.value);
+    formData.append("comment[comment]", comment);
 
     const res = await axiosInstance.post(
       `/api/v1/knowledge_comments`,
@@ -169,6 +175,8 @@ const addComment = async (comment) => {
     if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
     }
     toastNotifications.displayError(
@@ -221,6 +229,42 @@ const supportOff = async () => {
   }
 };
 
+const deleteComment = async () => {
+  isShowCommentDeleteConfirmDialog.value = false;
+  try {
+    const res = await axiosInstance.delete(
+      `/api/v1/knowledge_comments/${deleteCommentId.value}`
+    );
+    getComments();
+  } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages += error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError(
+      "コメント削除に失敗しました",
+      errorMessages
+    );
+  }
+};
+
+
+const showCommentDeleteDialog = (comment) => {
+  isShowCommentDeleteConfirmDialog.value = true;
+};
+
 const showEdit = () => {
   router.push({ name: "EditKnowledge", params: { id: knowledgeId.value } });
 };
@@ -263,8 +307,24 @@ const showEdit = () => {
         <div class="comment-container-title-area">
           <p class="comment-container-title">コメント</p>
         </div>
-        <div v-if="comments.length !== 0">
-          <Comments :comments="comments" />
+        <div v-if="comments.length > 0">
+          <div v-for="comment in comments" class="comment">
+            <Comments
+              :comment="comment"
+              :isEditing="isEditing"
+              @delete-comment="showCommentDeleteDialog(comment)"
+              @edit-comment="editComment"
+            />
+          </div>
+          <div v-if="isShowCommentDeleteConfirmDialog" class="modal-overlay">
+            <ConfirmDialog
+              :title="'コメントを削除します'"
+              :message="'よろしいですか？'"
+              :positiveButtonTitle="'削除'"
+              @handle-positive="deleteComment"
+              @cancel="cancelCommentDelete"
+            />
+          </div>
         </div>
         <div v-else>
           <p class="pt-2.5 pl-5">コメントはありません</p>
@@ -402,6 +462,10 @@ input[type="text"] {
   margin-left: 20px;
   padding-top: 20px;
   font-weight: bold;
+}
+.comment {
+  padding-left: 20px;
+  border-bottom: 1px solid rgba(6, 6, 6, 0.17);
 }
 
 @media (max-width: 768px) {
