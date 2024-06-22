@@ -294,6 +294,48 @@ const deleteComment = async () => {
   }
 };
 
+const editComment = async (inputComment, commentId) => {
+  if (commentId == null) {
+    toastNotifications.displayError("コメント編集に失敗しました", "");
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("comment[knowledge_id]", knowledgeId.value);
+    formData.append("comment[comment]", inputComment);
+
+    const res = await axiosInstance.put(
+      `/api/v1/knowledge_comments/${commentId}`, formData
+    );
+    isEditing.value = false;
+    deleteCommentId.value = 0;
+    getComments();
+  } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント編集に失敗しました", "");
+      return;
+    }
+
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages += error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError(
+      "コメント編集に失敗しました",
+      errorMessages
+    );
+    deleteCommentId.value = 0;
+  }
+};
+
 const showCommentDeleteDialog = (comment) => {
   isShowCommentDeleteConfirmDialog.value = true;
   deleteCommentId.value = comment.id;
@@ -364,7 +406,7 @@ const showKnowledgeList = () => {
               :comment="comment"
               :isEditing="isEditing"
               @delete-comment="showCommentDeleteDialog(comment)"
-              @edit-comment=""
+              @edit-comment="editComment"
             />
           </div>
           <div v-if="isShowCommentDeleteConfirmDialog" class="modal-overlay">
@@ -427,6 +469,15 @@ const showKnowledgeList = () => {
           />
         </button>
       </div>
+    </div>
+    <div v-if="isShowKnowledgeDeleteConfirmDialog" class="modal-overlay">
+      <ConfirmDialog
+        :title="'記事を削除します'"
+        :message="'よろしいですか？'"
+        :positiveButtonTitle="'削除'"
+        @handle-positive="knowledgeDelete"
+        @cancel="cancelKnowledgeDelete"
+      />
     </div>
   </div>
 </template>
