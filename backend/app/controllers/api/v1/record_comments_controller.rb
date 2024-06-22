@@ -7,7 +7,19 @@ class Api::V1::RecordCommentsController < ApplicationController
     end
 
     comments = Comment.where(record_id: params[:record_id])
-    render json: { comments: comments.as_json(include: { user: { only: [:name], methods: :image_url } }) }, status: :ok
+    render json: {
+      comments: comments.map do |comment|
+        comment.as_json(
+          methods: :comment_date_format,
+          include: {
+            user: {
+              only: [:name],
+              methods: :image_url
+            }
+          }
+        ).merge(is_mine_comment: comment.user_id == current_api_v1_user.id)
+      end
+    }, status: :ok
   rescue StandardError => e
     render json: { errors: e.message }, status: :internal_server_error
   end
