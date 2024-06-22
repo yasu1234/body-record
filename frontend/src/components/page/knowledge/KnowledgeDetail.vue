@@ -31,8 +31,10 @@ const comments = ref([]);
 const author = ref(null);
 const bookmarkCount = ref(0);
 const support = ref(null);
+const deleteCommentId = ref(0);
 const isShowCommentDeleteConfirmDialog = ref(false);
 const isEditing = ref(false);
+const isShowKnowledgeDeleteConfirmDialog = ref(false);
 
 const md = new MarkdownIt();
 
@@ -99,6 +101,36 @@ const getComments = async () => {
     comments.value = res.data.comments;
   } catch (error) {
     comments.value = [];
+  }
+};
+
+const deleteKnowledge = async () => {
+  try {
+    const res = await axiosInstance.delete(`/api/v1/knowledges/${knowledgeId.value}`);
+
+    toastNotifications.displayInfo("記事を削除しました", "");
+    setTimeout(async () => {
+      showKnowledgeList();
+    }, 3000);
+  } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("記事削除に失敗しました", "");
+      return;
+    }
+
+    let errorMessages = "";
+
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError("記事削除に失敗しました", errorMessages);
   }
 };
 
@@ -235,6 +267,7 @@ const deleteComment = async () => {
     const res = await axiosInstance.delete(
       `/api/v1/knowledge_comments/${deleteCommentId.value}`
     );
+    deleteCommentId.value = 0;
     getComments();
   } catch (error) {
     if (error.response == null) {
@@ -257,16 +290,34 @@ const deleteComment = async () => {
       "コメント削除に失敗しました",
       errorMessages
     );
+    deleteCommentId.value = 0;
   }
 };
 
-
 const showCommentDeleteDialog = (comment) => {
   isShowCommentDeleteConfirmDialog.value = true;
+  deleteCommentId.value = comment.id;
+};
+
+const showKnowledgeDeleteConfirmDialog = () => {
+  isShowKnowledgeDeleteConfirmDialog.value = true;
+};
+
+const knowledgeDelete = () => {
+  isShowKnowledgeDeleteConfirmDialog.value = false;
+  deleteKnowledge();
+};
+
+const cancelKnowledgeDelete = () => {
+  isShowKnowledgeDeleteConfirmDialog.value = false;
 };
 
 const showEdit = () => {
   router.push({ name: "EditKnowledge", params: { id: knowledgeId.value } });
+};
+
+const showKnowledgeList = () => {
+  router.push({ name: "KnowledgeList" });
 };
 </script>
 
@@ -313,7 +364,7 @@ const showEdit = () => {
               :comment="comment"
               :isEditing="isEditing"
               @delete-comment="showCommentDeleteDialog(comment)"
-              @edit-comment="editComment"
+              @edit-comment=""
             />
           </div>
           <div v-if="isShowCommentDeleteConfirmDialog" class="modal-overlay">
@@ -372,7 +423,7 @@ const showEdit = () => {
             alt="削除"
             v-tooltip="{ value: '削除' }"
             class="side-menu-image"
-            @click=""
+            @click="showKnowledgeDeleteConfirmDialog"
           />
         </button>
       </div>
