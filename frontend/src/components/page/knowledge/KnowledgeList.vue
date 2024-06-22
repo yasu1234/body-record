@@ -17,22 +17,23 @@ setupInterceptors(router);
 const keyword = ref("");
 const isBookmark = ref(false);
 const searchResult = ref([]);
-const currentId = ref(3);
 const pageCount = ref(1);
 const pageNum = ref(1);
+const isShowMine = ref(false);
+const isLogin = ref(false);
 
 onMounted(() => {
-  setQuery(route.query.keyword, route.query.isBookmark);
+  setQuery(route.query.keyword, route.query.isBookmark, route.query.isShowMine);
   search();
 });
 
 onBeforeRouteUpdate(async (to, from) => {
-  setQuery(to.query.keyword, to.query.isBookmark);
+  setQuery(to.query.keyword, to.query.isBookmark, to.query.isShowMine);
 
   search();
 });
 
-const setQuery = (keywordParam, bookmarkParam) => {
+const setQuery = (keywordParam, bookmarkParam, showMineParam) => {
   if (keywordParam != null) {
     keyword.value = keywordParam;
   } else {
@@ -43,6 +44,12 @@ const setQuery = (keywordParam, bookmarkParam) => {
     isBookmark.value = true;
   } else {
     isBookmark.value = false;
+  }
+
+  if (showMineParam != null && showMineParam === "true") {
+    isShowMine.value = true;
+  } else {
+    isShowMine.value = false;
   }
 };
 
@@ -57,6 +64,10 @@ const targetSearch = () => {
     query.isBookmark = true;
   }
 
+  if (isShowMine.value === true) {
+    query.isShowMine = true;
+  }
+
   router.push({ name: "KnowledgeList", query: query });
 };
 
@@ -66,6 +77,7 @@ const search = async () => {
       params: {
         keyword: keyword.value,
         is_bookmark: isBookmark.value,
+        is_show_mine: isShowMine.value,
         page: pageNum.value,
       },
     });
@@ -81,13 +93,12 @@ const search = async () => {
     for (let item of res.data.knowledges) {
       searchResult.value.push(item);
     }
+    isLogin.value = false;
   } catch (error) {
     searchResult.value = [];
+    isLogin.value = false;
     if (error.response != null && error.response.status === 401) {
-      toastNotifications.displayError(
-        "記事一覧取得に失敗しました",
-        "ログインしてください"
-      );
+      isLogin.value = true;
     }
   }
 };
@@ -102,13 +113,13 @@ const clickKnowledge = (item) => {
 };
 
 const addKnowledge = () => {
-  router.push("/addKnowledge");
+  router.push("AddKnowledge");
 };
 </script>
 
 <template>
   <Header />
-  <TabMenu :currentId="currentId" />
+  <TabMenu :currentId="3" />
   <div class="knowledge-search-container">
     <div class="mt-5">
       <input
@@ -122,11 +133,18 @@ const addKnowledge = () => {
     <div class="mt-5 pr-3">
       <input
         type="checkbox"
-        id="statusSelect"
         v-model="isBookmark"
         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
       />
       <label class="ml-2">ブックマークのみ絞り込む</label>
+    </div>
+    <div class="mt-5 pr-3">
+      <input
+        type="checkbox"
+        v-model="isShowMine"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
+      <label class="ml-2">自分が作成した記事のみ表示</label>
     </div>
     <div class="text-center mt-5">
       <SearchButton @searchButtonClick="targetSearch" />
@@ -153,7 +171,7 @@ const addKnowledge = () => {
     </div>
   </div>
   <div v-else>
-    <ResultEmpty class="mx-5" />
+    <ResultEmpty class="mx-5 mt-5" />
   </div>
 </template>
 

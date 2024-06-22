@@ -12,6 +12,10 @@ class Api::V1::KnowledgesController < ApplicationController
       knowledges = knowledges.joins(:bookmarks).where(bookmarks: { user_id: current_api_v1_user.id })
     end
 
+    if params[:is_show_mine].present? && params[:is_show_mine] == "true"
+      knowledges = knowledges.where(user_id: current_api_v1_user.id)
+    end
+
     knowledges = if params[:page].present?
                    knowledges.page(params[:page]).per(30)
                  else
