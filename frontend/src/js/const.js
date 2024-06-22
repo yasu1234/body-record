@@ -18,3 +18,8 @@ export const AccountStatusType = {
     unLogin: 2,
     all: 3
 }
+
+export const CommentMenuList = [
+    { id: 1, label: "編集する" },
+    { id: 2, label: "削除" },
+];
