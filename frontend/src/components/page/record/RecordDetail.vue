@@ -256,6 +256,48 @@ const deleteComment = async () => {
   }
 };
 
+const editComment = async (inputComment, commentId) => {
+  if (commentId == null) {
+    toastNotifications.displayError("コメント編集に失敗しました", "");
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("record_id", recordId.value);
+    formData.append("comment", inputComment);
+
+    const res = await axiosInstance.put(
+      `/api/v1/record_comments/${commentId}`, formData
+    );
+    isEditing.value = false;
+    deleteCommentId.value = 0;
+    getComments();
+  } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント編集に失敗しました", "");
+      return;
+    }
+
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages += error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError(
+      "コメント編集に失敗しました",
+      errorMessages
+    );
+    deleteCommentId.value = 0;
+  }
+};
+
 const showRecordDeleteDialog = () => {
   isShowRecordDeleteConfirmDialog.value = true;
 };
@@ -347,7 +389,7 @@ const showMyRecordList = () => {
                 :comment="comment"
                 :isEditing="isEditing"
                 @delete-comment="showCommentDeleteDialog(comment)"
-                @edit-comment=""
+                @edit-comment="editComment"
               />
             </div>
             <div v-if="isShowCommentDeleteConfirmDialog" class="modal-overlay">
