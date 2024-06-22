@@ -9,6 +9,7 @@ import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
 import Header from "../../layout/Header.vue";
 import SettingSideMenu from "../../layout/SettingSideMenu.vue";
 import TabMenu from "../../layout/TabMenu.vue";
+import ConfirmDialog from "../../layout/ConfirmDialog.vue";
 
 const router = useRouter();
 const toast = useToast();
@@ -94,34 +95,13 @@ const cancel = () => {
         退会する
       </button>
       <div v-if="isShowConfirmDialog" class="modal-overlay">
-        <div class="modal-container">
-          <div class="modal-header">
-            <slot name="header">アカウントを削除します</slot>
-          </div>
-          <div class="modal-body">
-            <slot name="body"
-              ><p>
-                削除すると今までの記録は消去されます<br />よろしいですか？
-              </p></slot
-            >
-          </div>
-          <div class="text-right">
-            <slot name="footer">
-              <button
-                class="delete-account-button mr-2.5 py-2.5 px-5"
-                @click="accountDelete"
-              >
-                退会する
-              </button>
-              <button
-                class="delete-account-cancel-button py-2.5 px-5"
-                @click="cancel"
-              >
-                キャンセル
-              </button>
-            </slot>
-          </div>
-        </div>
+        <ConfirmDialog
+          :title="'アカウントを削除します'"
+          :message="'削除すると今までの記録は消去されます よろしいですか'"
+          :positiveButtonTitle="'退会する'"
+          @handle-positive="accountDelete"
+          @cancel="cancel"
+        />
       </div>
     </main>
   </div>
@@ -152,40 +132,5 @@ const cancel = () => {
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-}
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-.modal-container {
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  padding: 20px;
-  width: 500px;
-}
-.modal-header {
-  margin-top: 0;
-  font-size: 20px;
-}
-.modal-body {
-  margin: 20px 0;
-  line-height: 1.6;
-}
-
-@media (max-width: 768px) {
-  .modal-container {
-    margin-left: 10px;
-    margin-right: 10px;
-    width: auto;
-  }
 }
 </style>
