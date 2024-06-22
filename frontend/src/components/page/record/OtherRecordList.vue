@@ -192,7 +192,7 @@ const clickRecord = (item) => {
       <SearchButton @searchButtonClick="searchParamChange" />
     </div>
   </div>
-  <div class="mt-5">
+  <div class="mt-8">
     <div v-if="searchResult.length > 0">
       <RecordCard
         v-for="record in searchResult"
@@ -200,7 +200,7 @@ const clickRecord = (item) => {
         :record="record"
         @recordClick="clickRecord(record)"
       />
-      <div class="record-list-page">
+      <div class="pb-8">
         <ListPage
           :pageCount="pageCount"
           v-model="page"

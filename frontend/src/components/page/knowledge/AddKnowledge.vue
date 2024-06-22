@@ -56,7 +56,7 @@ const registerKnowledge = async () => {
 
     toastNotifications.displayError(
       "ノウハウの追加に失敗しました",
-      errorMessages
+      errorMessage
     );
   }
 };

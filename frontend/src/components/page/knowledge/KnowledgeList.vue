@@ -119,7 +119,7 @@ const addKnowledge = () => {
         v-model="keyword"
       />
     </div>
-    <div class="search-check">
+    <div class="mt-5 pr-3">
       <input
         type="checkbox"
         id="statusSelect"
@@ -144,7 +144,7 @@ const addKnowledge = () => {
       :knowledge="knowledge"
       @click="clickKnowledge(knowledge)"
     />
-    <div class="mt-12">
+    <div class="mt-12 pb-8">
       <ListPage
         :pageCount="pageCount"
         v-model="pageNum"
@@ -175,10 +175,6 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-.search-check {
-  margin-top: 20px;
-  padding-right: 20px;
-}
 .add-button {
   font-size: 16px;
   font-weight: bold;
@@ -201,7 +197,6 @@ input[type="text"] {
     margin-right: 20px;
     text-align: right;
   }
-
   .knowledge-search-container {
     width: auto;
     margin-left: 20px;

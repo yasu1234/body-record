@@ -198,7 +198,7 @@ const addRecord = () => {
       + 記録を追加する
     </button>
   </div>
-  <div class="mt-5">
+  <div class="mt-8">
     <div v-if="searchResult.length > 0">
       <RecordCard
         v-for="record in searchResult"
@@ -206,7 +206,7 @@ const addRecord = () => {
         :record="record"
         @recordClick="clickRecord(record)"
       />
-      <div class="record-list-page">
+      <div class="pb-8">
         <ListPage
           :pageCount="pageCount"
           v-model="page"
