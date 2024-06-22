@@ -14,6 +14,8 @@ class Knowledge < ApplicationRecord
             limit: { max: 5 },
             allow_blank: true
 
+  attr_accessor :create_date_jst
+
   scope :latest_knowledges, -> { order(created_at: :desc) }
 
   def image_urls
@@ -24,5 +26,9 @@ class Knowledge < ApplicationRecord
         filename: image.filename.to_s
       }
     end
+  end
+
+  def create_date_format
+    self.create_date_jst = created_at&.in_time_zone('Asia/Tokyo').strftime("%Y-%m-%d")
   end
 end

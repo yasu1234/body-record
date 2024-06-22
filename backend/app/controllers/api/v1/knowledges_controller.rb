@@ -18,18 +18,18 @@ class Api::V1::KnowledgesController < ApplicationController
                    knowledges.page(1).per(30)
                  end
 
-    knowledges_with_bookmarks_count = knowledges.map do |knowledge|
-      {
-        knowledge: knowledge.as_json.merge(
+    totalPage = knowledges.total_pages
+
+    render json: {
+      knowledges: knowledges.map do |knowledge|
+        knowledge.as_json(
+          methods: :create_date_format
+        ).merge(
           bookmark_count: knowledge.bookmarks.count,
           is_bookmark: knowledge.bookmarks.where(user_id: current_api_v1_user.id).present?
         )
-      }
-    end
-
-    totalPage = knowledges.total_pages
-
-    render json: { knowledges: knowledges_with_bookmarks_count, totalPage: }, status: :ok
+      end, totalPage:
+    }, status: :ok
   end
 
   def create

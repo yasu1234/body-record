@@ -79,7 +79,7 @@ const search = async () => {
     searchResult.value = [];
 
     for (let item of res.data.knowledges) {
-      searchResult.value.push(item.knowledge);
+      searchResult.value.push(item);
     }
   } catch (error) {
     searchResult.value = [];
