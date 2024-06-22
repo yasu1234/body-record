@@ -38,6 +38,19 @@ class Api::V1::RecordCommentsController < ApplicationController
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   end
 
+  def update
+    comment = Comment.find(params[:id])
+    comment.update!(record_comment_params)
+
+    render json: { comment: }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  rescue StandardError => e
+    render json: { errors: e.message }, status: :internal_server_error
+  end
+
   private
 
     def record_comment_params
