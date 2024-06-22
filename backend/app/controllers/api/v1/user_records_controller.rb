@@ -6,10 +6,10 @@ class Api::V1::UserRecordsController < ApplicationController
     records = Record.where(user_id: params[:user_id])
 
     if records.count > 5
-      records = records.latest_records(5)
+      records = records.latest_records.limit_count(5)
       render json: { records: records.as_json(methods: :formatted_date), is_more: true }, status: :ok
     else
-      records = records.latest_records(records.count)
+      records = records.latest_records
       render json: { records: records.as_json(methods: :formatted_date), is_more: false }, status: :ok
     end
   end

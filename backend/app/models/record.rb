@@ -16,7 +16,8 @@ class Record < ApplicationRecord
             size: { less_than: 5.megabytes },
             limit: { max: 3 }
 
-  scope :latest_records, ->(limit) { order(date: :desc).limit(limit) }
+  scope :latest_records, -> { order(date: :desc) }
+  scope :limit_count, ->(count) { limit(count) }
 
   scope :in_month, ->(year, month) {
     start_date = DateTime.new(year, month, 1)
@@ -68,7 +69,7 @@ class Record < ApplicationRecord
                 records.page(1).per(30)
               end
 
-    [records, records.total_pages]
+    [records.latest_records, records.total_pages]
   end
 
   def image_urls
