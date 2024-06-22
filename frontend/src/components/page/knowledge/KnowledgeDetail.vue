@@ -36,7 +36,10 @@ const isShowCommentDeleteConfirmDialog = ref(false);
 const isEditing = ref(false);
 const isShowKnowledgeDeleteConfirmDialog = ref(false);
 
-const md = new MarkdownIt();
+const md = new MarkdownIt({
+  breaks: true,
+  html: true
+});
 
 const renderedMarkdown = computed(() => {
   if (knowledge.value != null && knowledge.value.content != null) {
