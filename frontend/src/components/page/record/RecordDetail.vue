@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
@@ -12,6 +12,7 @@ import CommentInput from "../../layout/CommentInput.vue";
 import TabMenu from "../../layout/TabMenu.vue";
 import Author from "../../layout/Author.vue";
 import RelationImage from "../../layout/RelationImage.vue";
+import ConfirmDialog from "../../layout/ConfirmDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -28,6 +29,9 @@ const comments = ref([]);
 const author = ref(null);
 const record = ref(null);
 const support = ref(null);
+const isShowCommentDeleteConfirmDialog = ref(false);
+const deleteCommentId = ref(0);
+const isEditing = ref(false);
 
 onMounted(() => {
   getDetail();
@@ -218,6 +222,53 @@ const addComment = async (comment) => {
   }
 };
 
+const deleteComment = async () => {
+  isShowCommentDeleteConfirmDialog.value = false;
+  try {
+    const res = await axiosInstance.delete(
+      `/api/v1/record_comments/${deleteCommentId.value}`
+    );
+    deleteCommentId.value = 0;
+    getComments();
+  } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages += error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError(
+      "コメント削除に失敗しました",
+      errorMessages
+    );
+    deleteCommentId.value = 0;
+  }
+};
+
+const showRecordDeleteDialog = () => {
+  isShowRecordDeleteConfirmDialog.value = true;
+};
+
+const showCommentDeleteDialog = (comment) => {
+  isShowCommentDeleteConfirmDialog.value = true;
+  deleteCommentId.value = comment.id;
+};
+
+const cancelCommentDelete = () => {
+  isShowCommentDeleteConfirmDialog.value = false;
+  deleteCommentId.value = 0;
+}
+
 const showEdit = () => {
   router.push({ name: "EditRecord", params: { id: recordId.value } });
 };
@@ -235,10 +286,30 @@ const showMyRecordList = () => {
     <div class="main ml-5">
       <div class="main_content">
         <div class="editor">
-          <p class="record-title">{{ (record != null && record.formatted_date != null) ? record.formatted_date : "" }}の記録</p>
-          <p class="mt-5">体重：{{ (record != null && record.weight != null) ? record.weight : "-" }} kg</p>
-          <p class="mt-2.5">体脂肪率：{{ (record != null && record.fat_percentage != null) ? record.fat_percentage : "-" }} %</p>
-          <p class="record-content">{{ (record != null && record.memo != null) ? record.memo : '' }}</p>
+          <p class="record-title">
+            {{
+              record != null && record.formatted_date != null
+                ? record.formatted_date
+                : ""
+            }}の記録
+          </p>
+          <p class="mt-5">
+            体重：{{
+              record != null && record.weight != null ? record.weight : "-"
+            }}
+            kg
+          </p>
+          <p class="mt-2.5">
+            体脂肪率：{{
+              record != null && record.fat_percentage != null
+                ? record.fat_percentage
+                : "-"
+            }}
+            %
+          </p>
+          <p class="record-content">
+            {{ record != null && record.memo != null ? record.memo : "" }}
+          </p>
           <div v-if="imageUrls !== null && imageUrls.length !== 0">
             <p class="mt-5">関連画像</p>
             <div class="thumbnail-container">
@@ -256,12 +327,28 @@ const showMyRecordList = () => {
             @support-off="supportOff"
           />
         </div>
-        <div class="radius-section">
+        <div class="radius-section mb-7">
           <div class="comment-container-title-area">
             <p class="ml-5 pt-5 font-bold">コメント</p>
           </div>
-          <div v-if="comments.length !== 0">
-            <Comments :comments="comments" />
+          <div v-if="comments.length > 0">
+            <div v-for="comment in comments" class="comment">
+              <Comments
+                :comment="comment"
+                :isEditing="isEditing"
+                @delete-comment="showCommentDeleteDialog(comment)"
+                @edit-comment=""
+              />
+            </div>
+            <div v-if="isShowCommentDeleteConfirmDialog" class="modal-overlay">
+              <ConfirmDialog
+                :title="'コメントを削除します'"
+                :message="'よろしいですか？'"
+                :positiveButtonTitle="'削除'"
+                @handle-positive="deleteComment"
+                @cancel="cancelCommentDelete"
+              />
+            </div>
           </div>
           <div v-else>
             <p class="pt-2.5 pl-5">コメントはありません</p>
@@ -271,7 +358,7 @@ const showMyRecordList = () => {
       </div>
     </div>
     <div class="side">
-      <div class="side_content">
+      <div class="side-content">
         <button v-if="isSupport" class="round-button">
           <img
             src="../../../assets/image/support_on.png"
@@ -305,7 +392,7 @@ const showMyRecordList = () => {
             alt="削除"
             v-tooltip="{ value: '削除' }"
             class="side-menu-image"
-            @click="deleteRecord"
+            @click="showRecordDeleteDialog"
           />
         </button>
       </div>
@@ -320,7 +407,7 @@ const showMyRecordList = () => {
   background-color: #f5f6f6;
   padding-top: 20px;
 }
-.side_content {
+.side-content {
   position: sticky;
   top: 100px;
   margin-left: 30px;
@@ -383,18 +470,20 @@ input[type="text"] {
 .comment-container-title-area {
   border-bottom: 1px solid rgba(6, 6, 6, 0.17);
 }
+.comment {
+  padding-left: 20px;
+  border-bottom: 1px solid rgba(6, 6, 6, 0.17);
+}
 
 @media (max-width: 768px) {
   .wrap {
     display: flex;
     flex-direction: column;
   }
-
   .main {
     padding-bottom: 65px;
     margin-right: 20px;
   }
-
   .side {
     position: fixed;
     align-items: center;
@@ -405,14 +494,12 @@ input[type="text"] {
     background-color: #fff;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   }
-
-  .side_content {
+  .side-content {
     display: flex;
     flex-direction: row;
     gap: 10px;
     padding: 10px;
   }
-
   .round-button {
     padding: 0;
     background: transparent;
