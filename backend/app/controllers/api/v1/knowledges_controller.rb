@@ -8,11 +8,15 @@ class Api::V1::KnowledgesController < ApplicationController
       knowledges = knowledges.where("title LIKE ?", "%#{params[:keyword]}%")
     end
 
-    if params[:is_bookmark].present? && params[:is_bookmark] == "true"
+    if params[:is_bookmark].present? && ActiveModel::Type::Boolean.new.cast(params[:is_bookmark])
       knowledges = knowledges.joins(:bookmarks).where(bookmarks: { user_id: current_api_v1_user.id })
     end
 
-    if params[:is_show_mine].present? && params[:is_show_mine] == "true"
+    if params[:is_show_mine].present? && ActiveModel::Type::Boolean.new.cast(params[:is_show_mine])
+      knowledges = knowledges.where(user_id: params[:user_id])
+    end
+
+    if params[:user_id].present?
       knowledges = knowledges.where(user_id: current_api_v1_user.id)
     end
 
@@ -27,6 +31,9 @@ class Api::V1::KnowledgesController < ApplicationController
     render json: {
       knowledges: knowledges.map do |knowledge|
         knowledge.as_json(
+          include: {
+            user: { only: [:name], methods: :image_url }
+          },
           methods: :create_date_format
         ).merge(
           bookmark_count: knowledge.bookmarks.count,

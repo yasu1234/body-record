@@ -243,6 +243,10 @@ const clickRecord = (item) => {
 const showMoreRecords = () => {
   router.push({ name: "OtherRecordList", params: { id: userId.value } });
 };
+
+const showMoreKnowledges = () => {
+  router.push({ name: "UserKnowledgeList", params: { id: userId.value } });
+};
 </script>
 
 <template>
@@ -296,7 +300,7 @@ const showMoreRecords = () => {
     </div>
     <button
       v-if="isMoreKnowledges"
-      @click="showMoreRecords"
+      @click="showMoreKnowledges"
       class="more-show-button mt-5"
     >
       もっと見る

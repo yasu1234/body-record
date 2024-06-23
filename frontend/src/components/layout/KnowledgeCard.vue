@@ -90,6 +90,7 @@ const renderedMarkdown = computed(() => {
 }
 .knowledge-card::before {
   position: absolute;
+  content: "";
   width: 95%;
   height: 10px;
   top: 0.5em;
