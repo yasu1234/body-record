@@ -9,7 +9,7 @@ import Toast from "primevue/toast";
 
 import Header from "../../layout/Header.vue";
 import TabMenu from "../../layout/TabMenu.vue";
-import Comments from "../../layout/Comments.vue";
+import Comment from "../../layout/Comment.vue";
 import CommentInput from "../../layout/CommentInput.vue";
 import Author from "../../layout/Author.vue";
 import RelationImage from "../../layout/RelationImage.vue";
@@ -404,7 +404,7 @@ const showKnowledgeList = () => {
         </div>
         <div v-if="comments.length > 0">
           <div v-for="comment in comments" class="comment">
-            <Comments
+            <Comment
               :comment="comment"
               :isEditing="isEditing"
               @delete-comment="showCommentDeleteDialog(comment)"
