@@ -9,6 +9,7 @@ import UserCard from "../../layout/UserCard.vue";
 import ListPage from "../../layout/ListPage.vue";
 import SearchButton from "../../atom/SearchButton.vue";
 import ResultEmpty from "../../atom/ResultEmpty.vue";
+import LoginIntroductionView from "../../layout/LoginIntroductionView.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -16,10 +17,11 @@ setupInterceptors(router);
 
 const keyword = ref("");
 const isDisplayOnlySupport = ref(false);
-const isLogin = ref(false);
+const shouldLogin = ref(false);
 const searchResult = ref([]);
 const pageCount = ref(1);
 const page = ref(1);
+const isEmpty = ref(false)
 
 onMounted(() => {
   setQuery(route.query.keyword, route.query.onlySupport, route.query.page);
@@ -64,6 +66,8 @@ const setQuery = (keywordParam, onlySupportParam, pageParam) => {
 };
 
 const searchUser = async () => {
+  shouldLogin.value = true;
+
   try {
     const res = await axiosInstance.get("/api/v1/users", {
       params: {
@@ -73,19 +77,29 @@ const searchUser = async () => {
       },
     });
 
-    if (res.data && res.data.total_page) {
+    searchResult.value = [];
+
+    if (res.data != null && res.data.total_page != null) {
       pageCount.value = res.data.total_page;
     } else {
       pageCount.value = 1;
     }
 
-    searchResult.value = [];
-
-    for (let item of res.data.users) {
-      searchResult.value.push(item);
+    if (res.data.users != null && res.data.users.length > 0) {
+      for (let item of res.data.users) {
+        searchResult.value.push(item);
+      }
     }
+
+    isEmpty.value = !(res.data.users != null && res.data.users.length > 0);
   } catch (error) {
     searchResult.value = [];
+    isEmpty.value = true;
+
+    if (error.response != null && error.response.status === 401) {
+      shouldLogin.value = true;
+      isEmpty.value = false;
+    }
   }
 };
 
@@ -123,7 +137,7 @@ const userSelect = (item) => {
       <SearchButton @searchButtonClick="targetSearch" />
     </div>
   </div>
-  <div class="mt-5 pb-5">
+  <div class="py-8">
     <div v-if="searchResult.length > 0">
       <div
         v-for="user in searchResult"
@@ -140,8 +154,11 @@ const userSelect = (item) => {
         />
       </div>
     </div>
-    <div v-else>
+    <div v-if="isEmpty">
       <ResultEmpty class="mx-5" />
+    </div>
+    <div v-if="shouldLogin">
+      <LoginIntroductionView class="mx-5" />
     </div>
   </div>
 </template>

@@ -125,7 +125,7 @@ const showHomeThenRelaod = async () => {
       <div class="navigation-menus">
         <button
           v-show="isLogin === false"
-          class="account-introducton-button"
+          class="account-introducton-button mr-7"
           @click="showAccountIntroduction"
         >
           会員登録・ログイン
@@ -181,9 +181,6 @@ header {
 .navigation-menus {
   display: flex;
   justify-content: space-between;
-}
-.account-introducton-button {
-  margin-right: 30px;
 }
 .user-button {
   padding: 0;

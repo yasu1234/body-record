@@ -10,6 +10,7 @@ import DatePicker from "../../atom/DatePicker.vue";
 import RecordCard from "../../layout/RecordCard.vue";
 import SearchButton from "../../atom/SearchButton.vue";
 import ResultEmpty from "../../atom/ResultEmpty.vue";
+import LoginIntroductionView from "../../layout/LoginIntroductionView.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -20,11 +21,12 @@ const user = ref(null);
 const keyword = ref("");
 const startDate = ref("");
 const endDate = ref("");
-const isLogin = ref(false);
+const shouldLogin = ref(false);
 const searchResult = ref([]);
 const currentId = ref(2);
 const pageCount = ref(1);
 const page = ref(1);
+const isEmpty = ref(false);
 
 onMounted(() => {
   userId.value = route.params.id;
@@ -111,6 +113,8 @@ const getUser = async () => {
 };
 
 const search = async () => {
+  shouldLogin.value = false;
+
   try {
     const res = await axiosInstance.get("/api/v1/records", {
       params: {
@@ -122,19 +126,30 @@ const search = async () => {
       },
     });
 
+    searchResult.value = [];
+
     if (res.data && res.data.totalPage) {
       pageCount.value = res.data.totalPage;
     } else {
       pageCount.value = 1;
     }
 
-    searchResult.value = [];
-
-    for (let item of res.data.records) {
-      searchResult.value.push(item);
+    if (res.data.records != null && res.data.records.length > 0) {
+      for (let item of res.data.records) {
+        searchResult.value.push(item);
+      }
     }
+
+    isEmpty.value = !(res.data.records != null && res.data.records.length > 0);
   } catch (error) {
     searchResult.value = [];
+
+    isEmpty.value = true;
+
+    if (error.response != null && error.response.status === 401) {
+      shouldLogin.value = true;
+      isEmpty.value = false;
+    }
   }
 };
 
@@ -192,7 +207,7 @@ const clickRecord = (item) => {
       <SearchButton @searchButtonClick="searchParamChange" />
     </div>
   </div>
-  <div class="mt-8">
+  <div class="py-8">
     <div v-if="searchResult.length > 0">
       <RecordCard
         v-for="record in searchResult"
@@ -200,7 +215,7 @@ const clickRecord = (item) => {
         :record="record"
         @recordClick="clickRecord(record)"
       />
-      <div class="pb-8">
+      <div>
         <ListPage
           :pageCount="pageCount"
           v-model="page"
@@ -208,8 +223,11 @@ const clickRecord = (item) => {
         />
       </div>
     </div>
-    <div v-else>
+    <div div v-if="isEmpty">
       <ResultEmpty class="mx-5" />
+    </div>
+    <div v-if="shouldLogin">
+      <LoginIntroductionView class="mx-5" />
     </div>
   </div>
 </template>

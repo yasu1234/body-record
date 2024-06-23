@@ -9,6 +9,7 @@ import ListPage from "../../layout/ListPage.vue";
 import SearchButton from "../../atom/SearchButton.vue";
 import KnowledgeCard from "../../layout/KnowledgeCard.vue";
 import ResultEmpty from "../../atom/ResultEmpty.vue";
+import LoginIntroductionView from "../../layout/LoginIntroductionView.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -20,7 +21,8 @@ const searchResult = ref([]);
 const pageCount = ref(1);
 const pageNum = ref(1);
 const isShowMine = ref(false);
-const isLogin = ref(false);
+const shouldLogin = ref(false);
+const isEmpty = ref(false);
 
 onMounted(() => {
   setQuery(route.query.keyword, route.query.isBookmark, route.query.isShowMine);
@@ -72,33 +74,37 @@ const targetSearch = () => {
 };
 
 const search = async () => {
+  shouldLogin.value = false;
+
   try {
     const res = await axiosInstance.get("/api/v1/knowledges", {
       params: {
         keyword: keyword.value,
         is_bookmark: isBookmark.value,
         is_show_mine: isShowMine.value,
-        page: pageNum.value
+        page: pageNum.value,
       },
     });
 
-    if (res.data && res.data.totalPage) {
+    searchResult.value = [];
+
+    if (res.data != null && res.data.totalPage != null) {
       pageCount.value = res.data.totalPage;
     } else {
       pageCount.value = 1;
     }
 
-    searchResult.value = [];
-
-    for (let item of res.data.knowledges) {
-      searchResult.value.push(item);
+    if (res.data.knowledges != null && res.data.knowledges.length > 0) {
+      for (let item of res.data.knowledges) {
+        searchResult.value.push(item);
+      }
     }
-    isLogin.value = false;
+
+    isEmpty.value = !(res.data.knowledges != null && res.data.knowledges.length > 0);
   } catch (error) {
     searchResult.value = [];
-    isLogin.value = false;
     if (error.response != null && error.response.status === 401) {
-      isLogin.value = true;
+      shouldLogin.value = true;
     }
   }
 };
@@ -155,23 +161,28 @@ const addKnowledge = () => {
       + ノウハウ記事を追加する
     </button>
   </div>
-  <div v-if="searchResult.length > 0">
-    <KnowledgeCard
-      v-for="knowledge in searchResult"
-      v-bind="knowledge"
-      :knowledge="knowledge"
-      @click="clickKnowledge(knowledge)"
-    />
-    <div class="mt-12 pb-8">
-      <ListPage
-        :pageCount="pageCount"
-        v-model="pageNum"
-        @changePage="updatePaginateItems"
+  <div class="py-8">
+    <div v-if="searchResult.length > 0">
+      <KnowledgeCard
+        v-for="knowledge in searchResult"
+        v-bind="knowledge"
+        :knowledge="knowledge"
+        @click="clickKnowledge(knowledge)"
       />
+      <div class="mt-12 pb-8">
+        <ListPage
+          :pageCount="pageCount"
+          v-model="pageNum"
+          @changePage="updatePaginateItems"
+        />
+      </div>
     </div>
-  </div>
-  <div v-else>
-    <ResultEmpty class="mx-5 mt-5" />
+    <div v-if="isEmpty">
+      <ResultEmpty class="mx-5 mt-5" />
+    </div>
+    <div v-if="shouldLogin">
+      <LoginIntroductionView class="mx-5" />
+    </div>
   </div>
 </template>
 

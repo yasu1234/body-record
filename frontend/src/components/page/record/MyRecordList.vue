@@ -8,6 +8,7 @@ import DatePicker from "../../atom/DatePicker.vue";
 import SearchButton from "../../atom/SearchButton.vue";
 import RecordCard from "../../layout/RecordCard.vue";
 import ResultEmpty from "../../atom/ResultEmpty.vue";
+import LoginIntroductionView from "../../layout/LoginIntroductionView.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -19,6 +20,8 @@ const isOnlyOpen = ref(false);
 const searchResult = ref([]);
 const pageCount = ref(1);
 const page = ref(1);
+const isEmpty = ref(false);
+const shouldLogin = ref(false);
 
 onMounted(() => {
   setQuery(
@@ -69,6 +72,8 @@ const paramChange = () => {
 };
 
 const search = async () => {
+  shouldLogin.value = false;
+
   try {
     const res = await axiosInstance.get("/api/v1/my_records", {
       params: {
@@ -80,19 +85,29 @@ const search = async () => {
       },
     });
 
+    searchResult.value = [];
+
     if (res.data && res.data.totalPage) {
       pageCount.value = res.data.totalPage;
     } else {
       pageCount.value = 1;
     }
 
-    searchResult.value = [];
-
-    for (let item of res.data.records) {
-      searchResult.value.push(item);
+    if (res.data.records != null && res.data.records.length > 0) {
+      for (let item of res.data.records) {
+        searchResult.value.push(item);
+      }
     }
+
+    isEmpty.value = !(res.data.records != null && res.data.records.length > 0);
   } catch (error) {
     searchResult.value = [];
+    isEmpty.value = true;
+
+    if (error.response != null && error.response.status === 401) {
+      shouldLogin.value = true;
+      isEmpty.value = false;
+    }
   }
 };
 
@@ -198,7 +213,7 @@ const addRecord = () => {
       + 記録を追加する
     </button>
   </div>
-  <div class="mt-8">
+  <div class="py-8">
     <div v-if="searchResult.length > 0">
       <RecordCard
         v-for="record in searchResult"
@@ -206,7 +221,7 @@ const addRecord = () => {
         :record="record"
         @recordClick="clickRecord(record)"
       />
-      <div class="pb-8">
+      <div>
         <ListPage
           :pageCount="pageCount"
           v-model="page"
@@ -214,8 +229,11 @@ const addRecord = () => {
         />
       </div>
     </div>
-    <div v-else>
+    <div v-if="isEmpty">
       <ResultEmpty class="mx-5" />
+    </div>
+    <div v-if="shouldLogin">
+      <LoginIntroductionView class="mx-5" />
     </div>
   </div>
 </template>

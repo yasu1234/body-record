@@ -13,7 +13,15 @@
 </template>
 
 <script setup>
-const showAccountIntroduction = () => {};
+import { useRouter } from "vue-router";
+import Cookies from "js-cookie";
+
+const router = useRouter();
+
+const showAccountIntroduction = () => {
+  console.log(router.currentRoute.value.fullPath);
+  router.push({ name: "AccountInteroduction" });
+};
 </script>
 
 <style scoped>
