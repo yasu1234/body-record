@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
 import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
+import { KnowledgeListSortType } from "../../../js/const.js";
 
 import TabMenu from "../../layout/TabMenu.vue";
 import Header from "../../layout/Header.vue";
@@ -23,6 +24,9 @@ const pageNum = ref(1);
 const isShowMine = ref(false);
 const shouldLogin = ref(false);
 const isEmpty = ref(false);
+const menuList = ref(KnowledgeListSortType);
+const selectCode = ref(menuList.value[0].code);
+const totalCount = ref(0);
 
 onMounted(() => {
   setQuery(route.query.keyword, route.query.isBookmark, route.query.isShowMine);
@@ -83,15 +87,22 @@ const search = async () => {
         is_bookmark: isBookmark.value,
         is_show_mine: isShowMine.value,
         page: pageNum.value,
+        sort_type: selectCode.value
       },
     });
 
     searchResult.value = [];
 
-    if (res.data != null && res.data.totalPage != null) {
-      pageCount.value = res.data.totalPage;
+    if (res.data != null && res.data.total_page != null) {
+      pageCount.value = res.data.total_page;
     } else {
       pageCount.value = 1;
+    }
+
+    if (res.data != null && res.data.total_count != null) {
+      totalCount.value = res.data.total_count;
+    } else {
+      totalCount.value = 0;
     }
 
     if (res.data.knowledges != null && res.data.knowledges.length > 0) {
@@ -100,7 +111,9 @@ const search = async () => {
       }
     }
 
-    isEmpty.value = !(res.data.knowledges != null && res.data.knowledges.length > 0);
+    isEmpty.value = !(
+      res.data.knowledges != null && res.data.knowledges.length > 0
+    );
   } catch (error) {
     searchResult.value = [];
     if (error.response != null && error.response.status === 401) {
@@ -111,6 +124,12 @@ const search = async () => {
 
 const updatePaginateItems = function (pageNum) {
   pageNum.value = pageNum;
+  search();
+};
+
+const changeSortType = (event) => {
+  const selectedCode = event.target.value;
+  selectCode.value = parseInt(selectedCode);
   search();
 };
 
@@ -163,6 +182,18 @@ const addKnowledge = () => {
   </div>
   <div class="py-8">
     <div v-if="searchResult.length > 0">
+      <div>
+        <select
+          v-model="selectCode"
+          class="select-box text-gray-900 text-sm rounded-lg block p-2.5"
+          @change="changeSortType"
+        >
+          <option v-for="menu in menuList" :key="menu.code" :value="menu.code">
+            {{ menu.name }}
+          </option>
+        </select>
+      </div>
+      <p class="text-center font-bold mt-8">合計{{ totalCount }}件</p>
       <KnowledgeCard
         v-for="knowledge in searchResult"
         v-bind="knowledge"
@@ -217,6 +248,11 @@ input[type="text"] {
 .add-button {
   font-size: 16px;
   font-weight: bold;
+}
+.select-box {
+  width: 280px;
+  border: 1px solid #ccc;
+  margin: 0 auto;
 }
 
 @media screen and (max-width: 768px) {

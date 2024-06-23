@@ -20,13 +20,25 @@ class Api::V1::KnowledgesController < ApplicationController
       knowledges = knowledges.where(user_id: params[:user_id])
     end
 
+    if params[:sort_type].present? && params[:sort_type].to_i == Knowledge::SortType::BOOKMARK_COUNT
+      #ブックマークが多い順に並び替え
+      knowledges = knowledges.left_joins(:bookmarks)
+      .group('knowledges.id')
+      .select('knowledges.*, COUNT(bookmarks.id) AS bookmark_count')
+      .order('COUNT(bookmarks.id) DESC')
+      total_count = knowledges.size.length
+    else
+      knowledges = knowledges.order(created_at: :desc)
+      total_count = knowledges.size
+    end
+
     knowledges = if params[:page].present?
                    knowledges.page(params[:page]).per(30)
                  else
                    knowledges.page(1).per(30)
                  end
 
-    totalPage = knowledges.total_pages
+    total_page = knowledges.total_pages
 
     render json: {
       knowledges: knowledges.map do |knowledge|
@@ -39,7 +51,7 @@ class Api::V1::KnowledgesController < ApplicationController
           bookmark_count: knowledge.bookmarks.count,
           is_bookmark: knowledge.bookmarks.where(user_id: current_api_v1_user.id).present?
         )
-      end, totalPage:
+      end, total_page:, total_count:
     }, status: :ok
   end
 
