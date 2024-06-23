@@ -11,6 +11,7 @@ const knowledgeContent = ref("");
 const bookmarkCount = ref(0);
 const isMyBookmark = ref(false);
 const createDate = ref("");
+const user = ref(null);
 
 onMounted(() => {
   setProps(props.knowledge);
@@ -26,6 +27,7 @@ const setProps = (knowledge) => {
   isMyBookmark.value = false;
   bookmarkCount.value = 0;
   createDate.value = "";
+  user.value = null;
 
   if (knowledge != null) {
     knowledgeTitle.value = knowledge.title;
@@ -33,6 +35,7 @@ const setProps = (knowledge) => {
     bookmarkCount.value = knowledge.bookmark_count;
     isMyBookmark.value = knowledge.is_bookmark;
     createDate.value = knowledge.create_date_format;
+    user.value = knowledge.user;
   }
 };
 
@@ -72,6 +75,23 @@ const renderedMarkdown = computed(() => {
       </div>
       <p class="ml-2.5">{{ bookmarkCount }}</p>
     </div>
+    <div class="knowledge-user-container">
+      <div
+        class="user-thumbnail-image"
+        v-if="
+          user !== null &&
+          user.image_url !== null &&
+          user.image_url.url !== null
+        "
+      >
+        <img
+          :src="user.image_url.url"
+          alt="ユーザー"
+          class="user-thumbnail-image"
+        />
+      </div>
+      <p class="ml-2.5 text-xs">{{ user != null && user.name != null ? user.name : '' }}</p>
+    </div>
     <div class="mt-1">
       <p class="create-date">{{ createDate }}</p>
     </div>
@@ -99,6 +119,17 @@ const renderedMarkdown = computed(() => {
   bottom: 0;
   margin: 0 auto;
   border-top: dotted 10px #fff; /*ドットの形・大きさ・色*/
+}
+.knowledge-user-containe {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-left: 20px;
+}
+.user-thumbnail-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 .bookmark-container {
   display: flex;

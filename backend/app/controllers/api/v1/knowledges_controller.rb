@@ -13,11 +13,11 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     if params[:is_show_mine].present? && ActiveModel::Type::Boolean.new.cast(params[:is_show_mine])
-      knowledges = knowledges.where(user_id: params[:user_id])
+      knowledges = knowledges.where(user_id: current_api_v1_user.id)
     end
 
     if params[:user_id].present?
-      knowledges = knowledges.where(user_id: current_api_v1_user.id)
+      knowledges = knowledges.where(user_id: params[:user_id])
     end
 
     knowledges = if params[:page].present?

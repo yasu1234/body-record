@@ -78,7 +78,7 @@ const search = async () => {
         keyword: keyword.value,
         is_bookmark: isBookmark.value,
         is_show_mine: isShowMine.value,
-        page: pageNum.value,
+        page: pageNum.value
       },
     });
 
