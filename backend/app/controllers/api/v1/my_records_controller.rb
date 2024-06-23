@@ -7,9 +7,13 @@ class Api::V1::MyRecordsController < ApplicationController
       base_scope = base_scope.where(open_status: 1)
     end
 
-    records, total_pages = Record.search_and_paginate(params, base_scope)
+    records, total_pages, total_count = Record.search_and_paginate(params, base_scope)
 
-    render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: :ok
+    render json: { 
+      records: records.as_json(methods: :formatted_date),
+      total_page: total_pages,
+      total_count: total_count
+    }, status: :ok
   end
 
   def create

@@ -69,7 +69,7 @@ class Record < ApplicationRecord
                 records.page(1).per(30)
               end
 
-    [records.latest_records, records.total_pages]
+    [records.latest_records, records.total_pages, records.count]
   end
 
   def image_urls

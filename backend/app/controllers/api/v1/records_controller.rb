@@ -7,9 +7,11 @@ class Api::V1::RecordsController < ApplicationController
     end
 
     base_scope = Record.where(open_status: 1).where(user_id: params[:user_id])
-    records, total_pages = Record.search_and_paginate(params, base_scope)
+    records, total_pages, total_count = Record.search_and_paginate(params, base_scope)
 
-    render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: :ok
+    render json: { 
+      records: records.as_json(methods: :formatted_date), total_page: total_pages, total_count: total_count
+    }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { error: "対象のデータが見つかりません" }, status: :not_found
   rescue StandardError => e
