@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
 import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
+import { UserListSortType } from "../../../js/const.js";
 
 import TabMenu from "../../layout/TabMenu.vue";
 import Header from "../../layout/Header.vue";
@@ -21,7 +22,10 @@ const shouldLogin = ref(false);
 const searchResult = ref([]);
 const pageCount = ref(1);
 const page = ref(1);
-const isEmpty = ref(false)
+const isEmpty = ref(false);
+const menuList = ref(UserListSortType);
+const selectCode = ref(menuList.value[0].code);
+const totalCount = ref(0);
 
 onMounted(() => {
   setQuery(route.query.keyword, route.query.onlySupport, route.query.page);
@@ -66,7 +70,7 @@ const setQuery = (keywordParam, onlySupportParam, pageParam) => {
 };
 
 const searchUser = async () => {
-  shouldLogin.value = true;
+  shouldLogin.value = false;
 
   try {
     const res = await axiosInstance.get("/api/v1/users", {
@@ -74,6 +78,7 @@ const searchUser = async () => {
         keyword: keyword.value,
         page: page.value,
         isSupportOnly: isDisplayOnlySupport.value,
+        sort_type: selectCode.value,
       },
     });
 
@@ -83,6 +88,12 @@ const searchUser = async () => {
       pageCount.value = res.data.total_page;
     } else {
       pageCount.value = 1;
+    }
+
+    if (res.data != null && res.data.total_count != null) {
+      totalCount.value = res.data.total_count;
+    } else {
+      totalCount.value = 0;
     }
 
     if (res.data.users != null && res.data.users.length > 0) {
@@ -108,6 +119,12 @@ const updatePaginateItems = (page) => {
   searchUser();
 };
 
+const changeSortType = (event) => {
+  const selectedCode = event.target.value;
+  selectCode.value = parseInt(selectedCode);
+  searchUser();
+};
+
 const userSelect = (item) => {
   router.push({ name: "OtherRecordList", params: { id: item.user.id } });
 };
@@ -117,17 +134,18 @@ const userSelect = (item) => {
   <Header />
   <TabMenu :currentId="2" />
   <div class="user-search-container">
-    <input
-      type="text"
-      id="keyword"
-      name="keywordName"
-      placeholder="名前で検索"
-      v-model="keyword"
-    />
+    <p class="font-bold">ユーザーの絞り込み</p>
+    <div class="mt-2.5">
+      <input
+        type="text"
+        name="keywordName"
+        placeholder="名前で検索"
+        v-model="keyword"
+      />
+    </div>
     <div class="mt-5">
       <input
         type="checkbox"
-        id="statusSelect"
         v-model="isDisplayOnlySupport"
         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
       />
@@ -139,6 +157,18 @@ const userSelect = (item) => {
   </div>
   <div class="py-8">
     <div v-if="searchResult.length > 0">
+      <div>
+        <select
+          v-model="selectCode"
+          class="select-box text-gray-900 text-sm rounded-lg block p-2.5"
+          @change="changeSortType"
+        >
+          <option v-for="menu in menuList" :key="menu.code" :value="menu.code">
+            {{ menu.name }}
+          </option>
+        </select>
+      </div>
+      <p class="text-center font-bold mt-8">合計{{ totalCount }}件</p>
       <div
         v-for="user in searchResult"
         class="user-card"
@@ -197,6 +227,11 @@ input[type="text"] {
   border-radius: 5px;
   background-color: #ffffff;
   cursor: pointer;
+}
+.select-box {
+  width: 300px;
+  border: 1px solid #ccc;
+  margin: 0 auto;
 }
 
 @media screen and (max-width: 768px) {

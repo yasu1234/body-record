@@ -13,31 +13,29 @@ const supporterCount = ref(0);
 const isMySuport = ref(false);
 
 onMounted(() => {
+  setProps(props);
+});
+
+watch(props, () => {
+  setProps(props);
+});
+
+const setProps = (props) => {
   user.value = props.user;
   if (props.user.latest_record != null) {
     latestRecordDate.value = props.user.latest_record.formatted_date;
   }
-  if (props.user != null && props.user.is_support) {
+  if (props.user != null && props.user.is_support != null) {
     isMySuport.value = props.user.is_support;
+  } else {
+    isMySuport.value = false;
   }
   if (props.user != null) {
     supporterCount.value = props.user.supporter_count;
+  } else {
+    supporterCount.value = 0;
   }
-});
-
-watch(props, () => {
-  user.value = props.user;
-  if (props.user.latest_record != null) {
-    latestRecordDate.value = props.user.supporter_count;
-  }
-
-  if (props.user != null && props.user.is_support) {
-    isMySuport.value = props.user.is_support;
-  }
-  if (props.user != null) {
-    supporterCount.value = props.user.supporter_count;
-  }
-});
+}
 
 const showUser = (item) => {
   router.push({ name: "UserProfile", params: { id: user.value.user.id } });
@@ -48,10 +46,10 @@ const showUser = (item) => {
   <div class="user-container" v-if="user != null">
     <div
       class="user-thumbnail-image"
-      v-if="user.user.image_url !== null && user.user.image_url.url !== null"
+      v-if="user.image_url !== null && user.image_url.url !== null"
     >
       <img
-        :src="user.user.image_url.url"
+        :src="user.image_url.url"
         alt="ユーザー"
         class="user-thumbnail-image"
       />
@@ -59,7 +57,7 @@ const showUser = (item) => {
     <div>
       <Button
         class="user-name-link"
-        :label="user.user.name"
+        :label="user.name"
         @click.stop="showUser(user)"
         link
       />

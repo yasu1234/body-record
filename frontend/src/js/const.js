@@ -23,3 +23,8 @@ export const CommentMenuList = [
     { id: 1, label: "編集する" },
     { id: 2, label: "削除" },
 ];
+
+export const UserListSortType = [
+    { name: "直近で作成された順", code: 1 },
+    { name: "応援しているユーザーが多い順", code: 2 },
+];

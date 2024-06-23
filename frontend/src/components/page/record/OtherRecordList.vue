@@ -182,7 +182,7 @@ const clickRecord = (item) => {
   <Header />
   <TabMenu :currentId="currentId" />
   <div class="record-search-container">
-    <p class="inputTitle font-bold" v-if="user != null">
+    <p class="search-item-title font-bold" v-if="user != null">
       {{ user.name }}さんの記録検索
     </p>
     <input
@@ -194,7 +194,7 @@ const clickRecord = (item) => {
     />
     <div class="record-search-time-list">
       <div class="item">
-        <p class="inputTitle">検索開始日</p>
+        <p class="search-item-title">検索開始日</p>
         <DatePicker
           isStart="true"
           :date="startDate"
@@ -202,7 +202,7 @@ const clickRecord = (item) => {
         />
       </div>
       <div class="item">
-        <p class="inputTitle">検索終了日</p>
+        <p class="search-item-title">検索終了日</p>
         <DatePicker
           isStart="false"
           :date="endDate"
@@ -250,7 +250,7 @@ input[type="text"] {
   padding: 5px;
   box-sizing: border-box;
 }
-.record-search-time-list .item .inputTitle {
+.record-search-time-list .item .search-item-title {
   margin: 5px 0 0;
   padding: 0;
   font-size: 16px;
