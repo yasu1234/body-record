@@ -35,6 +35,7 @@ const deleteCommentId = ref(0);
 const isShowCommentDeleteConfirmDialog = ref(false);
 const isEditing = ref(false);
 const isShowKnowledgeDeleteConfirmDialog = ref(false);
+const inputCommentRef = ref("");
 
 const md = new MarkdownIt({
   breaks: true,
@@ -217,9 +218,10 @@ const addComment = async (comment) => {
       formData
     );
     getComments();
+    inputCommentRef.value.resetForm();
   } catch (error) {
     if (error.response == null) {
-      toastNotifications.displayError("コメント削除に失敗しました", "");
+      toastNotifications.displayError("コメント投稿に失敗しました", "");
       return;
     }
 
@@ -235,7 +237,7 @@ const addComment = async (comment) => {
     }
 
     toastNotifications.displayError(
-      "コメントの追加に失敗しました",
+      "コメントの投稿に失敗しました",
       errorMessages
     );
   }
@@ -466,7 +468,7 @@ const showKnowledgeList = () => {
         <div v-else>
           <p class="pt-2.5 pl-5">コメントはありません</p>
         </div>
-        <CommentInput @add-comment="addComment" />
+        <CommentInput ref="inputCommentRef" @add-comment="addComment" />
       </div>
     </div>
     <div class="side">

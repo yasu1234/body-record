@@ -1,13 +1,19 @@
 <script setup>
 import { ref } from "vue";
 
-const comment = ref("");
-
 const emit = defineEmits(["add-comment"]);
+
+const comment = ref("");
 
 const addComment = () => {
   emit("add-comment", comment.value);
 };
+
+const resetForm = () => {
+  comment.value = "";
+};
+
+defineExpose({ resetForm });
 </script>
 
 <template>

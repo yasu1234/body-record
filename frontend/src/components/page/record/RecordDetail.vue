@@ -33,6 +33,7 @@ const isShowRecordDeleteConfirmDialog = ref(false);
 const isShowCommentDeleteConfirmDialog = ref(false);
 const deleteCommentId = ref(0);
 const isEditing = ref(false);
+const inputCommentRef = ref("");
 
 onMounted(() => {
   getDetail();
@@ -197,10 +198,11 @@ const addComment = async (comment) => {
     formData.append("comment", comment);
 
     const res = await axiosInstance.post(`/api/v1/record_comments`, formData);
+    inputCommentRef.value.resetForm();
     getComments();
   } catch (error) {
     if (error.response == null) {
-      toastNotifications.displayError("コメント追加に失敗しました", "");
+      toastNotifications.displayError("コメント投稿に失敗しました", "");
       return;
     }
 
@@ -217,7 +219,7 @@ const addComment = async (comment) => {
     }
 
     toastNotifications.displayError(
-      "コメント追加に失敗しました",
+      "コメント投稿に失敗しました",
       errorMessages
     );
   }
@@ -405,7 +407,7 @@ const showMyRecordList = () => {
           <div v-else>
             <p class="pt-2.5 pl-5">コメントはありません</p>
           </div>
-          <CommentInput @add-comment="addComment" />
+          <CommentInput ref="inputCommentRef" @add-comment="addComment" />
         </div>
       </div>
     </div>
