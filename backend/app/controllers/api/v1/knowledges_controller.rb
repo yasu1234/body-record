@@ -73,6 +73,14 @@ class Api::V1::KnowledgesController < ApplicationController
 
   def update
     knowledge = current_api_v1_user.knowledges.find(params[:id])
+
+    # 画像がある場合は既存の画像は残したまま追加
+    if params[:knowledge][:images].present?
+      new_images = params[:knowledge][:images]
+      knowledge.images.attach(new_images)
+      params[:knowledge].delete(:images)
+    end
+
     knowledge.update!(knowledge_register_params)
 
     render json: { knowledge: }, status: :ok

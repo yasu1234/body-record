@@ -25,6 +25,14 @@ class Api::V1::MyRecordsController < ApplicationController
 
   def update
     record = current_api_v1_user.records.find(params[:id])
+
+    # 画像がある場合は既存の画像は残したまま追加
+    if params[:record][:images].present?
+      new_images = params[:record][:images]
+      record.images.attach(new_images)
+      params[:record].delete(:images)
+    end
+
     record.update!(record_register_params)
 
     render json: { record: }, status: :ok
