@@ -28,46 +28,58 @@ const getContactList = async () => {
     }
   } catch (error) {
     searchResult.value = [];
-    let errorMessages = "";
-    if (error.response != null && error.response.status === 401) {
-      errorMessages = "ログインしてください";
-    }
-    toastNotifications.displayError(
-      "お問合せ送信に失敗しました",
-      errorMessages
-    );
+    toastNotifications.displayError("お問合せ送信に失敗しました", "");
   }
 };
 
-function clickContact(item) {
+const clickContact = (item) => {
   router.push({ name: "ContactDetail", params: { id: item.id } });
-}
+};
 </script>
 
 <template>
   <Header />
   <TabMenu />
   <Toast position="top-center" />
-  <div
-    class="contact-card"
-    v-for="item of searchResult"
-    :key="item.id"
-    @click="clickContact(item)"
-  >
-    <div class="complete-image" v-if="item.status === 1">
-      <p class="contact-complete">対応済</p>
-    </div>
-    <div class="pb-2.5">
-      <p class="mx-2.5 mt-2.5">{{ item.content }}</p>
+  <p class="title_line mt-5">お問合せ一覧</p>
+  <p class="mt-5 mx-5 text-lg">
+    対応済みのお問い合わせは次の日には表示されなくなるのでご注意ください
+  </p>
+  <div class="pb-8">
+    <div
+      class="contact-card"
+      v-for="item of searchResult"
+      :key="item.id"
+      @click="clickContact(item)"
+    >
+      <div class="complete-image" v-if="item.status === 1">
+        <p class="contact-complete">対応済</p>
+      </div>
+      <div class="pb-2.5">
+        <p class="mx-2.5 mt-2.5">
+          {{ item.content != null ? item.content : "" }}
+        </p>
+      </div>
+      <div>
+        <p class="contact-create-date mt-2.5">
+          {{ item.contact_date_format != null ? item.contact_date_format : "" }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .contact-card {
-  margin: 10px 12px 12px 12px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  cursor: pointer;
+  width: 700px;
+  margin: 0 auto;
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  margin-top: 20px;
 }
 .complete-image {
   border-radius: 20px;
@@ -81,5 +93,18 @@ function clickContact(item) {
 .contact-complete {
   font-size: 15px;
   text-align: center;
+}
+.contact-create-date {
+  color: #928484;
+  font-size: 12px;
+  text-align: right;
+}
+
+@media screen and (max-width: 768px) {
+  .contact-card {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 }
 </style>
