@@ -19,7 +19,6 @@ const menuList = ref([]);
 
 onMounted(() => {
   checkLogin();
-  console.log(router.currentRoute.value.fullPath);
 });
 
 const checkLogin = async () => {
@@ -99,6 +98,7 @@ const showMyPage = () => {
 };
 
 const showAccountIntroduction = () => {
+  Cookies.set("loginRoutePath", router.currentRoute.value.fullPath);
   router.push({ name: "AccountInteroduction" });
 };
 

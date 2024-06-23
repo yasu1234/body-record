@@ -33,7 +33,17 @@ const login = async () => {
     Cookies.set("client", res.headers["client"]);
     Cookies.set("uid", res.headers["uid"]);
 
-    showHome();
+    if (
+      Cookies.get("loginRoutePath") != null &&
+      !Cookies.get("loginRoutePath").includes("login") &&
+      !Cookies.get("loginRoutePath").includes("accountInteroduction") &&
+      !Cookies.get("loginRoutePath").includes("signup")
+    ) {
+      router.push({ path: Cookies.get("loginRoutePath") });
+      Cookies.remove("loginRoutePath");
+    } else {
+      showHome();
+    }
   } catch (error) {
     let errorMessages = "";
     if (error.response != null && error.response.status === 422) {
