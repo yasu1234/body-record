@@ -155,12 +155,20 @@ const bookmarkOn = async () => {
     isBookmark.value = res.data.knowledge.isBookmark;
     bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "ブックマークの登録に失敗しました",
       errorMessages
@@ -177,26 +185,26 @@ const bookmarkOff = async () => {
     isBookmark.value = res.data.knowledge.isBookmark;
     bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "ブックマークの解除に失敗しました",
       errorMessages
     );
   }
 };
-
-function bookmarkClick(isBookmarkOn) {
-  if (isBookmarkOn === true) {
-    bookmarkOff();
-  } else {
-    bookmarkOn();
-  }
-}
 
 const addComment = async (comment) => {
   try {
@@ -210,14 +218,22 @@ const addComment = async (comment) => {
     );
     getComments();
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "コメントの追加に失敗しました",
       errorMessages
@@ -237,14 +253,22 @@ const supportOn = async () => {
     });
     getSupport();
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("応援に失敗しました", errorMessages);
   }
 };
@@ -256,14 +280,22 @@ const supportOff = async () => {
     );
     getSupport();
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("応援解除に失敗しました", errorMessages);
   }
 };
@@ -387,11 +419,7 @@ const showKnowledgeList = () => {
             }}
           </p>
         </div>
-        <p
-          class="knowledge-title mt-5"
-          type="text"
-          v-if="knowledge !== null"
-        >
+        <p class="knowledge-title mt-5" type="text" v-if="knowledge !== null">
           {{ knowledge.title }}
         </p>
         <p class="knowledge-content" v-html="renderedMarkdown"></p>
@@ -447,7 +475,7 @@ const showKnowledgeList = () => {
           <button
             v-if="isBookmark"
             class="round-button"
-            @click="bookmarkClick(true)"
+            @click="bookmarkOff"
           >
             <img
               src="../../../assets/image/bookmark_on.png"
@@ -456,7 +484,7 @@ const showKnowledgeList = () => {
               class="side-menu-image"
             />
           </button>
-          <button v-else class="round-button" @click="bookmarkClick(false)">
+          <button v-else class="round-button" @click="bookmarkOn">
             <img
               src="../../../assets/image/bookmark_off.png"
               alt="ブックマーク"
