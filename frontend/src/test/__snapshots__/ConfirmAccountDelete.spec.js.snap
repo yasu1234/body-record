@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Contact SnapShotテスト初期表示 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="setting-container"
+  >
+    <setting-side-menu-stub
+      class="setting-side-menu"
+      currentindex="4"
+    />
+    <main
+      class="setting- px-2.5"
+    >
+      <p
+        class="confirm-account-delete-title mt-5"
+      >
+         退会前に必ずチェックしてください 
+      </p>
+      <p
+        class="mt-5"
+      >
+         ・退会すると今までログインしていたアドレスやパスワードではログインできません 
+      </p>
+      <p
+        class="mt-5"
+      >
+        ・退会すると今まで登録した記録や記事が削除されます
+      </p>
+      <p
+        class="mt-5"
+      >
+        ・退会するとコメントやブックマークの記録も削除されます
+      </p>
+      <p
+        class="mt-5"
+      >
+         ・再度サービスを使用する際には会員登録から再度行い必要があります 
+      </p>
+      <div
+        class="mt-8"
+      >
+        <input
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+          id="statusSelect"
+          type="checkbox"
+        />
+        <label
+          class="ml-2"
+        >
+          注意事項を確認して、了承しました
+        </label>
+      </div>
+      <button
+        class="delete-account-button mt-8 py-2.5 px-12"
+      >
+         退会する 
+      </button>
+      <!--v-if-->
+    </main>
+  </div>
+  
+</div>
+`;

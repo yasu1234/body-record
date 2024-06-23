@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Contact SnapShotテスト初期表示 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <toast-stub
+    position="top-center"
+  />
+  <img
+    alt="Logo"
+    class="home-logo"
+    src=""
+  />
+  <h1
+    class="text-center mt-5"
+  >
+    In-body.comへようこそ！
+  </h1>
+  <div
+    class="account-buttons mt-5"
+  >
+    <button
+      class="account-button"
+    >
+      会員登録
+    </button>
+    <button
+      class="account-button"
+    >
+      ログイン
+    </button>
+    <button
+      class="guest-login-button"
+    >
+       ゲストログイン 
+    </button>
+  </div>
+  
+</div>
+`;
