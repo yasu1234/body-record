@@ -27,7 +27,27 @@ const getDetail = async () => {
     const res = await axiosInstance.get(`/api/v1/contacts/${id}`);
     contact.value = res.data.contact;
   } catch (error) {
-    toastNotifications.displayError("問い合わせ内容の取得に失敗しました", "");
+    if (error.response == null) {
+      toastNotifications.displayError("問い合わせ内容の取得に失敗しました", "");
+      return;
+    }
+
+    let errorMessages = "";
+
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError(
+      "問い合わせ内容の取得に失敗しました",
+      errorMessages
+    );
   }
 };
 
@@ -46,14 +66,23 @@ const statusChange = async (isComplete) => {
     );
     contact.value = res.data.contact;
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("対応状況更新に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "対応状況更新に失敗しました",
       errorMessages
@@ -89,7 +118,9 @@ const statusChange = async (isComplete) => {
         対応済にする
       </button>
     </div>
-    <p class="mt-5">対応済みにすると次の日には表示されなくなりますので、ご注意ください</p>
+    <p class="mt-5">
+      対応済みにすると次の日には表示されなくなりますので、ご注意ください
+    </p>
   </div>
 </template>
 
