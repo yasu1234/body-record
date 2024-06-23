@@ -43,8 +43,7 @@ const md = new MarkdownIt({
 
 const renderedMarkdown = computed(() => {
   if (knowledge.value != null && knowledge.value.content != null) {
-    let replacedContent = knowledge.value.content.replace(/\n/g, '<br>');
-    return md.render(replacedContent);
+    return md.render(knowledge.value.content);
   }
   return "";
 });
@@ -76,7 +75,7 @@ const getDetail = async () => {
       errorMessage = "ログインしてください";
     }
 
-    toastNotifications.displayError("記事データの取得に失敗しました", "");
+    toastNotifications.displayError("記事データの取得に失敗しました", errorMessage);
   }
 };
 
@@ -571,6 +570,34 @@ input[type="text"] {
 .comment {
   padding-left: 20px;
   border-bottom: 1px solid rgba(6, 6, 6, 0.17);
+}
+:deep(thead) {
+  background: #ccc;
+  border: 1px solid #ddd;
+}
+:deep(code) {
+  background: #ccc;
+}
+:deep(td) {
+  border: 1px solid #000;
+}
+:deep(th) {
+  border: 1px solid #000;
+}
+:deep(ul) {
+  list-style-type: disc;
+}
+:deep(ol) {
+  list-style-type: decimal;
+}
+:deep(h1) {
+  text-decoration: underline;
+}
+:deep(h2) {
+  text-decoration: underline;
+}
+:deep(h3) {
+  text-decoration: underline;
 }
 
 @media (max-width: 768px) {
