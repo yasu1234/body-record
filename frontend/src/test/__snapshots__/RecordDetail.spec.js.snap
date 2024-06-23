@@ -27,22 +27,22 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントあり) 1`] = `
           <p
             class="record-title"
           >
-            2021年-1月-1日の記録
+            2021年-1月-1日の記録 
           </p>
           <p
             class="mt-5"
           >
-            体重：- kg
+             体重：- kg 
           </p>
           <p
             class="mt-2.5"
           >
-            体脂肪率：- %
+             体脂肪率：- % 
           </p>
           <p
             class="record-content"
           >
-            Test %
+            Test
           </p>
           <div>
             <p
@@ -78,7 +78,7 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントあり) 1`] = `
           <author-stub />
         </div>
         <div
-          class="radius-section"
+          class="radius-section mb-7"
         >
           <div
             class="comment-container-title-area"
@@ -90,9 +90,25 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントあり) 1`] = `
             </p>
           </div>
           <div>
-            <comments-stub
-              comments="[object Object],[object Object]"
-            />
+            
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            
+            <!--v-if-->
           </div>
           <comment-input-stub />
         </div>
@@ -102,7 +118,7 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントあり) 1`] = `
       class="side"
     >
       <div
-        class="side_content"
+        class="side-content"
       >
         <button
           class="round-button"
@@ -135,6 +151,7 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントあり) 1`] = `
         </button>
       </div>
     </div>
+    <!--v-if-->
   </div>
   
 </div>
@@ -167,22 +184,22 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントなし) 1`] = `
           <p
             class="record-title"
           >
-            2021年-1月-1日の記録
+            2021年-1月-1日の記録 
           </p>
           <p
             class="mt-5"
           >
-            体重：- kg
+             体重：- kg 
           </p>
           <p
             class="mt-2.5"
           >
-            体脂肪率：- %
+             体脂肪率：- % 
           </p>
           <p
             class="record-content"
           >
-            Test %
+            Test
           </p>
           <div>
             <p
@@ -218,7 +235,7 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントなし) 1`] = `
           <author-stub />
         </div>
         <div
-          class="radius-section"
+          class="radius-section mb-7"
         >
           <div
             class="comment-container-title-area"
@@ -230,9 +247,25 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントなし) 1`] = `
             </p>
           </div>
           <div>
-            <comments-stub
-              comments="[object Object],[object Object]"
-            />
+            
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            
+            <!--v-if-->
           </div>
           <comment-input-stub />
         </div>
@@ -242,7 +275,7 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントなし) 1`] = `
       class="side"
     >
       <div
-        class="side_content"
+        class="side-content"
       >
         <button
           class="round-button"
@@ -275,6 +308,7 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントなし) 1`] = `
         </button>
       </div>
     </div>
+    <!--v-if-->
   </div>
   
 </div>
@@ -307,22 +341,22 @@ exports[`RecordDetail SnapShotテスト初期表示(自分以外の記録)) 1`] 
           <p
             class="record-title"
           >
-            2021年-1月-1日の記録
+            2021年-1月-1日の記録 
           </p>
           <p
             class="mt-5"
           >
-            体重：- kg
+             体重：- kg 
           </p>
           <p
             class="mt-2.5"
           >
-            体脂肪率：- %
+             体脂肪率：- % 
           </p>
           <p
             class="record-content"
           >
-            Test %
+            Test
           </p>
           <div>
             <p
@@ -358,7 +392,7 @@ exports[`RecordDetail SnapShotテスト初期表示(自分以外の記録)) 1`] 
           <author-stub />
         </div>
         <div
-          class="radius-section"
+          class="radius-section mb-7"
         >
           <div
             class="comment-container-title-area"
@@ -370,9 +404,25 @@ exports[`RecordDetail SnapShotテスト初期表示(自分以外の記録)) 1`] 
             </p>
           </div>
           <div>
-            <comments-stub
-              comments="[object Object],[object Object]"
-            />
+            
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            
+            <!--v-if-->
           </div>
           <comment-input-stub />
         </div>
@@ -382,7 +432,7 @@ exports[`RecordDetail SnapShotテスト初期表示(自分以外の記録)) 1`] 
       class="side"
     >
       <div
-        class="side_content"
+        class="side-content"
       >
         <button
           class="round-button"
@@ -415,6 +465,7 @@ exports[`RecordDetail SnapShotテスト初期表示(自分以外の記録)) 1`] 
         </button>
       </div>
     </div>
+    <!--v-if-->
   </div>
   
 </div>

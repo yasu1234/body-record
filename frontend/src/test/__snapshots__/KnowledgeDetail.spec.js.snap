@@ -83,9 +83,25 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントあり) 1`] = `
           </p>
         </div>
         <div>
-          <comments-stub
-            comments="[object Object],[object Object]"
-          />
+          
+          <div
+            class="comment"
+          >
+            <comment-stub
+              comment="[object Object]"
+              isediting="false"
+            />
+          </div>
+          <div
+            class="comment"
+          >
+            <comment-stub
+              comment="[object Object]"
+              isediting="false"
+            />
+          </div>
+          
+          <!--v-if-->
         </div>
         <comment-input-stub />
       </div>
@@ -134,6 +150,7 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントあり) 1`] = `
         </button>
       </div>
     </div>
+    <!--v-if-->
   </div>
   
 </div>
@@ -222,9 +239,25 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントなし) 1`] = `
           </p>
         </div>
         <div>
-          <comments-stub
-            comments="[object Object],[object Object]"
-          />
+          
+          <div
+            class="comment"
+          >
+            <comment-stub
+              comment="[object Object]"
+              isediting="false"
+            />
+          </div>
+          <div
+            class="comment"
+          >
+            <comment-stub
+              comment="[object Object]"
+              isediting="false"
+            />
+          </div>
+          
+          <!--v-if-->
         </div>
         <comment-input-stub />
       </div>
@@ -273,6 +306,7 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントなし) 1`] = `
         </button>
       </div>
     </div>
+    <!--v-if-->
   </div>
   
 </div>

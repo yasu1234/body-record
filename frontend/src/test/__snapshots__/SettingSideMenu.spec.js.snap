@@ -8,6 +8,7 @@ exports[`TabItem.vue SnapShotテスト 1`] = `
   <div
     class="menu-toggle"
   >
+    
     <span
       class="toggle-line"
     />
@@ -17,6 +18,7 @@ exports[`TabItem.vue SnapShotテスト 1`] = `
     <span
       class="toggle-line"
     />
+    
   </div>
   <nav
     class="sidebar"
@@ -25,7 +27,7 @@ exports[`TabItem.vue SnapShotテスト 1`] = `
       class="sidebar-header"
     >
       <span
-        class="close-btn"
+        class="close-button"
       >
         ×
       </span>

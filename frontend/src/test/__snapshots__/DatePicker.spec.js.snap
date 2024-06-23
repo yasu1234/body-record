@@ -75,6 +75,7 @@ exports[`Header.vue SnapShotテスト 1`] = `
   timepicker="false"
   timepickerinline="false"
   transitions="true"
+  ui="[object Object]"
   utc="false"
   vertical="false"
   weeknumname="W"

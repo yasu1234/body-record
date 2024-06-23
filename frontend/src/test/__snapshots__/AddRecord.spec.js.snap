@@ -49,7 +49,9 @@ exports[`AddRecord SnapShotテスト初期表示 1`] = `
     <div
       class="mt-7"
     >
-      <float-label-stub />
+      <record-memo-input-stub
+        memo=""
+      />
     </div>
     <div
       class="mt-7"

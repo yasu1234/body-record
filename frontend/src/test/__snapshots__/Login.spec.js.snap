@@ -21,7 +21,7 @@ exports[`SearchPage SnapShotテスト初期表示 1`] = `
       class="form"
     >
       <div
-        class="item"
+        class="login-item"
       >
         <label>
           メールアドレス
@@ -35,7 +35,7 @@ exports[`SearchPage SnapShotテスト初期表示 1`] = `
         />
       </div>
       <div
-        class="item"
+        class="login-item"
       >
         <label>
           パスワード

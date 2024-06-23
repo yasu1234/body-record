@@ -16,9 +16,13 @@ exports[`EditKnowledge SnapShotテスト初期表示 1`] = `
     <float-label-stub
       class="mt-5"
     />
-    <float-label-stub
-      class="mt-5"
-    />
+    <div
+      class="mt=2.5"
+    >
+      <knowledge-content-input-stub
+        knowledgecontent="This is a test knowledge"
+      />
+    </div>
   </div>
   <div>
     <p
