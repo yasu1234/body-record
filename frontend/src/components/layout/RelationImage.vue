@@ -26,6 +26,12 @@ const emit = defineEmits(["recordClick"]);
       alt=""
       preview
       :pt="{
+        image: {
+          style: {
+            width: '100%',
+            height: '100%'
+          },
+        },
         button: {
           style: {
             background: '#F7F7F770',
@@ -67,6 +73,10 @@ const emit = defineEmits(["recordClick"]);
   width: 300px;
   height: 200px;
   object-fit: cover;
+}
+.thumbnail-image img {
+  width: 300px;
+  height: 200px;
 }
 .p-image-action {
   background: transparent;
