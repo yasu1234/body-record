@@ -22,6 +22,7 @@ const pageCount = ref(1);
 const page = ref(1);
 const isEmpty = ref(false);
 const shouldLogin = ref(false);
+const totalCount = ref(0);
 
 onMounted(() => {
   setQuery(
@@ -87,10 +88,16 @@ const search = async () => {
 
     searchResult.value = [];
 
-    if (res.data && res.data.totalPage) {
-      pageCount.value = res.data.totalPage;
+    if (res.data && res.data.total_page) {
+      pageCount.value = res.data.total_page;
     } else {
       pageCount.value = 1;
+    }
+
+    if (res.data != null && res.data.total_count != null) {
+      totalCount.value = res.data.total_count;
+    } else {
+      totalCount.value = 0;
     }
 
     if (res.data.records != null && res.data.records.length > 0) {
@@ -151,12 +158,12 @@ const updatePaginateItems = function (pageParam) {
   paramChange();
 };
 
-function startDateChange(event) {
-  startDate.value = event;
+const startDateChange = (date) => {
+  startDate.value = date;
 }
 
-function endDateChange(event) {
-  endDate.value = event;
+const endDateChange = (date) => {
+  endDate.value = date;
 }
 
 const clickRecord = (item) => {
@@ -215,12 +222,10 @@ const addRecord = () => {
   </div>
   <div class="py-8">
     <div v-if="searchResult.length > 0">
-      <RecordCard
-        v-for="record in searchResult"
-        v-bind="record"
-        :record="record"
-        @recordClick="clickRecord(record)"
-      />
+      <p class="text-center font-bold">合計{{ totalCount }}件</p>
+      <div v-for="record in searchResult"  class="mt-5">
+        <RecordCard :record="record" @recordClick="clickRecord(record)" />
+      </div>
       <div>
         <ListPage
           :pageCount="pageCount"

@@ -27,6 +27,7 @@ const currentId = ref(2);
 const pageCount = ref(1);
 const page = ref(1);
 const isEmpty = ref(false);
+const totalCount = ref(0);
 
 onMounted(() => {
   userId.value = route.params.id;
@@ -128,10 +129,16 @@ const search = async () => {
 
     searchResult.value = [];
 
-    if (res.data && res.data.totalPage) {
-      pageCount.value = res.data.totalPage;
+    if (res.data != null && res.data.total_page != null) {
+      pageCount.value = res.data.total_page;
     } else {
       pageCount.value = 1;
+    }
+
+    if (res.data != null && res.data.total_count != null) {
+      totalCount.value = res.data.total_count;
+    } else {
+      totalCount.value = 0;
     }
 
     if (res.data.records != null && res.data.records.length > 0) {
@@ -153,18 +160,18 @@ const search = async () => {
   }
 };
 
-const updatePaginateItems = function (pageNum) {
+const updatePaginateItems = (pageNum) => {
   page.value = pageNum;
   search();
 };
 
-function startDateChange(event) {
+const startDateChange = (event) => {
   startDate.value = event;
-}
+};
 
-function endDateChange(event) {
+const endDateChange = (event) => {
   endDate.value = event;
-}
+};
 
 const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
@@ -208,13 +215,11 @@ const clickRecord = (item) => {
     </div>
   </div>
   <div class="py-8">
-    <div v-if="searchResult.length > 0">
-      <RecordCard
-        v-for="record in searchResult"
-        v-bind="record"
-        :record="record"
-        @recordClick="clickRecord(record)"
-      />
+    <div v-if="searchResult.length > 0" class="mt-8">
+      <p class="text-center font-bold">合計{{ totalCount }}件</p>
+      <div v-for="record in searchResult" class="mt-5">
+        <RecordCard :record="record" @recordClick="clickRecord(record)" />
+      </div>
       <div>
         <ListPage
           :pageCount="pageCount"
