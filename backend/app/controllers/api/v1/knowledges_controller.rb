@@ -74,7 +74,7 @@ class Api::V1::KnowledgesController < ApplicationController
     render json: { knowledge: knowledge.as_json(
       include: {
         user: { only: [:name], methods: :image_url }
-      }, methods: :image_urls
+      }, methods:[:image_urls, :create_date_format]
     ).merge(
       is_bookmark: bookmark.present?,
       is_my_knowledge: knowledge.user_id == current_api_v1_user.id,

@@ -38,7 +38,7 @@ const isShowKnowledgeDeleteConfirmDialog = ref(false);
 
 const md = new MarkdownIt({
   breaks: true,
-  html: true
+  html: true,
 });
 
 const renderedMarkdown = computed(() => {
@@ -75,7 +75,10 @@ const getDetail = async () => {
       errorMessage = "ログインしてください";
     }
 
-    toastNotifications.displayError("記事データの取得に失敗しました", errorMessage);
+    toastNotifications.displayError(
+      "記事データの取得に失敗しました",
+      errorMessage
+    );
   }
 };
 
@@ -108,7 +111,9 @@ const getComments = async () => {
 
 const deleteKnowledge = async () => {
   try {
-    const res = await axiosInstance.delete(`/api/v1/knowledges/${knowledgeId.value}`);
+    const res = await axiosInstance.delete(
+      `/api/v1/knowledges/${knowledgeId.value}`
+    );
 
     toastNotifications.displayInfo("記事を削除しました", "");
     setTimeout(async () => {
@@ -308,7 +313,8 @@ const editComment = async (inputComment, commentId) => {
     formData.append("comment[comment]", inputComment);
 
     const res = await axiosInstance.put(
-      `/api/v1/knowledge_comments/${commentId}`, formData
+      `/api/v1/knowledge_comments/${commentId}`,
+      formData
     );
     isEditing.value = false;
     deleteCommentId.value = 0;
@@ -372,9 +378,17 @@ const showKnowledgeList = () => {
   <div class="wrap">
     <div class="main">
       <div class="editor">
+        <div>
+          <p class="create-date">
+            {{
+              knowledge != null && knowledge.create_date_format != null
+                ? knowledge.create_date_format
+                : ""
+            }}
+          </p>
+        </div>
         <p
-          id="title"
-          class="knowledge-title"
+          class="knowledge-title mt-5"
           type="text"
           v-if="knowledge !== null"
         >
@@ -531,6 +545,9 @@ input[type="text"] {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+.create-date {
+  color: #928484;
 }
 .knowledge-title {
   font-weight: bold;
