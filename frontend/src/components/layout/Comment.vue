@@ -56,7 +56,11 @@ const onClickOutsideHandler = () => {
 
 const editComment = () => {
   emit("edit-comment", inputComment.value, commentId.value);
-}
+};
+
+const editCancel = () => {
+  isEditing.value = false;
+};
 
 const showMenu = (menu) => {
   switch (menu.id) {
@@ -114,12 +118,17 @@ const showMenu = (menu) => {
       class="comment-textarea"
       placeholder="コメントを入力"
     />
-    <div class="comment-container mr-5">
+    <div class="text-right mr-5">
       <p v-if="comment.length > 300" class="text-red-500">
         300文字以上入力しています
       </p>
       <p v-else>残り{{ 300 - comment.length }}文字入力できます</p>
-      <button class="mb-5 py-1.5 px-2.5" @click="editComment">
+    </div>
+    <div class="comment-container mr-5 mt-2.5 mb-5">
+      <button class="comment-cancel-button px-1.5 mr-2.5" @click="editCancel">
+        キャンセル
+      </button>
+      <button class="px-1.5" @click="editComment">
         コメントを編集する
       </button>
     </div>
@@ -181,5 +190,11 @@ const showMenu = (menu) => {
   margin-left: 20px;
   padding-left: 10px;
   border: 1px solid #ccc;
+}
+.comment-cancel-button {
+  background: #fff;
+  color: #000000;
+  border: 1px solid #ccc;
+  cursor: pointer;
 }
 </style>
