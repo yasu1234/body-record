@@ -28,3 +28,8 @@ export const UserListSortType = [
     { name: "直近で作成された順", code: 1 },
     { name: "応援しているユーザーが多い順", code: 2 },
 ];
+
+export const KnowledgeListSortType = [
+    { name: "直近で作成された順", code: 1 },
+    { name: "ブックマークが多い順", code: 2 },
+];

@@ -26,6 +26,7 @@ class Api::V1::KnowledgesController < ApplicationController
       .group('knowledges.id')
       .select('knowledges.*, COUNT(bookmarks.id) AS bookmark_count')
       .order('COUNT(bookmarks.id) DESC')
+      .order(created_at: :desc)
       total_count = knowledges.size.length
     else
       knowledges = knowledges.order(created_at: :desc)

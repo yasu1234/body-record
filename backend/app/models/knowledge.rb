@@ -16,6 +16,10 @@ class Knowledge < ApplicationRecord
 
   attr_accessor :create_date_jst
 
+  module SortType
+    BOOKMARK_COUNT = 2
+  end
+
   scope :latest_knowledges, -> { order(created_at: :desc) }
 
   def image_urls
