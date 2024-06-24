@@ -38,7 +38,7 @@ jest.mock("@/js/axios.js", () => ({
   setupInterceptors: jest.fn(),
 }));
 
-describe("SearchPage", () => {
+describe("Login", () => {
   let wrapper;
 
   beforeEach(() => {

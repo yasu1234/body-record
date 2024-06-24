@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SearchPage SnapShotテスト初期表示 1`] = `
+exports[`Login SnapShotテスト初期表示 1`] = `
 <div
   data-v-app=""
 >
