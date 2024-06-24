@@ -1,3 +1,34 @@
+<template>
+  <Header />
+  <TabMenu />
+  <Toast position="top-center" />
+  <p class="title_line mt-5">お問合せ</p>
+  <div class="contact-container mt-5 pb-8">
+    <form class="contact-form" @submit.prevent="contactSubmit">
+      <div class="contact-item">
+        <label class="contact-require-label"
+          >要望や不適切な表現がある場合にはお問合せフォームを入力してください</label
+        >
+        <textarea name="contact" rows="20" v-model="contact" class="w-full" />
+        <div class="mt-2 text-right profile-input-width">
+          <p v-if="contact.length > 5000" class="text-red-500">
+            5000文字以上入力しています
+          </p>
+          <p v-else>残り{{ 5000 - contact.length }}文字入力できます</p>
+        </div>
+        <p>※あくまでもポートフォリオなのでご了承ください</p>
+        <p>※問い合わせが完了したら開発者にメールが届くようになっています</p>
+      </div>
+      <div class="pt-7 text-center">
+        <button class="submit-button">送信</button>
+      </div>
+    </form>
+    <router-link :to="'contact-list'" class="contact-link mt-5"
+      >問い合わせ一覧はこちら</router-link
+    >
+  </div>
+</template>
+
 <script setup>
 import { ref } from "vue";
 import { useToast } from "primevue/usetoast";
@@ -50,37 +81,6 @@ const showContactList = () => {
   router.push({ name: "ContactList" });
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu />
-  <Toast position="top-center" />
-  <p class="title_line mt-5">お問合せ</p>
-  <div class="contact-container mt-5 pb-8">
-    <form class="contact-form" @submit.prevent="contactSubmit">
-      <div class="contact-item">
-        <label class="contact-require-label"
-          >要望や不適切な表現がある場合にはお問合せフォームを入力してください</label
-        >
-        <textarea name="contact" rows="20" v-model="contact" class="w-full" />
-        <div class="mt-2 text-right profile-input-width">
-          <p v-if="contact.length > 5000" class="text-red-500">
-            5000文字以上入力しています
-          </p>
-          <p v-else>残り{{ 5000 - contact.length }}文字入力できます</p>
-        </div>
-        <p>※あくまでもポートフォリオなのでご了承ください</p>
-        <p>※問い合わせが完了したら開発者にメールが届くようになっています</p>
-      </div>
-      <div class="pt-7 text-center">
-        <button class="submit-button">送信</button>
-      </div>
-    </form>
-    <router-link :to="'contact-list'" class="contact-link mt-5"
-      >問い合わせ一覧はこちら</router-link
-    >
-  </div>
-</template>
 
 <style scoped>
 .contact-container {

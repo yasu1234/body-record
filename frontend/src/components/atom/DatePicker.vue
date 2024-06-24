@@ -1,3 +1,17 @@
+<template>
+  <VueDatePicker
+    locale="ja"
+    v-model="date"
+    week-start="0"
+    format="yyyy/M/d"
+    auto-apply
+    :month-change-on-scroll="false"
+    :enable-time-picker="false"
+    :date="date"
+    @update:model-value="updateDate"
+  />
+</template>
+
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
@@ -20,7 +34,7 @@ watch(props, () => {
   date.value = props.date;
 });
 
-function updateDate(newDate) {
+const updateDate = (newDate) => {
   if (newDate !== null) {
     emit("update:date", format(newDate, "yyyy/M/d"));
   } else {
@@ -28,19 +42,5 @@ function updateDate(newDate) {
   }
 }
 </script>
-
-<template>
-  <VueDatePicker
-    locale="ja"
-    v-model="date"
-    week-start="0"
-    format="yyyy/M/d"
-    auto-apply
-    :month-change-on-scroll="false"
-    :enable-time-picker="false"
-    :date="date"
-    @update:model-value="updateDate"
-  />
-</template>
 
 <style scoped></style>

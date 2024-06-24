@@ -1,3 +1,7 @@
+<template>
+  <canvas ref="ChartLine" :height="150"></canvas>
+</template>
+
 <script setup>
 import Chart from "chart.js/auto";
 import { ref, onMounted, watch } from "vue";
@@ -27,9 +31,5 @@ watch(props.data, (newData) => {
   }
 });
 </script>
-
-<template>
-  <canvas ref="ChartLine" :height="150"></canvas>
-</template>
 
 <style scoped></style>

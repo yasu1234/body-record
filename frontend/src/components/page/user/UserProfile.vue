@@ -1,3 +1,58 @@
+<template>
+  <Toast position="top-center" />
+  <Header />
+  <TabMenu />
+  <Profile :user="user" :support="support" @edit-support="editSupport" />
+  <div class="weight-graph">
+    <Chart :data="weigtData" />
+  </div>
+  <div class="weight-graph">
+    <Chart :data="fatPercentageData" />
+  </div>
+  <MonthPicker
+    :date="month"
+    @update:month="monthChange"
+    class="graph-month-picker"
+  />
+  <div class="text-center pb-8">
+    <div class="pt-10">
+      <span class="section-title">投稿した記録</span>
+    </div>
+    <div class="mt-5">
+      <div v-if="records.length > 0" v-for="record in records">
+        <RecordCard :record="record" @record-click="clickRecord(record)" />
+      </div>
+      <p v-else>登録された記録はありません</p>
+    </div>
+    <button
+      v-if="isMoreRecords"
+      @click="showMoreRecords"
+      class="more-show-button mt-5"
+    >
+      もっと見る
+    </button>
+    <div class="pt-10">
+      <span class="section-title">投稿した知識</span>
+    </div>
+    <div class="mt-5">
+      <div v-if="knowledges.length > 0" v-for="knowledge in knowledges">
+        <KnowledgeCard
+          :knowledge="knowledge"
+          @click="clickKnowledge(knowledge)"
+        />
+      </div>
+      <p v-else>記事を作成していません</p>
+    </div>
+    <button
+      v-if="isMoreKnowledges"
+      @click="showMoreKnowledges"
+      class="more-show-button mt-5"
+    >
+      もっと見る
+    </button>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
@@ -257,61 +312,6 @@ const showMoreKnowledges = () => {
   router.push({ name: "UserKnowledgeList", params: { id: userId.value } });
 };
 </script>
-
-<template>
-  <Toast position="top-center" />
-  <Header />
-  <TabMenu />
-  <Profile :user="user" :support="support" @edit-support="editSupport" />
-  <div class="weight-graph">
-    <Chart :data="weigtData" />
-  </div>
-  <div class="weight-graph">
-    <Chart :data="fatPercentageData" />
-  </div>
-  <MonthPicker
-    :date="month"
-    @update:month="monthChange"
-    class="graph-month-picker"
-  />
-  <div class="text-center pb-8">
-    <div class="pt-10">
-      <span class="section-title">投稿した記録</span>
-    </div>
-    <div class="mt-5">
-      <div v-if="records.length > 0" v-for="record in records">
-        <RecordCard :record="record" @recordClick="clickRecord(record)" />
-      </div>
-      <p v-else>登録された記録はありません</p>
-    </div>
-    <button
-      v-if="isMoreRecords"
-      @click="showMoreRecords"
-      class="more-show-button mt-5"
-    >
-      もっと見る
-    </button>
-    <div class="pt-10">
-      <span class="section-title">投稿した知識</span>
-    </div>
-    <div class="mt-5">
-      <div v-if="knowledges.length > 0" v-for="knowledge in knowledges">
-        <KnowledgeCard
-          :knowledge="knowledge"
-          @click="clickKnowledge(knowledge)"
-        />
-      </div>
-      <p v-else>記事を作成していません</p>
-    </div>
-    <button
-      v-if="isMoreKnowledges"
-      @click="showMoreKnowledges"
-      class="more-show-button mt-5"
-    >
-      もっと見る
-    </button>
-  </div>
-</template>
 
 <style scoped>
 .weight-graph {

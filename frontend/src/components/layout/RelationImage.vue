@@ -14,8 +14,6 @@ onMounted(() => {
 watch(props, () => {
   item.value = props.item;
 });
-
-const emit = defineEmits(["recordClick"]);
 </script>
 
 <template>

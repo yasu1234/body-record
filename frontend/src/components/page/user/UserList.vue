@@ -1,3 +1,78 @@
+<template>
+  <Header />
+  <TabMenu :currentId="2" />
+  <div class="user-search-container">
+    <p class="font-bold">ユーザーの絞り込み</p>
+    <div class="mt-2.5">
+      <input
+        type="text"
+        name="keywordName"
+        placeholder="名前で検索"
+        v-model="keyword"
+      />
+    </div>
+    <div class="mt-5">
+      <input
+        type="checkbox"
+        v-model="isDisplayOnlySupport"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
+      <label class="ml-2.5">応援しているユーザーのみ表示</label>
+    </div>
+    <div class="search-button-area">
+      <SearchButton @search-button-click="targetSearch" />
+    </div>
+  </div>
+  <div class="py-8">
+    <div v-if="searchResult.length > 0">
+      <div class="select-box">
+        <div
+          v-for="menu in menuList"
+          :key="menu.code"
+          class="text-sm rounded-lg block p-3"
+        >
+          <RadioButton
+            v-model="selectCode"
+            :inputId="String(menu.code)"
+            :value="menu.name"
+            @update:model-value="changeSortType"
+            :pt="{
+              root: {
+                style: {
+                  border: '1px solid #000',
+                  height: '100%'
+                }
+              }
+            }"
+          />
+          <label :for="menu.key" class="ml-2">{{ menu.name }}</label>
+        </div>
+      </div>
+      <p class="text-center font-bold mt-8">合計{{ totalCount }}件</p>
+      <div
+        v-for="user in searchResult"
+        class="user-card"
+        @click="userSelect(user)"
+      >
+        <UserCard :user="user" />
+      </div>
+      <div class="mt-12">
+        <ListPage
+          :pageCount="pageCount"
+          v-model="page"
+          @change-page="updatePaginateItems"
+        />
+      </div>
+    </div>
+    <div v-if="isEmpty">
+      <ResultEmpty class="mx-5" />
+    </div>
+    <div v-if="shouldLogin">
+      <LoginIntroductionView class="mx-5" />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
@@ -135,81 +210,6 @@ const userSelect = (item) => {
   router.push({ name: "OtherRecordList", params: { id: item.id } });
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu :currentId="2" />
-  <div class="user-search-container">
-    <p class="font-bold">ユーザーの絞り込み</p>
-    <div class="mt-2.5">
-      <input
-        type="text"
-        name="keywordName"
-        placeholder="名前で検索"
-        v-model="keyword"
-      />
-    </div>
-    <div class="mt-5">
-      <input
-        type="checkbox"
-        v-model="isDisplayOnlySupport"
-        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-      />
-      <label class="ml-2.5">応援しているユーザーのみ表示</label>
-    </div>
-    <div class="search-button-area">
-      <SearchButton @searchButtonClick="targetSearch" />
-    </div>
-  </div>
-  <div class="py-8">
-    <div v-if="searchResult.length > 0">
-      <div class="select-box">
-        <div
-          v-for="menu in menuList"
-          :key="menu.code"
-          class="text-sm rounded-lg block p-3"
-        >
-          <RadioButton
-            v-model="selectCode"
-            :inputId="String(menu.code)"
-            :value="menu.name"
-            @update:model-value="changeSortType"
-            :pt="{
-              root: {
-                style: {
-                  border: '1px solid #000',
-                  height: '100%'
-                }
-              }
-            }"
-          />
-          <label :for="menu.key" class="ml-2">{{ menu.name }}</label>
-        </div>
-      </div>
-      <p class="text-center font-bold mt-8">合計{{ totalCount }}件</p>
-      <div
-        v-for="user in searchResult"
-        class="user-card"
-        @click="userSelect(user)"
-      >
-        <UserCard :user="user" />
-      </div>
-      <div class="mt-12">
-        <ListPage
-          :pageCount="pageCount"
-          v-model="page"
-          @changePage="updatePaginateItems"
-        />
-      </div>
-    </div>
-    <div v-if="isEmpty">
-      <ResultEmpty class="mx-5" />
-    </div>
-    <div v-if="shouldLogin">
-      <LoginIntroductionView class="mx-5" />
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .user-search-container {

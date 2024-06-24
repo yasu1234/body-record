@@ -1,3 +1,54 @@
+<template>
+  <Header />
+  <TabMenu />
+  <Toast position="top-center" />
+  <form class="add-record-container" @submit.prevent="registerRecord">
+    <div class="w-52">
+      <p>記録日</p>
+      <DatePicker
+        isStart="false"
+        :date="recordDate"
+        @update:date="dateChange"
+      />
+    </div>
+    <div class="input-group mt-7">
+      <FloatLabel>
+        <InputText v-model="weight" class="w-52 h-10 p-2.5" />
+        <label>体重</label>
+      </FloatLabel>
+      <label for="goal-weight" class="ml-2">kg</label>
+    </div>
+    <div class="input-group mt-7">
+      <FloatLabel>
+        <InputText v-model="fatPercentage" class="w-52 h-10 p-2.5" />
+        <label>体脂肪率</label>
+      </FloatLabel>
+      <label for="goal-fat-percentage" class="ml-2">%</label>
+    </div>
+    <div class="mt-7">
+      <RecordMemoInput :memo="memo" @memo-edit="memoEdit" />
+    </div>
+    <div class="mt-7">
+      <input
+        type="checkbox"
+        id="statusSelect"
+        v-model="isAddAsHidden"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
+      <label class="ml-2">非公開記録にする場合にはチェック</label>
+    </div>
+    <div class="mt-7">
+      <p>関連画像(3枚まで登録できます)</p>
+      <div v-for="i in 3">
+        <DropFile @change="onFileChange" :index="i" class="mt-3" />
+      </div>
+    </div>
+    <div class="pb-5 mt-7 text-center">
+      <button class="add-record-button">記録を登録する</button>
+    </div>
+  </form>
+</template>
+
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -95,57 +146,6 @@ const showRecordDetail = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu />
-  <Toast position="top-center" />
-  <form class="add-record-container" @submit.prevent="registerRecord">
-    <div class="w-52">
-      <p>記録日</p>
-      <DatePicker
-        isStart="false"
-        :date="recordDate"
-        @update:date="dateChange"
-      />
-    </div>
-    <div class="input-group mt-7">
-      <FloatLabel>
-        <InputText v-model="weight" class="w-52 h-10 p-2.5" />
-        <label>体重</label>
-      </FloatLabel>
-      <label for="goal-weight" class="ml-2">kg</label>
-    </div>
-    <div class="input-group mt-7">
-      <FloatLabel>
-        <InputText v-model="fatPercentage" class="w-52 h-10 p-2.5" />
-        <label>体脂肪率</label>
-      </FloatLabel>
-      <label for="goal-fat-percentage" class="ml-2">%</label>
-    </div>
-    <div class="mt-7">
-      <RecordMemoInput :memo="memo" @memo-edit="memoEdit" />
-    </div>
-    <div class="mt-7">
-      <input
-        type="checkbox"
-        id="statusSelect"
-        v-model="isAddAsHidden"
-        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-      />
-      <label class="ml-2">非公開記録にする場合にはチェック</label>
-    </div>
-    <div class="mt-7">
-      <p>関連画像(3枚まで登録できます)</p>
-      <div v-for="i in 3">
-        <DropFile @change="onFileChange" :index="i" class="mt-3" />
-      </div>
-    </div>
-    <div class="pb-5 mt-7 text-center">
-      <button class="add-record-button">記録を登録する</button>
-    </div>
-  </form>
-</template>
 
 <style scoped>
 .add-record-container {

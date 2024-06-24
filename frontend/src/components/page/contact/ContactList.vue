@@ -1,3 +1,35 @@
+<template>
+  <Header />
+  <TabMenu />
+  <Toast position="top-center" />
+  <p class="title_line mt-5">お問合せ一覧</p>
+  <p class="mt-5 mx-5 text-lg">
+    対応済みのお問い合わせは次の日には表示されなくなるのでご注意ください
+  </p>
+  <div class="pb-8">
+    <div
+      class="contact-card"
+      v-for="item of searchResult"
+      :key="item.id"
+      @click="clickContact(item)"
+    >
+      <div class="complete-image" v-if="item.status === 1">
+        <p class="contact-complete">対応済</p>
+      </div>
+      <div class="pb-2.5">
+        <p class="mx-2.5 mt-2.5">
+          {{ item.content != null ? item.content : "" }}
+        </p>
+      </div>
+      <div>
+        <p class="contact-create-date mt-2.5">
+          {{ item.contact_date_format != null ? item.contact_date_format : "" }}
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -36,38 +68,6 @@ const clickContact = (item) => {
   router.push({ name: "ContactDetail", params: { id: item.id } });
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu />
-  <Toast position="top-center" />
-  <p class="title_line mt-5">お問合せ一覧</p>
-  <p class="mt-5 mx-5 text-lg">
-    対応済みのお問い合わせは次の日には表示されなくなるのでご注意ください
-  </p>
-  <div class="pb-8">
-    <div
-      class="contact-card"
-      v-for="item of searchResult"
-      :key="item.id"
-      @click="clickContact(item)"
-    >
-      <div class="complete-image" v-if="item.status === 1">
-        <p class="contact-complete">対応済</p>
-      </div>
-      <div class="pb-2.5">
-        <p class="mx-2.5 mt-2.5">
-          {{ item.content != null ? item.content : "" }}
-        </p>
-      </div>
-      <div>
-        <p class="contact-create-date mt-2.5">
-          {{ item.contact_date_format != null ? item.contact_date_format : "" }}
-        </p>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .contact-card {

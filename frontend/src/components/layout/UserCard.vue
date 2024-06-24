@@ -1,3 +1,46 @@
+<template>
+  <div class="user-container" v-if="user != null">
+    <div
+      class="user-thumbnail-image"
+      v-if="user.image_url !== null && user.image_url.url !== null"
+    >
+      <img
+        :src="user.image_url.url"
+        alt="ユーザー"
+        class="user-thumbnail-image"
+      />
+    </div>
+    <div>
+      <Button
+        class="user-name-link"
+        :label="user.name"
+        @click.stop="showUser"
+        link
+      />
+    </div>
+  </div>
+  <p class="latest-record-date mt-2.5 ml-5">
+    最新の記録： {{ latestRecordDate != null ? latestRecordDate : "記録なし" }}
+  </p>
+  <div class="support-container mt-2.5 ml-5 pb-5">
+    <div v-if="isMySupport" class="support-button">
+      <img
+        src="../../assets/image/support_on.png"
+        alt="サポート中"
+        class="support-image"
+      />
+    </div>
+    <div v-else class="support-button">
+      <img
+        src="../../assets/image/support_off.png"
+        alt="未サポート"
+        class="support-image"
+      />
+    </div>
+    <p class="ml-2.5">{{ supporterCount }}</p>
+  </div>
+</template>
+
 <script setup>
 import { useRouter } from "vue-router";
 import { ref, onMounted, watch } from "vue";
@@ -41,49 +84,6 @@ const showUser = () => {
   router.push({ name: "UserProfile", params: { id: user.value.id } });
 };
 </script>
-
-<template>
-  <div class="user-container" v-if="user != null">
-    <div
-      class="user-thumbnail-image"
-      v-if="user.image_url !== null && user.image_url.url !== null"
-    >
-      <img
-        :src="user.image_url.url"
-        alt="ユーザー"
-        class="user-thumbnail-image"
-      />
-    </div>
-    <div>
-      <Button
-        class="user-name-link"
-        :label="user.name"
-        @click.stop="showUser"
-        link
-      />
-    </div>
-  </div>
-  <p class="latest-record-date mt-2.5 ml-5">
-    最新の記録： {{ latestRecordDate != null ? latestRecordDate : "記録なし" }}
-  </p>
-  <div class="support-container mt-2.5 ml-5 pb-5">
-    <div v-if="isMySupport" class="support-button">
-      <img
-        src="../../assets/image/support_on.png"
-        alt="サポート中"
-        class="support-image"
-      />
-    </div>
-    <div v-else class="support-button">
-      <img
-        src="../../assets/image/support_off.png"
-        alt="未サポート"
-        class="support-image"
-      />
-    </div>
-    <p class="ml-2.5">{{ supporterCount }}</p>
-  </div>
-</template>
 
 <style scoped>
 .user-container {

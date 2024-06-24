@@ -1,16 +1,3 @@
-<script setup>
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-
-const props = defineProps(["date"]);
-
-const emit = defineEmits(["update:month"]);
-
-const updateMonth = (newMonth) => {
-  emit("update:month", newMonth);
-}
-</script>
-
 <template>
   <VueDatePicker
     locale="ja"
@@ -26,5 +13,18 @@ const updateMonth = (newMonth) => {
     @update:model-value="updateMonth"
   />
 </template>
+
+<script setup>
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+
+const props = defineProps(["date"]);
+
+const emit = defineEmits(["update:month"]);
+
+const updateMonth = (newMonth) => {
+  emit("update:month", newMonth);
+}
+</script>
 
 <style scoped></style>

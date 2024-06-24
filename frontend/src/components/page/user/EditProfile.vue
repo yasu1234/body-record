@@ -1,3 +1,60 @@
+<template>
+  <Header />
+  <TabMenu />
+  <Toast position="top-center" />
+  <div class="setting-container">
+    <SettingSideMenu :currentIndex="1" class="setting-side-menu" />
+    <main class="setting-main">
+      <form @submit.prevent="updateProfile" class="ml-3.5 pb-5">
+        <div class="profile-edit-content">
+          <FloatLabel>
+            <InputText v-model="goalWeight" class="p-2.5" />
+            <label>目標体重</label>
+          </FloatLabel>
+          <label for="goal-weight" class="ml-2.5">kg</label>
+        </div>
+        <div class="profile-edit-content">
+          <FloatLabel>
+            <InputText v-model="goalFatPercentage" class="p-2.5" />
+            <label>目標体脂肪率</label>
+          </FloatLabel>
+          <label for="goal-fat-percentage" class="ml-2.5">%</label>
+        </div>
+        <div class="mt-5">
+          <FloatLabel>
+            <Textarea
+              v-model="profile"
+              rows="10"
+              class="profile-input-width h-full p-2.5"
+            />
+            <label>紹介文</label>
+          </FloatLabel>
+          <div class="mt-2 text-right profile-input-width">
+            <p v-if="profile.length > 200" class="text-red-500">
+              200文字以上入力しています
+            </p>
+            <p v-else>残り{{ 200 - profile.length }}文字入力できます</p>
+          </div>
+        </div>
+        <div class="mt-5">
+          <label>プロフィール画像変更</label>
+          <div v-if="userThumbnail !== null" class="current-thumbnail">
+            <img
+              :src="userThumbnail.url"
+              alt="ユーザーアイコン"
+            />
+          </div>
+          <div v-else class="edit-profile-thumb-image">
+            <i class="pi pi-user" style="font-size: 40px; color: white" />
+          </div>
+          <DropFile @change="onFileChange" class="mt-5" />
+        </div>
+        <button class="edit-profile-button">更新する</button>
+      </form>
+    </main>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -138,63 +195,6 @@ const showMyPage = () => {
   router.push({ name: "MyPage" });
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu />
-  <Toast position="top-center" />
-  <div class="setting-container">
-    <SettingSideMenu :currentIndex="1" class="setting-side-menu" />
-    <main class="setting-main">
-      <form @submit.prevent="updateProfile" class="ml-3.5 pb-5">
-        <div class="profile-edit-content">
-          <FloatLabel>
-            <InputText v-model="goalWeight" class="p-2.5" />
-            <label>目標体重</label>
-          </FloatLabel>
-          <label for="goal-weight" class="ml-2.5">kg</label>
-        </div>
-        <div class="profile-edit-content">
-          <FloatLabel>
-            <InputText v-model="goalFatPercentage" class="p-2.5" />
-            <label>目標体脂肪率</label>
-          </FloatLabel>
-          <label for="goal-fat-percentage" class="ml-2.5">%</label>
-        </div>
-        <div class="mt-5">
-          <FloatLabel>
-            <Textarea
-              v-model="profile"
-              rows="10"
-              class="profile-input-width h-full p-2.5"
-            />
-            <label>紹介文</label>
-          </FloatLabel>
-          <div class="mt-2 text-right profile-input-width">
-            <p v-if="profile.length > 200" class="text-red-500">
-              200文字以上入力しています
-            </p>
-            <p v-else>残り{{ 200 - profile.length }}文字入力できます</p>
-          </div>
-        </div>
-        <div class="mt-5">
-          <label>プロフィール画像変更</label>
-          <div v-if="userThumbnail !== null" class="current-thumbnail">
-            <img
-              :src="userThumbnail.url"
-              alt="ユーザーアイコン"
-            />
-          </div>
-          <div v-else class="edit-profile-thumb-image">
-            <i class="pi pi-user" style="font-size: 40px; color: white" />
-          </div>
-          <DropFile @change="onFileChange" class="mt-5" />
-        </div>
-        <button class="edit-profile-button">更新する</button>
-      </form>
-    </main>
-  </div>
-</template>
 
 <style scoped>
 .profile-edit-content {

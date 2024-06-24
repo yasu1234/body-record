@@ -1,3 +1,134 @@
+<template>
+  <Header />
+  <TabMenu :currentId="0" />
+  <Toast position="top-center" />
+  <div class="wrap">
+    <div class="main ml-5">
+      <div class="main_content">
+        <div class="editor">
+          <p class="record-title">
+            {{
+              record != null && record.formatted_date != null
+                ? record.formatted_date
+                : ""
+            }}の記録
+          </p>
+          <p class="mt-5">
+            体重：{{
+              record != null && record.weight != null ? record.weight : "-"
+            }}
+            kg
+          </p>
+          <p class="mt-2.5">
+            体脂肪率：{{
+              record != null && record.fat_percentage != null
+                ? record.fat_percentage
+                : "-"
+            }}
+            %
+          </p>
+          <p class="record-content">
+            {{ record != null && record.memo != null ? record.memo : "" }}
+          </p>
+          <div v-if="imageUrls !== null && imageUrls.length !== 0">
+            <p class="mt-5">関連画像</p>
+            <div class="thumbnail-container">
+              <div class="thumbnail" v-for="item in imageUrls">
+                <RelationImage :item="item" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="author !== null" class="radius-section pt-2.5">
+          <Author
+            :author="author"
+            :support="support"
+            @support-on="supportOn"
+            @support-off="supportOff"
+          />
+        </div>
+        <div class="radius-section mb-7">
+          <div class="comment-container-title-area">
+            <p class="ml-5 pt-5 font-bold">コメント</p>
+          </div>
+          <div v-if="comments.length > 0">
+            <div v-for="comment in comments" class="comment">
+              <Comment
+                :comment="comment"
+                :isEditing="isEditing"
+                @delete-comment="showCommentDeleteDialog(comment)"
+                @edit-comment="editComment"
+              />
+            </div>
+            <div v-if="isShowCommentDeleteConfirmDialog" class="modal-overlay">
+              <ConfirmDialog
+                :title="'コメントを削除します'"
+                :message="'よろしいですか？'"
+                :positiveButtonTitle="'削除'"
+                @handle-positive="deleteComment"
+                @cancel="cancelCommentDelete"
+              />
+            </div>
+          </div>
+          <div v-else>
+            <p class="pt-2.5 pl-5">コメントはありません</p>
+          </div>
+          <CommentInput ref="inputCommentRef" @add-comment="addComment" />
+        </div>
+      </div>
+    </div>
+    <div class="side">
+      <div class="side-content">
+        <button v-if="support != null && support.is_support" class="round-button">
+          <img
+            src="../../../assets/image/support_on.png"
+            alt="応援解除"
+            v-tooltip="{ value: '応援解除' }"
+            class="side-menu-image"
+            @click="supportOff"
+          />
+        </button>
+        <button v-else class="round-button">
+          <img
+            src="../../../assets/image/support_off.png"
+            alt="応援"
+            v-tooltip="{ value: '応援する' }"
+            class="side-menu-image"
+            @click="supportOn"
+          />
+        </button>
+        <button class="round-button" v-show="isMyRecord">
+          <img
+            src="../../../assets/image/edit.png"
+            alt="記録編集"
+            v-tooltip="{ value: '記録編集' }"
+            class="side-menu-image"
+            @click="showEdit"
+          />
+        </button>
+        <button class="round-button" v-show="isMyRecord">
+          <img
+            src="../../../assets/image/delete.png"
+            alt="削除"
+            v-tooltip="{ value: '削除' }"
+            class="side-menu-image"
+            @click="showRecordDeleteDialog"
+          />
+        </button>
+      </div>
+    </div>
+    <div v-if="isShowRecordDeleteConfirmDialog" class="modal-overlay">
+      <ConfirmDialog
+        :title="'記録を削除します'"
+        :message="'よろしいですか？'"
+        :positiveButtonTitle="'削除'"
+        @handle-positive="recordDelete"
+        @cancel="cancelRecordDelete"
+      />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -326,137 +457,6 @@ const showMyRecordList = () => {
   router.push({ name: "Home" });
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu :currentId="0" />
-  <Toast position="top-center" />
-  <div class="wrap">
-    <div class="main ml-5">
-      <div class="main_content">
-        <div class="editor">
-          <p class="record-title">
-            {{
-              record != null && record.formatted_date != null
-                ? record.formatted_date
-                : ""
-            }}の記録
-          </p>
-          <p class="mt-5">
-            体重：{{
-              record != null && record.weight != null ? record.weight : "-"
-            }}
-            kg
-          </p>
-          <p class="mt-2.5">
-            体脂肪率：{{
-              record != null && record.fat_percentage != null
-                ? record.fat_percentage
-                : "-"
-            }}
-            %
-          </p>
-          <p class="record-content">
-            {{ record != null && record.memo != null ? record.memo : "" }}
-          </p>
-          <div v-if="imageUrls !== null && imageUrls.length !== 0">
-            <p class="mt-5">関連画像</p>
-            <div class="thumbnail-container">
-              <div class="thumbnail" v-for="item in imageUrls">
-                <RelationImage :item="item" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-if="author !== null" class="radius-section pt-2.5">
-          <Author
-            :author="author"
-            :support="support"
-            @support-on="supportOn"
-            @support-off="supportOff"
-          />
-        </div>
-        <div class="radius-section mb-7">
-          <div class="comment-container-title-area">
-            <p class="ml-5 pt-5 font-bold">コメント</p>
-          </div>
-          <div v-if="comments.length > 0">
-            <div v-for="comment in comments" class="comment">
-              <Comment
-                :comment="comment"
-                :isEditing="isEditing"
-                @delete-comment="showCommentDeleteDialog(comment)"
-                @edit-comment="editComment"
-              />
-            </div>
-            <div v-if="isShowCommentDeleteConfirmDialog" class="modal-overlay">
-              <ConfirmDialog
-                :title="'コメントを削除します'"
-                :message="'よろしいですか？'"
-                :positiveButtonTitle="'削除'"
-                @handle-positive="deleteComment"
-                @cancel="cancelCommentDelete"
-              />
-            </div>
-          </div>
-          <div v-else>
-            <p class="pt-2.5 pl-5">コメントはありません</p>
-          </div>
-          <CommentInput ref="inputCommentRef" @add-comment="addComment" />
-        </div>
-      </div>
-    </div>
-    <div class="side">
-      <div class="side-content">
-        <button v-if="support != null && support.is_support" class="round-button">
-          <img
-            src="../../../assets/image/support_on.png"
-            alt="応援解除"
-            v-tooltip="{ value: '応援解除' }"
-            class="side-menu-image"
-            @click="supportOff"
-          />
-        </button>
-        <button v-else class="round-button">
-          <img
-            src="../../../assets/image/support_off.png"
-            alt="応援"
-            v-tooltip="{ value: '応援する' }"
-            class="side-menu-image"
-            @click="supportOn"
-          />
-        </button>
-        <button class="round-button" v-show="isMyRecord">
-          <img
-            src="../../../assets/image/edit.png"
-            alt="記録編集"
-            v-tooltip="{ value: '記録編集' }"
-            class="side-menu-image"
-            @click="showEdit"
-          />
-        </button>
-        <button class="round-button" v-show="isMyRecord">
-          <img
-            src="../../../assets/image/delete.png"
-            alt="削除"
-            v-tooltip="{ value: '削除' }"
-            class="side-menu-image"
-            @click="showRecordDeleteDialog"
-          />
-        </button>
-      </div>
-    </div>
-    <div v-if="isShowRecordDeleteConfirmDialog" class="modal-overlay">
-      <ConfirmDialog
-        :title="'記録を削除します'"
-        :message="'よろしいですか？'"
-        :positiveButtonTitle="'削除'"
-        @handle-positive="recordDelete"
-        @cancel="cancelRecordDelete"
-      />
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .wrap {

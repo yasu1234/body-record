@@ -15,7 +15,7 @@
         <ListPage
           :pageCount="pageCount"
           v-model="pageNum"
-          @changePage="updatePaginateItems"
+          @change-page="updatePaginateItems"
         />
       </div>
     </div>

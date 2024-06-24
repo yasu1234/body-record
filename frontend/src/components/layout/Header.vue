@@ -1,7 +1,51 @@
+<template>
+  <header>
+    <h2 class="title">
+      <router-link to="/" class="title">In-Body.com</router-link>
+    </h2>
+    <nav>
+      <div class="navigation-menus">
+        <button
+          v-show="isLogin === false"
+          class="account-introducton-button mr-7"
+          @click="showAccountIntroduction"
+        >
+          会員登録・ログイン
+        </button>
+        <div @click="toggleDropdown" v-on-click-outside="onClickOutsideHandler">
+          <Button
+            icon="pi pi-user"
+            severity="info"
+            rounded
+            aria-label="ユーザー"
+            class="user-button"
+            :pt="{
+              root: {
+                style: {
+                  background: '#4264ec',
+                },
+              },
+            }"
+          />
+        </div>
+      </div>
+      <div v-if="showDropdown" class="dropdown-menu">
+        <button
+          v-for="menu in menuList"
+          class="menu-item"
+          @click="showMenu(menu)"
+        >
+          {{ menu.label }}
+        </button>
+      </div>
+    </nav>
+  </header>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { vOnClickOutside } from '@vueuse/components'
+import { vOnClickOutside } from "@vueuse/components";
 import Cookies from "js-cookie";
 import Button from "primevue/button";
 
@@ -53,7 +97,7 @@ const toggleDropdown = () => {
 
 const onClickOutsideHandler = () => {
   showDropdown.value = false;
-}
+};
 
 const setMenu = () => {
   if (isLogin.value) {
@@ -115,50 +159,6 @@ const showHomeThenRelaod = async () => {
   router.go(0);
 };
 </script>
-
-<template>
-  <header>
-    <h2 class="title">
-      <router-link to="/" class="title">In-Body.com</router-link>
-    </h2>
-    <nav>
-      <div class="navigation-menus">
-        <button
-          v-show="isLogin === false"
-          class="account-introducton-button mr-7"
-          @click="showAccountIntroduction"
-        >
-          会員登録・ログイン
-        </button>
-        <div @click="toggleDropdown" v-on-click-outside="onClickOutsideHandler">
-          <Button
-            icon="pi pi-user"
-            severity="info"
-            rounded
-            aria-label="ユーザー"
-            class="user-button"
-            :pt="{
-              root: {
-                style: {
-                  background: '#4264ec',
-                },
-              },
-            }"
-          />
-        </div>
-      </div>
-      <div v-if="showDropdown" class="dropdown-menu">
-        <button
-          v-for="menu in menuList"
-          class="menu-item"
-          @click="showMenu(menu)"
-        >
-          {{ menu.label }}
-        </button>
-      </div>
-    </nav>
-  </header>
-</template>
 
 <style scoped>
 header {

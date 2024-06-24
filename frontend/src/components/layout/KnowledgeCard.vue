@@ -1,3 +1,51 @@
+<template>
+  <div class="knowledge-card">
+    <p class="m-2.5 text-lg">
+      <b>{{ knowledgeTitle }}</b>
+    </p>
+    <div class="break-words">
+      <p class="mt-2.5 ml-2.5" v-html="renderedMarkdown" />
+    </div>
+    <div class="bookmark-container mt-5 ml-5 pb-5">
+      <div v-if="isMyBookmark" class="round-bookamark">
+        <img
+          src="../../assets/image/bookmark_on.png"
+          alt="サポート中"
+          class="bookmark-image"
+        />
+      </div>
+      <div v-else class="round-bookamark">
+        <img
+          src="../../assets/image/bookmark_off.png"
+          alt="未サポート"
+          class="bookmark-image"
+        />
+      </div>
+      <p class="ml-2.5">{{ bookmarkCount }}</p>
+    </div>
+    <div class="knowledge-user-container">
+      <div
+        class="user-thumbnail-image"
+        v-if="
+          user !== null &&
+          user.image_url !== null &&
+          user.image_url.url !== null
+        "
+      >
+        <img
+          :src="user.image_url.url"
+          alt="ユーザー"
+          class="user-thumbnail-image"
+        />
+      </div>
+      <p class="ml-2.5 text-xs text-left">{{ user != null && user.name != null ? user.name : '' }}</p>
+    </div>
+    <div class="mt-1">
+      <p class="create-date">{{ createDate }}</p>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import MarkdownIt from "markdown-it";
@@ -49,54 +97,6 @@ const renderedMarkdown = computed(() => {
   return md.render(slicedContent);
 });
 </script>
-
-<template>
-  <div class="knowledge-card">
-    <p class="m-2.5 text-lg">
-      <b>{{ knowledgeTitle }}</b>
-    </p>
-    <div class="break-words">
-      <p class="mt-2.5 ml-2.5" v-html="renderedMarkdown" />
-    </div>
-    <div class="bookmark-container mt-5 ml-5 pb-5">
-      <div v-if="isMyBookmark" class="round-bookamark">
-        <img
-          src="../../assets/image/bookmark_on.png"
-          alt="サポート中"
-          class="bookmark-image"
-        />
-      </div>
-      <div v-else class="round-bookamark">
-        <img
-          src="../../assets/image/bookmark_off.png"
-          alt="未サポート"
-          class="bookmark-image"
-        />
-      </div>
-      <p class="ml-2.5">{{ bookmarkCount }}</p>
-    </div>
-    <div class="knowledge-user-container">
-      <div
-        class="user-thumbnail-image"
-        v-if="
-          user !== null &&
-          user.image_url !== null &&
-          user.image_url.url !== null
-        "
-      >
-        <img
-          :src="user.image_url.url"
-          alt="ユーザー"
-          class="user-thumbnail-image"
-        />
-      </div>
-      <p class="ml-2.5 text-xs text-left">{{ user != null && user.name != null ? user.name : '' }}</p>
-    </div>
-    <div class="mt-1">
-      <p class="create-date">{{ createDate }}</p>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .knowledge-card {

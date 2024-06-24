@@ -1,5 +1,3 @@
-<script setup></script>
-
 <template>
   <div class="empty-container p-2.5">
     <p>該当するデータが見つかりませんでした</p>
@@ -9,6 +7,8 @@
     <p>・登録されたデータがない可能性があります</p>
   </div>
 </template>
+
+<script setup></script>
 
 <style scoped>
 .empty-container {

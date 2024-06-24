@@ -212,7 +212,7 @@ const addRecord = () => {
       <label class="ml-2">非公開記録は表示しない</label>
     </div>
     <div class="search-button-area">
-      <SearchButton @searchButtonClick="paramChange" />
+      <SearchButton @search-button-click="paramChange" />
     </div>
   </div>
   <div class="add-button-area">
@@ -224,13 +224,13 @@ const addRecord = () => {
     <div v-if="searchResult.length > 0">
       <p class="text-center font-bold">合計{{ totalCount }}件</p>
       <div v-for="record in searchResult"  class="mt-5">
-        <RecordCard :record="record" @recordClick="clickRecord(record)" />
+        <RecordCard :record="record" @record-click="clickRecord(record)" />
       </div>
       <div>
         <ListPage
           :pageCount="pageCount"
           v-model="page"
-          @changePage="updatePaginateItems"
+          @change-page="updatePaginateItems"
         />
       </div>
     </div>

@@ -1,3 +1,26 @@
+<template>
+  <Header />
+  <Toast position="top-center" />
+  <h1 class="view-title mt-7">ログイン</h1>
+  <div class="login-container">
+    <form class="form" @submit.prevent="handleSubmit">
+      <div class="login-item">
+        <label>メールアドレス</label>
+        <input id="email" type="email" v-model="email" />
+        <p class="validation-error-message">{{ emailError }}</p>
+      </div>
+      <div class="login-item">
+        <label>パスワード</label>
+        <PasswordText :password="password" @update-password="updatePassword" />
+        <p class="validation-error-message">{{ passwordError }}</p>
+      </div>
+      <div class="login-button-container">
+        <button class="login-button">ログイン</button>
+      </div>
+    </form>
+  </div>
+</template>
+
 <script setup>
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
@@ -84,29 +107,6 @@ const showHome = () => {
   router.push({ name: "Home" });
 };
 </script>
-
-<template>
-  <Header />
-  <Toast position="top-center" />
-  <h1 class="view-title mt-7">ログイン</h1>
-  <div class="login-container">
-    <form class="form" @submit.prevent="handleSubmit">
-      <div class="login-item">
-        <label>メールアドレス</label>
-        <input id="email" type="email" v-model="email" />
-        <p class="validation-error-message">{{ emailError }}</p>
-      </div>
-      <div class="login-item">
-        <label>パスワード</label>
-        <PasswordText :password="password" @update-password="updatePassword" />
-        <p class="validation-error-message">{{ passwordError }}</p>
-      </div>
-      <div class="login-button-container">
-        <button class="login-button">ログイン</button>
-      </div>
-    </form>
-  </div>
-</template>
 
 <style scoped>
 .login-container {

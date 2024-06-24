@@ -1,3 +1,46 @@
+<template>
+  <Header />
+  <TabMenu />
+  <Toast position="top-center" />
+  <div class="setting-container">
+    <SettingSideMenu :currentIndex="4" class="setting-side-menu" />
+    <main class="setting- px-2.5">
+      <p class="confirm-account-delete-title mt-5">
+        退会前に必ずチェックしてください
+      </p>
+      <p class="mt-5">
+        ・退会すると今までログインしていたアドレスやパスワードではログインできません
+      </p>
+      <p class="mt-5">・退会すると今まで登録した記録や記事が削除されます</p>
+      <p class="mt-5">・退会するとコメントやブックマークの記録も削除されます</p>
+      <p class="mt-5">
+        ・再度サービスを使用する際には会員登録から再度行い必要があります
+      </p>
+      <div class="mt-8">
+        <input
+          type="checkbox"
+          id="statusSelect"
+          v-model="isChecked"
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+        />
+        <label class="ml-2">注意事項を確認して、了承しました</label>
+      </div>
+      <button class="delete-account-button mt-8 py-2.5 px-12" @click="confirm">
+        退会する
+      </button>
+      <div v-if="isShowConfirmDialog" class="modal-overlay">
+        <ConfirmDialog
+          :title="'アカウントを削除します'"
+          :message="'削除すると今までの記録は消去されます よろしいですか'"
+          :positiveButtonTitle="'退会する'"
+          @handle-positive="accountDelete"
+          @cancel="cancel"
+        />
+      </div>
+    </main>
+  </div>
+</template>
+
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -63,49 +106,6 @@ const cancel = () => {
   isShowConfirmDialog.value = false;
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu />
-  <Toast position="top-center" />
-  <div class="setting-container">
-    <SettingSideMenu :currentIndex="4" class="setting-side-menu" />
-    <main class="setting- px-2.5">
-      <p class="confirm-account-delete-title mt-5">
-        退会前に必ずチェックしてください
-      </p>
-      <p class="mt-5">
-        ・退会すると今までログインしていたアドレスやパスワードではログインできません
-      </p>
-      <p class="mt-5">・退会すると今まで登録した記録や記事が削除されます</p>
-      <p class="mt-5">・退会するとコメントやブックマークの記録も削除されます</p>
-      <p class="mt-5">
-        ・再度サービスを使用する際には会員登録から再度行い必要があります
-      </p>
-      <div class="mt-8">
-        <input
-          type="checkbox"
-          id="statusSelect"
-          v-model="isChecked"
-          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-        />
-        <label class="ml-2">注意事項を確認して、了承しました</label>
-      </div>
-      <button class="delete-account-button mt-8 py-2.5 px-12" @click="confirm">
-        退会する
-      </button>
-      <div v-if="isShowConfirmDialog" class="modal-overlay">
-        <ConfirmDialog
-          :title="'アカウントを削除します'"
-          :message="'削除すると今までの記録は消去されます よろしいですか'"
-          :positiveButtonTitle="'退会する'"
-          @handle-positive="accountDelete"
-          @cancel="cancel"
-        />
-      </div>
-    </main>
-  </div>
-</template>
 
 <style scoped>
 .confirm-account-delete-title {

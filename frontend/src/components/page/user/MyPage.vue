@@ -214,7 +214,7 @@ const showMoreKnowledges = () => {
       </div>
       <div class="mt-5">
         <div v-if="records.length > 0" v-for="record in records">
-          <RecordCard :record="record" @recordClick="clickRecord(record)" />
+          <RecordCard :record="record" @record-click="clickRecord(record)" />
         </div>
         <p v-else>登録された記録はありません</p>
       </div>

@@ -1,3 +1,20 @@
+<template>
+  <Toast position="top-center" />
+  <img
+    src="../../../assets/image/home_image.jpg"
+    alt="Logo"
+    class="home-logo"
+  />
+  <h1 class="text-center mt-5">In-body.comへようこそ！</h1>
+  <div class="account-buttons mt-5">
+    <button class="account-button" @click="showSignup">会員登録</button>
+    <button class="account-button" @click="showLogin">ログイン</button>
+    <button class="guest-login-button" @click="guestLogin">
+      ゲストログイン
+    </button>
+  </div>
+</template>
+
 <script setup>
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
@@ -50,23 +67,6 @@ const guestLogin = async () => {
   }
 };
 </script>
-
-<template>
-  <Toast position="top-center" />
-  <img
-    src="../../../assets/image/home_image.jpg"
-    alt="Logo"
-    class="home-logo"
-  />
-  <h1 class="text-center mt-5">In-body.comへようこそ！</h1>
-  <div class="account-buttons mt-5">
-    <button class="account-button" @click="showSignup">会員登録</button>
-    <button class="account-button" @click="showLogin">ログイン</button>
-    <button class="guest-login-button" @click="guestLogin">
-      ゲストログイン
-    </button>
-  </div>
-</template>
 
 <style scoped>
 .home-logo {

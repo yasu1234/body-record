@@ -1,3 +1,124 @@
+<template>
+  <Header />
+  <TabMenu :currentId="0" />
+  <Toast position="top-center" />
+  <div class="wrap">
+    <div class="main">
+      <div class="editor">
+        <div>
+          <p class="create-date">
+            {{
+              knowledge != null && knowledge.create_date_format != null
+                ? knowledge.create_date_format
+                : ""
+            }}
+          </p>
+        </div>
+        <p class="knowledge-title mt-5" type="text" v-if="knowledge !== null">
+          {{ knowledge.title }}
+        </p>
+        <div class="break-words">
+          <p class="knowledge-content" v-html="renderedMarkdown" />
+        </div>
+        <div v-if="imageUrls.length !== 0">
+          <p class="mt-5">関連画像</p>
+          <div class="thumbnail-container">
+            <div class="thumbnail" v-for="item in imageUrls">
+              <RelationImage :item="item" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="author !== null" class="radius-section pt-2.5">
+        <Author
+          :author="author"
+          :support="support"
+          @support-on="supportOn"
+          @support-off="supportOff"
+        />
+      </div>
+      <div class="radius-section mb-5">
+        <div class="comment-container-title-area">
+          <p class="comment-container-title">コメント</p>
+        </div>
+        <div v-if="comments.length > 0">
+          <div v-for="comment in comments" class="comment">
+            <Comment
+              :comment="comment"
+              :isEditing="isEditing"
+              @delete-comment="showCommentDeleteDialog(comment)"
+              @edit-comment="editComment"
+            />
+          </div>
+          <div v-if="isShowCommentDeleteConfirmDialog" class="modal-overlay">
+            <ConfirmDialog
+              :title="'コメントを削除します'"
+              :message="'よろしいですか？'"
+              :positiveButtonTitle="'削除'"
+              @handle-positive="deleteComment"
+              @cancel="cancelCommentDelete"
+            />
+          </div>
+        </div>
+        <div v-else>
+          <p class="pt-2.5 pl-5">コメントはありません</p>
+        </div>
+        <CommentInput ref="inputCommentRef" @add-comment="addComment" />
+      </div>
+    </div>
+    <div class="side">
+      <div class="side-content">
+        <div class="bookmark-button-container">
+          <button v-if="isBookmark" class="round-button" @click="bookmarkOff">
+            <img
+              src="../../../assets/image/bookmark_on.png"
+              alt="ブックマーク解除"
+              v-tooltip="{ value: 'ブックマーク解除' }"
+              class="side-menu-image"
+            />
+          </button>
+          <button v-else class="round-button" @click="bookmarkOn">
+            <img
+              src="../../../assets/image/bookmark_off.png"
+              alt="ブックマーク"
+              v-tooltip="{ value: 'ブックマークする' }"
+              class="side-menu-image"
+            />
+          </button>
+          <p class="text-center">{{ bookmarkCount }}</p>
+        </div>
+        <button class="round-button" v-show="isMyKnowledge">
+          <img
+            src="../../../assets/image/edit.png"
+            alt="編集"
+            v-tooltip="{ value: '編集' }"
+            class="side-menu-image"
+            @click="showEdit"
+          />
+        </button>
+        <button class="round-button" v-show="isMyKnowledge">
+          <img
+            src="../../../assets/image/delete.png"
+            alt="削除"
+            v-tooltip="{ value: '削除' }"
+            class="side-menu-image"
+            @click="showKnowledgeDeleteConfirmDialog"
+          />
+        </button>
+      </div>
+    </div>
+    <div v-if="isShowKnowledgeDeleteConfirmDialog" class="modal-overlay">
+      <ConfirmDialog
+        :title="'記事を削除します'"
+        :message="'よろしいですか？'"
+        :positiveButtonTitle="'削除'"
+        @handle-positive="knowledgeDelete"
+        @cancel="cancelKnowledgeDelete"
+      />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -404,127 +525,6 @@ const showKnowledgeList = () => {
   router.push({ name: "KnowledgeList" });
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu :currentId="0" />
-  <Toast position="top-center" />
-  <div class="wrap">
-    <div class="main">
-      <div class="editor">
-        <div>
-          <p class="create-date">
-            {{
-              knowledge != null && knowledge.create_date_format != null
-                ? knowledge.create_date_format
-                : ""
-            }}
-          </p>
-        </div>
-        <p class="knowledge-title mt-5" type="text" v-if="knowledge !== null">
-          {{ knowledge.title }}
-        </p>
-        <div class="break-words">
-          <p class="knowledge-content" v-html="renderedMarkdown" />
-        </div>
-        <div v-if="imageUrls.length !== 0">
-          <p class="mt-5">関連画像</p>
-          <div class="thumbnail-container">
-            <div class="thumbnail" v-for="item in imageUrls">
-              <RelationImage :item="item" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="author !== null" class="radius-section pt-2.5">
-        <Author
-          :author="author"
-          :support="support"
-          @support-on="supportOn"
-          @support-off="supportOff"
-        />
-      </div>
-      <div class="radius-section mb-5">
-        <div class="comment-container-title-area">
-          <p class="comment-container-title">コメント</p>
-        </div>
-        <div v-if="comments.length > 0">
-          <div v-for="comment in comments" class="comment">
-            <Comment
-              :comment="comment"
-              :isEditing="isEditing"
-              @delete-comment="showCommentDeleteDialog(comment)"
-              @edit-comment="editComment"
-            />
-          </div>
-          <div v-if="isShowCommentDeleteConfirmDialog" class="modal-overlay">
-            <ConfirmDialog
-              :title="'コメントを削除します'"
-              :message="'よろしいですか？'"
-              :positiveButtonTitle="'削除'"
-              @handle-positive="deleteComment"
-              @cancel="cancelCommentDelete"
-            />
-          </div>
-        </div>
-        <div v-else>
-          <p class="pt-2.5 pl-5">コメントはありません</p>
-        </div>
-        <CommentInput ref="inputCommentRef" @add-comment="addComment" />
-      </div>
-    </div>
-    <div class="side">
-      <div class="side-content">
-        <div class="bookmark-button-container">
-          <button v-if="isBookmark" class="round-button" @click="bookmarkOff">
-            <img
-              src="../../../assets/image/bookmark_on.png"
-              alt="ブックマーク解除"
-              v-tooltip="{ value: 'ブックマーク解除' }"
-              class="side-menu-image"
-            />
-          </button>
-          <button v-else class="round-button" @click="bookmarkOn">
-            <img
-              src="../../../assets/image/bookmark_off.png"
-              alt="ブックマーク"
-              v-tooltip="{ value: 'ブックマークする' }"
-              class="side-menu-image"
-            />
-          </button>
-          <p class="text-center">{{ bookmarkCount }}</p>
-        </div>
-        <button class="round-button" v-show="isMyKnowledge">
-          <img
-            src="../../../assets/image/edit.png"
-            alt="編集"
-            v-tooltip="{ value: '編集' }"
-            class="side-menu-image"
-            @click="showEdit"
-          />
-        </button>
-        <button class="round-button" v-show="isMyKnowledge">
-          <img
-            src="../../../assets/image/delete.png"
-            alt="削除"
-            v-tooltip="{ value: '削除' }"
-            class="side-menu-image"
-            @click="showKnowledgeDeleteConfirmDialog"
-          />
-        </button>
-      </div>
-    </div>
-    <div v-if="isShowKnowledgeDeleteConfirmDialog" class="modal-overlay">
-      <ConfirmDialog
-        :title="'記事を削除します'"
-        :message="'よろしいですか？'"
-        :positiveButtonTitle="'削除'"
-        @handle-positive="knowledgeDelete"
-        @cancel="cancelKnowledgeDelete"
-      />
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .wrap {

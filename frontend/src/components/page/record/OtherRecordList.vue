@@ -211,20 +211,20 @@ const clickRecord = (item) => {
       </div>
     </div>
     <div class="search-button-area">
-      <SearchButton @searchButtonClick="searchParamChange" />
+      <SearchButton @search-button-click="searchParamChange" />
     </div>
   </div>
   <div class="py-8">
     <div v-if="searchResult.length > 0" class="mt-8">
       <p class="text-center font-bold">合計{{ totalCount }}件</p>
       <div v-for="record in searchResult" class="mt-5">
-        <RecordCard :record="record" @recordClick="clickRecord(record)" />
+        <RecordCard :record="record" @record-click="clickRecord(record)" />
       </div>
       <div>
         <ListPage
           :pageCount="pageCount"
           v-model="page"
-          @changePage="updatePaginateItems"
+          @change-page="updatePaginateItems"
         />
       </div>
     </div>

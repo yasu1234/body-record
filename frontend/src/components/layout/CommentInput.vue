@@ -1,21 +1,3 @@
-<script setup>
-import { ref } from "vue";
-
-const emit = defineEmits(["add-comment"]);
-
-const comment = ref("");
-
-const addComment = () => {
-  emit("add-comment", comment.value);
-};
-
-const resetForm = () => {
-  comment.value = "";
-};
-
-defineExpose({ resetForm });
-</script>
-
 <template>
   <textarea
     name="comment"
@@ -34,6 +16,24 @@ defineExpose({ resetForm });
     </button>
   </div>
 </template>
+
+<script setup>
+import { ref } from "vue";
+
+const emit = defineEmits(["add-comment"]);
+
+const comment = ref("");
+
+const addComment = () => {
+  emit("add-comment", comment.value);
+};
+
+const resetForm = () => {
+  comment.value = "";
+};
+
+defineExpose({ resetForm });
+</script>
 
 <style scoped>
 .comment-textarea {

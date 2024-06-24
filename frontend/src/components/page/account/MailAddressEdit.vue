@@ -1,3 +1,32 @@
+<template>
+  <Header />
+  <TabMenu />
+  <Toast position="top-center" />
+  <div class="setting-container">
+    <SettingSideMenu :currentIndex="2" />
+    <main>
+      <h1 class="view-title pt-10">メールアドレス変更</h1>
+      <div class="mailaddress-edit-container">
+        <form class="form" @submit.prevent="checkValidate">
+          <div class="pt-10">
+            <FloatLabel>
+              <InputText
+                v-model="newMailAddres"
+                class="email-edit-input h-10 p-2.5"
+              />
+              <label>変更後のメールアドレス</label>
+            </FloatLabel>
+            <p class="validation-error-message">{{ emailError }}</p>
+          </div>
+          <div class="mailaddress-edit-content-center">
+            <button class="mailaddress-edit-button">更新</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</template>
+
 <script setup>
 import Cookies from "js-cookie";
 import { useField, useForm } from "vee-validate";
@@ -77,35 +106,6 @@ const { validate } = useForm({
 const { value: newMailAddres, errorMessage: emailError } =
   useField("newMailAddres");
 </script>
-
-<template>
-  <Header />
-  <TabMenu />
-  <Toast position="top-center" />
-  <div class="setting-container">
-    <SettingSideMenu :currentIndex="2" />
-    <main>
-      <h1 class="view-title pt-10">メールアドレス変更</h1>
-      <div class="mailaddress-edit-container">
-        <form class="form" @submit.prevent="checkValidate">
-          <div class="pt-10">
-            <FloatLabel>
-              <InputText
-                v-model="newMailAddres"
-                class="email-edit-input h-10 p-2.5"
-              />
-              <label>変更後のメールアドレス</label>
-            </FloatLabel>
-            <p class="validation-error-message">{{ emailError }}</p>
-          </div>
-          <div class="mailaddress-edit-content-center">
-            <button class="mailaddress-edit-button">更新</button>
-          </div>
-        </form>
-      </div>
-    </main>
-  </div>
-</template>
 
 <style scoped>
 .mailaddress-edit-container {

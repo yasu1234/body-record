@@ -1,3 +1,89 @@
+<template>
+  <Header />
+  <TabMenu :currentId="3" />
+  <div class="knowledge-search-container">
+    <div class="mt-5">
+      <input
+        type="text"
+        id="keyword"
+        name="keywordName"
+        placeholder="キーワードで絞り込む"
+        v-model="keyword"
+      />
+    </div>
+    <div class="mt-5 pr-3">
+      <input
+        type="checkbox"
+        v-model="isBookmark"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
+      <label class="ml-2">ブックマークのみ絞り込む</label>
+    </div>
+    <div class="mt-5 pr-3">
+      <input
+        type="checkbox"
+        v-model="isShowMine"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
+      <label class="ml-2">自分が作成した記事のみ表示</label>
+    </div>
+    <div class="text-center mt-5">
+      <SearchButton @search-button-click="targetSearch" />
+    </div>
+  </div>
+  <div class="add-button-area">
+    <button class="add-button p-2.5" @click="addKnowledge">
+      + 記事を追加する
+    </button>
+  </div>
+  <div class="py-8">
+    <div v-if="searchResult.length > 0">
+      <div class="select-box">
+        <div
+          v-for="menu in menuList"
+          :key="menu.code"
+          class="text-sm rounded-lg block p-3"
+        >
+          <RadioButton
+            v-model="selectCode"
+            :inputId="String(menu.code)"
+            :value="menu.name"
+            @update:model-value="changeSortType"
+            :pt="{
+              root: {
+                style: {
+                  border: '1px solid #000',
+                  height: '100%',
+                },
+              },
+            }"
+          />
+          <label :for="menu.key" class="ml-2">{{ menu.name }}</label>
+        </div>
+      </div>
+      <p class="text-center font-bold mt-8">合計{{ totalCount }}件</p>
+      <KnowledgeCard
+        v-for="knowledge in searchResult"
+        :knowledge="knowledge"
+        @click="clickKnowledge(knowledge)"
+      />
+      <div class="mt-12 pb-8">
+        <ListPage
+          :pageCount="pageCount"
+          v-model="pageNum"
+          @change-page="updatePaginateItems"
+        />
+      </div>
+    </div>
+    <div v-if="isEmpty">
+      <ResultEmpty class="mx-5 mt-5" />
+    </div>
+    <div v-if="shouldLogin">
+      <LoginIntroductionView class="mx-5" />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
@@ -147,92 +233,6 @@ const addKnowledge = () => {
   router.push("AddKnowledge");
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu :currentId="3" />
-  <div class="knowledge-search-container">
-    <div class="mt-5">
-      <input
-        type="text"
-        id="keyword"
-        name="keywordName"
-        placeholder="キーワードで絞り込む"
-        v-model="keyword"
-      />
-    </div>
-    <div class="mt-5 pr-3">
-      <input
-        type="checkbox"
-        v-model="isBookmark"
-        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-      />
-      <label class="ml-2">ブックマークのみ絞り込む</label>
-    </div>
-    <div class="mt-5 pr-3">
-      <input
-        type="checkbox"
-        v-model="isShowMine"
-        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-      />
-      <label class="ml-2">自分が作成した記事のみ表示</label>
-    </div>
-    <div class="text-center mt-5">
-      <SearchButton @searchButtonClick="targetSearch" />
-    </div>
-  </div>
-  <div class="add-button-area">
-    <button class="add-button p-2.5" @click="addKnowledge">
-      + 記事を追加する
-    </button>
-  </div>
-  <div class="py-8">
-    <div v-if="searchResult.length > 0">
-      <div class="select-box">
-        <div
-          v-for="menu in menuList"
-          :key="menu.code"
-          class="text-sm rounded-lg block p-3"
-        >
-          <RadioButton
-            v-model="selectCode"
-            :inputId="String(menu.code)"
-            :value="menu.name"
-            @update:model-value="changeSortType"
-            :pt="{
-              root: {
-                style: {
-                  border: '1px solid #000',
-                  height: '100%',
-                },
-              },
-            }"
-          />
-          <label :for="menu.key" class="ml-2">{{ menu.name }}</label>
-        </div>
-      </div>
-      <p class="text-center font-bold mt-8">合計{{ totalCount }}件</p>
-      <KnowledgeCard
-        v-for="knowledge in searchResult"
-        :knowledge="knowledge"
-        @click="clickKnowledge(knowledge)"
-      />
-      <div class="mt-12 pb-8">
-        <ListPage
-          :pageCount="pageCount"
-          v-model="pageNum"
-          @changePage="updatePaginateItems"
-        />
-      </div>
-    </div>
-    <div v-if="isEmpty">
-      <ResultEmpty class="mx-5 mt-5" />
-    </div>
-    <div v-if="shouldLogin">
-      <LoginIntroductionView class="mx-5" />
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .knowledge-search-container {

@@ -1,3 +1,22 @@
+<template>
+  <div class="menu-toggle" @click="isOpen = !isOpen">
+    <span v-for="i in 3" class="toggle-line" />
+  </div>
+  <nav class="sidebar" :class="{ open: isOpen }">
+    <div class="sidebar-header">
+      <span class="close-button" @click="isOpen = false">&times;</span>
+    </div>
+    <div class="menu" v-for="menu in menuList">
+      <div class="menu-container">
+        <div class="menu-select" v-show="menu.id == currentIndex" />
+        <button class="side-menu-item" @click="showMenu(menu)">
+          {{ menu.label }}
+        </button>
+      </div>
+    </div>
+  </nav>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -70,25 +89,6 @@ const showConfirmAccountDelete = () => {
   router.push({ name: "ConfirmAccountDelete" });
 };
 </script>
-
-<template>
-  <div class="menu-toggle" @click="isOpen = !isOpen">
-    <span v-for="i in 3" class="toggle-line" />
-  </div>
-  <nav class="sidebar" :class="{ open: isOpen }">
-    <div class="sidebar-header">
-      <span class="close-button" @click="isOpen = false">&times;</span>
-    </div>
-    <div class="menu" v-for="menu in menuList">
-      <div class="menu-container">
-        <div class="menu-select" v-show="menu.id == currentIndex" />
-        <button class="side-menu-item" @click="showMenu(menu)">
-          {{ menu.label }}
-        </button>
-      </div>
-    </div>
-  </nav>
-</template>
 
 <style scoped>
 .menu-toggle {

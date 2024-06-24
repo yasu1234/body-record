@@ -1,6 +1,18 @@
+<template>
+  <div class="tab-menu">
+    <TabItem
+      v-for="item in TabMenuList"
+      v-bind="item" :menuId="item.id"
+      :menuTitle="item.label"
+      :currentId="currentId"
+      @menu-tapped="menuChange" />
+  </div>
+  <div class="tab-line h-px"/>
+</template>
+
+
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
 
 import TabItem from '../atom/TabItem.vue'
 import { TabMenuList } from '../../js/const.js'
@@ -27,18 +39,6 @@ function menuChange(event) {
   }
 }
 </script>
-
-<template>
-    <div class="tab-menu">
-      <TabItem
-        v-for="item in TabMenuList"
-        v-bind="item" :menuId="item.id"
-        :menuTitle="item.label"
-        :currentId="currentId"
-        @menu-tapped="menuChange" />
-    </div>
-    <div class="tab-line h-px"/>
-</template>
 
 <style scoped>
 .tab-menu {

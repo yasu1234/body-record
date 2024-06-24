@@ -1,3 +1,34 @@
+<template>
+  <Header />
+  <TabMenu />
+  <Toast position="top-center" />
+  <div class="p-7">
+    <FloatLabel class="mt-5">
+      <InputText v-model="title" class="input-width" />
+      <label>タイトル</label>
+    </FloatLabel>
+    <div class="mt=2.5">
+      <KnowledgeContentInput
+        :knowledgeContent="knowledge"
+        @content-edit="contentEdit"
+      />
+    </div>
+  </div>
+  <div class="p-5">
+    <h2>関連画像(5枚まで登録できます)</h2>
+    <div class="file-input-container">
+      <div v-for="i in 5">
+        <DropFile @change="onFileChange" :index="i" class="mt-3" />
+      </div>
+    </div>
+  </div>
+  <div class="p-5 text-center">
+    <button class="add-knowledge-button" @click="registerKnowledge">
+      登録する
+    </button>
+  </div>
+</template>
+
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -73,37 +104,6 @@ const showKnowledgeDetail = (item) => {
   router.push({ name: "KnowledgeDetail", params: { id: item.id } });
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu />
-  <Toast position="top-center" />
-  <div class="p-7">
-    <FloatLabel class="mt-5">
-      <InputText v-model="title" class="input-width" />
-      <label>タイトル</label>
-    </FloatLabel>
-    <div class="mt=2.5">
-      <KnowledgeContentInput
-        :knowledgeContent="knowledge"
-        @content-edit="contentEdit"
-      />
-    </div>
-  </div>
-  <div class="p-5">
-    <h2>関連画像(5枚まで登録できます)</h2>
-    <div class="file-input-container">
-      <div v-for="i in 5">
-        <DropFile @change="onFileChange" :index="i" class="mt-3" />
-      </div>
-    </div>
-  </div>
-  <div class="p-5 text-center">
-    <button class="add-knowledge-button" @click="registerKnowledge">
-      登録する
-    </button>
-  </div>
-</template>
 
 <style scoped>
 .input-width {

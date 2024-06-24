@@ -1,3 +1,36 @@
+<template>
+  <Toast position="top-center" />
+  <Header />
+  <TabMenu />
+  <div v-if="contact !== null" class="mt-5 pb-8 mx-5">
+    <p class="contact-create-date">
+      {{
+        contact.contact_date_format != null ? contact.contact_date_format : ""
+      }}
+    </p>
+    <div class="mt-7">
+      <p class="contact-content">
+        {{ contact.content != null ? contact.content : "" }}
+      </p>
+    </div>
+    <div class="mt-5">
+      <button
+        class="status-edit-button"
+        v-if="contact.status === 1"
+        @click="statusChange(true)"
+      >
+        対応中に戻す
+      </button>
+      <button class="status-edit-button" v-else @click="statusChange(false)">
+        対応済にする
+      </button>
+    </div>
+    <p class="mt-5">
+      対応済みにすると次の日には表示されなくなりますので、ご注意ください
+    </p>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -90,39 +123,6 @@ const statusChange = async (isComplete) => {
   }
 };
 </script>
-
-<template>
-  <Toast position="top-center" />
-  <Header />
-  <TabMenu />
-  <div v-if="contact !== null" class="mt-5 pb-8 mx-5">
-    <p class="contact-create-date">
-      {{
-        contact.contact_date_format != null ? contact.contact_date_format : ""
-      }}
-    </p>
-    <div class="mt-7">
-      <p class="contact-content">
-        {{ contact.content != null ? contact.content : "" }}
-      </p>
-    </div>
-    <div class="mt-5">
-      <button
-        class="status-edit-button"
-        v-if="contact.status === 1"
-        @click="statusChange(true)"
-      >
-        対応中に戻す
-      </button>
-      <button class="status-edit-button" v-else @click="statusChange(false)">
-        対応済にする
-      </button>
-    </div>
-    <p class="mt-5">
-      対応済みにすると次の日には表示されなくなりますので、ご注意ください
-    </p>
-  </div>
-</template>
 
 <style scoped>
 .contact-content {

@@ -1,3 +1,57 @@
+<template>
+  <div v-if="!isEditing">
+    <div class="comment-header pr-2.5">
+      <div class="comment-user">
+        <div class="comment-thumbnail-image" v-if="imageUrl != null">
+          <img :src="imageUrl" alt="ユーザー" class="comment-thumbnail-image" />
+        </div>
+        <p class="ml-2.5">{{ userName }}</p>
+      </div>
+      <div v-if="isMineComment" class="menu-container">
+        <button class="menu-button" @click="toggleDropdown">
+          <MeatBallMenu />
+        </button>
+        <div v-if="showDropdown" class="dropdown-menu">
+          <button
+            v-for="menu in menuList"
+            class="menu-item"
+            @click="showMenu(menu)"
+          >
+            {{ menu.label }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <p class="pt-2.5 mb-1.5">{{ comment }}</p>
+    <p class="comment-date pr-2.5 mb-2.5">
+      {{ commentDate }}
+    </p>
+  </div>
+  <div v-if="isEditing" class="mt-2.5 mr-5">
+    <textarea
+      name="comment"
+      rows="10"
+      v-model="inputComment"
+      class="comment-textarea"
+      placeholder="コメントを入力"
+    />
+    <div class="text-right mr-5">
+      <p v-if="comment.length > 300" class="text-red-500">
+        300文字以上入力しています
+      </p>
+      <p v-else>残り{{ 300 - comment.length }}文字入力できます</p>
+    </div>
+    <div class="comment-container mr-5 mt-2.5 mb-5">
+      <button class="comment-cancel-button px-1.5 mr-2.5" @click="editCancel">
+        キャンセル
+      </button>
+      <button class="px-1.5" @click="editComment">
+        コメントを編集する
+      </button>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { CommentMenuList } from "../../js/const.js";
@@ -80,60 +134,6 @@ const showMenu = (menu) => {
   }
 };
 </script>
-
-<template>
-  <div v-if="!isEditing">
-    <div class="comment-header pr-2.5">
-      <div class="comment-user">
-        <div class="comment-thumbnail-image" v-if="imageUrl != null">
-          <img :src="imageUrl" alt="ユーザー" class="comment-thumbnail-image" />
-        </div>
-        <p class="ml-2.5">{{ userName }}</p>
-      </div>
-      <div v-if="isMineComment" class="menu-container">
-        <button class="menu-button" @click="toggleDropdown">
-          <MeatBallMenu />
-        </button>
-        <div v-if="showDropdown" class="dropdown-menu">
-          <button
-            v-for="menu in menuList"
-            class="menu-item"
-            @click="showMenu(menu)"
-          >
-            {{ menu.label }}
-          </button>
-        </div>
-      </div>
-    </div>
-    <p class="pt-2.5 mb-1.5">{{ comment }}</p>
-    <p class="comment-date pr-2.5 mb-2.5">
-      {{ commentDate }}
-    </p>
-  </div>
-  <div v-if="isEditing" class="mt-2.5 mr-5">
-    <textarea
-      name="comment"
-      rows="10"
-      v-model="inputComment"
-      class="comment-textarea"
-      placeholder="コメントを入力"
-    />
-    <div class="text-right mr-5">
-      <p v-if="comment.length > 300" class="text-red-500">
-        300文字以上入力しています
-      </p>
-      <p v-else>残り{{ 300 - comment.length }}文字入力できます</p>
-    </div>
-    <div class="comment-container mr-5 mt-2.5 mb-5">
-      <button class="comment-cancel-button px-1.5 mr-2.5" @click="editCancel">
-        キャンセル
-      </button>
-      <button class="px-1.5" @click="editComment">
-        コメントを編集する
-      </button>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .comment-header {

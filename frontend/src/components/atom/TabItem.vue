@@ -1,3 +1,16 @@
+<template>
+  <div>
+    <button
+      @click="handleClick(props.menuId)"
+      class="tab-button"
+      :class="[props.currentId === props.menuId ? 'active' : '', 'tab']"
+    >
+      {{ props.menuTitle }}
+    </button>
+    <div class="active-tab" v-if="props.currentId === props.menuId"></div>
+  </div>
+</template>
+
 <script setup>
 const props = defineProps({
   menuTitle: String,
@@ -11,19 +24,6 @@ function handleClick(menuId) {
   emit("menu-tapped", menuId);
 }
 </script>
-
-<template>
-  <div>
-    <button
-      @click="handleClick(props.menuId)"
-      class="tab-button"
-      :class="[props.currentId === props.menuId ? 'active' : '', 'tab']"
-    >
-      {{ props.menuTitle }}
-    </button>
-    <div class="active-tab" v-if="props.currentId === props.menuId"></div>
-  </div>
-</template>
 
 <style scoped>
 .tab {
