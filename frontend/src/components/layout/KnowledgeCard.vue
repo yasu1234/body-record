@@ -90,7 +90,7 @@ const renderedMarkdown = computed(() => {
           class="user-thumbnail-image"
         />
       </div>
-      <p class="ml-2.5 text-xs">{{ user != null && user.name != null ? user.name : '' }}</p>
+      <p class="ml-2.5 text-xs text-left">{{ user != null && user.name != null ? user.name : '' }}</p>
     </div>
     <div class="mt-1">
       <p class="create-date">{{ createDate }}</p>

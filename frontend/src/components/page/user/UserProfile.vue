@@ -273,7 +273,6 @@ const showMoreKnowledges = () => {
       <RecordCard
         v-if="records.length > 0"
         v-for="record in records"
-        v-bind="record"
         :record="record"
         @recordClick="clickRecord(record)"
       />
@@ -293,7 +292,6 @@ const showMoreKnowledges = () => {
       <KnowledgeCard
         v-if="knowledges.length > 0"
         v-for="knowledge in knowledges"
-        v-bind="knowledge"
         :knowledge="knowledge"
       />
       <p v-else>記事を作成していません</p>

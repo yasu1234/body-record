@@ -196,7 +196,6 @@ const addKnowledge = () => {
       <p class="text-center font-bold mt-8">合計{{ totalCount }}件</p>
       <KnowledgeCard
         v-for="knowledge in searchResult"
-        v-bind="knowledge"
         :knowledge="knowledge"
         @click="clickKnowledge(knowledge)"
       />

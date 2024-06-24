@@ -207,7 +207,6 @@ const showMoreKnowledges = () => {
         <RecordCard
           v-if="records.length > 0"
           v-for="record in records"
-          v-bind="record"
           :record="record"
           @recordClick="clickRecord(record)"
         />
