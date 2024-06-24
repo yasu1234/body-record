@@ -55,7 +55,7 @@ const renderedMarkdown = computed(() => {
     <p class="m-2.5 text-lg">
       <b>{{ knowledgeTitle }}</b>
     </p>
-    <div>
+    <div class="break-words">
       <p class="mt-2.5 ml-2.5" v-html="renderedMarkdown" />
     </div>
     <div class="bookmark-container mt-5 ml-5 pb-5">

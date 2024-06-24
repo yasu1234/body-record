@@ -271,6 +271,35 @@ input[type="text"] {
   border: 1px solid #ccc;
   margin: 0 auto;
 }
+:deep(thead) {
+  background: #ccc;
+  border: 1px solid #ddd;
+}
+:deep(code) {
+  background: #ccc;
+  white-space: pre-wrap;
+}
+:deep(td) {
+  border: 1px solid #000;
+}
+:deep(th) {
+  border: 1px solid #000;
+}
+:deep(ul) {
+  list-style-type: disc;
+}
+:deep(ol) {
+  list-style-type: decimal;
+}
+:deep(h1) {
+  text-decoration: underline;
+}
+:deep(h2) {
+  text-decoration: underline;
+}
+:deep(h3) {
+  text-decoration: underline;
+}
 
 @media screen and (max-width: 768px) {
   .add-button-area {
