@@ -61,8 +61,4 @@ class User < ActiveRecord::Base
   def check_support_mine(target_support_user)
     self == target_support_user
   end
-
-  def check_supporting(other_user)
-    supporting_relationships.find_by(support_id: other_user.id).exists?
-  end
 end

@@ -253,7 +253,7 @@ const supportOn = async () => {
         "Content-Type": "multipart/form-data",
       },
     });
-    getSupport();
+    support.value = res.data.user;
   } catch (error) {
     if (error.response == null) {
       toastNotifications.displayError("コメント削除に失敗しました", "");
@@ -280,7 +280,7 @@ const supportOff = async () => {
     const res = await axiosInstance.delete(
       `/api/v1/supports/${knowledgeUserId.value}`
     );
-    getSupport();
+    support.value = res.data.user;
   } catch (error) {
     if (error.response == null) {
       toastNotifications.displayError("コメント削除に失敗しました", "");
@@ -440,7 +440,7 @@ const showKnowledgeList = () => {
         <Author
           :author="author"
           :support="support"
-          @suport-on="supportOn"
+          @support-on="supportOn"
           @support-off="supportOff"
         />
       </div>

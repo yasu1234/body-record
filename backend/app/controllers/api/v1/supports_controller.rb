@@ -81,7 +81,9 @@ class Api::V1::SupportsController < ApplicationController
   def destroy
     support_user = User.find(params[:id])
 
-    unless current_api_v1_user.check_supporting(support_user)
+    supporting = support_user.supporter_relationships.find_by(user_id: current_api_v1_user.id)
+
+    if supporting.nil?
       render json: { errors: "応援していないユーザーなので解除できません" }, status: :unprocessable_entity and return
     end
 

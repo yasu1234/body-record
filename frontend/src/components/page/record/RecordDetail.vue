@@ -24,7 +24,6 @@ const imageUrls = ref([]);
 const recordId = ref(null);
 const recordUserId = ref(0);
 const isMyRecord = ref(false);
-const isSupport = ref(false);
 const comments = ref([]);
 const author = ref(null);
 const record = ref(null);
@@ -133,13 +132,9 @@ const supportOn = async () => {
     const formData = new FormData();
     formData.append("id", recordUserId.value);
 
-    const res = await axiosInstance.post(`/api/v1/supports`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    isSupport.value = res.data.is_support;
-    getSupport();
+    const res = await axiosInstance.post(`/api/v1/supports`, formData);
+
+    support.value = res.data.user;
   } catch (error) {
     if (error.response == null) {
       toastNotifications.displayError("応援に失敗しました", "");
@@ -167,8 +162,8 @@ const supportOff = async () => {
     const res = await axiosInstance.delete(
       `/api/v1/supports/${recordUserId.value}`
     );
-    isSupport.value = res.data.is_support;
-    getSupport();
+
+    support.value = res.data.user;
   } catch (error) {
     if (error.response == null) {
       toastNotifications.displayError("応援解除に失敗しました", "");
@@ -377,7 +372,7 @@ const showMyRecordList = () => {
           <Author
             :author="author"
             :support="support"
-            @suport-on="supportOn"
+            @support-on="supportOn"
             @support-off="supportOff"
           />
         </div>
@@ -413,7 +408,7 @@ const showMyRecordList = () => {
     </div>
     <div class="side">
       <div class="side-content">
-        <button v-if="isSupport" class="round-button">
+        <button v-if="support != null && support.is_support" class="round-button">
           <img
             src="../../../assets/image/support_on.png"
             alt="応援解除"
