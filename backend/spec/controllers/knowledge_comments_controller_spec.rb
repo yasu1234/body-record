@@ -190,7 +190,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
       end
     end
 
-    context "コメント更新完了" do
+    context "コメント削除完了" do
       let!(:comment1) { create(:comment, user:, comment: "メモTEST", knowledge_id: knowledge.id) }
       before do
         request.headers.merge!(headers)

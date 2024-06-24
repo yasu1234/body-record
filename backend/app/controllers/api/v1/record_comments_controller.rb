@@ -68,6 +68,6 @@ class Api::V1::RecordCommentsController < ApplicationController
   private
 
     def record_comment_params
-      params.permit(:record_id, :comment)
+      params.require(:comment).permit(:record_id, :comment)
     end
 end
