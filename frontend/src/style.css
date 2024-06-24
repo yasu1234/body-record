@@ -20,8 +20,6 @@ a {
   font-weight: 500;
   text-decoration: inherit;
 }
-a:hover {
-}
 body {
   margin: 0;
   place-items: center;
@@ -78,7 +76,7 @@ p.validation-error-message {
   border-radius: 5px;
   margin-top: 20px;
 }
-/* ファイル登録編集ではエリアをPCの場合には横２つ表示 */
+/* ファイル登録編集では画像エリアをPCの場合には横２つ表示 */
 .file-input-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -100,6 +98,7 @@ p.validation-error-message {
   align-items: center;
   z-index: 9999;
 }
+/* タイトルの装飾(1文字目を大きくして色を変える) */
 .title_line {
   font-weight: bold;
   border-bottom: 2px solid #f58505;
@@ -111,6 +110,12 @@ p.validation-error-message {
 .title_line:first-letter {
   font-size: 1.5em;
   color: #f58505;
+}
+/* マイページ・ユーザーページの記録と記事のタイトルの装飾 */
+.section-title {
+  border-bottom: solid 5px #ffa500;
+  font-size: 25px;
+  font-weight: bold;
 }
 
 @media screen and (max-width: 768px) {

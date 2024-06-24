@@ -1,0 +1,188 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MyPage SnapShotテスト初期表示(データあり) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <toast-stub
+    position="top-center"
+  />
+  <header-stub />
+  <tab-menu-stub />
+  <profile-stub
+    support="[object Object]"
+    user="[object Object]"
+  />
+  <div
+    class="weight-graph"
+  >
+    <chart-stub
+      data="[object Object]"
+    />
+  </div>
+  <div
+    class="weight-graph"
+  >
+    <chart-stub
+      data="[object Object]"
+    />
+  </div>
+  <month-picker-stub
+    class="graph-month-picker"
+    date="[object Object]"
+  />
+  <div
+    class="text-center"
+  >
+    <div
+      class="pb-5"
+    >
+      <div
+        class="pt-10"
+      >
+        <span
+          class="section-title"
+        >
+          投稿した記録
+        </span>
+      </div>
+      <div
+        class="mt-5"
+      >
+        
+        <div>
+          <record-card-stub
+            record="[object Object]"
+          />
+        </div>
+        <div>
+          <record-card-stub
+            record="[object Object]"
+          />
+        </div>
+        
+      </div>
+      <button
+        class="more-show-button mt-5"
+      >
+         もっと見る 
+      </button>
+    </div>
+    <div
+      class="pb-8"
+    >
+      <div
+        class="pt-10"
+      >
+        <span
+          class="section-title"
+        >
+          投稿した知識
+        </span>
+      </div>
+      <div
+        class="mt-5"
+      >
+        
+        <div>
+          <knowledge-card-stub
+            knowledge="[object Object]"
+          />
+        </div>
+        <div>
+          <knowledge-card-stub
+            knowledge="[object Object]"
+          />
+        </div>
+        
+      </div>
+      <button
+        class="more-show-button mt-5"
+      >
+         もっと見る 
+      </button>
+    </div>
+  </div>
+  
+</div>
+`;
+
+exports[`MyPage SnapShotテスト初期表示(データなし) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <toast-stub
+    position="top-center"
+  />
+  <header-stub />
+  <tab-menu-stub />
+  <profile-stub />
+  <div
+    class="weight-graph"
+  >
+    <chart-stub
+      data="[object Object]"
+    />
+  </div>
+  <div
+    class="weight-graph"
+  >
+    <chart-stub
+      data="[object Object]"
+    />
+  </div>
+  <month-picker-stub
+    class="graph-month-picker"
+    date="[object Object]"
+  />
+  <div
+    class="text-center"
+  >
+    <div
+      class="pb-5"
+    >
+      <div
+        class="pt-10"
+      >
+        <span
+          class="section-title"
+        >
+          投稿した記録
+        </span>
+      </div>
+      <div
+        class="mt-5"
+      >
+        <p>
+          登録された記録はありません
+        </p>
+      </div>
+      <!--v-if-->
+    </div>
+    <div
+      class="pb-8"
+    >
+      <div
+        class="pt-10"
+      >
+        <span
+          class="section-title"
+        >
+          投稿した知識
+        </span>
+      </div>
+      <div
+        class="mt-5"
+      >
+        <p>
+          記事を作成していません
+        </p>
+      </div>
+      <!--v-if-->
+    </div>
+  </div>
+  
+</div>
+`;

@@ -141,7 +141,16 @@ const getMonthRecord = async () => {
     fatPercentageData.value.datasets[0].data = res.data.records.map(
       (record) => record.fat_percentage
     );
-  } catch (error) {}
+  } catch (error) {
+    weigtData.value.labels = [];
+    weigtData.value.datasets[0].data = [];
+    fatPercentageData.value.labels = [];
+    fatPercentageData.value.datasets[0].data = [];
+
+    if (error.response != null && error.response.status === 401) {
+      toastNotifications.displayError("ログインしてください", "");
+    }
+  }
 };
 
 const getUserKnowledge = async () => {
@@ -204,12 +213,9 @@ const showMoreKnowledges = () => {
         <span class="section-title">投稿した記録</span>
       </div>
       <div class="mt-5">
-        <RecordCard
-          v-if="records.length > 0"
-          v-for="record in records"
-          :record="record"
-          @recordClick="clickRecord(record)"
-        />
+        <div v-if="records.length > 0" v-for="record in records">
+          <RecordCard :record="record" @recordClick="clickRecord(record)" />
+        </div>
         <p v-else>登録された記録はありません</p>
       </div>
       <button
@@ -220,16 +226,16 @@ const showMoreKnowledges = () => {
         もっと見る
       </button>
     </div>
-    <div class="pb-5">
+    <div class="pb-8">
       <div class="pt-10">
         <span class="section-title">投稿した知識</span>
       </div>
       <div class="mt-5">
         <div v-if="knowledges.length > 0" v-for="knowledge in knowledges">
           <KnowledgeCard
-          :knowledge="knowledge"
-          @click="clickKnowledge(knowledge)"
-        />
+            :knowledge="knowledge"
+            @click="clickKnowledge(knowledge)"
+          />
         </div>
         <p v-else>記事を作成していません</p>
       </div>
@@ -245,11 +251,6 @@ const showMoreKnowledges = () => {
 </template>
 
 <style scoped>
-.section-title {
-  border-bottom: solid 5px #ffa500;
-  font-size: 25px;
-  font-weight: bold;
-}
 .weight-graph {
   margin-top: 30px;
   width: 600px;

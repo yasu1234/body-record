@@ -21,22 +21,30 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントあり) 1`] = `
       <div
         class="editor"
       >
+        <div>
+          <p
+            class="create-date"
+          />
+        </div>
         <p
-          class="knowledge-title"
-          id="title"
+          class="knowledge-title mt-5"
           type="text"
         >
           Test Knowledge
         </p>
-        <p
-          class="knowledge-content"
+        <div
+          class="break-words"
         >
-          <p>
-            This is a test knowledge
-          </p>
-          
+          <p
+            class="knowledge-content"
+          >
+            <p>
+              This is a test knowledge
+            </p>
+            
 
-        </p>
+          </p>
+        </div>
         <div>
           <p
             class="mt-5"
@@ -177,22 +185,30 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントなし) 1`] = `
       <div
         class="editor"
       >
+        <div>
+          <p
+            class="create-date"
+          />
+        </div>
         <p
-          class="knowledge-title"
-          id="title"
+          class="knowledge-title mt-5"
           type="text"
         >
           Test Knowledge
         </p>
-        <p
-          class="knowledge-content"
+        <div
+          class="break-words"
         >
-          <p>
-            This is a test knowledge
-          </p>
-          
+          <p
+            class="knowledge-content"
+          >
+            <p>
+              This is a test knowledge
+            </p>
+            
 
-        </p>
+          </p>
+        </div>
         <div>
           <p
             class="mt-5"

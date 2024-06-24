@@ -31,12 +31,12 @@ describe("Author", () => {
     image_url: {
       url: "https://example.com/author.jpg",
     },
-    isSupport: false,
+    is_support: false,
   };
 
   const mockUser = {
     id: 1,
-    supporterCount: 10,
+    supporter_count: 10,
   };
 
   beforeEach(() => {    
@@ -62,12 +62,12 @@ describe("Author", () => {
       image_url: {
         url: "https://example.com/author.jpg",
       },
-      isSupport: true,
+      is_support: true,
     };
 
     const mockUser = {
       id: 1,
-      supporterCount: 10,
+      supporter_count: 10,
     };
 
     wrapper = shallowMount(Author, {
