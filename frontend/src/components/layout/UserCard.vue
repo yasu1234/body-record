@@ -37,8 +37,8 @@ const setProps = (props) => {
   }
 }
 
-const showUser = (item) => {
-  router.push({ name: "UserProfile", params: { id: user.value.user.id } });
+const showUser = () => {
+  router.push({ name: "UserProfile", params: { id: user.value.id } });
 };
 </script>
 
@@ -58,7 +58,7 @@ const showUser = (item) => {
       <Button
         class="user-name-link"
         :label="user.name"
-        @click.stop="showUser(user)"
+        @click.stop="showUser"
         link
       />
     </div>
