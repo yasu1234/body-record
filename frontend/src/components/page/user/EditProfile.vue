@@ -43,8 +43,6 @@ const getProfile = async () => {
 
     userThumbnail.value = res.data.user.image_url;
 
-    console.log(res);
-
     if (res.data.user.profile == null) {
       goalWeight.value = null;
       goalFatPercentage.value = null;
@@ -56,6 +54,8 @@ const getProfile = async () => {
     goalFatPercentage.value = res.data.user.profile.goal_fat_percentage;
     if (res.data.user.profile.profile !== null) {
       profile.value = res.data.user.profile.profile;
+    } else {
+      profile.value = ""
     }
   } catch (error) {
     let errorMessage = "";

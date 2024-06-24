@@ -189,8 +189,8 @@ const supportOff = async () => {
 const addComment = async (comment) => {
   try {
     const formData = new FormData();
-    formData.append("record_id", recordId.value);
-    formData.append("comment", comment);
+    formData.append("comment[record_id]", recordId.value);
+    formData.append("comment[comment]", comment);
 
     const res = await axiosInstance.post(`/api/v1/record_comments`, formData);
     inputCommentRef.value.resetForm();
@@ -261,8 +261,8 @@ const editComment = async (inputComment, commentId) => {
 
   try {
     const formData = new FormData();
-    formData.append("record_id", recordId.value);
-    formData.append("comment", inputComment);
+    formData.append("comment[record_id]", recordId.value);
+    formData.append("comment[comment]", inputComment);
 
     const res = await axiosInstance.put(
       `/api/v1/record_comments/${commentId}`, formData

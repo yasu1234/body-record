@@ -196,7 +196,7 @@ const addKnowledge = () => {
         >
           <RadioButton
             v-model="selectCode"
-            :inputId="menu.code"
+            :inputId="String(menu.code)"
             :value="menu.name"
             @update:model-value="changeSortType"
             :pt="{

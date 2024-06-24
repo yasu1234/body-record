@@ -10,7 +10,7 @@ const props = defineProps(["user"]);
 const user = ref(null);
 const latestRecordDate = ref(null);
 const supporterCount = ref(0);
-const isMySuport = ref(false);
+const isMySupport = ref(false);
 
 onMounted(() => {
   setProps(props);
@@ -26,9 +26,9 @@ const setProps = (props) => {
     latestRecordDate.value = props.user.latest_record.formatted_date;
   }
   if (props.user != null && props.user.is_support != null) {
-    isMySuport.value = props.user.is_support;
+    isMySupport.value = props.user.is_support;
   } else {
-    isMySuport.value = false;
+    isMySupport.value = false;
   }
   if (props.user != null) {
     supporterCount.value = props.user.supporter_count;
@@ -67,7 +67,7 @@ const showUser = () => {
     最新の記録： {{ latestRecordDate != null ? latestRecordDate : "記録なし" }}
   </p>
   <div class="support-container mt-2.5 ml-5 pb-5">
-    <div v-if="isMySuport" class="support-button">
+    <div v-if="isMySupport" class="support-button">
       <img
         src="../../assets/image/support_on.png"
         alt="サポート中"

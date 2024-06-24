@@ -2,13 +2,7 @@
 import { ref, onMounted, watch } from "vue";
 
 const props = defineProps(["author", "support"]);
-
-const emit = defineEmits(["suport-on", "support-off"]);
-
-const onChange = (e) => {
-  file.value = e.target.files[0];
-  emit("change", file.value, index.value);
-};
+const emit = defineEmits(["support-on", "support-off"]);
 
 const author = ref(null);
 const support = ref(null);
@@ -27,11 +21,11 @@ const setProps = () => {
 };
 
 const supportOn = () => {
-  emit("suport-on");
+  emit("support-on");
 };
 
 const supportOff = () => {
-  emit("suport-off");
+  emit("support-off");
 };
 </script>
 
