@@ -10,7 +10,7 @@ RSpec.describe Knowledge, type: :model do
         user.knowledges.create!(title: "test", content: "test")
       end
 
-      it "紐づくノウハウデータも削除される" do
+      it "紐づく記事データも削除される" do
         expect { user.destroy }.to change(Knowledge, :count).by(-1)
       end
     end

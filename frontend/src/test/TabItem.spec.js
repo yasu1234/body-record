@@ -86,8 +86,8 @@ describe('TabItem.vue', () => {
     })
     const button = wrapper.find('button')
     await button.trigger('click')
-    expect(wrapper.emitted('menuTapped')).toBeTruthy()
-    expect(wrapper.emitted('menuTapped')[0]).toEqual([1])
+    expect(wrapper.emitted('menu-tapped')).toBeTruthy()
+    expect(wrapper.emitted('menu-tapped')[0]).toEqual([1])
   })
 })
 

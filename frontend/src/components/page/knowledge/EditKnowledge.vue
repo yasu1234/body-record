@@ -105,7 +105,7 @@ const edit = async () => {
     }, 3000);
   } catch (error) {
     if (error.response == null) {
-      toastNotifications.displayError("ノウハウの編集に失敗しました", "");
+      toastNotifications.displayError("記事の編集に失敗しました", "");
       return;
     }
 
@@ -122,7 +122,7 @@ const edit = async () => {
     }
 
     toastNotifications.displayError(
-      "ノウハウの編集に失敗しました",
+      "記事の編集に失敗しました",
       errorMessage
     );
   }

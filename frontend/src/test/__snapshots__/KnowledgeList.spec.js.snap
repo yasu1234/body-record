@@ -60,7 +60,7 @@ exports[`KnowledgeList SnapShotテスト初期表示(データあり) 1`] = `
     <button
       class="add-button p-2.5"
     >
-       + ノウハウ記事を追加する 
+       + 記事を追加する 
     </button>
   </div>
   <div
@@ -192,7 +192,7 @@ exports[`KnowledgeList SnapShotテスト初期表示(データなし) 1`] = `
     <button
       class="add-button p-2.5"
     >
-       + ノウハウ記事を追加する 
+       + 記事を追加する 
     </button>
   </div>
   <div

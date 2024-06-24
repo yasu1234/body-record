@@ -5,10 +5,10 @@ const props = defineProps({
   currentId: Number,
 });
 
-const emit = defineEmits(["menuTapped"]);
+const emit = defineEmits(["menu-tapped"]);
 
 function handleClick(menuId) {
-  emit("menuTapped", menuId);
+  emit("menu-tapped", menuId);
 }
 </script>
 

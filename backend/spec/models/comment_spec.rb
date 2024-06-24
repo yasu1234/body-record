@@ -10,7 +10,7 @@ RSpec.describe Comment, type: :model do
         user.comments.create!(comment: "test", user_id: user.id)
       end
 
-      it "紐づくノウハウデータも削除される" do
+      it "紐づく記事データも削除される" do
         expect { user.destroy }.to change(Comment, :count).by(-1)
       end
     end

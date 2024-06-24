@@ -183,7 +183,7 @@ const addKnowledge = () => {
   </div>
   <div class="add-button-area">
     <button class="add-button p-2.5" @click="addKnowledge">
-      + ノウハウ記事を追加する
+      + 記事を追加する
     </button>
   </div>
   <div class="py-8">
