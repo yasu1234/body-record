@@ -37,7 +37,7 @@ class Api::V1::KnowledgeCommentsController < ApplicationController
 
     render json: { knowledge: knowledge.as_json(include: [:comments]) }, status: :ok
   rescue ActiveRecord::RecordNotFound
-    render json: { error: "対象のデータが見つかりません" }, status: :not_found
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   rescue StandardError => e
     render json: { errors: e.message }, status: :internal_server_error
   end

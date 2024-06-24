@@ -4,13 +4,13 @@ class Api::V1::SupportCountsController < ApplicationController
   def index
     support_user = User.find(params[:user_id])
 
-    includes_user = support_user.supporter_relationships.exists?(id: current_api_v1_user.id)
+    includes_user = support_user.supporter_relationships.exists?(user_id: current_api_v1_user.id)
 
     render json: {
       user: support_user.as_json({ only: %i[id name] }).merge(
-        isSupport: includes_user,
-        supporterCount: support_user.supporter_relationships.count,
-        supportCount: support_user.supportings.count
+        is_support: includes_user,
+        supporter_count: support_user.supporter_relationships.count,
+        support_count: support_user.supportings.count
       )
     }, status: :ok
   rescue ActiveRecord::RecordNotFound

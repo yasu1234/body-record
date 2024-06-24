@@ -19,7 +19,7 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
 
   def destroy
     if current_api_v1_user.status == 1
-      render json: { errors: "ゲストユーザーは削除できません" }, status: :unprocessable_entity and return
+      render json: { errors: "ゲストユーザーは退会できません" }, status: :unprocessable_entity and return
     end
 
     current_api_v1_user.destroy!

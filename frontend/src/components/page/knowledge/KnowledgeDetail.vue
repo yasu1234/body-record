@@ -153,7 +153,7 @@ const bookmarkOn = async () => {
       },
     });
     knowledge.value = res.data.knowledge;
-    isBookmark.value = res.data.knowledge.isBookmark;
+    isBookmark.value = res.data.knowledge.is_bookmark;
     bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
     if (error.response == null) {
@@ -183,7 +183,7 @@ const bookmarkOff = async () => {
       `/api/v1/bookmarks/${knowledgeId.value}`
     );
     knowledge.value = res.data.knowledge;
-    isBookmark.value = res.data.knowledge.isBookmark;
+    isBookmark.value = res.data.knowledge.is_bookmark;
     bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
     if (error.response == null) {
@@ -424,7 +424,9 @@ const showKnowledgeList = () => {
         <p class="knowledge-title mt-5" type="text" v-if="knowledge !== null">
           {{ knowledge.title }}
         </p>
-        <p class="knowledge-content" v-html="renderedMarkdown"></p>
+        <div class="break-words">
+          <p class="knowledge-content" v-html="renderedMarkdown" />
+        </div>
         <div v-if="imageUrls.length !== 0">
           <p class="mt-5">関連画像</p>
           <div class="thumbnail-container">
@@ -474,11 +476,7 @@ const showKnowledgeList = () => {
     <div class="side">
       <div class="side-content">
         <div class="bookmark-button-container">
-          <button
-            v-if="isBookmark"
-            class="round-button"
-            @click="bookmarkOff"
-          >
+          <button v-if="isBookmark" class="round-button" @click="bookmarkOff">
             <img
               src="../../../assets/image/bookmark_on.png"
               alt="ブックマーク解除"
@@ -624,6 +622,7 @@ input[type="text"] {
 }
 :deep(code) {
   background: #ccc;
+  white-space: pre-wrap;
 }
 :deep(td) {
   border: 1px solid #000;

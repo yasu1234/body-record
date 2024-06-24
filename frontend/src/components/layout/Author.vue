@@ -54,7 +54,7 @@ const supportOff = () => {
     <p class="ml-2.5" v-if="author !== null">{{ author.name }}</p>
   </div>
   <div class="support-container mt-2.5 ml-5 pb-5">
-    <button v-if="author !== null && author.isSupport" class="support-button">
+    <button v-if="support !== null && support.is_support" class="support-button">
       <img
         src="../../assets/image/support_on.png"
         alt="ユーザー"
@@ -70,7 +70,7 @@ const supportOff = () => {
         @click="supportOn"
       />
     </button>
-    <p class="ml-2.5" v-if="support !== null">{{ support.supporterCount }}</p>
+    <p class="ml-2.5" v-if="support !== null">{{ support.supporter_count }}</p>
   </div>
 </template>
 

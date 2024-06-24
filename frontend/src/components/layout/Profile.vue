@@ -65,20 +65,20 @@ const setSupport = (support) => {
     return;
   }
 
-  if (support.supportCount != null) {
-    supportCount.value = support.supportCount;
+  if (support.support_count != null) {
+    supportCount.value = support.support_count;
   } else {
     supportCount.value = 0;
   }
 
-  if (support.supporterCount != null) {
-    supporterCount.value = support.supporterCount;
+  if (support.supporter_count != null) {
+    supporterCount.value = support.supporter_count;
   } else {
     supporterCount.value = 0;
   }
 
-  if (support.isSupport != null) {
-    isSupport.value = support.isSupport;
+  if (support.is_support != null) {
+    isSupport.value = support.is_support;
   } else {
     isSupport.value = false;
   }

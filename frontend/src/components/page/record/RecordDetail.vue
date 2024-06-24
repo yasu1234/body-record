@@ -138,7 +138,7 @@ const supportOn = async () => {
         "Content-Type": "multipart/form-data",
       },
     });
-    isSupport.value = res.data.isSupport;
+    isSupport.value = res.data.is_support;
     getSupport();
   } catch (error) {
     if (error.response == null) {
@@ -167,7 +167,7 @@ const supportOff = async () => {
     const res = await axiosInstance.delete(
       `/api/v1/supports/${recordUserId.value}`
     );
-    isSupport.value = res.data.isSupport;
+    isSupport.value = res.data.is_support;
     getSupport();
   } catch (error) {
     if (error.response == null) {

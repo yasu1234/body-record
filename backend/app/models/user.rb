@@ -11,6 +11,10 @@ class User < ActiveRecord::Base
     GUEST_USER = 1
   end
 
+  module SortType
+    SUPPORTER_COUNT = 2
+  end
+
   has_one_attached :image
 
   has_many :bookmarks, dependent: :destroy
@@ -58,8 +62,7 @@ class User < ActiveRecord::Base
     self == target_support_user
   end
 
-  def removeSupport(other_user)
-    support = supporting_relationships.find_by(support_id: other_user.id)
-    support&.destroy
+  def check_supporting(other_user)
+    supporting_relationships.find_by(support_id: other_user.id).exists?
   end
 end

@@ -38,7 +38,7 @@ const deleteImage = async (item) => {
         image_id: item.id,
       },
     });
-    imageUrls.value = res.data.imageUrls;
+    imageUrls.value = res.data.image_urls;
   } catch (error) {
     if (error.response == null) {
       toastNotifications.displayError("画像の削除に失敗しました", "");

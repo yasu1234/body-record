@@ -41,7 +41,7 @@ const deleteImage = async (item) => {
         image_id: item.id
       },
     });
-    imageUrls.value = res.data.imageUrls;
+    imageUrls.value = res.data.image_urls;
   } catch (error) {
     let errorMessage = "";
     if (error.response != null && error.response.status == 401) {
