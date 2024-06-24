@@ -91,7 +91,7 @@ const search = async () => {
         sort_type:
           selectCode.value === menuList.value[1].name
             ? menuList.value[1].code
-            : menuList.value[0].code
+            : menuList.value[0].code,
       },
     });
 
