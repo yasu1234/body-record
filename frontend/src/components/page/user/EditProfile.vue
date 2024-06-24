@@ -41,16 +41,28 @@ const getProfile = async () => {
   try {
     const res = await axiosInstance.get(`/api/v1/profiles/${userId.value}`);
 
+    userThumbnail.value = res.data.user.image_url;
+
+    console.log(res);
+
+    if (res.data.user.profile == null) {
+      goalWeight.value = null;
+      goalFatPercentage.value = null;
+      profile.value = "";
+      return;
+    }  
+
     goalWeight.value = res.data.user.profile.goal_weight;
     goalFatPercentage.value = res.data.user.profile.goal_fat_percentage;
-
     if (res.data.user.profile.profile !== null) {
       profile.value = res.data.user.profile.profile;
     }
-
-    userThumbnail.value = res.data.user.image_url;
   } catch (error) {
-    toastNotifications.displayError("プロフィール情報取得にに失敗しました", "");
+    let errorMessage = "";
+    if (error.response != null && error.response.status === 401) {
+      errorMessage = "ログインしてください";
+    }
+    toastNotifications.displayError("プロフィール情報取得に失敗しました", errorMessage);
   }
 };
 
@@ -78,7 +90,10 @@ const updateProfile = async () => {
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "プロフィール変更に失敗しました",
       errorMessages
