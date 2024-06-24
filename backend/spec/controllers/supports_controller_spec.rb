@@ -90,7 +90,7 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
 
       it "応援データが取得できる" do
         json_response = JSON.parse(response.body)
-        expect(json_response["user"]["supporters"].count).to eq 0
+        expect(json_response["user"]["supporter_count"]).to eq 0
         expect(json_response["user"]["is_support"]).to eq false
       end
     end
