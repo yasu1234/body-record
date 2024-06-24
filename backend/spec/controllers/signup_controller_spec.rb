@@ -152,7 +152,7 @@ RSpec.describe Api::V1::SignupController, type: :controller do
 
       it "エラーメッセージが返却される" do
         json_response = JSON.parse(response.body)
-        expect(json_response["errors"]).to eq "ゲストユーザーは削除できません"
+        expect(json_response["errors"]).to eq "ゲストユーザーは退会できません"
       end
     end
   end

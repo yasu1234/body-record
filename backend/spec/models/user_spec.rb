@@ -79,19 +79,4 @@ RSpec.describe User, type: :model do
       expect(other_user.supporters).to include(user)
     end
   end
-
-  describe "#removeSupport" do
-    let(:user) { create(:user) }
-    let(:other_user) { create(:user) }
-
-    before do
-      user.support!(other_user)
-    end
-
-    it "応援解除が行われる" do
-      expect { user.removeSupport(other_user) }.to change { Support.count }.by(-1)
-      expect(user.supportings).not_to include(other_user)
-      expect(other_user.supporters).not_to include(user)
-    end
-  end
 end

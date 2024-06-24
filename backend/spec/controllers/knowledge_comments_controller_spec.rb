@@ -92,7 +92,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
       end
     end
 
-    context "record_idが不足" do
+    context "knowledge_idが不足" do
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)

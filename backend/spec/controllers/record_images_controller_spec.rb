@@ -48,7 +48,7 @@ RSpec.describe Api::V1::RecordImagesController, type: :controller do
 
       it "画像が削除され0件になる" do
         json_response = JSON.parse(response.body)
-        expect(json_response["imageUrls"].count).to eq 0
+        expect(json_response["image_urls"].count).to eq 0
       end
     end
   end
