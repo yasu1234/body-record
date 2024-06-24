@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
 import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
 import { KnowledgeListSortType } from "../../../js/const.js";
+import RadioButton from "primevue/radiobutton";
 
 import TabMenu from "../../layout/TabMenu.vue";
 import Header from "../../layout/Header.vue";
@@ -25,7 +26,7 @@ const isShowMine = ref(false);
 const shouldLogin = ref(false);
 const isEmpty = ref(false);
 const menuList = ref(KnowledgeListSortType);
-const selectCode = ref(menuList.value[0].code);
+const selectCode = ref(menuList.value[0].name);
 const totalCount = ref(0);
 
 onMounted(() => {
@@ -87,7 +88,10 @@ const search = async () => {
         is_bookmark: isBookmark.value,
         is_show_mine: isShowMine.value,
         page: pageNum.value,
-        sort_type: selectCode.value
+        sort_type:
+          selectCode.value === menuList.value[1].name
+            ? menuList.value[1].code
+            : menuList.value[0].code
       },
     });
 
@@ -128,8 +132,10 @@ const updatePaginateItems = function (pageNum) {
 };
 
 const changeSortType = (event) => {
-  const selectedCode = event.target.value;
-  selectCode.value = parseInt(selectedCode);
+  if (event == null) {
+    return;
+  }
+  selectCode.value = event;
   search();
 };
 
@@ -182,16 +188,28 @@ const addKnowledge = () => {
   </div>
   <div class="py-8">
     <div v-if="searchResult.length > 0">
-      <div>
-        <select
-          v-model="selectCode"
-          class="select-box text-gray-900 text-sm rounded-lg block p-2.5"
-          @change="changeSortType"
+      <div class="select-box">
+        <div
+          v-for="menu in menuList"
+          :key="menu.code"
+          class="text-sm rounded-lg block p-3"
         >
-          <option v-for="menu in menuList" :key="menu.code" :value="menu.code">
-            {{ menu.name }}
-          </option>
-        </select>
+          <RadioButton
+            v-model="selectCode"
+            :inputId="menu.code"
+            :value="menu.name"
+            @update:model-value="changeSortType"
+            :pt="{
+              root: {
+                style: {
+                  border: '1px solid #000',
+                  height: '100%',
+                },
+              },
+            }"
+          />
+          <label :for="menu.key" class="ml-2">{{ menu.name }}</label>
+        </div>
       </div>
       <p class="text-center font-bold mt-8">合計{{ totalCount }}件</p>
       <KnowledgeCard
