@@ -1,0 +1,201 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MyRecordList SnapShotテスト初期表示(データあり) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <div
+    class="record-search-container"
+  >
+    <input
+      id="keyword"
+      name="keywordName"
+      placeholder="キーワードで検索"
+      type="text"
+    />
+    <div
+      class="record-search-time-list"
+    >
+      <div
+        class="item"
+      >
+        <p
+          class="input-title"
+        >
+          検索開始日
+        </p>
+        <date-picker-stub
+          date=""
+          isstart="true"
+        />
+      </div>
+      <div
+        class="item"
+      >
+        <p
+          class="input-title"
+        >
+          検索終了日
+        </p>
+        <date-picker-stub
+          date=""
+          isstart="false"
+        />
+      </div>
+    </div>
+    <div
+      class="mt-5"
+    >
+      <input
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+        id="statusSelect"
+        type="checkbox"
+      />
+      <label
+        class="ml-2"
+      >
+        非公開記録は表示しない
+      </label>
+    </div>
+    <div
+      class="search-button-area"
+    >
+      <search-button-stub />
+    </div>
+  </div>
+  <div
+    class="add-button-area"
+  >
+    <button
+      class="add-button p-2.5"
+    >
+       + 記録を追加する 
+    </button>
+  </div>
+  <div
+    class="py-8"
+  >
+    <div>
+      <p
+        class="text-center font-bold"
+      >
+        合計0件
+      </p>
+      
+      <div
+        class="mt-5"
+      >
+        <record-card-stub
+          record="[object Object]"
+        />
+      </div>
+      <div
+        class="mt-5"
+      >
+        <record-card-stub
+          record="[object Object]"
+        />
+      </div>
+      
+      <div>
+        <list-page-stub
+          modelvalue="1"
+          pagecount="2"
+        />
+      </div>
+    </div>
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  
+</div>
+`;
+
+exports[`UserList SnapShotテスト初期表示(データなし) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <div
+    class="record-search-container"
+  >
+    <input
+      id="keyword"
+      name="keywordName"
+      placeholder="キーワードで検索"
+      type="text"
+    />
+    <div
+      class="record-search-time-list"
+    >
+      <div
+        class="item"
+      >
+        <p
+          class="input-title"
+        >
+          検索開始日
+        </p>
+        <date-picker-stub
+          date=""
+          isstart="true"
+        />
+      </div>
+      <div
+        class="item"
+      >
+        <p
+          class="input-title"
+        >
+          検索終了日
+        </p>
+        <date-picker-stub
+          date=""
+          isstart="false"
+        />
+      </div>
+    </div>
+    <div
+      class="mt-5"
+    >
+      <input
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+        id="statusSelect"
+        type="checkbox"
+      />
+      <label
+        class="ml-2"
+      >
+        非公開記録は表示しない
+      </label>
+    </div>
+    <div
+      class="search-button-area"
+    >
+      <search-button-stub />
+    </div>
+  </div>
+  <div
+    class="add-button-area"
+  >
+    <button
+      class="add-button p-2.5"
+    >
+       + 記録を追加する 
+    </button>
+  </div>
+  <div
+    class="py-8"
+  >
+    <!--v-if-->
+    <div>
+      <result-empty-stub
+        class="mx-5"
+      />
+    </div>
+    <!--v-if-->
+  </div>
+  
+</div>
+`;

@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SupportList SnapShotテスト初期表示(データあり) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="mt-5 p-2.5 text-center"
+  >
+    <p
+      class="font-bold"
+    >
+      サポート(応援)しているユーザー一覧
+    </p>
+    <div>
+      
+      <div
+        class="support-card"
+      >
+        <support-card-stub
+          issupport="true"
+          user="[object Object]"
+        />
+      </div>
+      <div
+        class="support-card"
+      >
+        <support-card-stub
+          issupport="true"
+          user="[object Object]"
+        />
+      </div>
+      
+      <div
+        class="mt-12"
+      >
+        <list-page-stub
+          modelvalue="1"
+          pagecount="1"
+        />
+      </div>
+    </div>
+  </div>
+  
+</div>
+`;
+
+exports[`SupportList SnapShotテスト初期表示(データなし) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="mt-5 p-2.5 text-center"
+  >
+    <p
+      class="font-bold"
+    >
+      サポート(応援)しているユーザー一覧
+    </p>
+    <div>
+      <p
+        class="mx-5 mt-5"
+      >
+        サポートしているユーザーはいません
+      </p>
+    </div>
+  </div>
+  
+</div>
+`;

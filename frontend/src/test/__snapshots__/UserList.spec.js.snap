@@ -1,0 +1,183 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserList SnapShotテスト初期表示(データあり) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="2"
+  />
+  <div
+    class="user-search-container"
+  >
+    <p
+      class="font-bold"
+    >
+      ユーザーの絞り込み
+    </p>
+    <div
+      class="mt-2.5"
+    >
+      <input
+        name="keywordName"
+        placeholder="名前で検索"
+        type="text"
+      />
+    </div>
+    <div
+      class="mt-5"
+    >
+      <input
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+        type="checkbox"
+      />
+      <label
+        class="ml-2.5"
+      >
+        応援しているユーザーのみ表示
+      </label>
+    </div>
+    <div
+      class="search-button-area"
+    >
+      <search-button-stub />
+    </div>
+  </div>
+  <div
+    class="py-8"
+  >
+    <div>
+      <div
+        class="select-box"
+      >
+        
+        <div
+          class="text-sm rounded-lg block p-3"
+        >
+          <radio-button-stub
+            inputid="1"
+            modelvalue="直近で作成された順"
+            pt="[object Object]"
+            value="直近で作成された順"
+          />
+          <label
+            class="ml-2"
+          >
+            直近で作成された順
+          </label>
+        </div>
+        <div
+          class="text-sm rounded-lg block p-3"
+        >
+          <radio-button-stub
+            inputid="2"
+            modelvalue="直近で作成された順"
+            pt="[object Object]"
+            value="応援しているユーザーが多い順"
+          />
+          <label
+            class="ml-2"
+          >
+            応援しているユーザーが多い順
+          </label>
+        </div>
+        
+      </div>
+      <p
+        class="text-center font-bold mt-8"
+      >
+        合計0件
+      </p>
+      
+      <div
+        class="user-card"
+      >
+        <user-card-stub
+          user="[object Object]"
+        />
+      </div>
+      <div
+        class="user-card"
+      >
+        <user-card-stub
+          user="[object Object]"
+        />
+      </div>
+      
+      <div
+        class="mt-12"
+      >
+        <list-page-stub
+          modelvalue="1"
+          pagecount="2"
+        />
+      </div>
+    </div>
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  
+</div>
+`;
+
+exports[`UserList SnapShotテスト初期表示(データなし) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="2"
+  />
+  <div
+    class="user-search-container"
+  >
+    <p
+      class="font-bold"
+    >
+      ユーザーの絞り込み
+    </p>
+    <div
+      class="mt-2.5"
+    >
+      <input
+        name="keywordName"
+        placeholder="名前で検索"
+        type="text"
+      />
+    </div>
+    <div
+      class="mt-5"
+    >
+      <input
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+        type="checkbox"
+      />
+      <label
+        class="ml-2.5"
+      >
+        応援しているユーザーのみ表示
+      </label>
+    </div>
+    <div
+      class="search-button-area"
+    >
+      <search-button-stub />
+    </div>
+  </div>
+  <div
+    class="py-8"
+  >
+    <!--v-if-->
+    <div>
+      <result-empty-stub
+        class="mx-5"
+      />
+    </div>
+    <!--v-if-->
+  </div>
+  
+</div>
+`;
