@@ -84,7 +84,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
     context "未ログイン" do
       before do
         request.headers.merge!(common_header)
-        post :create, format: :json, params: valid_params
+        post :create, format: :json, params: { comment: valid_params }
       end
 
       it "401(未認証のステータスコード)が発生" do
@@ -96,7 +96,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
-        post :create, format: :json, params: knowledge_id_lack_param
+        post :create, format: :json, params: { comment: knowledge_id_lack_param }
       end
 
       it "404エラーが発生" do
@@ -108,7 +108,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
-        post :create, format: :json, params: valid_params
+        post :create, format: :json, params: { comment: valid_params }
       end
 
       it "ステータスコードが200" do
