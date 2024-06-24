@@ -36,10 +36,9 @@ onMounted(() => {
 
 const deleteImage = async (item) => {
   try {
-    const res = await axiosInstance.delete("/api/v1/record_images", {
+    const res = await axiosInstance.delete(`/api/v1/record_images/${recordId.value}`, {
       params: {
-        id: recordId.value,
-        image_id: item.id,
+        image_id: item.id
       },
     });
     imageUrls.value = res.data.imageUrls;
