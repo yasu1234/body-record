@@ -25,7 +25,7 @@ class Knowledge < ApplicationRecord
   def image_urls
     images.map do |image|
       {
-        url: "http://localhost:3000" + Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true),
+        url: ENV["API_HOST"] + Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true),
         id: image.id,
         filename: image.filename.to_s
       }
