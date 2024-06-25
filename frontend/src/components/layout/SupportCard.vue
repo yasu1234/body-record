@@ -12,7 +12,7 @@
     </div>
     <div>
       <Button
-        class="user-name-link"
+        class="user-name-link ml-2"
         :label="user.name"
         @click.stop="showUser"
         link

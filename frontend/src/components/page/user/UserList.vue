@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <TabMenu :currentId="2" />
+  <TabMenu :currentId=3 />
   <div class="user-search-container">
     <p class="font-bold">ユーザーの絞り込み</p>
     <div class="mt-2.5">

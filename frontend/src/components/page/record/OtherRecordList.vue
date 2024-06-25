@@ -1,3 +1,62 @@
+<template>
+  <Header />
+  <TabMenu :currentId=3 />
+  <div class="record-search-container">
+    <p class="search-item-title font-bold" v-if="user != null">
+      {{ user.name }}さんの記録検索
+    </p>
+    <input
+      type="text"
+      id="keyword"
+      name="keywordName"
+      placeholder="キーワードで検索"
+      v-model="keyword"
+    />
+    <div class="record-search-time-list">
+      <div class="item">
+        <p class="search-item-title">検索開始日</p>
+        <DatePicker
+          isStart="true"
+          :date="startDate"
+          @update:date="startDateChange"
+        />
+      </div>
+      <div class="item">
+        <p class="search-item-title">検索終了日</p>
+        <DatePicker
+          isStart="false"
+          :date="endDate"
+          @update:date="endDateChange"
+        />
+      </div>
+    </div>
+    <div class="search-button-area">
+      <SearchButton @search-button-click="searchParamChange" />
+    </div>
+  </div>
+  <div class="py-8">
+    <div v-if="searchResult.length > 0" class="mt-8">
+      <p class="text-center font-bold">合計{{ totalCount }}件</p>
+      <div v-for="record in searchResult" class="mt-5">
+        <RecordCard :record="record" @record-click="clickRecord(record)" />
+      </div>
+      <div>
+        <ListPage
+          :pageCount="pageCount"
+          v-model="page"
+          @change-page="updatePaginateItems"
+        />
+      </div>
+    </div>
+    <div div v-if="isEmpty">
+      <ResultEmpty class="mx-5" />
+    </div>
+    <div v-if="shouldLogin">
+      <LoginIntroductionView class="mx-5" />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
@@ -23,7 +82,6 @@ const startDate = ref("");
 const endDate = ref("");
 const shouldLogin = ref(false);
 const searchResult = ref([]);
-const currentId = ref(2);
 const pageCount = ref(1);
 const page = ref(1);
 const isEmpty = ref(false);
@@ -177,65 +235,6 @@ const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu :currentId="currentId" />
-  <div class="record-search-container">
-    <p class="search-item-title font-bold" v-if="user != null">
-      {{ user.name }}さんの記録検索
-    </p>
-    <input
-      type="text"
-      id="keyword"
-      name="keywordName"
-      placeholder="キーワードで検索"
-      v-model="keyword"
-    />
-    <div class="record-search-time-list">
-      <div class="item">
-        <p class="search-item-title">検索開始日</p>
-        <DatePicker
-          isStart="true"
-          :date="startDate"
-          @update:date="startDateChange"
-        />
-      </div>
-      <div class="item">
-        <p class="search-item-title">検索終了日</p>
-        <DatePicker
-          isStart="false"
-          :date="endDate"
-          @update:date="endDateChange"
-        />
-      </div>
-    </div>
-    <div class="search-button-area">
-      <SearchButton @search-button-click="searchParamChange" />
-    </div>
-  </div>
-  <div class="py-8">
-    <div v-if="searchResult.length > 0" class="mt-8">
-      <p class="text-center font-bold">合計{{ totalCount }}件</p>
-      <div v-for="record in searchResult" class="mt-5">
-        <RecordCard :record="record" @record-click="clickRecord(record)" />
-      </div>
-      <div>
-        <ListPage
-          :pageCount="pageCount"
-          v-model="page"
-          @change-page="updatePaginateItems"
-        />
-      </div>
-    </div>
-    <div div v-if="isEmpty">
-      <ResultEmpty class="mx-5" />
-    </div>
-    <div v-if="shouldLogin">
-      <LoginIntroductionView class="mx-5" />
-    </div>
-  </div>
-</template>
 
 <style scoped>
 input[type="text"] {

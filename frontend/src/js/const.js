@@ -6,9 +6,10 @@ export const PasswordType = {
 };
 
 export const TabMenuList = [
-  { id: 1, label: "My記録" },
-  { id: 2, label: "みんなの記録" },
-  { id: 3, label: "健康・フィットネス記事" },
+  { id: 1, label: "ホーム" },
+  { id: 2, label: "My記録" },
+  { id: 3, label: "みんなの記録" },
+  { id: 4, label: "健康・フィットネス記事" },
 ];
 
 export const HeaderMenuList = [

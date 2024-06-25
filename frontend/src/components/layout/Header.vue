@@ -7,7 +7,7 @@
       <div class="navigation-menus">
         <button
           v-show="isLogin === false"
-          class="account-introducton-button mr-7"
+          class="account-introduction-button mr-7"
           @click="showAccountIntroduction"
         >
           会員登録・ログイン
@@ -199,6 +199,9 @@ header {
 .navigation-menus {
   display: flex;
   justify-content: space-between;
+}
+.account-introduction-button {
+  font-weight: bold;
 }
 .user-button {
   padding: 0;

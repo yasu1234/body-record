@@ -96,3 +96,9 @@ jobs:
       - name: Deploy to ECS
         run: |
           aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
+
+      - name: Install ecschedule
+        uses: Songmu/ecschedule@main
+
+      - name: Run ecschedule
+        run: ecschedule -conf ecschedule.yaml apply -all

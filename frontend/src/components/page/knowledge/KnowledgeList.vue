@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <TabMenu :currentId="3" />
+  <TabMenu :currentId=4 />
   <div class="knowledge-search-container">
     <div class="mt-5">
       <input

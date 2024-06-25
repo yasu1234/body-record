@@ -1,7 +1,7 @@
 <template>
   <div class="modal-container">
     <div class="modal-header">
-      <slot name="header">{{ title }}</slot>
+      <p name="header" class="font-bold">{{ title }}</p>
     </div>
     <div class="modal-body">
       <slot name="body"
