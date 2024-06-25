@@ -4,7 +4,8 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
   before_action :check_login, only: %i[update destroy]
 
   def update
-    if current_api_v1_user.status == User::Status::GUEST_USER
+    if current_api_v1_user.status == User::Status::GUEST_USER &&
+      (account_update_params[:email].present? || account_update_params[:password].present?)
       render json: { errors: "ゲストユーザーは変更できません" }, status: :unprocessable_entity and return
     end
 
@@ -16,7 +17,7 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
   end
 
   def destroy
-    if current_api_v1_user.status == 1
+    if current_api_v1_user.status == User::Status::GUEST_USER
       render json: { errors: "ゲストユーザーは退会できません" }, status: :unprocessable_entity and return
     end
 

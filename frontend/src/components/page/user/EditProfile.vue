@@ -84,8 +84,8 @@ const file = ref(null);
 const userThumbnail = ref(null);
 const userId = ref(0);
 
-function onFileChange(event) {
-  file.value = event[0];
+const onFileChange = (event) => {
+  file.value = event;
 }
 
 onMounted(() => {
@@ -126,12 +126,18 @@ const getProfile = async () => {
 const updateProfile = async () => {
   try {
     const formData = new FormData();
-    formData.append("profile", profile.value);
-    formData.append("goal_weight", goalWeight.value);
-    formData.append("goal_fat_percentage", goalFatPercentage.value);
-
+    if (profile.value != null) {
+      formData.append("profile", profile.value);
+    }
+    if (goalWeight.value != null) {
+      formData.append("goal_weight", goalWeight.value);
+    }
+    if (goalFatPercentage.value != null) {
+      formData.append("goal_fat_percentage", goalFatPercentage.value);
+    }
+    
     const res = await axiosInstance.post(`/api/v1/profiles`, formData);
-    if (file.value !== null) {
+    if (file.value != null) {
       updateProfileImage();
     } else {
       toastNotifications.displayInfo("プロフィールを更新しました", "");
