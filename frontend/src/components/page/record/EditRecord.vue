@@ -45,7 +45,16 @@
               label=""
               icon="pi pi-trash"
               class="delete-button"
-              @click="deleteImage(item)"
+              @click="showConfirmDialog"
+            />
+          </div>
+          <div v-if="isImageDeleteConfirmDialog" class="modal-overlay">
+            <ConfirmDialog
+              :title="'画像を削除します'"
+              :message="'よろしいですか？'"
+              :positiveButtonTitle="'削除'"
+              @handle-positive="deleteImage(item)"
+              @cancel="cancelImageDelete"
             />
           </div>
         </div>
@@ -79,6 +88,7 @@ import DatePicker from "../../atom/DatePicker.vue";
 import Header from "../../layout/Header.vue";
 import TabMenu from "../../layout/TabMenu.vue";
 import RecordMemoInput from "../../layout/RecordMemoInput.vue";
+import ConfirmDialog from "../../layout/ConfirmDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -94,18 +104,23 @@ const files = ref([...Array(3)]);
 const imageUrls = ref([]);
 const recordId = ref(null);
 const isHidden = ref(false);
+const isImageDeleteConfirmDialog = ref(false);
 
 onMounted(() => {
   getDetail();
 });
 
 const deleteImage = async (item) => {
+  isImageDeleteConfirmDialog.value = false;
   try {
-    const res = await axiosInstance.delete(`/api/v1/record_images/${recordId.value}`, {
-      params: {
-        image_id: item.id
-      },
-    });
+    const res = await axiosInstance.delete(
+      `/api/v1/record_images/${recordId.value}`,
+      {
+        params: {
+          image_id: item.id,
+        },
+      }
+    );
     imageUrls.value = res.data.image_urls;
   } catch (error) {
     let errorMessage = "";
@@ -207,6 +222,14 @@ const memoEdit = (editingMemo) => {
   memo.value = editingMemo;
 };
 
+const showConfirmDialog = () => {
+  isImageDeleteConfirmDialog.value = true;
+}
+
+const cancelImageDelete = () => {
+  isImageDeleteConfirmDialog.value = false;
+}
+
 const showRecordDetail = () => {
   router.push({ name: "RecordDetail", params: { id: recordId.value } });
 };
@@ -251,13 +274,16 @@ input[type="text"] {
   padding-left: 20px;
 }
 .thumbnail img {
-  height: 100%;
+  height: 200px;
+  width: 200px;
 }
 .thumbnail-image {
-  height: 100%;
+  height: 200px;
+  width: 200px;
 }
 .thumbnail-image img {
-  height: 100%;
+  height: 200px;
+  width: 200px;
 }
 .thumbnail-actions {
   position: absolute;
