@@ -18,6 +18,7 @@ class Record < ApplicationRecord
 
   scope :latest_records, -> { order(date: :desc) }
   scope :limit_count, ->(count) { limit(count) }
+  scope :open, -> { where(open_status: 1) }
 
   scope :in_month, ->(year, month) {
     start_date = DateTime.new(year, month, 1)

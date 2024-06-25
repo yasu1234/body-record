@@ -6,7 +6,7 @@ class Api::V1::RecordsController < ApplicationController
       render json: { errors: "ユーザー情報が特定できません" }, status: :bad_request and return
     end
 
-    base_scope = Record.where(open_status: 1).where(user_id: params[:user_id])
+    base_scope = Record.open.where(user_id: params[:user_id])
     records, total_pages, total_count = Record.search_and_paginate(params, base_scope)
 
     render json: { 
