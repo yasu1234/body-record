@@ -32,7 +32,7 @@ h1 {
   line-height: 1.1;
 }
 button {
-  background: #f58505;
+  background: #ffa500;
   color: white;
   border-radius: 8px;
   border: 0px solid transparent;
@@ -102,7 +102,7 @@ p.validation-error-message {
 /* タイトルの装飾(1文字目を大きくして色を変える) */
 .title_line {
   font-weight: bold;
-  border-bottom: 2px solid #f58505;
+  border-bottom: 2px solid #ffa500;
   padding: 0.3em;
   margin-bottom: 0.3em;
   margin-left: 20px;
@@ -110,11 +110,11 @@ p.validation-error-message {
 }
 .title_line:first-letter {
   font-size: 1.5em;
-  color: #f58505;
+  color: #ffa500;
 }
 /* マイページ・ユーザーページの記録と記事のタイトルの装飾 */
 .section-title {
-  border-bottom: solid 5px #f58505;
+  border-bottom: solid 5px #ffa500;
   font-size: 25px;
   font-weight: bold;
 }
@@ -147,6 +147,6 @@ p.validation-error-message {
     background-color: #ffffff;
   }
   a:hover {
-    color: #f58505;
+    color: #ffa500;
   }
 }
