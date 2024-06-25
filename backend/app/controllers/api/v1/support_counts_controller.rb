@@ -15,7 +15,5 @@ class Api::V1::SupportCountsController < ApplicationController
     }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のユーザーが見つかりません" }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 end

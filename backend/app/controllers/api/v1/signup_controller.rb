@@ -13,8 +13,6 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
     end
 
     render json: { user: current_api_v1_user }, status: :ok
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   def destroy
@@ -26,8 +24,6 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
     render json: { user: nil }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   private

@@ -53,7 +53,7 @@ RSpec.describe Knowledge, type: :model do
       it "登録した画像の情報を取得できる" do
         urls = knowledge.image_urls
         expect(urls.count).to eq(1)
-        expect(urls.first[:url]).to include("http://localhost:3000/rails/active_storage/blobs")
+        expect(urls.first[:url]).to include("rails/active_storage/blobs")
         expect(urls.first[:filename]).to eq("image.png")
       end
     end

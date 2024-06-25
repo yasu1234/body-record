@@ -47,7 +47,5 @@ class Api::V1::UsersController < ApplicationController
     render json: { user: user.as_json(only: %i[id name], methods: :image_url) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のユーザーが見つかりません" }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 end

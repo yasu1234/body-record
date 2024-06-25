@@ -20,8 +20,6 @@ class Api::V1::RecordCommentsController < ApplicationController
         ).merge(is_mine_comment: comment.user_id == current_api_v1_user.id)
       end
     }, status: :ok
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   def create
@@ -47,8 +45,6 @@ class Api::V1::RecordCommentsController < ApplicationController
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   rescue ActiveRecord::RecordInvalid => e
     render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   def destroy
@@ -61,8 +57,6 @@ class Api::V1::RecordCommentsController < ApplicationController
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   rescue ActiveRecord::RecordNotDestroyed => e
     render json: { errors: e.message }, status: :unprocessable_entity
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   private

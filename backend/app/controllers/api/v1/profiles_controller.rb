@@ -12,8 +12,6 @@ class Api::V1::ProfilesController < ApplicationController
       ) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   def create
@@ -25,8 +23,6 @@ class Api::V1::ProfilesController < ApplicationController
     render json: { user: current_api_v1_user.profile.as_json(include: { user: { only: [:name], methods: :image_url } }) }, status: :ok
   rescue ActiveRecord::RecordInvalid => e
     render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   private

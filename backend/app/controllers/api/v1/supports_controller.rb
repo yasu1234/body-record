@@ -104,7 +104,5 @@ class Api::V1::SupportsController < ApplicationController
     render json: { errors: "対象のユーザーが見つかりません" }, status: :not_found
   rescue ActiveRecord::RecordNotDestroyed => e
     render json: { errors: e.message }, status: :unprocessable_entity
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 end

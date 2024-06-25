@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :null_session
 
+  rescue_from StandardError, with: :rescue_500
+
   def check_login
     render json: { errors: "未ログイン" }, status: :unauthorized unless api_v1_user_signed_in?
   end
@@ -16,5 +18,9 @@ class ApplicationController < ActionController::Base
       return if request.xhr?
 
       render json: { errors: "forbidden" }, status: :forbidden
+    end
+
+    def rescue_500(e)
+      render json: { errors: e.message }, status: :internal_server_error
     end
 end

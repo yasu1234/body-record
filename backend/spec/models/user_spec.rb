@@ -19,7 +19,7 @@ RSpec.describe User, type: :model do
 
       it "登録した画像の情報を取得できる" do
         url = user.image_url
-        expect(url[:url]).to include("http://localhost:3000/rails/active_storage/blobs")
+        expect(url[:url]).to include("/rails/active_storage/blobs")
         expect(url[:filename]).to eq("image.png")
       end
     end

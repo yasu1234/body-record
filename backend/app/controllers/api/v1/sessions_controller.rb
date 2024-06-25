@@ -8,8 +8,6 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
     @token = @resource.create_token
     @resource.save!
     render_create_success
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   def check_login

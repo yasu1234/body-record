@@ -8,7 +8,5 @@ class Api::V1::RecordImagesController < ApplicationController
     render json: { image_urls: record.image_urls }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 end

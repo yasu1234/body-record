@@ -23,8 +23,6 @@ class Api::V1::MyRecordsController < ApplicationController
 
     record.save!
     render json: { record: }, status: :ok
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   def update
@@ -44,8 +42,6 @@ class Api::V1::MyRecordsController < ApplicationController
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   rescue ActiveRecord::RecordInvalid => e
     render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   private

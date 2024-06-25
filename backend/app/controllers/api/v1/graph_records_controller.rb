@@ -14,7 +14,5 @@ class Api::V1::GraphRecordsController < ApplicationController
     render json: { records: records_with_empty_dates.as_json(methods: :graph_formatted_date) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { error: "対象のデータが見つかりません" }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 end
