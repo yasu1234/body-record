@@ -26,7 +26,7 @@ class Record < ApplicationRecord
     where(date: start_date..end_date)
   }
 
-  def self.get_month_records(year, month, user)
+  def self.get_month_records(year, month, user, is_other)
     start_date = DateTime.new(year, month, 1)
     end_date = start_date.next_month
 
@@ -43,7 +43,16 @@ class Record < ApplicationRecord
     # 1ヶ月の記録をまとめる、なければ体重と体脂肪率が0のデータを作成(DBには保存しない)
     dates.each do |date|
       record = records.find { |r| r.date == date }
-      records_with_empty_dates << (record || Record.new(date:, weight: 0, fat_percentage: 0))
+      if is_other
+        new_record = if record.nil? || record.open_status != 1
+          Record.new(date:, weight: 0, fat_percentage: 0)
+        else
+          record
+        end
+        records_with_empty_dates << new_record
+      else
+        records_with_empty_dates << (record || Record.new(date:, weight: 0, fat_percentage: 0))
+      end
     end
 
     records_with_empty_dates
