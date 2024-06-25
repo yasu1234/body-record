@@ -26,6 +26,7 @@ jobs:
     env:
       API_DOMAIN: "http://localhost"
       GUEST_USER_ADDRESS: "test@text.com"
+      API_HOST: 'https://localhost:3000'
     services:
       postgres:
         image: postgres:15.2
