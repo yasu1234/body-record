@@ -114,8 +114,6 @@ class Api::V1::KnowledgesController < ApplicationController
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   rescue ActiveRecord::RecordNotDestroyed => e
     render json: { errors: e.message }, status: :unprocessable_entity
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   private

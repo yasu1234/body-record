@@ -2,8 +2,8 @@
   <div v-if="!isEditing">
     <div class="comment-header pr-2.5">
       <div class="comment-user">
-        <div class="comment-thumbnail-image" v-if="imageUrl != null">
-          <img :src="imageUrl" alt="ユーザー" class="comment-thumbnail-image" />
+        <div class="comment-thumbnail-image" v-if="imageUrl != null && imageUrl.url != null">
+          <img :src="imageUrl.url" alt="ユーザー" class="comment-thumbnail-image" />
         </div>
         <p class="ml-2.5">{{ userName }}</p>
       </div>
