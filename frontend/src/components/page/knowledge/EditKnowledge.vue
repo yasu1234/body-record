@@ -13,6 +13,16 @@
         @content-edit="contentEdit"
       />
     </div>
+    <div class="markdown-info">
+      マークダウンを一部使用できます。詳しくは<a
+        href="https://kumaapp.amebaownd.com/posts/54283163"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="info-link"
+        >こちら</a
+      >をご覧ください。<br>
+      特に複数行の改行は使うことが多いと思うので必ずご確認ください
+    </div>
   </div>
   <div v-if="imageUrls !== null && imageUrls.length !== 0">
     <p class="mt-5 ml-5">登録済みの画像</p>
@@ -237,5 +247,17 @@ const showKnowledgeDetail = (item) => {
   border-radius: 4px;
   cursor: pointer;
   border-radius: 50%;
+}
+.markdown-info {
+  font-size: 14px;
+  color: #333;
+}
+.info-link {
+  color: #ffa500;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.info-link:hover {
+  color: #ffa500;
 }
 </style>

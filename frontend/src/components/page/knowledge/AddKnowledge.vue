@@ -13,6 +13,16 @@
         @content-edit="contentEdit"
       />
     </div>
+    <div class="markdown-info">
+      マークダウンを一部使用できます。詳しくは<a
+        href="https://kumaapp.amebaownd.com/posts/54283163"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="info-link"
+        >こちら</a
+      >をご覧ください。<br>
+      特に複数行の改行は使うことが多いと思うので必ずご確認ください
+    </div>
   </div>
   <div class="p-5">
     <h2>関連画像(5枚まで登録できます)</h2>
@@ -85,10 +95,7 @@ const registerKnowledge = async () => {
       errorMessage = "ログインしてください";
     }
 
-    toastNotifications.displayError(
-      "記事の追加に失敗しました",
-      errorMessage
-    );
+    toastNotifications.displayError("記事の追加に失敗しました", errorMessage);
   }
 };
 
@@ -114,5 +121,17 @@ const showKnowledgeDetail = (item) => {
   font-size: 16px;
   font-weight: bold;
   padding: 10px 50px;
+}
+.markdown-info {
+  font-size: 14px;
+  color: #333;
+}
+.info-link {
+  color: #ffa500;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.info-link:hover {
+  color: #ffa500;
 }
 </style>
