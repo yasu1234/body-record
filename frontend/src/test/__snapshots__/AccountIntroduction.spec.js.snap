@@ -13,11 +13,11 @@ exports[`Contact SnapShotテスト初期表示 1`] = `
     class="home-logo"
     src=""
   />
-  <h1
-    class="text-center mt-5"
+  <p
+    class="introduction-title mt-5"
   >
     In-body.comへようこそ！
-  </h1>
+  </p>
   <div
     class="account-buttons mt-5"
   >

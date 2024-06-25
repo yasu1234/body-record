@@ -44,7 +44,7 @@ exports[`MyPage SnapShotテスト初期表示(データあり) 1`] = `
         <span
           class="section-title"
         >
-          投稿した記録
+          作成した記録
         </span>
       </div>
       <div
@@ -78,7 +78,7 @@ exports[`MyPage SnapShotテスト初期表示(データあり) 1`] = `
         <span
           class="section-title"
         >
-          投稿した知識
+          投稿した記事
         </span>
       </div>
       <div
@@ -149,14 +149,14 @@ exports[`MyPage SnapShotテスト初期表示(データなし) 1`] = `
         <span
           class="section-title"
         >
-          投稿した記録
+          作成した記録
         </span>
       </div>
       <div
         class="mt-5"
       >
         <p>
-          登録された記録はありません
+          作成された記録はありません
         </p>
       </div>
       <!--v-if-->
@@ -170,14 +170,14 @@ exports[`MyPage SnapShotテスト初期表示(データなし) 1`] = `
         <span
           class="section-title"
         >
-          投稿した知識
+          投稿した記事
         </span>
       </div>
       <div
         class="mt-5"
       >
         <p>
-          記事を作成していません
+          記事を投稿していません
         </p>
       </div>
       <!--v-if-->
