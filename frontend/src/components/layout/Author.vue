@@ -1,40 +1,3 @@
-<script setup>
-import { ref, onMounted, watch } from "vue";
-
-const props = defineProps(["author", "support"]);
-
-const emit = defineEmits(["suport-on", "support-off"]);
-
-const onChange = (e) => {
-  file.value = e.target.files[0];
-  emit("change", file.value, index.value);
-};
-
-const author = ref(null);
-const support = ref(null);
-
-onMounted(() => {
-  setProps();
-});
-
-watch(props, () => {
-  setProps();
-});
-
-const setProps = () => {
-  author.value = props.author;
-  support.value = props.support;
-};
-
-const supportOn = () => {
-  emit("suport-on");
-};
-
-const supportOff = () => {
-  emit("suport-off");
-};
-</script>
-
 <template>
   <div class="author">
     <div
@@ -54,7 +17,10 @@ const supportOff = () => {
     <p class="ml-2.5" v-if="author !== null">{{ author.name }}</p>
   </div>
   <div class="support-container mt-2.5 ml-5 pb-5">
-    <button v-if="author !== null && author.isSupport" class="support-button">
+    <button
+      v-if="support !== null && support.is_support"
+      class="support-button"
+    >
       <img
         src="../../assets/image/support_on.png"
         alt="ユーザー"
@@ -70,9 +36,40 @@ const supportOff = () => {
         @click="supportOn"
       />
     </button>
-    <p class="ml-2.5" v-if="support !== null">{{ support.supporterCount }}</p>
+    <p class="ml-2.5" v-if="support !== null">{{ support.supporter_count }}</p>
   </div>
 </template>
+
+<script setup>
+import { ref, onMounted, watch } from "vue";
+
+const props = defineProps(["author", "support"]);
+const emit = defineEmits(["support-on", "support-off"]);
+
+const author = ref(null);
+const support = ref(null);
+
+onMounted(() => {
+  setProps();
+});
+
+watch(props, () => {
+  setProps();
+});
+
+const setProps = () => {
+  author.value = props.author;
+  support.value = props.support;
+};
+
+const supportOn = () => {
+  emit("support-on");
+};
+
+const supportOff = () => {
+  emit("support-off");
+};
+</script>
 
 <style scoped>
 .author {

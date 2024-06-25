@@ -1,0 +1,175 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Contact SnapShotテスト初期表示(登録データあり) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="setting-container"
+  >
+    <setting-side-menu-stub
+      class="setting-side-menu"
+      currentindex="1"
+    />
+    <main
+      class="setting-main"
+    >
+      <form
+        class="ml-3.5 pb-5"
+      >
+        <div
+          class="profile-edit-content"
+        >
+          <float-label-stub />
+          <label
+            class="ml-2.5"
+            for="goal-weight"
+          >
+            kg
+          </label>
+        </div>
+        <div
+          class="profile-edit-content"
+        >
+          <float-label-stub />
+          <label
+            class="ml-2.5"
+            for="goal-fat-percentage"
+          >
+            %
+          </label>
+        </div>
+        <div
+          class="mt-5"
+        >
+          <float-label-stub />
+          <div
+            class="mt-2 text-right profile-input-width"
+          >
+            <p>
+              残り200文字入力できます
+            </p>
+          </div>
+        </div>
+        <div
+          class="mt-5"
+        >
+          <label>
+            プロフィール画像変更
+          </label>
+          <div
+            class="edit-profile-thumb-image"
+          >
+            <i
+              class="pi pi-user"
+              style="font-size: 40px; color: white;"
+            />
+          </div>
+          <drop-file-stub
+            class="mt-5"
+          />
+        </div>
+        <button
+          class="edit-profile-button"
+        >
+          更新する
+        </button>
+      </form>
+    </main>
+  </div>
+  
+</div>
+`;
+
+exports[`Contact SnapShotテスト初期表示(登録データなし) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="setting-container"
+  >
+    <setting-side-menu-stub
+      class="setting-side-menu"
+      currentindex="1"
+    />
+    <main
+      class="setting-main"
+    >
+      <form
+        class="ml-3.5 pb-5"
+      >
+        <div
+          class="profile-edit-content"
+        >
+          <float-label-stub />
+          <label
+            class="ml-2.5"
+            for="goal-weight"
+          >
+            kg
+          </label>
+        </div>
+        <div
+          class="profile-edit-content"
+        >
+          <float-label-stub />
+          <label
+            class="ml-2.5"
+            for="goal-fat-percentage"
+          >
+            %
+          </label>
+        </div>
+        <div
+          class="mt-5"
+        >
+          <float-label-stub />
+          <div
+            class="mt-2 text-right profile-input-width"
+          >
+            <p>
+              残り200文字入力できます
+            </p>
+          </div>
+        </div>
+        <div
+          class="mt-5"
+        >
+          <label>
+            プロフィール画像変更
+          </label>
+          <div
+            class="edit-profile-thumb-image"
+          >
+            <i
+              class="pi pi-user"
+              style="font-size: 40px; color: white;"
+            />
+          </div>
+          <drop-file-stub
+            class="mt-5"
+          />
+        </div>
+        <button
+          class="edit-profile-button"
+        >
+          更新する
+        </button>
+      </form>
+    </main>
+  </div>
+  
+</div>
+`;

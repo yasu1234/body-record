@@ -1,3 +1,13 @@
+<template>
+  <Password
+    v-model="password"
+    :feedback="false"
+    @update:model-value="updatePassword"
+    class="password-text"
+    toggleMask
+  />
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 
@@ -23,22 +33,16 @@ function updatePassword(currentText) {
 }
 </script>
 
-<template>
-  <Password
-    v-model="password"
-    :feedback="false"
-    @update:model-value="updatePassword"
-    class="password-text"
-    toggleMask
-  />
-</template>
-
 <style scoped>
 .password-text {
   display: block;
   border: 1px solid #ccc;
 }
 :deep(input[type="password"]) {
+  padding: 10px;
+  width: 100%;
+}
+:deep(input[type="text"]) {
   padding: 10px;
   width: 100%;
 }

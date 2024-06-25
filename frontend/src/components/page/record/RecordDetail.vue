@@ -1,5 +1,136 @@
+<template>
+  <Header />
+  <TabMenu :currentId="0" />
+  <Toast position="top-center" />
+  <div class="wrap">
+    <div class="main ml-5">
+      <div class="main_content">
+        <div class="editor">
+          <p class="record-title">
+            {{
+              record != null && record.formatted_date != null
+                ? record.formatted_date
+                : ""
+            }}の記録
+          </p>
+          <p class="mt-5">
+            体重：{{
+              record != null && record.weight != null ? record.weight : "-"
+            }}
+            kg
+          </p>
+          <p class="mt-2.5">
+            体脂肪率：{{
+              record != null && record.fat_percentage != null
+                ? record.fat_percentage
+                : "-"
+            }}
+            %
+          </p>
+          <p class="record-content">
+            {{ record != null && record.memo != null ? record.memo : "" }}
+          </p>
+          <div v-if="imageUrls !== null && imageUrls.length !== 0">
+            <p class="mt-5">関連画像</p>
+            <div class="thumbnail-container">
+              <div class="thumbnail" v-for="item in imageUrls">
+                <RelationImage :item="item" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="author !== null" class="radius-section pt-2.5">
+          <Author
+            :author="author"
+            :support="support"
+            @support-on="supportOn"
+            @support-off="supportOff"
+          />
+        </div>
+        <div class="radius-section mb-7">
+          <div class="comment-container-title-area">
+            <p class="ml-5 pt-5 font-bold">コメント</p>
+          </div>
+          <div v-if="comments.length > 0">
+            <div v-for="comment in comments" class="comment">
+              <Comment
+                :comment="comment"
+                :isEditing="isEditing"
+                @delete-comment="showCommentDeleteDialog(comment)"
+                @edit-comment="editComment"
+              />
+            </div>
+            <div v-if="isShowCommentDeleteConfirmDialog" class="modal-overlay">
+              <ConfirmDialog
+                :title="'コメントを削除します'"
+                :message="'よろしいですか？'"
+                :positiveButtonTitle="'削除'"
+                @handle-positive="deleteComment"
+                @cancel="cancelCommentDelete"
+              />
+            </div>
+          </div>
+          <div v-else>
+            <p class="pt-2.5 pl-5">コメントはありません</p>
+          </div>
+          <CommentInput ref="inputCommentRef" @add-comment="addComment" />
+        </div>
+      </div>
+    </div>
+    <div class="side">
+      <div class="side-content">
+        <button v-if="support != null && support.is_support" class="round-button">
+          <img
+            src="../../../assets/image/support_on.png"
+            alt="応援解除"
+            v-tooltip="{ value: '応援解除' }"
+            class="side-menu-image"
+            @click="supportOff"
+          />
+        </button>
+        <button v-else class="round-button">
+          <img
+            src="../../../assets/image/support_off.png"
+            alt="応援"
+            v-tooltip="{ value: '応援する' }"
+            class="side-menu-image"
+            @click="supportOn"
+          />
+        </button>
+        <button class="round-button" v-show="isMyRecord">
+          <img
+            src="../../../assets/image/edit.png"
+            alt="記録編集"
+            v-tooltip="{ value: '記録編集' }"
+            class="side-menu-image"
+            @click="showEdit"
+          />
+        </button>
+        <button class="round-button" v-show="isMyRecord">
+          <img
+            src="../../../assets/image/delete.png"
+            alt="削除"
+            v-tooltip="{ value: '削除' }"
+            class="side-menu-image"
+            @click="showRecordDeleteDialog"
+          />
+        </button>
+      </div>
+    </div>
+    <div v-if="isShowRecordDeleteConfirmDialog" class="modal-overlay">
+      <ConfirmDialog
+        :title="'記録を削除します'"
+        :message="'よろしいですか？'"
+        :positiveButtonTitle="'削除'"
+        @handle-positive="recordDelete"
+        @cancel="cancelRecordDelete"
+      />
+    </div>
+  </div>
+</template>
+
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
@@ -7,11 +138,12 @@ import { toastService } from "../../../js/toast.js";
 import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
 
 import Header from "../../layout/Header.vue";
-import Comments from "../../layout/Comments.vue";
+import Comment from "../../layout/Comment.vue";
 import CommentInput from "../../layout/CommentInput.vue";
 import TabMenu from "../../layout/TabMenu.vue";
 import Author from "../../layout/Author.vue";
 import RelationImage from "../../layout/RelationImage.vue";
+import ConfirmDialog from "../../layout/ConfirmDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -23,11 +155,15 @@ const imageUrls = ref([]);
 const recordId = ref(null);
 const recordUserId = ref(0);
 const isMyRecord = ref(false);
-const isSupport = ref(false);
 const comments = ref([]);
 const author = ref(null);
 const record = ref(null);
 const support = ref(null);
+const isShowRecordDeleteConfirmDialog = ref(false);
+const isShowCommentDeleteConfirmDialog = ref(false);
+const deleteCommentId = ref(0);
+const isEditing = ref(false);
+const inputCommentRef = ref("");
 
 onMounted(() => {
   getDetail();
@@ -127,13 +263,9 @@ const supportOn = async () => {
     const formData = new FormData();
     formData.append("id", recordUserId.value);
 
-    const res = await axiosInstance.post(`/api/v1/supports`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    isSupport.value = res.data.isSupport;
-    getSupport();
+    const res = await axiosInstance.post(`/api/v1/supports`, formData);
+
+    support.value = res.data.user;
   } catch (error) {
     if (error.response == null) {
       toastNotifications.displayError("応援に失敗しました", "");
@@ -161,8 +293,8 @@ const supportOff = async () => {
     const res = await axiosInstance.delete(
       `/api/v1/supports/${recordUserId.value}`
     );
-    isSupport.value = res.data.isSupport;
-    getSupport();
+
+    support.value = res.data.user;
   } catch (error) {
     if (error.response == null) {
       toastNotifications.displayError("応援解除に失敗しました", "");
@@ -188,14 +320,15 @@ const supportOff = async () => {
 const addComment = async (comment) => {
   try {
     const formData = new FormData();
-    formData.append("record_id", recordId.value);
-    formData.append("comment", comment);
+    formData.append("comment[record_id]", recordId.value);
+    formData.append("comment[comment]", comment);
 
     const res = await axiosInstance.post(`/api/v1/record_comments`, formData);
+    inputCommentRef.value.resetForm();
     getComments();
   } catch (error) {
     if (error.response == null) {
-      toastNotifications.displayError("コメント追加に失敗しました", "");
+      toastNotifications.displayError("コメント投稿に失敗しました", "");
       return;
     }
 
@@ -212,11 +345,109 @@ const addComment = async (comment) => {
     }
 
     toastNotifications.displayError(
-      "コメント追加に失敗しました",
+      "コメント投稿に失敗しました",
       errorMessages
     );
   }
 };
+
+const deleteComment = async () => {
+  isShowCommentDeleteConfirmDialog.value = false;
+  try {
+    const res = await axiosInstance.delete(
+      `/api/v1/record_comments/${deleteCommentId.value}`
+    );
+    deleteCommentId.value = 0;
+    getComments();
+  } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages += error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError(
+      "コメント削除に失敗しました",
+      errorMessages
+    );
+    deleteCommentId.value = 0;
+  }
+};
+
+const editComment = async (inputComment, commentId) => {
+  if (commentId == null) {
+    toastNotifications.displayError("コメント編集に失敗しました", "");
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("comment[record_id]", recordId.value);
+    formData.append("comment[comment]", inputComment);
+
+    const res = await axiosInstance.put(
+      `/api/v1/record_comments/${commentId}`, formData
+    );
+    isEditing.value = false;
+    deleteCommentId.value = 0;
+    getComments();
+  } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント編集に失敗しました", "");
+      return;
+    }
+
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages += error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError(
+      "コメント編集に失敗しました",
+      errorMessages
+    );
+    deleteCommentId.value = 0;
+  }
+};
+
+const showRecordDeleteDialog = () => {
+  isShowRecordDeleteConfirmDialog.value = true;
+};
+
+const showCommentDeleteDialog = (comment) => {
+  isShowCommentDeleteConfirmDialog.value = true;
+  deleteCommentId.value = comment.id;
+};
+
+const recordDelete = () => {
+  isShowRecordDeleteConfirmDialog.value = false;
+  deleteRecord();
+};
+
+const cancelRecordDelete = () => {
+  isShowRecordDeleteConfirmDialog.value = false;
+};
+
+const cancelCommentDelete = () => {
+  isShowCommentDeleteConfirmDialog.value = false;
+  deleteCommentId.value = 0;
+}
 
 const showEdit = () => {
   router.push({ name: "EditRecord", params: { id: recordId.value } });
@@ -227,92 +458,6 @@ const showMyRecordList = () => {
 };
 </script>
 
-<template>
-  <Header />
-  <TabMenu :currentId="0" />
-  <Toast position="top-center" />
-  <div class="wrap">
-    <div class="main ml-5">
-      <div class="main_content">
-        <div class="editor">
-          <p class="record-title">{{ (record != null && record.formatted_date != null) ? record.formatted_date : "" }}の記録</p>
-          <p class="mt-5">体重：{{ (record != null && record.weight != null) ? record.weight : "-" }} kg</p>
-          <p class="mt-2.5">体脂肪率：{{ (record != null && record.fat_percentage != null) ? record.fat_percentage : "-" }} %</p>
-          <p class="record-content">{{ (record != null && record.memo != null) ? record.memo : '' }}</p>
-          <div v-if="imageUrls !== null && imageUrls.length !== 0">
-            <p class="mt-5">関連画像</p>
-            <div class="thumbnail-container">
-              <div class="thumbnail" v-for="item in imageUrls">
-                <RelationImage :item="item" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-if="author !== null" class="radius-section pt-2.5">
-          <Author
-            :author="author"
-            :support="support"
-            @suport-on="supportOn"
-            @support-off="supportOff"
-          />
-        </div>
-        <div class="radius-section">
-          <div class="comment-container-title-area">
-            <p class="ml-5 pt-5 font-bold">コメント</p>
-          </div>
-          <div v-if="comments.length !== 0">
-            <Comments :comments="comments" />
-          </div>
-          <div v-else>
-            <p class="pt-2.5 pl-5">コメントはありません</p>
-          </div>
-          <CommentInput @add-comment="addComment" />
-        </div>
-      </div>
-    </div>
-    <div class="side">
-      <div class="side_content">
-        <button v-if="isSupport" class="round-button">
-          <img
-            src="../../../assets/image/support_on.png"
-            alt="応援解除"
-            v-tooltip="{ value: '応援解除' }"
-            class="side-menu-image"
-            @click="supportOff"
-          />
-        </button>
-        <button v-else class="round-button">
-          <img
-            src="../../../assets/image/support_off.png"
-            alt="応援"
-            v-tooltip="{ value: '応援する' }"
-            class="side-menu-image"
-            @click="supportOn"
-          />
-        </button>
-        <button class="round-button" v-show="isMyRecord">
-          <img
-            src="../../../assets/image/edit.png"
-            alt="記録編集"
-            v-tooltip="{ value: '記録編集' }"
-            class="side-menu-image"
-            @click="showEdit"
-          />
-        </button>
-        <button class="round-button" v-show="isMyRecord">
-          <img
-            src="../../../assets/image/delete.png"
-            alt="削除"
-            v-tooltip="{ value: '削除' }"
-            class="side-menu-image"
-            @click="deleteRecord"
-          />
-        </button>
-      </div>
-    </div>
-  </div>
-</template>
-
 <style scoped>
 .wrap {
   display: grid;
@@ -320,7 +465,7 @@ const showMyRecordList = () => {
   background-color: #f5f6f6;
   padding-top: 20px;
 }
-.side_content {
+.side-content {
   position: sticky;
   top: 100px;
   margin-left: 30px;
@@ -383,18 +528,20 @@ input[type="text"] {
 .comment-container-title-area {
   border-bottom: 1px solid rgba(6, 6, 6, 0.17);
 }
+.comment {
+  padding-left: 20px;
+  border-bottom: 1px solid rgba(6, 6, 6, 0.17);
+}
 
 @media (max-width: 768px) {
   .wrap {
     display: flex;
     flex-direction: column;
   }
-
   .main {
     padding-bottom: 65px;
     margin-right: 20px;
   }
-
   .side {
     position: fixed;
     align-items: center;
@@ -405,14 +552,12 @@ input[type="text"] {
     background-color: #fff;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   }
-
-  .side_content {
+  .side-content {
     display: flex;
     flex-direction: row;
     gap: 10px;
     padding: 10px;
   }
-
   .round-button {
     padding: 0;
     background: transparent;

@@ -7,9 +7,20 @@ class Api::V1::KnowledgeCommentsController < ApplicationController
     end
 
     comments = Comment.where(knowledge_id: params[:knowledge_id])
-    render json: { comments: comments.as_json(include: { user: { only: [:name], methods: :image_url } }) }, status: :ok
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
+
+    render json: {
+      comments: comments.map do |comment|
+        comment.as_json(
+          methods: :comment_date_format,
+          include: {
+            user: {
+              only: [:name],
+              methods: :image_url
+            }
+          }
+        ).merge(is_mine_comment: comment.user_id == current_api_v1_user.id)
+      end
+    }, status: :ok
   end
 
   def create
@@ -24,14 +35,35 @@ class Api::V1::KnowledgeCommentsController < ApplicationController
 
     render json: { knowledge: knowledge.as_json(include: [:comments]) }, status: :ok
   rescue ActiveRecord::RecordNotFound
-    render json: { error: "対象のデータが見つかりません" }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
+  end
+
+  def update
+    comment = Comment.find(params[:id])
+    comment.update!(knowledge_comment_params)
+
+    render json: { comment: }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  end
+
+  def destroy
+    comment = Comment.find(params[:id])
+
+    comment.destroy!
+
+    render json: { comment: }, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: "対象のデータが見つかりません" }, status: :not_found
+  rescue ActiveRecord::RecordNotDestroyed => e
+    render json: { errors: e.message }, status: :unprocessable_entity
   end
 
   private
 
     def knowledge_comment_params
-      params.permit(:knowledge_id, :comment)
+      params.require(:comment).permit(:knowledge_id, :comment)
     end
 end

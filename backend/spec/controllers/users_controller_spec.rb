@@ -33,9 +33,9 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     end
 
     context "キーワードでユーザ名の絞り込み" do
-      let!(:user1) { create(:user, id: 1, name: "test1") }
-      let!(:user2) { create(:user, id: 2, name: "test23") }
-      let!(:user3) { create(:user, id: 3, name: "test3") }
+      let!(:user1) { create(:user, id: 1, name: "test1", created_at: "2024-05-02T00:00:00.000Z") }
+      let!(:user2) { create(:user, id: 2, name: "test23", created_at: "2024-05-03T00:00:00.000Z") }
+      let!(:user3) { create(:user, id: 3, name: "test3", created_at: "2024-05-01T00:00:00.000Z") }
 
       before do
         request.headers.merge!(headers)
@@ -50,8 +50,8 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       it "データは2件取得" do
         json_response = JSON.parse(response.body)
         expect(json_response["users"].count).to eq 2
-        expect(json_response["users"][0]["user"]["name"]).to eq "test23"
-        expect(json_response["users"][1]["user"]["name"]).to eq "test3"
+        expect(json_response["users"][0]["name"]).to eq "test23"
+        expect(json_response["users"][1]["name"]).to eq "test3"
       end
     end
 
@@ -75,7 +75,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         it "データは1件取得" do
           json_response = JSON.parse(response.body)
           expect(json_response["users"].count).to eq 1
-          expect(json_response["users"][0]["user"]["id"]).to eq 1
+          expect(json_response["users"][0]["id"]).to eq 1
         end
       end
     end

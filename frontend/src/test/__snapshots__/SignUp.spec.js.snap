@@ -21,7 +21,7 @@ exports[`SignUp SnapShotテスト初期表示 1`] = `
       class="form"
     >
       <div
-        class="item"
+        class="signup-item"
       >
         <label>
           メールアドレス
@@ -35,11 +35,9 @@ exports[`SignUp SnapShotテスト初期表示 1`] = `
         />
       </div>
       <div
-        class="item"
+        class="signup-item"
       >
-        <label
-          for="password"
-        >
+        <label>
           パスワード
         </label>
         <password-text-stub
@@ -51,11 +49,9 @@ exports[`SignUp SnapShotテスト初期表示 1`] = `
         />
       </div>
       <div
-        class="item"
+        class="signup-item"
       >
-        <label
-          for="passwordConfirm"
-        >
+        <label>
           パスワード(確認)
         </label>
         <password-text-stub
@@ -67,11 +63,9 @@ exports[`SignUp SnapShotテスト初期表示 1`] = `
         />
       </div>
       <div
-        class="item"
+        class="signup-item"
       >
-        <label
-          for="name"
-        >
+        <label>
           名前
         </label>
         <input
@@ -83,7 +77,7 @@ exports[`SignUp SnapShotテスト初期表示 1`] = `
         />
       </div>
       <div
-        class="text-center"
+        class="text-center mt-5"
       >
         <button
           class="signup-button"

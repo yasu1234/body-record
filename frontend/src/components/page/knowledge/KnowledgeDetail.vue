@@ -1,3 +1,124 @@
+<template>
+  <Header />
+  <TabMenu :currentId="0" />
+  <Toast position="top-center" />
+  <div class="wrap">
+    <div class="main">
+      <div class="editor">
+        <div>
+          <p class="create-date">
+            {{
+              knowledge != null && knowledge.create_date_format != null
+                ? knowledge.create_date_format
+                : ""
+            }}
+          </p>
+        </div>
+        <p class="knowledge-title mt-5" type="text" v-if="knowledge !== null">
+          {{ knowledge.title }}
+        </p>
+        <div class="break-words">
+          <p class="knowledge-content" v-html="renderedMarkdown" />
+        </div>
+        <div v-if="imageUrls.length !== 0">
+          <p class="mt-5">関連画像</p>
+          <div class="thumbnail-container">
+            <div class="thumbnail" v-for="item in imageUrls">
+              <RelationImage :item="item" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="author !== null" class="radius-section pt-2.5">
+        <Author
+          :author="author"
+          :support="support"
+          @support-on="supportOn"
+          @support-off="supportOff"
+        />
+      </div>
+      <div class="radius-section mb-5">
+        <div class="comment-container-title-area">
+          <p class="comment-container-title">コメント</p>
+        </div>
+        <div v-if="comments.length > 0">
+          <div v-for="comment in comments" class="comment">
+            <Comment
+              :comment="comment"
+              :isEditing="isEditing"
+              @delete-comment="showCommentDeleteDialog(comment)"
+              @edit-comment="editComment"
+            />
+          </div>
+          <div v-if="isShowCommentDeleteConfirmDialog" class="modal-overlay">
+            <ConfirmDialog
+              :title="'コメントを削除します'"
+              :message="'よろしいですか？'"
+              :positiveButtonTitle="'削除'"
+              @handle-positive="deleteComment"
+              @cancel="cancelCommentDelete"
+            />
+          </div>
+        </div>
+        <div v-else>
+          <p class="pt-2.5 pl-5">コメントはありません</p>
+        </div>
+        <CommentInput ref="inputCommentRef" @add-comment="addComment" />
+      </div>
+    </div>
+    <div class="side">
+      <div class="side-content">
+        <div class="bookmark-button-container">
+          <button v-if="isBookmark" class="round-button" @click="bookmarkOff">
+            <img
+              src="../../../assets/image/bookmark_on.png"
+              alt="ブックマーク解除"
+              v-tooltip="{ value: 'ブックマーク解除' }"
+              class="side-menu-image"
+            />
+          </button>
+          <button v-else class="round-button" @click="bookmarkOn">
+            <img
+              src="../../../assets/image/bookmark_off.png"
+              alt="ブックマーク"
+              v-tooltip="{ value: 'ブックマークする' }"
+              class="side-menu-image"
+            />
+          </button>
+          <p class="text-center">{{ bookmarkCount }}</p>
+        </div>
+        <button class="round-button" v-show="isMyKnowledge">
+          <img
+            src="../../../assets/image/edit.png"
+            alt="編集"
+            v-tooltip="{ value: '編集' }"
+            class="side-menu-image"
+            @click="showEdit"
+          />
+        </button>
+        <button class="round-button" v-show="isMyKnowledge">
+          <img
+            src="../../../assets/image/delete.png"
+            alt="削除"
+            v-tooltip="{ value: '削除' }"
+            class="side-menu-image"
+            @click="showKnowledgeDeleteConfirmDialog"
+          />
+        </button>
+      </div>
+    </div>
+    <div v-if="isShowKnowledgeDeleteConfirmDialog" class="modal-overlay">
+      <ConfirmDialog
+        :title="'記事を削除します'"
+        :message="'よろしいですか？'"
+        :positiveButtonTitle="'削除'"
+        @handle-positive="knowledgeDelete"
+        @cancel="cancelKnowledgeDelete"
+      />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -9,10 +130,11 @@ import Toast from "primevue/toast";
 
 import Header from "../../layout/Header.vue";
 import TabMenu from "../../layout/TabMenu.vue";
-import Comments from "../../layout/Comments.vue";
+import Comment from "../../layout/Comment.vue";
 import CommentInput from "../../layout/CommentInput.vue";
 import Author from "../../layout/Author.vue";
 import RelationImage from "../../layout/RelationImage.vue";
+import ConfirmDialog from "../../layout/ConfirmDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -30,11 +152,19 @@ const comments = ref([]);
 const author = ref(null);
 const bookmarkCount = ref(0);
 const support = ref(null);
+const deleteCommentId = ref(0);
+const isShowCommentDeleteConfirmDialog = ref(false);
+const isEditing = ref(false);
+const isShowKnowledgeDeleteConfirmDialog = ref(false);
+const inputCommentRef = ref("");
 
-const md = new MarkdownIt();
+const md = new MarkdownIt({
+  breaks: true,
+  html: true,
+});
 
 const renderedMarkdown = computed(() => {
-  if (knowledge.value && knowledge.value.content) {
+  if (knowledge.value != null && knowledge.value.content != null) {
     return md.render(knowledge.value.content);
   }
   return "";
@@ -46,9 +176,11 @@ onMounted(() => {
 });
 
 const getDetail = async () => {
-  const id = route.params.id;
+  knowledgeId.value = route.params.id;
   try {
-    const res = await axiosInstance.get(`/api/v1/knowledges/${id}`);
+    const res = await axiosInstance.get(
+      `/api/v1/knowledges/${knowledgeId.value}`
+    );
     knowledgeId.value = res.data.knowledge.id;
     knowledge.value = res.data.knowledge;
     knowledgeUserId.value = res.data.knowledge.user_id;
@@ -60,12 +192,15 @@ const getDetail = async () => {
 
     getSupport();
   } catch (error) {
-    let errorMessage = ""
+    let errorMessage = "";
     if (error.response != null && error.response.status === 401) {
       errorMessage = "ログインしてください";
     }
 
-    toastNotifications.displayError("記事データの取得に失敗しました", "");
+    toastNotifications.displayError(
+      "記事データの取得に失敗しました",
+      errorMessage
+    );
   }
 };
 
@@ -96,6 +231,38 @@ const getComments = async () => {
   }
 };
 
+const deleteKnowledge = async () => {
+  try {
+    const res = await axiosInstance.delete(
+      `/api/v1/knowledges/${knowledgeId.value}`
+    );
+
+    toastNotifications.displayInfo("記事を削除しました", "");
+    setTimeout(async () => {
+      showKnowledgeList();
+    }, 3000);
+  } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("記事削除に失敗しました", "");
+      return;
+    }
+
+    let errorMessages = "";
+
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError("記事削除に失敗しました", errorMessages);
+  }
+};
+
 const bookmarkOn = async () => {
   try {
     const formData = new FormData();
@@ -107,15 +274,23 @@ const bookmarkOn = async () => {
       },
     });
     knowledge.value = res.data.knowledge;
-    isBookmark.value = res.data.knowledge.isBookmark;
+    isBookmark.value = res.data.knowledge.is_bookmark;
     bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "ブックマークの登録に失敗しました",
       errorMessages
@@ -129,15 +304,23 @@ const bookmarkOff = async () => {
       `/api/v1/bookmarks/${knowledgeId.value}`
     );
     knowledge.value = res.data.knowledge;
-    isBookmark.value = res.data.knowledge.isBookmark;
+    isBookmark.value = res.data.knowledge.is_bookmark;
     bookmarkCount.value = res.data.knowledge.bookmark_count;
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
       "ブックマークの解除に失敗しました",
       errorMessages
@@ -145,34 +328,37 @@ const bookmarkOff = async () => {
   }
 };
 
-function bookmarkClick(isBookmarkOn) {
-  if (isBookmarkOn === true) {
-    bookmarkOff();
-  } else {
-    bookmarkOn();
-  }
-}
-
 const addComment = async (comment) => {
   try {
     const formData = new FormData();
-    formData.append("knowledge_id", knowledgeId.value);
-    formData.append("comment", comment);
+    formData.append("comment[knowledge_id]", knowledgeId.value);
+    formData.append("comment[comment]", comment);
 
     const res = await axiosInstance.post(
       `/api/v1/knowledge_comments`,
       formData
     );
     getComments();
+    inputCommentRef.value.resetForm();
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント投稿に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError(
-      "コメントの追加に失敗しました",
+      "コメントの投稿に失敗しました",
       errorMessages
     );
   }
@@ -188,16 +374,24 @@ const supportOn = async () => {
         "Content-Type": "multipart/form-data",
       },
     });
-    getSupport();
+    support.value = res.data.user;
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("応援に失敗しました", errorMessages);
   }
 };
@@ -207,118 +401,130 @@ const supportOff = async () => {
     const res = await axiosInstance.delete(
       `/api/v1/supports/${knowledgeUserId.value}`
     );
-    getSupport();
+    support.value = res.data.user;
   } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
     let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
+    if (error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
       } else {
         errorMessages = error.response.data.errors;
       }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
     }
+
     toastNotifications.displayError("応援解除に失敗しました", errorMessages);
   }
+};
+
+const deleteComment = async () => {
+  isShowCommentDeleteConfirmDialog.value = false;
+  try {
+    const res = await axiosInstance.delete(
+      `/api/v1/knowledge_comments/${deleteCommentId.value}`
+    );
+    deleteCommentId.value = 0;
+    getComments();
+  } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント削除に失敗しました", "");
+      return;
+    }
+
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages += error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError(
+      "コメント削除に失敗しました",
+      errorMessages
+    );
+    deleteCommentId.value = 0;
+  }
+};
+
+const editComment = async (inputComment, commentId) => {
+  if (commentId == null) {
+    toastNotifications.displayError("コメント編集に失敗しました", "");
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("comment[knowledge_id]", knowledgeId.value);
+    formData.append("comment[comment]", inputComment);
+
+    const res = await axiosInstance.put(
+      `/api/v1/knowledge_comments/${commentId}`,
+      formData
+    );
+    isEditing.value = false;
+    deleteCommentId.value = 0;
+    getComments();
+  } catch (error) {
+    if (error.response == null) {
+      toastNotifications.displayError("コメント編集に失敗しました", "");
+      return;
+    }
+
+    let errorMessages = "";
+    if (error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages += error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError(
+      "コメント編集に失敗しました",
+      errorMessages
+    );
+    deleteCommentId.value = 0;
+  }
+};
+
+const showCommentDeleteDialog = (comment) => {
+  isShowCommentDeleteConfirmDialog.value = true;
+  deleteCommentId.value = comment.id;
+};
+
+const showKnowledgeDeleteConfirmDialog = () => {
+  isShowKnowledgeDeleteConfirmDialog.value = true;
+};
+
+const knowledgeDelete = () => {
+  isShowKnowledgeDeleteConfirmDialog.value = false;
+  deleteKnowledge();
+};
+
+const cancelKnowledgeDelete = () => {
+  isShowKnowledgeDeleteConfirmDialog.value = false;
 };
 
 const showEdit = () => {
   router.push({ name: "EditKnowledge", params: { id: knowledgeId.value } });
 };
-</script>
 
-<template>
-  <Header />
-  <TabMenu :currentId="0" />
-  <Toast position="top-center" />
-  <div class="wrap">
-    <div class="main">
-      <div class="editor">
-        <p
-          id="title"
-          class="knowledge-title"
-          type="text"
-          v-if="knowledge !== null"
-        >
-          {{ knowledge.title }}
-        </p>
-        <p class="knowledge-content" v-html="renderedMarkdown"></p>
-        <div v-if="imageUrls.length !== 0">
-          <p class="mt-5">関連画像</p>
-          <div class="thumbnail-container">
-            <div class="thumbnail" v-for="item in imageUrls">
-              <RelationImage :item="item" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="author !== null" class="radius-section pt-2.5">
-        <Author
-          :author="author"
-          :support="support"
-          @suport-on="supportOn"
-          @support-off="supportOff"
-        />
-      </div>
-      <div class="radius-section mb-5">
-        <div class="comment-container-title-area">
-          <p class="comment-container-title">コメント</p>
-        </div>
-        <div v-if="comments.length !== 0">
-          <Comments :comments="comments" />
-        </div>
-        <div v-else>
-          <p class="pt-2.5 pl-5">コメントはありません</p>
-        </div>
-        <CommentInput @add-comment="addComment" />
-      </div>
-    </div>
-    <div class="side">
-      <div class="side-content">
-        <div class="bookmark-button-container">
-          <button
-            v-if="isBookmark"
-            class="round-button"
-            @click="bookmarkClick(true)"
-          >
-            <img
-              src="../../../assets/image/bookmark_on.png"
-              alt="ブックマーク解除"
-              v-tooltip="{ value: 'ブックマーク解除' }"
-              class="side-menu-image"
-            />
-          </button>
-          <button v-else class="round-button" @click="bookmarkClick(false)">
-            <img
-              src="../../../assets/image/bookmark_off.png"
-              alt="ブックマーク"
-              v-tooltip="{ value: 'ブックマークする' }"
-              class="side-menu-image"
-            />
-          </button>
-          <p class="text-center">{{ bookmarkCount }}</p>
-        </div>
-        <button class="round-button" v-show="isMyKnowledge">
-          <img
-            src="../../../assets/image/edit.png"
-            alt="編集"
-            v-tooltip="{ value: '編集' }"
-            class="side-menu-image"
-            @click="showEdit"
-          />
-        </button>
-        <button class="round-button" v-show="isMyKnowledge">
-          <img
-            src="../../../assets/image/delete.png"
-            alt="削除"
-            v-tooltip="{ value: '削除' }"
-            class="side-menu-image"
-            @click=""
-          />
-        </button>
-      </div>
-    </div>
-  </div>
-</template>
+const showKnowledgeList = () => {
+  router.push({ name: "KnowledgeList" });
+};
+</script>
 
 <style scoped>
 .wrap {
@@ -368,6 +574,9 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+.create-date {
+  color: #928484;
+}
 .knowledge-title {
   font-weight: bold;
   font-size: 22px;
@@ -402,6 +611,39 @@ input[type="text"] {
   margin-left: 20px;
   padding-top: 20px;
   font-weight: bold;
+}
+.comment {
+  padding-left: 20px;
+  border-bottom: 1px solid rgba(6, 6, 6, 0.17);
+}
+:deep(thead) {
+  background: #ccc;
+  border: 1px solid #ddd;
+}
+:deep(code) {
+  background: #ccc;
+  white-space: pre-wrap;
+}
+:deep(td) {
+  border: 1px solid #000;
+}
+:deep(th) {
+  border: 1px solid #000;
+}
+:deep(ul) {
+  list-style-type: disc;
+}
+:deep(ol) {
+  list-style-type: decimal;
+}
+:deep(h1) {
+  text-decoration: underline;
+}
+:deep(h2) {
+  text-decoration: underline;
+}
+:deep(h3) {
+  text-decoration: underline;
 }
 
 @media (max-width: 768px) {

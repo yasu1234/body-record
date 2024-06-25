@@ -1,3 +1,44 @@
+<template>
+  <Header />
+  <Toast position="top-center" />
+  <p class="view-title mt-7">会員登録</p>
+  <div class="signup-container">
+    <form class="form" @submit.prevent="checkValidate">
+      <div class="signup-item">
+        <label>メールアドレス</label>
+        <input id="email" type="email" v-model="email" />
+        <p class="validation-error-message">{{ emailError }}</p>
+      </div>
+      <div class="signup-item">
+        <label>パスワード</label>
+        <PasswordText
+          :password="password"
+          :passwordType="PasswordType.password"
+          @update-password="updatePassword"
+        />
+        <p class="validation-error-message">{{ passwordError }}</p>
+      </div>
+      <div class="signup-item">
+        <label>パスワード(確認)</label>
+        <PasswordText
+          :password="passwordConfirm"
+          :passwordType="PasswordType.passwordConfirm"
+          @update-password="updatePassword"
+        />
+        <p class="validation-error-message">{{ passwordConfirmError }}</p>
+      </div>
+      <div class="signup-item">
+        <label>名前</label>
+        <input id="name" type="text" v-model="name" />
+        <p class="validation-error-message">{{ nameError }}</p>
+      </div>
+      <div class="text-center mt-5">
+        <button class="signup-button">登録</button>
+      </div>
+    </form>
+  </div>
+</template>
+
 <script setup>
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
@@ -15,8 +56,7 @@ import { PasswordType } from "../../../js/const.js";
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
-setupInterceptors(router)
-
+setupInterceptors(router);
 
 const checkValidate = async () => {
   const result = await validate();
@@ -94,47 +134,6 @@ const updatePassword = (inputPassword, passwordType) => {
 };
 </script>
 
-<template>
-  <Header />
-  <Toast position="top-center" />
-  <p class="view-title mt-7">会員登録</p>
-  <div class="signup-container">
-    <form class="form" @submit.prevent="checkValidate">
-      <div class="item">
-        <label>メールアドレス</label>
-        <input id="email" type="email" v-model="email" />
-        <p class="validation-error-message">{{ emailError }}</p>
-      </div>
-      <div class="item">
-        <label for="password">パスワード</label>
-        <PasswordText
-          :password="password"
-          :passwordType="PasswordType.password"
-          @update-password="updatePassword"
-        />
-        <p class="validation-error-message">{{ passwordError }}</p>
-      </div>
-      <div class="item">
-        <label for="passwordConfirm">パスワード(確認)</label>
-        <PasswordText
-          :password="passwordConfirm"
-          :passwordType="PasswordType.passwordConfirm"
-          @update-password="updatePassword"
-        />
-        <p class="validation-error-message">{{ passwordConfirmError }}</p>
-      </div>
-      <div class="item">
-        <label for="name">名前</label>
-        <input id="name" type="text" v-model="name" />
-        <p class="validation-error-message">{{ nameError }}</p>
-      </div>
-      <div class="text-center">
-        <button class="signup-button">登録</button>
-      </div>
-    </form>
-  </div>
-</template>
-
 <style scoped>
 .signup-container {
   width: 500px;
@@ -144,7 +143,7 @@ const updatePassword = (inputPassword, passwordType) => {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-.item {
+.signup-item {
   padding-top: 40px;
   margin: 0 auto;
 }
@@ -152,6 +151,7 @@ const updatePassword = (inputPassword, passwordType) => {
 .form input[type="text"] {
   padding: 10px;
   width: 100%;
+  border: 1px solid #ccc;
 }
 .signup-button {
   font-size: 16px;

@@ -8,6 +8,7 @@ import DatePicker from "../../atom/DatePicker.vue";
 import SearchButton from "../../atom/SearchButton.vue";
 import RecordCard from "../../layout/RecordCard.vue";
 import ResultEmpty from "../../atom/ResultEmpty.vue";
+import LoginIntroductionView from "../../layout/LoginIntroductionView.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -19,6 +20,9 @@ const isOnlyOpen = ref(false);
 const searchResult = ref([]);
 const pageCount = ref(1);
 const page = ref(1);
+const isEmpty = ref(false);
+const shouldLogin = ref(false);
+const totalCount = ref(0);
 
 onMounted(() => {
   setQuery(
@@ -69,6 +73,8 @@ const paramChange = () => {
 };
 
 const search = async () => {
+  shouldLogin.value = false;
+
   try {
     const res = await axiosInstance.get("/api/v1/my_records", {
       params: {
@@ -80,19 +86,35 @@ const search = async () => {
       },
     });
 
-    if (res.data && res.data.totalPage) {
-      pageCount.value = res.data.totalPage;
+    searchResult.value = [];
+
+    if (res.data && res.data.total_page) {
+      pageCount.value = res.data.total_page;
     } else {
       pageCount.value = 1;
     }
 
-    searchResult.value = [];
-
-    for (let item of res.data.records) {
-      searchResult.value.push(item);
+    if (res.data != null && res.data.total_count != null) {
+      totalCount.value = res.data.total_count;
+    } else {
+      totalCount.value = 0;
     }
+
+    if (res.data.records != null && res.data.records.length > 0) {
+      for (let item of res.data.records) {
+        searchResult.value.push(item);
+      }
+    }
+
+    isEmpty.value = !(res.data.records != null && res.data.records.length > 0);
   } catch (error) {
     searchResult.value = [];
+    isEmpty.value = true;
+
+    if (error.response != null && error.response.status === 401) {
+      shouldLogin.value = true;
+      isEmpty.value = false;
+    }
   }
 };
 
@@ -136,12 +158,12 @@ const updatePaginateItems = function (pageParam) {
   paramChange();
 };
 
-function startDateChange(event) {
-  startDate.value = event;
+const startDateChange = (date) => {
+  startDate.value = date;
 }
 
-function endDateChange(event) {
-  endDate.value = event;
+const endDateChange = (date) => {
+  endDate.value = date;
 }
 
 const clickRecord = (item) => {
@@ -190,7 +212,7 @@ const addRecord = () => {
       <label class="ml-2">非公開記録は表示しない</label>
     </div>
     <div class="search-button-area">
-      <SearchButton @searchButtonClick="paramChange" />
+      <SearchButton @search-button-click="paramChange" />
     </div>
   </div>
   <div class="add-button-area">
@@ -198,24 +220,25 @@ const addRecord = () => {
       + 記録を追加する
     </button>
   </div>
-  <div class="mt-5">
+  <div class="py-8">
     <div v-if="searchResult.length > 0">
-      <RecordCard
-        v-for="record in searchResult"
-        v-bind="record"
-        :record="record"
-        @recordClick="clickRecord(record)"
-      />
-      <div class="record-list-page">
+      <p class="text-center font-bold">合計{{ totalCount }}件</p>
+      <div v-for="record in searchResult"  class="mt-5">
+        <RecordCard :record="record" @record-click="clickRecord(record)" />
+      </div>
+      <div>
         <ListPage
           :pageCount="pageCount"
           v-model="page"
-          @changePage="updatePaginateItems"
+          @change-page="updatePaginateItems"
         />
       </div>
     </div>
-    <div v-else>
+    <div v-if="isEmpty">
       <ResultEmpty class="mx-5" />
+    </div>
+    <div v-if="shouldLogin">
+      <LoginIntroductionView class="mx-5" />
     </div>
   </div>
 </template>

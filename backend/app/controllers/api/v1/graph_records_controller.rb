@@ -9,12 +9,10 @@ class Api::V1::GraphRecordsController < ApplicationController
       return render json: { errors: "対象のデータが見つかりません" }, status: :not_found
     end
 
-    records_with_empty_dates = Record.get_month_records(params[:targetYear].to_i, params[:targetMonth].to_i, user)
+    records_with_empty_dates = Record.get_month_records(params[:targetYear].to_i, params[:targetMonth].to_i, user, user.id != current_api_v1_user.id)
 
     render json: { records: records_with_empty_dates.as_json(methods: :graph_formatted_date) }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { error: "対象のデータが見つかりません" }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 end

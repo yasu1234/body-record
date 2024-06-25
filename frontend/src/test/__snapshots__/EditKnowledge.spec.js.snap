@@ -16,9 +16,29 @@ exports[`EditKnowledge SnapShotテスト初期表示 1`] = `
     <float-label-stub
       class="mt-5"
     />
-    <float-label-stub
-      class="mt-5"
-    />
+    <div
+      class="mt=2.5"
+    >
+      <knowledge-content-input-stub
+        knowledgecontent="This is a test knowledge"
+      />
+    </div>
+    <div
+      class="markdown-info"
+    >
+       マークダウンを一部使用できます。詳しくは
+      <a
+        class="info-link"
+        href="https://kumaapp.amebaownd.com/posts/54283163"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        こちら
+      </a>
+      をご覧ください。
+      <br />
+       特に複数行の改行は使うことが多いと思うので必ずご確認ください 
+    </div>
   </div>
   <div>
     <p

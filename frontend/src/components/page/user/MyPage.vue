@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { toastService } from "../../../js/toast.js";
 import Toast from "primevue/toast";
@@ -14,7 +14,6 @@ import MonthPicker from "../../atom/MonthPicker.vue";
 import Profile from "../../layout/Profile.vue";
 import TabMenu from "../../layout/TabMenu.vue";
 
-const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const toastNotifications = new toastService(toast);
@@ -142,7 +141,16 @@ const getMonthRecord = async () => {
     fatPercentageData.value.datasets[0].data = res.data.records.map(
       (record) => record.fat_percentage
     );
-  } catch (error) {}
+  } catch (error) {
+    weigtData.value.labels = [];
+    weigtData.value.datasets[0].data = [];
+    fatPercentageData.value.labels = [];
+    fatPercentageData.value.datasets[0].data = [];
+
+    if (error.response != null && error.response.status === 401) {
+      toastNotifications.displayError("ログインしてください", "");
+    }
+  }
 };
 
 const getUserKnowledge = async () => {
@@ -164,7 +172,7 @@ const getUserKnowledge = async () => {
 const monthChange = (event) => {
   month.value = event;
   getMonthRecord();
-}
+};
 
 const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
@@ -172,6 +180,14 @@ const clickRecord = (item) => {
 
 const showMoreRecords = () => {
   router.push({ name: "Home" });
+};
+
+const clickKnowledge = (item) => {
+  router.push({ name: "KnowledgeDetail", params: { id: item.id } });
+};
+
+const showMoreKnowledges = () => {
+  router.push({ name: "UserKnowledgeList", params: { id: userId.value } });
 };
 </script>
 
@@ -192,54 +208,49 @@ const showMoreRecords = () => {
     class="graph-month-picker"
   />
   <div class="text-center">
-    <div class="pt-10">
-      <span class="section-title">投稿した記録</span>
+    <div class="pb-5">
+      <div class="pt-10">
+        <span class="section-title">作成した記録</span>
+      </div>
+      <div class="mt-5">
+        <div v-if="records.length > 0" v-for="record in records">
+          <RecordCard :record="record" @record-click="clickRecord(record)" />
+        </div>
+        <p v-else>作成された記録はありません</p>
+      </div>
+      <button
+        v-if="isMoreRecords"
+        @click="showMoreRecords"
+        class="more-show-button mt-5"
+      >
+        もっと見る
+      </button>
     </div>
-    <div class="mt-5">
-      <RecordCard
-        v-if="records.length > 0"
-        v-for="record in records"
-        v-bind="record"
-        :record="record"
-        @recordClick="clickRecord(record)"
-      />
-      <p v-else>登録された記録はありません</p>
+    <div class="pb-8">
+      <div class="pt-10">
+        <span class="section-title">投稿した記事</span>
+      </div>
+      <div class="mt-5">
+        <div v-if="knowledges.length > 0" v-for="knowledge in knowledges">
+          <KnowledgeCard
+            :knowledge="knowledge"
+            @click="clickKnowledge(knowledge)"
+          />
+        </div>
+        <p v-else>記事を投稿していません</p>
+      </div>
+      <button
+        v-if="isMoreKnowledges"
+        @click="showMoreKnowledges"
+        class="more-show-button mt-5"
+      >
+        もっと見る
+      </button>
     </div>
-    <button
-      v-if="isMoreRecords"
-      @click="showMoreRecords"
-      class="more-show-button mt-5"
-    >
-      もっと見る
-    </button>
-    <div class="pt-10">
-      <span class="section-title">投稿した知識</span>
-    </div>
-    <div class="mt-5">
-      <KnowledgeCard
-        v-if="knowledges.length > 0"
-        v-for="knowledge in knowledges"
-        v-bind="knowledge"
-        :knowledge="knowledge"
-      />
-      <p v-else>記事を作成していません</p>
-    </div>
-    <button
-      v-if="isMoreKnowledges"
-      @click="showMoreRecords"
-      class="more-show-button mt-5"
-    >
-      もっと見る
-    </button>
   </div>
 </template>
 
 <style scoped>
-.section-title {
-  border-bottom: solid 5px #ffa500;
-  font-size: 25px;
-  font-weight: bold;
-}
 .weight-graph {
   margin-top: 30px;
   width: 600px;

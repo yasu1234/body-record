@@ -1,17 +1,3 @@
-<script setup>
-const props = defineProps({
-  menuTitle: String,
-  menuId: Number,
-  currentId: Number,
-});
-
-const emit = defineEmits(["menuTapped"]);
-
-function handleClick(menuId) {
-  emit("menuTapped", menuId);
-}
-</script>
-
 <template>
   <div>
     <button
@@ -24,6 +10,20 @@ function handleClick(menuId) {
     <div class="active-tab" v-if="props.currentId === props.menuId"></div>
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+  menuTitle: String,
+  menuId: Number,
+  currentId: Number,
+});
+
+const emit = defineEmits(["menu-tapped"]);
+
+function handleClick(menuId) {
+  emit("menu-tapped", menuId);
+}
+</script>
 
 <style scoped>
 .tab {

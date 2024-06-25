@@ -1,6 +1,62 @@
+<template>
+  <header>
+    <h2 class="title">
+      <router-link to="/" class="title">In-Body.com</router-link>
+    </h2>
+    <nav>
+      <div class="navigation-menus">
+        <button
+          v-show="isLogin === false"
+          class="account-introducton-button mr-7"
+          @click="showAccountIntroduction"
+        >
+          会員登録・ログイン
+        </button>
+        <div @click="toggleDropdown" v-on-click-outside="onClickOutsideHandler">
+          <div
+            class="user-button"
+            v-if="imageUrl !== null && imageUrl.url !== null"
+          >
+            <img
+              :src="imageUrl.url"
+              alt="ユーザー"
+              class="user-button"
+            />
+          </div>
+          <Button
+            v-else
+            icon="pi pi-user"
+            severity="info"
+            rounded
+            aria-label="ユーザー"
+            class="user-button"
+            :pt="{
+              root: {
+                style: {
+                  background: '#4264ec',
+                },
+              },
+            }"
+          />
+        </div>
+      </div>
+      <div v-if="showDropdown" class="dropdown-menu">
+        <button
+          v-for="menu in menuList"
+          class="menu-item"
+          @click="showMenu(menu)"
+        >
+          {{ menu.label }}
+        </button>
+      </div>
+    </nav>
+  </header>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { vOnClickOutside } from "@vueuse/components";
 import Cookies from "js-cookie";
 import Button from "primevue/button";
 
@@ -15,15 +71,11 @@ const isLogin = ref(null);
 const userId = ref(0);
 const showDropdown = ref(false);
 const menuList = ref([]);
+const imageUrl = ref(null);
 
 onMounted(() => {
   checkLogin();
-  console.log(router.currentRoute.value.fullPath);
 });
-
-const toggleDropdown = () => {
-  showDropdown.value = !showDropdown.value;
-};
 
 const checkLogin = async () => {
   try {
@@ -31,9 +83,11 @@ const checkLogin = async () => {
 
     isLogin.value = res.data.user !== null;
     userId.value = res.data.user.id;
+    imageUrl.value = res.data.user.image_url;
     setMenu();
   } catch (error) {
     isLogin.value = false;
+    imageUrl.value = null;
     setMenu();
   }
 };
@@ -47,8 +101,20 @@ const logout = async () => {
 
     showHomeThenRelaod();
   } catch (error) {
-    console.log({ error });
+    Cookies.remove("accessToken");
+    Cookies.remove("client");
+    Cookies.remove("uid");
+
+    showHomeThenRelaod();
   }
+};
+
+const toggleDropdown = () => {
+  showDropdown.value = !showDropdown.value;
+};
+
+const onClickOutsideHandler = () => {
+  showDropdown.value = false;
 };
 
 const setMenu = () => {
@@ -94,6 +160,7 @@ const showMyPage = () => {
 };
 
 const showAccountIntroduction = () => {
+  Cookies.set("loginRoutePath", router.currentRoute.value.fullPath);
   router.push({ name: "AccountInteroduction" });
 };
 
@@ -111,55 +178,11 @@ const showHomeThenRelaod = async () => {
 };
 </script>
 
-<template>
-  <header>
-    <h2 class="title">
-      <router-link to="/" class="title">In-Body.com</router-link>
-    </h2>
-    <nav>
-      <div class="navigation-menus">
-        <button
-          v-show="isLogin === false"
-          class="account-introducton-button"
-          @click="showAccountIntroduction"
-        >
-          会員登録・ログイン
-        </button>
-        <div @click="toggleDropdown">
-          <Button
-            icon="pi pi-user"
-            severity="info"
-            rounded
-            aria-label="ユーザー"
-            class="user-button"
-            :pt="{
-              root: {
-                style: {
-                  background: '#4264ec',
-                },
-              },
-            }"
-          />
-        </div>
-      </div>
-      <div v-if="showDropdown" class="dropdown-menu">
-        <button
-          v-for="menu in menuList"
-          class="menu-item"
-          @click="showMenu(menu)"
-        >
-          {{ menu.label }}
-        </button>
-      </div>
-    </nav>
-  </header>
-</template>
-
 <style scoped>
 header {
   width: 100%;
   height: 80px;
-  background: #f6f8fa;
+  background: #fbf3dc;
   padding-left: 30px;
   padding-right: 30px;
   box-sizing: border-box;
@@ -177,13 +200,12 @@ header {
   display: flex;
   justify-content: space-between;
 }
-.account-introducton-button {
-  margin-right: 30px;
-}
 .user-button {
   padding: 0;
   border: 1px solid #ccc;
   border-radius: 50%;
+  width: 45px;
+  height: 45px;
 }
 .dropdown-menu {
   position: absolute;

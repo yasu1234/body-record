@@ -1,0 +1,20 @@
+region: us-east-1
+cluster: body-record2
+rules:
+- name: body-record-batch-schedule
+  scheduleExpression: cron(0 16 * * ? *)
+  targetId: body-record-batch-schedule-id
+  taskDefinition: body_record_task:5
+  containerOverrides:
+  - name: body_record
+    command: [bundle, exec, rake, contact:destroy]
+  launch_type: FARGATE
+  platform_version: LATEST
+  network_configuration:
+    aws_vpc_configuration:
+      subnets:
+      - subnet-0a753077dc7206d99
+      - subnet-0373469010862d2de
+      security_groups:
+      - sg-0f6aa001f35ffcb6a
+      assign_public_ip: ENABLED

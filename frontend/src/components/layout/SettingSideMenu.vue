@@ -1,9 +1,27 @@
+<template>
+  <div class="menu-toggle" @click="isOpen = !isOpen">
+    <span v-for="i in 3" class="toggle-line" />
+  </div>
+  <nav class="sidebar" :class="{ open: isOpen }">
+    <div class="sidebar-header">
+      <span class="close-button" @click="isOpen = false">&times;</span>
+    </div>
+    <div class="menu" v-for="menu in menuList">
+      <div class="menu-container">
+        <div class="menu-select" v-show="menu.id == currentIndex" />
+        <button class="side-menu-item" @click="showMenu(menu)">
+          {{ menu.label }}
+        </button>
+      </div>
+    </div>
+  </nav>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import { axiosInstance, setupInterceptors } from "../../js/axios.js";
 
-const route = useRoute();
 const router = useRouter();
 setupInterceptors(router);
 
@@ -48,7 +66,7 @@ const showMenu = (menu) => {
       showPasswordEdit();
       break;
     case 4:
-    showConfirmAccountDelete();
+      showConfirmAccountDelete();
       break;
     default:
       break;
@@ -66,31 +84,11 @@ const showMailAddressEdit = () => {
 const showPasswordEdit = () => {
   router.push({ name: "PasswordEdit" });
 };
+
 const showConfirmAccountDelete = () => {
   router.push({ name: "ConfirmAccountDelete" });
 };
 </script>
-
-<template>
-  <div class="menu-toggle" @click="isOpen = !isOpen">
-    <span class="toggle-line" />
-    <span class="toggle-line" />
-    <span class="toggle-line" />
-  </div>
-  <nav class="sidebar" :class="{ open: isOpen }">
-    <div class="sidebar-header">
-      <span class="close-btn" @click="isOpen = false">&times;</span>
-    </div>
-    <div class="menu" v-for="menu in menuList">
-      <div class="menu-container">
-        <div class="menu-select" v-show="menu.id == currentIndex" />
-        <button class="side-menu-item" @click="showMenu(menu)">
-          {{ menu.label }}
-        </button>
-      </div>
-    </div>
-  </nav>
-</template>
 
 <style scoped>
 .menu-toggle {
@@ -121,7 +119,7 @@ main {
   flex: 1;
   padding: 20px;
 }
-.close-btn {
+.close-button {
   font-size: 24px;
   cursor: pointer;
 }
@@ -159,13 +157,13 @@ main {
     justify-content: flex-end;
     margin-bottom: 20px;
   }
-  .close-btn {
+  .close-button {
     display: block;
   }
 }
 
 @media (min-width: 769px) {
-  .close-btn {
+  .close-button {
     display: none;
   }
 }

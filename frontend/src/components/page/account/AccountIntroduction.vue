@@ -1,3 +1,20 @@
+<template>
+  <Toast position="top-center" />
+  <img
+    src="../../../assets/image/home_image.jpg"
+    alt="Logo"
+    class="home-logo"
+  />
+  <p class="introduction-title mt-5">In-body.comへようこそ！</p>
+  <div class="account-buttons mt-5">
+    <button class="account-button" @click="showSignup">会員登録</button>
+    <button class="account-button" @click="showLogin">ログイン</button>
+    <button class="guest-login-button" @click="guestLogin">
+      ゲストログイン
+    </button>
+  </div>
+</template>
+
 <script setup>
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
@@ -25,12 +42,24 @@ const guestLogin = async () => {
     Cookies.set("client", res.headers["client"]);
     Cookies.set("uid", res.headers["uid"]);
 
-    router.push({ name: "Home" });
+    if (
+      Cookies.get("loginRoutePath") != null &&
+      !Cookies.get("loginRoutePath").includes("login") &&
+      !Cookies.get("loginRoutePath").includes("accountInteroduction") &&
+      !Cookies.get("loginRoutePath").includes("signup")
+    ) {
+      router.push({ path: Cookies.get("loginRoutePath") });
+      Cookies.remove("loginRoutePath");
+    } else {
+      router.push({ name: "Home" });
+    }
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
     }
     toastNotifications.displayError(
@@ -41,24 +70,16 @@ const guestLogin = async () => {
 };
 </script>
 
-<template>
-  <Toast position="top-center" />
-  <img src="../../../assets/image/home_image.jpg" alt="Logo" class="home-logo" />
-  <h1 class="text-center mt-5">In-body.comへようこそ！</h1>
-  <div class="account-buttons mt-5">
-    <button class="account-button" @click="showSignup">会員登録</button>
-    <button class="account-button" @click="showLogin">ログイン</button>
-    <button class="guest-login-button" @click="guestLogin">
-      ゲストログイン
-    </button>
-  </div>
-</template>
-
 <style scoped>
 .home-logo {
   width: 100%;
   height: 400px;
   display: block;
+}
+.introduction-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 30px;
 }
 .account-buttons {
   display: flex;

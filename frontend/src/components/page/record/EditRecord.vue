@@ -1,3 +1,68 @@
+<template>
+  <Header />
+  <TabMenu />
+  <Toast position="top-center" />
+  <form class="edit-container" @submit.prevent="edit">
+    <div class="w-52">
+      <p>記録日</p>
+      <DatePicker isStart="true" :date="recordDate" @update:date="dateChange" />
+    </div>
+    <div class="weight-group mt-7">
+      <FloatLabel>
+        <InputText v-model="weight" class="w-52 h-10 p-2.5" />
+        <label>体重</label>
+      </FloatLabel>
+      <p class="ml-2">kg</p>
+    </div>
+    <div class="weight-group mt-7">
+      <FloatLabel>
+        <InputText v-model="fatPercentage" class="w-52 h-10 p-2.5" />
+        <label>体脂肪率</label>
+      </FloatLabel>
+      <p class="ml-2">%</p>
+    </div>
+    <div class="mt-5">
+      <RecordMemoInput :memo="memo" @memo-edit="memoEdit" />
+    </div>
+    <div class="mt-7">
+      <input
+        type="checkbox"
+        id="statusSelect"
+        v-model="isHidden"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+      />
+      <label class="ml-2">非公開記録にする場合にはチェック</label>
+    </div>
+    <div v-if="imageUrls !== null && imageUrls.length !== 0">
+      <p class="mt-5">登録済みの画像</p>
+      <div class="thumbnail-container">
+        <div class="thumbnail" v-for="item in imageUrls">
+          <div class="thumbnail-image">
+            <img :src="item.url" alt="" />
+          </div>
+          <div class="thumbnail-actions">
+            <Button
+              label=""
+              icon="pi pi-trash"
+              class="delete-button"
+              @click="deleteImage(item)"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5">
+      <p>関連画像(登録済みの画像と合わせて3枚まで登録できます)</p>
+      <div v-for="i in 3">
+        <DropFile @change="onFileChange" :index="i" class="mt-3" />
+      </div>
+    </div>
+    <div class="p-5 text-center">
+      <button class="record-edit-button">編集する</button>
+    </div>
+  </form>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -36,13 +101,12 @@ onMounted(() => {
 
 const deleteImage = async (item) => {
   try {
-    const res = await axiosInstance.delete("/api/v1/record_images", {
+    const res = await axiosInstance.delete(`/api/v1/record_images/${recordId.value}`, {
       params: {
-        id: recordId.value,
-        image_id: item.id,
+        image_id: item.id
       },
     });
-    imageUrls.value = res.data.imageUrls;
+    imageUrls.value = res.data.image_urls;
   } catch (error) {
     let errorMessage = "";
     if (error.response != null && error.response.status == 401) {
@@ -147,71 +211,6 @@ const showRecordDetail = () => {
   router.push({ name: "RecordDetail", params: { id: recordId.value } });
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu />
-  <Toast position="top-center" />
-  <form class="edit-container" @submit.prevent="edit">
-    <div class="w-52">
-      <p>記録日</p>
-      <DatePicker isStart="true" :date="recordDate" @update:date="dateChange" />
-    </div>
-    <div class="weight-group mt-7">
-      <FloatLabel>
-        <InputText v-model="weight" class="w-52 h-10 p-2.5" />
-        <label>体重</label>
-      </FloatLabel>
-      <p class="ml-2">kg</p>
-    </div>
-    <div class="weight-group mt-7">
-      <FloatLabel>
-        <InputText v-model="fatPercentage" class="w-52 h-10 p-2.5" />
-        <label>体脂肪率</label>
-      </FloatLabel>
-      <p class="ml-2">%</p>
-    </div>
-    <div class="mt-5">
-      <RecordMemoInput :memo="memo" @memo-edit="memoEdit" />
-    </div>
-    <div class="mt-7">
-      <input
-        type="checkbox"
-        id="statusSelect"
-        v-model="isHidden"
-        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-      />
-      <label class="ml-2">非公開記録にする場合にはチェック</label>
-    </div>
-    <div v-if="imageUrls !== null && imageUrls.length !== 0">
-      <p class="mt-5">登録済みの画像</p>
-      <div class="thumbnail-container">
-        <div class="thumbnail" v-for="item in imageUrls">
-          <div class="thumbnail-image">
-            <img :src="item.url" alt="" />
-          </div>
-          <div class="thumbnail-actions">
-            <Button
-              label=""
-              icon="pi pi-trash"
-              class="delete-button"
-              @click="deleteImage(item)"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="mt-5">
-      <p>関連画像(登録済みの画像と合わせて3枚まで登録できます)</p>
-      <div v-for="i in 3">
-        <DropFile @change="onFileChange" :index="i" class="mt-3" />
-      </div>
-    </div>
-    <div class="p-5 text-center">
-      <button class="record-edit-button">編集する</button>
-    </div>
-  </form>
-</template>
 
 <style scoped>
 .edit-container {

@@ -16,7 +16,7 @@ RSpec.describe Bookmark, type: :model do
       end
     end
 
-    context "ノウハウを削除" do
+    context "記事を削除" do
       let(:user) { create(:user) }
       let(:knowledge) { create(:knowledge) }
 

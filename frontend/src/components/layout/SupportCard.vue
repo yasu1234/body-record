@@ -1,3 +1,41 @@
+<template>
+  <div class="support-container" v-if="user != null">
+    <div
+      class="user-thumbnail-image"
+      v-if="user.image_url !== null && user.image_url.url !== null"
+    >
+      <img
+        :src="user.image_url.url"
+        alt="ユーザー"
+        class="user-thumbnail-image"
+      />
+    </div>
+    <div>
+      <Button
+        class="user-name-link"
+        :label="user.name"
+        @click.stop="showUser"
+        link
+      />
+    </div>
+  </div>
+  <p class="text-left mt-2.5 ml-5">
+    {{ profile }}
+  </p>
+  <div class="text-right mt-2.5 mr-2.5 pb-5">
+    <button
+      v-if="isSupport"
+      class="support-delete-button support-button"
+      @click="supportOff"
+    >
+      サポート解除
+    </button>
+    <button v-else class="support-button" @click="supportOn">
+      サポートする
+    </button>
+  </div>
+</template>
+
 <script setup>
 import { useRouter } from "vue-router";
 import { ref, onMounted, watch } from "vue";
@@ -49,44 +87,6 @@ const supportOff = () => {
   emit("support-off", user.value.id);
 };
 </script>
-
-<template>
-  <div class="support-container" v-if="user != null">
-    <div
-      class="user-thumbnail-image"
-      v-if="user.image_url !== null && user.image_url.url !== null"
-    >
-      <img
-        :src="user.image_url.url"
-        alt="ユーザー"
-        class="user-thumbnail-image"
-      />
-    </div>
-    <div>
-      <Button
-        class="user-name-link"
-        :label="user.name"
-        @click.stop="showUser"
-        link
-      />
-    </div>
-  </div>
-  <p class="text-left mt-2.5 ml-5">
-    {{ profile }}
-  </p>
-  <div class="text-right mt-2.5 mr-2.5 pb-5">
-    <button
-      v-if="isSupport"
-      class="support-delete-button support-button"
-      @click="supportOff"
-    >
-      サポート解除
-    </button>
-    <button v-else class="support-button" @click="supportOn">
-      サポートする
-    </button>
-  </div>
-</template>
 
 <style scoped>
 .support-container {

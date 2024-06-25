@@ -10,7 +10,7 @@ RSpec.describe Record, type: :model do
         user.records.create!(date: "2024/04/29")
       end
 
-      it "紐づくノウハウデータも削除される" do
+      it "紐づく記事データも削除される" do
         expect { user.destroy }.to change(Record, :count).by(-1)
       end
     end

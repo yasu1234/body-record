@@ -16,14 +16,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 a {
   font-weight: 500;
   text-decoration: inherit;
 }
-a:hover {
-}
-
 body {
   margin: 0;
   place-items: center;
@@ -31,12 +27,10 @@ body {
   min-height: 100vh;
   background-color: #f5f6f6;
 }
-
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-
 button {
   background: #ffa500;
   color: white;
@@ -50,37 +44,30 @@ button {
 button:hover {
   opacity: 0.6;
 }
-
 img {
   object-fit: cover;
+  image-rendering: -webkit-optimize-contrast;
 }
-
 textarea {
   resize: vertical;
 }
-
 .card {
   padding: 2em;
 }
-
 p.validation-error-message {
   color:red;
 }
-
 #app {
   margin: 0 auto;
 }
-
 .setting-container {
   display: flex;
 }
-
 .view-title {
   text-align: center;
   font-size: 26px;
   font-weight: 700;
 }
-
 .record-search-container {
   width: 700px;
   margin: 0 auto;
@@ -90,17 +77,46 @@ p.validation-error-message {
   border-radius: 5px;
   margin-top: 20px;
 }
-
-/* ファイル登録編集ではエリアをPCの場合には横２つ表示 */
+/* ファイル登録編集では画像エリアをPCの場合には横２つ表示 */
 .file-input-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
-
 .form {
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+/* タイトルの装飾(1文字目を大きくして色を変える) */
+.title_line {
+  font-weight: bold;
+  border-bottom: 2px solid #f58505;
+  padding: 0.3em;
+  margin-bottom: 0.3em;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.title_line:first-letter {
+  font-size: 1.5em;
+  color: #f58505;
+}
+/* マイページ・ユーザーページの記録と記事のタイトルの装飾 */
+.section-title {
+  border-bottom: solid 5px #ffa500;
+  font-size: 25px;
+  font-weight: bold;
 }
 
 @media screen and (max-width: 768px) {
@@ -114,15 +130,14 @@ p.validation-error-message {
     border-radius: 5px;
     margin-top: 20px;
   }
+  .file-input-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 
 @media screen and (min-width: 768px) {
   .record-search-time-list {
     display: flex;
-  }
-
-  .file-input-container {
-    grid-template-columns: repeat(1, 1fr);
   }
 }
 

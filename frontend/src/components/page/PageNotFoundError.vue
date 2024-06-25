@@ -1,7 +1,3 @@
-<script setup>
-import Header from "../layout/Header.vue";
-</script>
-
 <template>
   <Header />
   <div class="not-found-container mt-5 px-2.5">
@@ -20,6 +16,10 @@ import Header from "../layout/Header.vue";
     </div>
   </div>
 </template>
+
+<script setup>
+import Header from "../layout/Header.vue";
+</script>
 
 <style scoped>
 .not-found-container {

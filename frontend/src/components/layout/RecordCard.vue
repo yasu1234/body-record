@@ -1,3 +1,16 @@
+<template>
+  <div v-if="record !== null">
+    <div class="my-idea-card" @click="recordClick">
+      <h4 class="mt-2.5 mx-3">
+        <b>{{ record.formatted_date }}の記録</b>
+      </h4>
+      <div>
+        <p class="mt-2.5 mb-2.5 mx-3">{{ recordMemo }}</p>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted, watch } from "vue";
 
@@ -16,7 +29,7 @@ watch(props, () => {
   memoTrim(props.record.memo);
 });
 
-const emit = defineEmits(["recordClick"]);
+const emit = defineEmits(["record-click"]);
 
 const memoTrim = (memo) => {
   if (memo == null) {
@@ -32,22 +45,9 @@ const memoTrim = (memo) => {
 }
 
 const recordClick = () => {
-  emit("recordClick", record);
+  emit("record-click", record);
 };
 </script>
-
-<template>
-  <div v-if="record !== null">
-    <div class="my-idea-card" @click="recordClick">
-      <h4 class="mt-2.5 mx-3">
-        <b>{{ record.formatted_date }}の記録</b>
-      </h4>
-      <div>
-        <p class="mt-2.5 mb-2.5 mx-3">{{ recordMemo }}</p>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .my-idea-card {

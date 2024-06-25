@@ -19,7 +19,7 @@ RSpec.describe User, type: :model do
 
       it "登録した画像の情報を取得できる" do
         url = user.image_url
-        expect(url[:url]).to include("http://localhost:3000/rails/active_storage/blobs")
+        expect(url[:url]).to include("/rails/active_storage/blobs")
         expect(url[:filename]).to eq("image.png")
       end
     end
@@ -77,21 +77,6 @@ RSpec.describe User, type: :model do
       expect { user.support!(other_user) }.to change { Support.count }.by(1)
       expect(user.supportings).to include(other_user)
       expect(other_user.supporters).to include(user)
-    end
-  end
-
-  describe "#removeSupport" do
-    let(:user) { create(:user) }
-    let(:other_user) { create(:user) }
-
-    before do
-      user.support!(other_user)
-    end
-
-    it "応援解除が行われる" do
-      expect { user.removeSupport(other_user) }.to change { Support.count }.by(-1)
-      expect(user.supportings).not_to include(other_user)
-      expect(other_user.supporters).not_to include(user)
     end
   end
 end

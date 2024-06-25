@@ -16,9 +16,7 @@ exports[`EditRecord SnapShotテスト初期表示 1`] = `
     <div
       class="w-52"
     >
-      <p
-        class="inputTitle"
-      >
+      <p>
         記録日
       </p>
       <date-picker-stub
@@ -48,7 +46,7 @@ exports[`EditRecord SnapShotテスト初期表示 1`] = `
     <div
       class="mt-5"
     >
-      <float-label-stub />
+      <record-memo-input-stub />
     </div>
     <div
       class="mt-7"

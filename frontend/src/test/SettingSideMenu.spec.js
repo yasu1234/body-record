@@ -21,6 +21,17 @@ jest.mock('vue-router', () => {
   };
 });
 
+jest.mock("@/js/axios.js", () => ({
+  axiosInstance: {
+    get: jest.fn(),
+    interceptors: {
+      request: { use: jest.fn() },
+      response: { use: jest.fn() },
+    },
+  },
+  setupInterceptors: jest.fn(),
+}));
+
 describe('TabItem.vue', () => {
   let wrapper
 

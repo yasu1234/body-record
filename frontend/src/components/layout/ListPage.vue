@@ -1,3 +1,14 @@
+<template>
+  <Paginate
+    :page-count="pageCount"
+    :page-range="3"
+    :margin-pages="2"
+    :click-handler="clickCallback"
+    :prev-text="'<'"
+    :next-text="'>'"
+  />
+</template>
+
 <script setup>
 import { ref, onMounted, watch } from "vue";
 
@@ -17,23 +28,12 @@ watch(props, () => {
   pageCount.value = props.pageCount;
 });
 
-const emits = defineEmits(["changePage"]);
+const emits = defineEmits(["change-page"]);
 
 const clickCallback = function (pageNum) {
-  emits("changePage", pageNum);
+  emits("change-page", pageNum);
 };
 </script>
-
-<template>
-  <Paginate
-    :page-count="pageCount"
-    :page-range="3"
-    :margin-pages="2"
-    :click-handler="clickCallback"
-    :prev-text="'<'"
-    :next-text="'>'"
-  />
-</template>
 
 <style scoped>
 .pagination {

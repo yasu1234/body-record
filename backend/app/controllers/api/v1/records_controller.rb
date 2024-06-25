@@ -6,14 +6,14 @@ class Api::V1::RecordsController < ApplicationController
       render json: { errors: "ユーザー情報が特定できません" }, status: :bad_request and return
     end
 
-    base_scope = Record.where(open_status: 1).where(user_id: params[:user_id])
-    records, total_pages = Record.search_and_paginate(params, base_scope)
+    base_scope = Record.open.where(user_id: params[:user_id])
+    records, total_pages, total_count = Record.search_and_paginate(params, base_scope)
 
-    render json: { records: records.as_json(methods: :formatted_date), totalPage: total_pages }, status: :ok
+    render json: { 
+      records: records.as_json(methods: :formatted_date), total_page: total_pages, total_count: total_count
+    }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { error: "対象のデータが見つかりません" }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   def show
@@ -37,8 +37,6 @@ class Api::V1::RecordsController < ApplicationController
     }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { error: "対象のデータが見つかりません" }, status: :not_found
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   def destroy
@@ -52,8 +50,6 @@ class Api::V1::RecordsController < ApplicationController
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   rescue ActiveRecord::RecordNotDestroyed => e
     render json: { errors: e.message }, status: :unprocessable_entity
-  rescue StandardError => e
-    render json: { errors: e.message }, status: :internal_server_error
   end
 
   private

@@ -84,7 +84,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
     context "未ログイン" do
       before do
         request.headers.merge!(common_header)
-        post :create, format: :json, params: valid_params
+        post :create, format: :json, params: { comment: valid_params }
       end
 
       it "401(未認証のステータスコード)が発生" do
@@ -92,11 +92,11 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
       end
     end
 
-    context "record_idが不足" do
+    context "knowledge_idが不足" do
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
-        post :create, format: :json, params: knowledge_id_lack_param
+        post :create, format: :json, params: { comment: knowledge_id_lack_param }
       end
 
       it "404エラーが発生" do
@@ -108,7 +108,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
-        post :create, format: :json, params: valid_params
+        post :create, format: :json, params: { comment: valid_params }
       end
 
       it "ステータスコードが200" do
@@ -119,6 +119,92 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
         json_response = JSON.parse(response.body)
         expect(json_response["knowledge"]["comments"].count).to eq 1
         expect(json_response["knowledge"]["comments"][0]["comment"]).to eq "TESTコメント成功"
+      end
+    end
+  end
+
+  describe "PUT #update" do
+    context "未ログイン" do
+      before do
+        request.headers.merge!(common_header)
+        post :update, format: :json, params: { comment: valid_params, id: comment.id }
+      end
+
+      it "401(未認証のステータスコード)が発生" do
+        expect(response.status).to eq 401
+      end
+    end
+
+    context "comment_idが不足" do
+      before do
+        request.headers.merge!(headers)
+        request.headers.merge!(common_header)
+        post :update, format: :json, params: { comment: knowledge_id_lack_param, id: knowledge.id }
+      end
+
+      it "404エラーが発生" do
+        expect(response.status).to eq 404
+      end
+    end
+
+    context "コメント更新完了" do
+      let!(:comment1) { create(:comment, user:, comment: "メモTEST", knowledge_id: knowledge.id) }
+      before do
+        request.headers.merge!(headers)
+        request.headers.merge!(common_header)
+        post :update, format: :json, params: { comment: valid_params, id: comment1.id }
+      end
+
+      it "ステータスコードが200" do
+        expect(response.status).to eq 200
+      end
+
+      it "更新したコメントがレスポンスに含めれている" do
+        json_response = JSON.parse(response.body)
+        expect(json_response["comment"]["comment"]).to eq "TESTコメント成功"
+      end
+    end
+  end
+
+  describe "Delete #destroy" do
+    context "未ログイン" do
+      before do
+        request.headers.merge!(common_header)
+        post :destroy, format: :json, params: { id: comment.id }
+      end
+
+      it "401(未認証のステータスコード)が発生" do
+        expect(response.status).to eq 401
+      end
+    end
+
+    context "comment_idが不足" do
+      before do
+        request.headers.merge!(headers)
+        request.headers.merge!(common_header)
+        post :destroy, format: :json, params: { id: knowledge.id }
+      end
+
+      it "404エラーが発生" do
+        expect(response.status).to eq 404
+      end
+    end
+
+    context "コメント削除完了" do
+      let!(:comment1) { create(:comment, user:, comment: "メモTEST", knowledge_id: knowledge.id) }
+      before do
+        request.headers.merge!(headers)
+        request.headers.merge!(common_header)
+        post :destroy, format: :json, params: { id: comment1.id }
+      end
+
+      it "ステータスコードが200" do
+        expect(response.status).to eq 200
+      end
+
+      it "更新したコメントがレスポンスに含めれている" do
+        json_response = JSON.parse(response.body)
+        expect(json_response["comment"]["id"]).to eq comment1.id
       end
     end
   end

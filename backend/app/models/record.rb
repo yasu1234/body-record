@@ -16,7 +16,9 @@ class Record < ApplicationRecord
             size: { less_than: 5.megabytes },
             limit: { max: 3 }
 
-  scope :latest_records, ->(limit) { order(date: :desc).limit(limit) }
+  scope :latest_records, -> { order(date: :desc) }
+  scope :limit_count, ->(count) { limit(count) }
+  scope :open, -> { where(open_status: 1) }
 
   scope :in_month, ->(year, month) {
     start_date = DateTime.new(year, month, 1)
@@ -24,7 +26,7 @@ class Record < ApplicationRecord
     where(date: start_date..end_date)
   }
 
-  def self.get_month_records(year, month, user)
+  def self.get_month_records(year, month, user, is_other)
     start_date = DateTime.new(year, month, 1)
     end_date = start_date.next_month
 
@@ -41,7 +43,16 @@ class Record < ApplicationRecord
     # 1ヶ月の記録をまとめる、なければ体重と体脂肪率が0のデータを作成(DBには保存しない)
     dates.each do |date|
       record = records.find { |r| r.date == date }
-      records_with_empty_dates << (record || Record.new(date:, weight: 0, fat_percentage: 0))
+      if is_other
+        new_record = if record.nil? || record.open_status != 1
+          Record.new(date:, weight: 0, fat_percentage: 0)
+        else
+          record
+        end
+        records_with_empty_dates << new_record
+      else
+        records_with_empty_dates << (record || Record.new(date:, weight: 0, fat_percentage: 0))
+      end
     end
 
     records_with_empty_dates
@@ -68,7 +79,7 @@ class Record < ApplicationRecord
                 records.page(1).per(30)
               end
 
-    [records, records.total_pages]
+    [records.latest_records, records.total_pages, records.count]
   end
 
   def image_urls
@@ -76,7 +87,7 @@ class Record < ApplicationRecord
 
     images.map do |image|
       {
-        url: "http://localhost:3000" + Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true),
+        url: ENV["API_HOST"] + Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true),
         id: image.id,
         filename: image.filename.to_s
       }

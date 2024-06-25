@@ -1,129 +1,3 @@
-<script setup>
-import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import FloatLabel from "primevue/floatlabel";
-import InputText from "primevue/inputtext";
-import Textarea from "primevue/textarea";
-import Toast from "primevue/toast";
-import { useToast } from "primevue/usetoast";
-import { toastService } from "../../../js/toast.js";
-import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
-
-import DropFile from "../../atom/DropFile.vue";
-import Header from "../../layout/Header.vue";
-import SettingSideMenu from "../../layout/SettingSideMenu.vue";
-import TabMenu from "../../layout/TabMenu.vue";
-
-const route = useRoute();
-const router = useRouter();
-const toast = useToast();
-const toastNotifications = new toastService(toast);
-setupInterceptors(router);
-
-const goalWeight = ref(null);
-const goalFatPercentage = ref(null);
-const profile = ref("");
-const file = ref(null);
-const userThumbnail = ref(null);
-const userId = ref(0);
-
-function onFileChange(event) {
-  file.value = event[0];
-}
-
-onMounted(() => {
-  getProfile();
-});
-
-const getProfile = async () => {
-  userId.value = route.params.id;
-
-  try {
-    const res = await axiosInstance.get(`/api/v1/profiles/${userId.value}`);
-
-    goalWeight.value = res.data.user.profile.goal_weight;
-    goalFatPercentage.value = res.data.user.profile.goal_fat_percentage;
-
-    if (res.data.user.profile.profile !== null) {
-      profile.value = res.data.user.profile.profile;
-    }
-
-    userThumbnail.value = res.data.user.image_url;
-  } catch (error) {
-    toastNotifications.displayError("プロフィール情報取得にに失敗しました", "");
-  }
-};
-
-const updateProfile = async () => {
-  try {
-    const formData = new FormData();
-    formData.append("profile", profile.value);
-    formData.append("goal_weight", goalWeight.value);
-    formData.append("goal_fat_percentage", goalFatPercentage.value);
-
-    const res = await axiosInstance.post(`/api/v1/profiles`, formData);
-    if (file.value !== null) {
-      updateProfileImage();
-    } else {
-      toastNotifications.displayInfo("プロフィールを更新しました", "");
-      setTimeout(async () => {
-        showMyPage();
-      }, 3000);
-    }
-  } catch (error) {
-    let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
-      if (Array.isArray(error.response.data.errors)) {
-        errorMessages += error.response.data.errors.join("\n");
-      } else {
-        errorMessages = error.response.data.errors;
-      }
-    }
-    toastNotifications.displayError(
-      "プロフィール変更に失敗しました",
-      errorMessages
-    );
-  }
-};
-
-const updateProfileImage = async () => {
-  try {
-    const formData = new FormData();
-    if (file.value !== null) {
-      formData.append("image", file.value);
-    }
-
-    const res = await axiosInstance.put(`/api/v1/auth`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    toastNotifications.displayInfo("プロフィールを更新しました", "");
-    setTimeout(async () => {
-      showMyPage();
-    }, 3000);
-  } catch (error) {
-    let errorMessages = "";
-    if (error.response != null && error.response.status === 422) {
-      if (Array.isArray(error.response.data.errors)) {
-        errorMessages += error.response.data.errors.join("\n");
-      } else {
-        errorMessages = error.response.data.errors;
-      }
-    }
-    toastNotifications.displayError(
-      "プロフィール画像登録に失敗しました",
-      errorMessages
-    );
-  }
-};
-
-const showMyPage = () => {
-  router.push({ name: "MyPage" });
-};
-</script>
-
 <template>
   <Header />
   <TabMenu />
@@ -180,6 +54,153 @@ const showMyPage = () => {
     </main>
   </div>
 </template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import FloatLabel from "primevue/floatlabel";
+import InputText from "primevue/inputtext";
+import Textarea from "primevue/textarea";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
+import { toastService } from "../../../js/toast.js";
+import { axiosInstance, setupInterceptors } from "../../../js/axios.js";
+
+import DropFile from "../../atom/DropFile.vue";
+import Header from "../../layout/Header.vue";
+import SettingSideMenu from "../../layout/SettingSideMenu.vue";
+import TabMenu from "../../layout/TabMenu.vue";
+
+const route = useRoute();
+const router = useRouter();
+const toast = useToast();
+const toastNotifications = new toastService(toast);
+setupInterceptors(router);
+
+const goalWeight = ref(null);
+const goalFatPercentage = ref(null);
+const profile = ref("");
+const file = ref(null);
+const userThumbnail = ref(null);
+const userId = ref(0);
+
+const onFileChange = (event) => {
+  file.value = event;
+}
+
+onMounted(() => {
+  getProfile();
+});
+
+const getProfile = async () => {
+  userId.value = route.params.id;
+
+  try {
+    const res = await axiosInstance.get(`/api/v1/profiles/${userId.value}`);
+
+    userThumbnail.value = res.data.user.image_url;
+
+    if (res.data.user.profile == null) {
+      goalWeight.value = null;
+      goalFatPercentage.value = null;
+      profile.value = "";
+      return;
+    }  
+
+    goalWeight.value = res.data.user.profile.goal_weight;
+    goalFatPercentage.value = res.data.user.profile.goal_fat_percentage;
+    if (res.data.user.profile.profile !== null) {
+      profile.value = res.data.user.profile.profile;
+    } else {
+      profile.value = ""
+    }
+  } catch (error) {
+    let errorMessage = "";
+    if (error.response != null && error.response.status === 401) {
+      errorMessage = "ログインしてください";
+    }
+    toastNotifications.displayError("プロフィール情報取得に失敗しました", errorMessage);
+  }
+};
+
+const updateProfile = async () => {
+  try {
+    const formData = new FormData();
+    if (profile.value != null) {
+      formData.append("profile", profile.value);
+    }
+    if (goalWeight.value != null) {
+      formData.append("goal_weight", goalWeight.value);
+    }
+    if (goalFatPercentage.value != null) {
+      formData.append("goal_fat_percentage", goalFatPercentage.value);
+    }
+    
+    const res = await axiosInstance.post(`/api/v1/profiles`, formData);
+    if (file.value != null) {
+      updateProfileImage();
+    } else {
+      toastNotifications.displayInfo("プロフィールを更新しました", "");
+      setTimeout(async () => {
+        showMyPage();
+      }, 3000);
+    }
+  } catch (error) {
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
+      }
+    } else if (error.response.status === 401) {
+      errorMessages = "ログインしてください";
+    }
+
+    toastNotifications.displayError(
+      "プロフィール変更に失敗しました",
+      errorMessages
+    );
+  }
+};
+
+const updateProfileImage = async () => {
+  try {
+    const formData = new FormData();
+    if (file.value !== null) {
+      formData.append("image", file.value);
+    }
+
+    const res = await axiosInstance.put(`/api/v1/auth`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    toastNotifications.displayInfo("プロフィールを更新しました", "");
+    setTimeout(async () => {
+      showMyPage();
+    }, 3000);
+  } catch (error) {
+    let errorMessages = "";
+    if (error.response != null && error.response.status === 422) {
+      if (Array.isArray(error.response.data.errors)) {
+        errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
+      }
+    }
+    toastNotifications.displayError(
+      "プロフィール画像登録に失敗しました",
+      errorMessages
+    );
+  }
+};
+
+const showMyPage = () => {
+  router.push({ name: "MyPage" });
+};
+</script>
 
 <style scoped>
 .profile-edit-content {

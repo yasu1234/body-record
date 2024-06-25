@@ -17,6 +17,7 @@ import KnowledgeList from '/src/components/page/knowledge/KnowledgeList.vue';
 import AddKnowledge from '/src/components/page/knowledge/AddKnowledge.vue';
 import EditKnowledge from '/src/components/page/knowledge/EditKnowledge.vue';
 import KnowledgeDetail from '/src/components/page/knowledge/KnowledgeDetail.vue';
+import UserKnowledgeList from '/src/components/page/knowledge/UserKnowledgeList.vue';
 import UserProfile from '/src/components/page/user/UserProfile.vue';
 import EditProfile from '/src/components/page/user/EditProfile.vue';
 import UserList from '/src/components/page/user/UserList.vue';
@@ -145,6 +146,11 @@ const routes = [
     path: '/myPage',
     name: 'MyPage',
     component: MyPage 
+  },
+  { 
+    path: '/knowledge/user/:id',
+    name: 'UserKnowledgeList',
+    component: UserKnowledgeList 
   },
   { 
     path: '/:pathMatch(.*)*',

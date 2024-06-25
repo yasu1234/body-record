@@ -78,7 +78,7 @@ describe('Header.vue', () => {
   })
 
   it('ログイン済みの場合には会員登録・ログインボタンが表示されない', async () => {
-    const user = { id: 1 }
+    const user = { id: 1, image_url: 'test.jpg'}
 
     jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
@@ -101,7 +101,7 @@ describe('Header.vue', () => {
   })
 
   it('ログイン済みの場合にはドロップダウンメニューが4つ表示される', async () => {
-    const user = { id: 1 }
+    const user = { id: 1, image_url: 'test.jpg' }
 
     jest.mock("@/js/axios.js", () => ({
       axiosInstance: {
@@ -130,7 +130,7 @@ describe('Header.vue', () => {
   })
 
   it('ログアウトするとCookieのトークン情報がなくなる', async () => {
-    const user = { id: 1 }
+    const user = { id: 1, image_url: 'test.jpg' }
 
     jest.mock("@/js/axios.js", () => ({
       axiosInstance: {

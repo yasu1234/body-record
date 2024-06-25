@@ -1,3 +1,26 @@
+<template>
+  <Header />
+  <Toast position="top-center" />
+  <h1 class="view-title mt-7">ログイン</h1>
+  <div class="login-container">
+    <form class="form" @submit.prevent="handleSubmit">
+      <div class="login-item">
+        <label>メールアドレス</label>
+        <input id="email" type="email" v-model="email" />
+        <p class="validation-error-message">{{ emailError }}</p>
+      </div>
+      <div class="login-item">
+        <label>パスワード</label>
+        <PasswordText :password="password" @update-password="updatePassword" />
+        <p class="validation-error-message">{{ passwordError }}</p>
+      </div>
+      <div class="login-button-container">
+        <button class="login-button">ログイン</button>
+      </div>
+    </form>
+  </div>
+</template>
+
 <script setup>
 import { useRouter } from "vue-router";
 import Cookies from "js-cookie";
@@ -33,7 +56,17 @@ const login = async () => {
     Cookies.set("client", res.headers["client"]);
     Cookies.set("uid", res.headers["uid"]);
 
-    showHome();
+    if (
+      Cookies.get("loginRoutePath") != null &&
+      !Cookies.get("loginRoutePath").includes("login") &&
+      !Cookies.get("loginRoutePath").includes("accountInteroduction") &&
+      !Cookies.get("loginRoutePath").includes("signup")
+    ) {
+      router.push({ path: Cookies.get("loginRoutePath") });
+      Cookies.remove("loginRoutePath");
+    } else {
+      showHome();
+    }
   } catch (error) {
     let errorMessages = "";
     if (error.response != null && error.response.status === 422) {
@@ -75,29 +108,6 @@ const showHome = () => {
 };
 </script>
 
-<template>
-  <Header />
-  <Toast position="top-center" />
-  <h1 class="view-title mt-7">ログイン</h1>
-  <div class="login-container">
-    <form class="form" @submit.prevent="handleSubmit">
-      <div class="item">
-        <label>メールアドレス</label>
-        <input id="email" type="email" v-model="email" />
-        <p class="validation-error-message">{{ emailError }}</p>
-      </div>
-      <div class="item">
-        <label>パスワード</label>
-        <PasswordText :password="password" @update-password="updatePassword" />
-        <p class="validation-error-message">{{ passwordError }}</p>
-      </div>
-      <div class="login-button-container">
-        <button class="login-button">ログイン</button>
-      </div>
-    </form>
-  </div>
-</template>
-
 <style scoped>
 .login-container {
   width: 500px;
@@ -107,13 +117,14 @@ const showHome = () => {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-.item {
+.login-item {
   padding-top: 40px;
   margin: 0 auto;
 }
 .form input[type="email"] {
   padding: 10px;
   width: 100%;
+  border: 1px solid #ccc;
 }
 .login-button-container {
   padding-top: 40px;

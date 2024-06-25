@@ -1,3 +1,35 @@
+<template>
+  <Header />
+  <TabMenu />
+  <Toast position="top-center" />
+  <div class="mt-5 p-2.5 text-center">
+    <P class="font-bold">サポーター(応援しているユーザー)一覧</P>
+    <div v-if="supporterList.length > 0">
+      <div
+        v-for="supporter in supporterList"
+        class="support-card"
+      >
+        <SupportCard
+          :user="supporter"
+          :isSupport="supporter.is_support_mine"
+          @support-off="supportOff"
+          @support-on="supportOn"
+        />
+      </div>
+      <div class="mt-12">
+        <ListPage
+          :pageCount="pageCount"
+          v-model="pageNum"
+          @change-page="updatePaginateItems"
+        />
+      </div>
+    </div>
+    <div v-else>
+      <p class="mx-5 mt-5">サポーターはいません</p>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
@@ -128,38 +160,6 @@ const updatePaginateItems = (page) => {
   searchUser();
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu />
-  <Toast position="top-center" />
-  <div class="mt-5 p-2.5 text-center">
-    <P class="font-bold">サポーター(応援しているユーザー)一覧</P>
-    <div v-if="supporterList.length > 0">
-      <div
-        v-for="supporter in supporterList"
-        class="support-card"
-      >
-        <SupportCard
-          :user="supporter"
-          :isSupport="supporter.is_support_mine"
-          @support-off="supportOff"
-          @support-on="supportOn"
-        />
-      </div>
-      <div class="mt-12">
-        <ListPage
-          :pageCount="pageCount"
-          v-model="pageNum"
-          @changePage="updatePaginateItems"
-        />
-      </div>
-    </div>
-    <div v-else>
-      <p class="mx-5 mt-5">サポーターはいません</p>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .support-card {

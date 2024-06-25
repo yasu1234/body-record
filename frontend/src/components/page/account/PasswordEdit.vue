@@ -1,3 +1,49 @@
+<template>
+  <Header />
+  <TabMenu />
+  <Toast position="top-center" />
+  <div class="setting-container">
+    <SettingSideMenu :currentIndex="3" />
+    <main>
+      <p class="title_line pt-10">パスワード変更</p>
+      <div class="password-edit-container">
+        <form class="form" @submit.prevent="checkValidate">
+          <div class="pt-10">
+            <label for="password">現在のパスワード</label>
+            <PasswordText
+              :password="currentPassword"
+              :passwordType="PasswordType.password"
+              @update-password="updatePassword"
+            />
+            <p class="validation-error-message">{{ currentPasswordError }}</p>
+          </div>
+          <div class="pt-10">
+            <label for="password">パスワード</label>
+            <PasswordText
+              :password="password"
+              :passwordType="PasswordType.newPassword"
+              @update-password="updatePassword"
+            />
+            <p class="validation-error-message">{{ passwordError }}</p>
+          </div>
+          <div class="pt-10">
+            <label for="passwordConfirm">パスワード(確認)</label>
+            <PasswordText
+              :password="passwordConfirm"
+              :passwordType="PasswordType.newPasswordConfirm"
+              @update-password="updatePassword"
+            />
+            <p class="validation-error-message">{{ passwordConfirmError }}</p>
+          </div>
+          <div class="text-center">
+            <button class="password-edit-button mt-5">更新</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</template>
+
 <script setup>
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
@@ -100,56 +146,11 @@ const updatePassword = (inputPassword, passwordType) => {
 };
 </script>
 
-<template>
-  <Header />
-  <TabMenu />
-  <Toast position="top-center" />
-  <div class="setting-container">
-    <SettingSideMenu :currentIndex="3" />
-    <main>
-      <h1 class="view-title pt-10">パスワード変更</h1>
-      <div class="password-edit-container">
-        <form class="form" @submit.prevent="checkValidate">
-          <div class="pt-10">
-            <label for="password">現在のパスワード</label>
-            <PasswordText
-              :password="currentPassword"
-              :passwordType="PasswordType.password"
-              @update-password="updatePassword"
-            />
-            <p class="validation-error-message">{{ currentPasswordError }}</p>
-          </div>
-          <div class="pt-10">
-            <label for="password">パスワード</label>
-            <PasswordText
-              :password="password"
-              :passwordType="PasswordType.newPassword"
-              @update-password="updatePassword"
-            />
-            <p class="validation-error-message">{{ passwordError }}</p>
-          </div>
-          <div class="pt-10">
-            <label for="passwordConfirm">パスワード(確認)</label>
-            <PasswordText
-              :password="passwordConfirm"
-              :passwordType="PasswordType.newPasswordConfirm"
-              @update-password="updatePassword"
-            />
-            <p class="validation-error-message">{{ passwordConfirmError }}</p>
-          </div>
-          <div class="text-center">
-            <button class="password-edit-button mt-5">更新</button>
-          </div>
-        </form>
-      </div>
-    </main>
-  </div>
-</template>
-
 <style scoped>
 .password-edit-container {
   width: 500px;
   margin: 0 auto;
+  margin-top: 20px;
   padding: 20px;
   background-color: #ffffff;
   border: 1px solid #ccc;

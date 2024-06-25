@@ -1,13 +1,3 @@
-<script setup>
-import Button from "primevue/button";
-
-const emit = defineEmits(["searchButtonClick"]);
-
-const searchButtonClick = () => {
-  emit("searchButtonClick");
-};
-</script>
-
 <template>
   <Button
     label="この条件で検索する"
@@ -16,6 +6,16 @@ const searchButtonClick = () => {
     @click="searchButtonClick"
   />
 </template>
+
+<script setup>
+import Button from "primevue/button";
+
+const emit = defineEmits(["search-button-click"]);
+
+const searchButtonClick = () => {
+  emit("search-button-click");
+};
+</script>
 
 <style scoped>
 .search-button {

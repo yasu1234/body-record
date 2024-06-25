@@ -10,6 +10,7 @@ import DatePicker from "../../atom/DatePicker.vue";
 import RecordCard from "../../layout/RecordCard.vue";
 import SearchButton from "../../atom/SearchButton.vue";
 import ResultEmpty from "../../atom/ResultEmpty.vue";
+import LoginIntroductionView from "../../layout/LoginIntroductionView.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -20,11 +21,13 @@ const user = ref(null);
 const keyword = ref("");
 const startDate = ref("");
 const endDate = ref("");
-const isLogin = ref(false);
+const shouldLogin = ref(false);
 const searchResult = ref([]);
 const currentId = ref(2);
 const pageCount = ref(1);
 const page = ref(1);
+const isEmpty = ref(false);
+const totalCount = ref(0);
 
 onMounted(() => {
   userId.value = route.params.id;
@@ -111,6 +114,8 @@ const getUser = async () => {
 };
 
 const search = async () => {
+  shouldLogin.value = false;
+
   try {
     const res = await axiosInstance.get("/api/v1/records", {
       params: {
@@ -122,34 +127,51 @@ const search = async () => {
       },
     });
 
-    if (res.data && res.data.totalPage) {
-      pageCount.value = res.data.totalPage;
+    searchResult.value = [];
+
+    if (res.data != null && res.data.total_page != null) {
+      pageCount.value = res.data.total_page;
     } else {
       pageCount.value = 1;
     }
 
-    searchResult.value = [];
-
-    for (let item of res.data.records) {
-      searchResult.value.push(item);
+    if (res.data != null && res.data.total_count != null) {
+      totalCount.value = res.data.total_count;
+    } else {
+      totalCount.value = 0;
     }
+
+    if (res.data.records != null && res.data.records.length > 0) {
+      for (let item of res.data.records) {
+        searchResult.value.push(item);
+      }
+    }
+
+    isEmpty.value = !(res.data.records != null && res.data.records.length > 0);
   } catch (error) {
     searchResult.value = [];
+
+    isEmpty.value = true;
+
+    if (error.response != null && error.response.status === 401) {
+      shouldLogin.value = true;
+      isEmpty.value = false;
+    }
   }
 };
 
-const updatePaginateItems = function (pageNum) {
+const updatePaginateItems = (pageNum) => {
   page.value = pageNum;
   search();
 };
 
-function startDateChange(event) {
+const startDateChange = (event) => {
   startDate.value = event;
-}
+};
 
-function endDateChange(event) {
+const endDateChange = (event) => {
   endDate.value = event;
-}
+};
 
 const clickRecord = (item) => {
   router.push({ name: "RecordDetail", params: { id: item.id } });
@@ -160,7 +182,7 @@ const clickRecord = (item) => {
   <Header />
   <TabMenu :currentId="currentId" />
   <div class="record-search-container">
-    <p class="inputTitle font-bold" v-if="user != null">
+    <p class="search-item-title font-bold" v-if="user != null">
       {{ user.name }}さんの記録検索
     </p>
     <input
@@ -172,7 +194,7 @@ const clickRecord = (item) => {
     />
     <div class="record-search-time-list">
       <div class="item">
-        <p class="inputTitle">検索開始日</p>
+        <p class="search-item-title">検索開始日</p>
         <DatePicker
           isStart="true"
           :date="startDate"
@@ -180,7 +202,7 @@ const clickRecord = (item) => {
         />
       </div>
       <div class="item">
-        <p class="inputTitle">検索終了日</p>
+        <p class="search-item-title">検索終了日</p>
         <DatePicker
           isStart="false"
           :date="endDate"
@@ -189,27 +211,28 @@ const clickRecord = (item) => {
       </div>
     </div>
     <div class="search-button-area">
-      <SearchButton @searchButtonClick="searchParamChange" />
+      <SearchButton @search-button-click="searchParamChange" />
     </div>
   </div>
-  <div class="mt-5">
-    <div v-if="searchResult.length > 0">
-      <RecordCard
-        v-for="record in searchResult"
-        v-bind="record"
-        :record="record"
-        @recordClick="clickRecord(record)"
-      />
-      <div class="record-list-page">
+  <div class="py-8">
+    <div v-if="searchResult.length > 0" class="mt-8">
+      <p class="text-center font-bold">合計{{ totalCount }}件</p>
+      <div v-for="record in searchResult" class="mt-5">
+        <RecordCard :record="record" @record-click="clickRecord(record)" />
+      </div>
+      <div>
         <ListPage
           :pageCount="pageCount"
           v-model="page"
-          @changePage="updatePaginateItems"
+          @change-page="updatePaginateItems"
         />
       </div>
     </div>
-    <div v-else>
+    <div div v-if="isEmpty">
       <ResultEmpty class="mx-5" />
+    </div>
+    <div v-if="shouldLogin">
+      <LoginIntroductionView class="mx-5" />
     </div>
   </div>
 </template>
@@ -227,7 +250,7 @@ input[type="text"] {
   padding: 5px;
   box-sizing: border-box;
 }
-.record-search-time-list .item .inputTitle {
+.record-search-time-list .item .search-item-title {
   margin: 5px 0 0;
   padding: 0;
   font-size: 16px;

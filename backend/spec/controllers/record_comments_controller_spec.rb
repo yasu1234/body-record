@@ -5,7 +5,6 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
   let(:headers) { user.create_new_auth_token }
   let(:common_header) { { 'X-Requested-With': "XMLHttpRequest" } }
   let(:record_id_lack_param) { { comment: "TESTコメント" } }
-  let(:update_valid_params) { { memo: "メモ更新TEST", date: "2024-04-01", images: [image] } }
 
   def create_comments(count)
     create_list(:comment, count, user:)
@@ -83,11 +82,11 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
   describe "POST #create" do
     context "未ログイン" do
       let!(:record) { create(:record, user:, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
-      let(:valid_params) { { record_id: record.id, comment: "TESTコメント成功" } }
+      let!(:valid_params) { { record_id: record.id, comment: "TESTコメント成功" } }
 
       before do
         request.headers.merge!(common_header)
-        post :create, format: :json, params: valid_params
+        post :create, format: :json, params: { comment: valid_params }
       end
 
       it "401(未認証のステータスコード)が発生" do
@@ -101,7 +100,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
-        post :create, format: :json, params: record_id_lack_param
+        post :create, format: :json, params: { comment: record_id_lack_param }
       end
 
       it "404エラーが発生" do
@@ -116,7 +115,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
-        post :create, format: :json, params: valid_params
+        post :create, format: :json, params: { comment: valid_params }
       end
 
       it "ステータスコードが200" do
@@ -127,6 +126,101 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
         json_response = JSON.parse(response.body)
         expect(json_response["record"]["comments"].count).to eq 1
         expect(json_response["record"]["comments"][0]["comment"]).to eq "TESTコメント成功"
+      end
+    end
+  end
+
+  describe "PUT #update" do
+    context "未ログイン" do
+      let!(:record) { create(:record, user:, id: 2, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
+      let(:valid_params) { { record_id: record.id, comment: "TESTコメント成功" } }
+      before do
+        request.headers.merge!(common_header)
+        post :update, format: :json, params: { comment: valid_params, id: record.id }
+      end
+
+      it "401(未認証のステータスコード)が発生" do
+        expect(response.status).to eq 401
+      end
+    end
+
+    context "comment_idが不足" do
+      let!(:record) { create(:record, user:, id: 2, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
+      let(:valid_params) { { record_id: record.id, comment: "TESTコメント成功" } }
+      before do
+        request.headers.merge!(headers)
+        request.headers.merge!(common_header)
+        post :update, format: :json, params: { comment: valid_params, id: record.id }
+      end
+
+      it "404エラーが発生" do
+        expect(response.status).to eq 404
+      end
+    end
+
+    context "コメント更新完了" do
+      let!(:record) { create(:record, user:, id: 2, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
+      let!(:comment1) { create(:comment, user:, comment: "メモTEST", record_id: record.id) }
+      let(:valid_params) { { record_id: record.id, comment: "TESTコメント成功" } }
+      before do
+        request.headers.merge!(headers)
+        request.headers.merge!(common_header)
+        post :update, format: :json, params: { comment: valid_params, id: comment1.id }
+      end
+
+      it "ステータスコードが200" do
+        expect(response.status).to eq 200
+      end
+
+      it "更新したコメントがレスポンスに含めれている" do
+        json_response = JSON.parse(response.body)
+        expect(json_response["comment"]["comment"]).to eq "TESTコメント成功"
+      end
+    end
+  end
+
+  describe "DELETE #destroy" do
+    context "未ログイン" do
+      let!(:record) { create(:record, user:, id: 2, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
+      let!(:comment1) { create(:comment, user:, comment: "メモTEST", record_id: record.id) }
+      before do
+        request.headers.merge!(common_header)
+        post :destroy, format: :json, params: { id: comment1.id }
+      end
+
+      it "401(未認証のステータスコード)が発生" do
+        expect(response.status).to eq 401
+      end
+    end
+
+    context "comment_idが不足" do
+      before do
+        request.headers.merge!(headers)
+        request.headers.merge!(common_header)
+        post :destroy, format: :json, params: { id: -100 }
+      end
+
+      it "404エラーが発生" do
+        expect(response.status).to eq 404
+      end
+    end
+
+    context "コメント削除完了" do
+      let!(:record) { create(:record, user:, id: 2, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
+      let!(:comment1) { create(:comment, user:, comment: "メモTEST", record_id: record.id) }
+      before do
+        request.headers.merge!(headers)
+        request.headers.merge!(common_header)
+        post :destroy, format: :json, params: { id: comment1.id }
+      end
+
+      it "ステータスコードが200" do
+        expect(response.status).to eq 200
+      end
+
+      it "更新したコメントがレスポンスに含めれている" do
+        json_response = JSON.parse(response.body)
+        expect(json_response["comment"]["id"]).to eq comment1.id
       end
     end
   end

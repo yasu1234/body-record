@@ -11,6 +11,10 @@ class User < ActiveRecord::Base
     GUEST_USER = 1
   end
 
+  module SortType
+    SUPPORTER_COUNT = 2
+  end
+
   has_one_attached :image
 
   has_many :bookmarks, dependent: :destroy
@@ -36,7 +40,7 @@ class User < ActiveRecord::Base
     return unless image.attached?
 
     {
-      url: "http://localhost:3000" + Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true),
+      url: ENV["API_HOST"] + Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true),
       id: image.id,
       filename: image.filename.to_s
     }
@@ -56,10 +60,5 @@ class User < ActiveRecord::Base
 
   def check_support_mine(target_support_user)
     self == target_support_user
-  end
-
-  def removeSupport(other_user)
-    support = supporting_relationships.find_by(support_id: other_user.id)
-    support&.destroy
   end
 end

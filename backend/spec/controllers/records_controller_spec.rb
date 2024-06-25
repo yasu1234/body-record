@@ -46,7 +46,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
       it "データが1件取得できる" do
         json_response = JSON.parse(response.body)
         expect(json_response["records"].count).to eq 1
-        expect(json_response["totalPage"]).to eq 1
+        expect(json_response["total_page"]).to eq 1
       end
     end
   end
@@ -86,7 +86,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
       it "件数は1件で、合計ページは2" do
         json_response = JSON.parse(response.body)
         expect(json_response["records"].count).to eq 1
-        expect(json_response["totalPage"]).to eq 2
+        expect(json_response["total_page"]).to eq 2
       end
     end
   end
@@ -109,7 +109,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
       it "件数は0件で、合計ページは0" do
         json_response = JSON.parse(response.body)
         expect(json_response["records"].count).to eq 0
-        expect(json_response["totalPage"]).to eq 0
+        expect(json_response["total_page"]).to eq 0
       end
     end
   end
@@ -131,7 +131,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
       it "件数は0件で、合計ページは0" do
         json_response = JSON.parse(response.body)
         expect(json_response["records"].count).to eq 0
-        expect(json_response["totalPage"]).to eq 0
+        expect(json_response["total_page"]).to eq 0
       end
     end
   end
@@ -156,7 +156,7 @@ RSpec.describe Api::V1::RecordsController, type: :controller do
       it "件数は2件で、合計ページは1" do
         json_response = JSON.parse(response.body)
         expect(json_response["records"].count).to eq 2
-        expect(json_response["totalPage"]).to eq 1
+        expect(json_response["total_page"]).to eq 1
         expect(json_response["records"][0]["memo"]).to eq "メモTEST"
         expect(json_response["records"][1]["memo"]).to eq "メモ1メモ"
       end

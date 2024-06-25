@@ -34,9 +34,9 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
       it "パラメータで指定したユーザーを応援している" do
         json_response = JSON.parse(response.body)
         expect(json_response["user"]["id"]).to eq other_user.id
-        expect(json_response["user"]["supporterCount"]).to eq 1
-        expect(json_response["user"]["supportCount"]).to eq 0
-        expect(json_response["user"]["isSupport"]).to eq true
+        expect(json_response["user"]["supporter_count"]).to eq 1
+        expect(json_response["user"]["support_count"]).to eq 0
+        expect(json_response["user"]["is_support"]).to eq true
       end
     end
 
@@ -56,9 +56,9 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
       it "応援データが取得できる" do
         json_response = JSON.parse(response.body)
         expect(json_response["user"]["id"]).to eq other_user.id
-        expect(json_response["user"]["supporterCount"]).to eq 1
-        expect(json_response["user"]["supportCount"]).to eq 0
-        expect(json_response["user"]["isSupport"]).to eq true
+        expect(json_response["user"]["supporter_count"]).to eq 1
+        expect(json_response["user"]["support_count"]).to eq 0
+        expect(json_response["user"]["is_support"]).to eq true
       end
     end
   end
@@ -90,8 +90,8 @@ RSpec.describe Api::V1::SupportsController, type: :controller do
 
       it "応援データが取得できる" do
         json_response = JSON.parse(response.body)
-        expect(json_response["user"]["supporters"].count).to eq 0
-        expect(json_response["user"]["isSupport"]).to eq false
+        expect(json_response["user"]["supporter_count"]).to eq 0
+        expect(json_response["user"]["is_support"]).to eq false
       end
     end
 

@@ -1,3 +1,61 @@
+<template>
+  <Header />
+  <TabMenu />
+  <Toast position="top-center" />
+  <div class="p-7">
+    <FloatLabel class="mt-5">
+      <InputText v-model="title" class="input-width" />
+      <label>タイトル</label>
+    </FloatLabel>
+    <div class="mt=2.5">
+      <KnowledgeContentInput
+        :knowledgeContent="knowledge"
+        @content-edit="contentEdit"
+      />
+    </div>
+    <div class="markdown-info">
+      マークダウンを一部使用できます。詳しくは<a
+        href="https://kumaapp.amebaownd.com/posts/54283163"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="info-link"
+        >こちら</a
+      >をご覧ください。<br>
+      特に複数行の改行は使うことが多いと思うので必ずご確認ください
+    </div>
+  </div>
+  <div v-if="imageUrls !== null && imageUrls.length !== 0">
+    <p class="mt-5 ml-5">登録済みの画像</p>
+    <div class="thumbnail-container">
+      <div class="thumbnail" v-for="item in imageUrls">
+        <div class="thumbnail-image">
+          <img :src="item.url" alt="" />
+        </div>
+        <div class="thumbnail-actions">
+          <Button
+            label=""
+            icon="pi pi-trash"
+            v-tooltip="{ value: '画像削除' }"
+            class="delete-button"
+            @click="deleteImage(item)"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="p-5">
+    <p>関連画像(5枚まで登録できます)</p>
+    <div class="file-input-container">
+      <div v-for="i in 5">
+        <DropFile @change="onFileChange" :index="i" class="mt-3" />
+      </div>
+    </div>
+  </div>
+  <div class="p-10 text-center">
+    <button class="edit-knowledge-button" @click="edit">編集する</button>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -38,7 +96,7 @@ const deleteImage = async (item) => {
         image_id: item.id,
       },
     });
-    imageUrls.value = res.data.imageUrls;
+    imageUrls.value = res.data.image_urls;
   } catch (error) {
     if (error.response == null) {
       toastNotifications.displayError("画像の削除に失敗しました", "");
@@ -105,7 +163,7 @@ const edit = async () => {
     }, 3000);
   } catch (error) {
     if (error.response == null) {
-      toastNotifications.displayError("ノウハウの編集に失敗しました", "");
+      toastNotifications.displayError("記事の編集に失敗しました", "");
       return;
     }
 
@@ -122,7 +180,7 @@ const edit = async () => {
     }
 
     toastNotifications.displayError(
-      "ノウハウの編集に失敗しました",
+      "記事の編集に失敗しました",
       errorMessage
     );
   }
@@ -140,54 +198,6 @@ const showKnowledgeDetail = (item) => {
   router.push({ name: "KnowledgeDetail", params: { id: item.id } });
 };
 </script>
-
-<template>
-  <Header />
-  <TabMenu />
-  <Toast position="top-center" />
-  <div class="p-7">
-    <FloatLabel class="mt-5">
-      <InputText v-model="title" class="input-width" />
-      <label>タイトル</label>
-    </FloatLabel>
-    <div class="mt=2.5">
-      <KnowledgeContentInput
-        :knowledgeContent="knowledge"
-        @content-edit="contentEdit"
-      />
-    </div>
-  </div>
-  <div v-if="imageUrls !== null && imageUrls.length !== 0">
-    <p class="mt-5 ml-5">登録済みの画像</p>
-    <div class="thumbnail-container">
-      <div class="thumbnail" v-for="item in imageUrls">
-        <div class="thumbnail-image">
-          <img :src="item.url" alt="" />
-        </div>
-        <div class="thumbnail-actions">
-          <Button
-            label=""
-            icon="pi pi-trash"
-            v-tooltip="{ value: '画像削除' }"
-            class="delete-button"
-            @click="deleteImage(item)"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="p-5">
-    <p>関連画像(5枚まで登録できます)</p>
-    <div class="file-input-container">
-      <div v-for="i in 5">
-        <DropFile @change="onFileChange" :index="i" class="mt-3" />
-      </div>
-    </div>
-  </div>
-  <div class="p-10 text-center">
-    <button class="edit-knowledge-button" @click="edit">編集する</button>
-  </div>
-</template>
 
 <style scoped>
 .input-width {
@@ -237,5 +247,17 @@ const showKnowledgeDetail = (item) => {
   border-radius: 4px;
   cursor: pointer;
   border-radius: 50%;
+}
+.markdown-info {
+  font-size: 14px;
+  color: #333;
+}
+.info-link {
+  color: #ffa500;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.info-link:hover {
+  color: #ffa500;
 }
 </style>

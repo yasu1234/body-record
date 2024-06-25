@@ -1,3 +1,58 @@
+<template>
+  <div class="profile-card">
+    <div class="profile-card-inner">
+      <div class="profile-thumb">
+        <img
+          v-if="userThumbnail !== null && userThumbnail.url !== null"
+          :src="userThumbnail.url"
+          alt="ユーザーアイコン"
+        />
+        <div v-else class="profile-thumb-image">
+          <i class="pi pi-user" style="font-size: 60px; color: white" ></i>
+        </div>
+      </div>
+      <div class="profile-content">
+        <p class="profile-name">{{ userName != null ? userName : "" }}</p>
+        <p class="profile-intro break-words">
+          {{ profileMessage != null ? profileMessage : "" }}
+        </p>
+        <p class="mt-2.5">目標体重：{{ goalWeight }}kg</p>
+        <p class="mt-2.5">目標体脂肪率：{{ goalFatPercentage }}%</p>
+      </div>
+      <div class="profile-support-container">
+        <button
+          class="support-content hover:underline"
+          @click="showSupportList"
+        >
+          {{ supportCount }}<br />サポート
+        </button>
+        <button class="support-content hover:underline" @click="showSupporter">
+          {{ supporterCount }}<br />サポーター
+        </button>
+      </div>
+      <div class="profile-edit">
+        <div v-if="isMyProfile">
+          <button class="profile-edit-button" @click="showEditProfile">
+            プロフィール編集
+          </button>
+        </div>
+        <div v-else>
+          <button
+            v-if="isSupport"
+            class="profile-edit-button"
+            @click="editSupport"
+          >
+            サポーター解除
+          </button>
+          <button v-else class="profile-edit-button" @click="editSupport">
+            サポートする
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -65,20 +120,20 @@ const setSupport = (support) => {
     return;
   }
 
-  if (support.supportCount != null) {
-    supportCount.value = support.supportCount;
+  if (support.support_count != null) {
+    supportCount.value = support.support_count;
   } else {
     supportCount.value = 0;
   }
 
-  if (support.supporterCount != null) {
-    supporterCount.value = support.supporterCount;
+  if (support.supporter_count != null) {
+    supporterCount.value = support.supporter_count;
   } else {
     supporterCount.value = 0;
   }
 
-  if (support.isSupport != null) {
-    isSupport.value = support.isSupport;
+  if (support.is_support != null) {
+    isSupport.value = support.is_support;
   } else {
     isSupport.value = false;
   }
@@ -100,61 +155,6 @@ const showSupportList = () => {
   router.push({ name: "SupportList", params: { id: userId.value } });
 };
 </script>
-
-<template>
-  <div class="profile-card">
-    <div class="profile-card-inner">
-      <div class="profile-thumb">
-        <img
-          v-if="userThumbnail !== null && userThumbnail.url !== null"
-          :src="userThumbnail.url"
-          alt="ユーザーアイコン"
-        />
-        <div v-else class="profile-thumb-image">
-          <i class="pi pi-user" style="font-size: 60px; color: white" ></i>
-        </div>
-      </div>
-      <div class="profile-content">
-        <p class="profile-name">{{ userName != null ? userName : "" }}</p>
-        <p class="profile-intro break-words">
-          {{ profileMessage != null ? profileMessage : "" }}
-        </p>
-        <p class="mt-2.5">目標体重：{{ goalWeight }}kg</p>
-        <p class="mt-2.5">目標体脂肪率：{{ goalFatPercentage }}%</p>
-      </div>
-      <div class="profile-support-container">
-        <button
-          class="support-content hover:underline"
-          @click="showSupportList"
-        >
-          {{ supportCount }}<br />サポート
-        </button>
-        <button class="support-content hover:underline" @click="showSupporter">
-          {{ supporterCount }}<br />サポーター
-        </button>
-      </div>
-      <div class="profile-edit">
-        <div v-if="isMyProfile">
-          <button class="profile-edit-button" @click="showEditProfile">
-            プロフィール編集
-          </button>
-        </div>
-        <div v-else>
-          <button
-            v-if="isSupport"
-            class="profile-edit-button"
-            @click="editSupport"
-          >
-            サポーター解除
-          </button>
-          <button v-else class="profile-edit-button" @click="editSupport">
-            サポートする
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .profile-card {
