@@ -120,7 +120,7 @@ const renderedMarkdown = computed(() => {
   margin: 0 auto;
   border-top: dotted 10px #fff; /*ドットの形・大きさ・色*/
 }
-.knowledge-user-containe {
+.knowledge-user-container {
   display: flex;
   align-items: center;
   margin-top: 10px;
