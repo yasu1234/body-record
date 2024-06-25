@@ -46,6 +46,7 @@ button:hover {
 }
 img {
   object-fit: cover;
+  image-rendering: -webkit-optimize-contrast;
 }
 textarea {
   resize: vertical;
