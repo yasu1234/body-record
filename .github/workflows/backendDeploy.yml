@@ -3,7 +3,7 @@ name: Deploy work flow for Amazon ECS
 on:
   push:
     branches:
-      - develop
+      - main
 env:
   AWS_REGION: us-east-1
   WEBAPP_CONTAINER_NAME: body-record-rails
