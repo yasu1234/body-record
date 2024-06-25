@@ -96,14 +96,3 @@ jobs:
       - name: Deploy to ECS
         run: |
           aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
-
-      - name: Install ecschedule
-        run: |
-          curl -OL https://github.com/kayac/ecschedule/releases/download/v1.1.0/ecschedule_1.1.0_linux_amd64.tar.gz
-          tar xvzf ecschedule_1.1.0_linux_amd64.tar.gz
-          sudo mv ecschedule /usr/local/bin/
-          ecschedule --version
-
-      - name: Deploy to ECS schedule
-        run: |
-          ecschedule -conf ecschedule.yaml apply -all
