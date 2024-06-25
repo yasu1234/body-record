@@ -20,7 +20,7 @@
         rel="noopener noreferrer"
         class="info-link"
         >こちら</a
-      >をご覧ください。<br>
+      >をご覧ください。<br />
       特に複数行の改行は使うことが多いと思うので必ずご確認ください
     </div>
   </div>
@@ -37,10 +37,19 @@
             icon="pi pi-trash"
             v-tooltip="{ value: '画像削除' }"
             class="delete-button"
-            @click="deleteImage(item)"
+            @click="showConfirmDialog"
           />
         </div>
         <p class="text-center mt-2.5">{{ item.filename }}</p>
+        <div v-if="isImageDeleteConfirmDialog" class="modal-overlay">
+          <ConfirmDialog
+            :title="'画像を削除します'"
+            :message="'よろしいですか？'"
+            :positiveButtonTitle="'削除'"
+            @handle-positive="deleteImage(item)"
+            @cancel="cancelImageDelete"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -72,6 +81,7 @@ import DropFile from "../../atom/DropFile.vue";
 import Header from "../../layout/Header.vue";
 import TabMenu from "../../layout/TabMenu.vue";
 import KnowledgeContentInput from "../../layout/KnowledgeContentInput.vue";
+import ConfirmDialog from "../../layout/ConfirmDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -84,17 +94,18 @@ const knowledge = ref("");
 const files = ref([...Array(5)]);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
+const isImageDeleteConfirmDialog = ref(false);
 
 onMounted(() => {
   getDetail();
 });
 
 const deleteImage = async (item) => {
+  isImageDeleteConfirmDialog.value = false;
   try {
-    const res = await axiosInstance.delete("/api/v1/knowledge_images", {
+    const res = await axiosInstance.delete(`/api/v1/knowledge_images/${knowledgeId.value}`, {
       params: {
-        id: knowledgeId.value,
-        image_id: item.id,
+        image_id: item.id
       },
     });
     imageUrls.value = res.data.image_urls;
@@ -132,7 +143,10 @@ const getDetail = async () => {
     if (error.response != null && error.response.status === 401) {
       errorMessage = "ログインしてください";
     }
-    toastNotifications.displayError("登録データの取得に失敗しました", errorMessage);
+    toastNotifications.displayError(
+      "登録データの取得に失敗しました",
+      errorMessage
+    );
   }
 };
 
@@ -180,10 +194,7 @@ const edit = async () => {
       errorMessage = "ログインしてください";
     }
 
-    toastNotifications.displayError(
-      "記事の編集に失敗しました",
-      errorMessage
-    );
+    toastNotifications.displayError("記事の編集に失敗しました", errorMessage);
   }
 };
 
@@ -194,6 +205,14 @@ const onFileChange = (event, index) => {
 const contentEdit = (editContent) => {
   knowledge.value = editContent;
 };
+
+const showConfirmDialog = () => {
+  isImageDeleteConfirmDialog.value = true;
+}
+
+const cancelImageDelete = () => {
+  isImageDeleteConfirmDialog.value = false;
+}
 
 const showKnowledgeDetail = (item) => {
   router.push({ name: "KnowledgeDetail", params: { id: item.id } });
