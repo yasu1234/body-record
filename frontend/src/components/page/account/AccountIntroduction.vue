@@ -5,7 +5,7 @@
     alt="Logo"
     class="home-logo"
   />
-  <h1 class="text-center mt-5">In-body.comへようこそ！</h1>
+  <p class="introduction-title mt-5">In-body.comへようこそ！</p>
   <div class="account-buttons mt-5">
     <button class="account-button" @click="showSignup">会員登録</button>
     <button class="account-button" @click="showLogin">ログイン</button>
@@ -55,9 +55,11 @@ const guestLogin = async () => {
     }
   } catch (error) {
     let errorMessages = "";
-    if (error.response.status === 422) {
+    if (error.response != null && error.response.status === 422) {
       if (Array.isArray(error.response.data.errors)) {
         errorMessages += error.response.data.errors.join("\n");
+      } else {
+        errorMessages = error.response.data.errors;
       }
     }
     toastNotifications.displayError(
@@ -73,6 +75,11 @@ const guestLogin = async () => {
   width: 100%;
   height: 400px;
   display: block;
+}
+.introduction-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 30px;
 }
 .account-buttons {
   display: flex;
