@@ -75,6 +75,9 @@ resource "aws_ecs_task_definition" "body-record-task" {
       name      = "MAIL_FROM"
       valueFrom = "/mail/from"
       }, {
+      name      = "GUEST_USER_ADDRESS"
+      valueFrom = "/guest/user"
+      },{
       name      = "RAILS_MASTER_KEY"
       valueFrom = "/rails/masterkey"
     }]
@@ -163,7 +166,7 @@ resource "aws_iam_role" "task-execution" {
   })
   description           = "Allows ECS tasks to call AWS services on your behalf."
   force_detach_policies = false
-  managed_policy_arns   = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+  managed_policy_arns   = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy", "arn:aws:iam::aws:policy/AmazonSSMFullAccess"]
   max_session_duration  = 3600
   name                  = "ecsTaskExecutionRole"
   name_prefix           = null
@@ -190,7 +193,7 @@ resource "aws_ecs_service" "body-record-service" {
   scheduling_strategy                = "REPLICA"
   tags                               = {}
   tags_all                           = {}
-  task_definition                    = "body_record_task:9"
+  task_definition                    = "body_record_task:17"
   triggers                           = {}
   wait_for_steady_state              = null
   alarms {
