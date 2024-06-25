@@ -5,7 +5,7 @@
   <div class="setting-container">
     <SettingSideMenu :currentIndex="3" />
     <main>
-      <h1 class="view-title pt-10">パスワード変更</h1>
+      <p class="title_line pt-10">パスワード変更</p>
       <div class="password-edit-container">
         <form class="form" @submit.prevent="checkValidate">
           <div class="pt-10">
@@ -150,6 +150,7 @@ const updatePassword = (inputPassword, passwordType) => {
 .password-edit-container {
   width: 500px;
   margin: 0 auto;
+  margin-top: 20px;
   padding: 20px;
   background-color: #ffffff;
   border: 1px solid #ccc;

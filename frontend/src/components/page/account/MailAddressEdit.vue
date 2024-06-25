@@ -5,7 +5,7 @@
   <div class="setting-container">
     <SettingSideMenu :currentIndex="2" />
     <main>
-      <h1 class="view-title pt-10">メールアドレス変更</h1>
+      <p class="title_line pt-10">メールアドレス変更</p>
       <div class="mailaddress-edit-container">
         <form class="form" @submit.prevent="checkValidate">
           <div class="pt-10">
