@@ -4,7 +4,7 @@ rules:
 - name: body-record-batch-schedule
   scheduleExpression: cron(0 16 * * ? *)
   targetId: body-record-batch-schedule-id
-  taskDefinition: body_record_task:5
+  taskDefinition: body_record_task:14
   containerOverrides:
   - name: body_record
     command: [bundle, exec, rake, contact:destroy]
