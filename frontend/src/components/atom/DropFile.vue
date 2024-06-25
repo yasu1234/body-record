@@ -33,8 +33,7 @@
           </div>
           <div>
             <button
-              class="ml-2"
-              type="button"
+              class="delete-button"
               @click="remove"
               title="Remove file"
             >
@@ -95,7 +94,7 @@ const drop = (e) => {
   e.preventDefault();
   file.value = e.dataTransfer.files[0];
   isDragging.value = false;
-  emit("change", file.value, index);
+  emit("change", file.value, index.value);
 };
 </script>
 
@@ -135,6 +134,11 @@ const drop = (e) => {
   height: 100px;
   border-radius: 5px;
   border: 1px solid #a2a2a2;
+}
+.delete-button {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
 
 @media screen and (max-width: 768px) {
