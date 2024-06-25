@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import { useRouter, onBeforeRouteUpdate, useRoute } from "vue-router";
 import { axiosInstance } from "../../../js/axios.js";
 
+import TabMenu from "../../layout/TabMenu.vue";
+import Header from "../../layout/Header.vue";
 import ListPage from "../../layout/ListPage.vue";
 import DatePicker from "../../atom/DatePicker.vue";
 import SearchButton from "../../atom/SearchButton.vue";
@@ -176,6 +178,8 @@ const addRecord = () => {
 </script>
 
 <template>
+  <Header />
+  <TabMenu :currentId=2 />
   <div class="record-search-container">
     <input
       type="text"

@@ -11,6 +11,7 @@ import ContactList from '/src/components/page/contact/ContactList.vue';
 import ContactDetail from '/src/components/page/contact/ContactDetail.vue';
 import AddRecord from '/src/components/page/record/AddRecord.vue';
 import EditRecord from '/src/components/page/record/EditRecord.vue';
+import MyRecordList from '/src/components/page/record/MyRecordList.vue';
 import RecordDetail from '/src/components/page/record/RecordDetail.vue';
 import OtherRecordList from '/src/components/page/record/OtherRecordList.vue';
 import KnowledgeList from '/src/components/page/knowledge/KnowledgeList.vue';
@@ -51,6 +52,11 @@ const routes = [
     path: '/addRecord', 
     name: 'AddRecord', 
     component: AddRecord,
+  },
+  { 
+    path: '/myRecordList',
+    name: 'MyRecordList',
+    component: MyRecordList 
   },
   {
     path: '/knowledge', 
