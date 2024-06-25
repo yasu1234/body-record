@@ -210,13 +210,13 @@ const showMoreKnowledges = () => {
   <div class="text-center">
     <div class="pb-5">
       <div class="pt-10">
-        <span class="section-title">投稿した記録</span>
+        <span class="section-title">作成した記録</span>
       </div>
       <div class="mt-5">
         <div v-if="records.length > 0" v-for="record in records">
           <RecordCard :record="record" @record-click="clickRecord(record)" />
         </div>
-        <p v-else>登録された記録はありません</p>
+        <p v-else>作成された記録はありません</p>
       </div>
       <button
         v-if="isMoreRecords"
@@ -228,7 +228,7 @@ const showMoreKnowledges = () => {
     </div>
     <div class="pb-8">
       <div class="pt-10">
-        <span class="section-title">投稿した知識</span>
+        <span class="section-title">投稿した記事</span>
       </div>
       <div class="mt-5">
         <div v-if="knowledges.length > 0" v-for="knowledge in knowledges">
@@ -237,7 +237,7 @@ const showMoreKnowledges = () => {
             @click="clickKnowledge(knowledge)"
           />
         </div>
-        <p v-else>記事を作成していません</p>
+        <p v-else>記事を投稿していません</p>
       </div>
       <button
         v-if="isMoreKnowledges"
