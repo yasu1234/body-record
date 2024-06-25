@@ -8,7 +8,7 @@
         <p class="ml-2.5">{{ userName }}</p>
       </div>
       <div v-if="isMineComment" class="menu-container">
-        <button class="menu-button" @click="toggleDropdown">
+        <button class="menu-button" @click="toggleDropdown" v-on-click-outside="onClickOutsideHandler">
           <MeatBallMenu />
         </button>
         <div v-if="showDropdown" class="dropdown-menu">
@@ -55,6 +55,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { CommentMenuList } from "../../js/const.js";
+import { vOnClickOutside } from "@vueuse/components";
 
 import MeatBallMenu from "../atom/MeatBallMenu.vue";
 
