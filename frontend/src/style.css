@@ -32,7 +32,7 @@ h1 {
   line-height: 1.1;
 }
 button {
-  background: #ffa500;
+  background: #f58505;
   color: white;
   border-radius: 8px;
   border: 0px solid transparent;
@@ -114,7 +114,7 @@ p.validation-error-message {
 }
 /* マイページ・ユーザーページの記録と記事のタイトルの装飾 */
 .section-title {
-  border-bottom: solid 5px #ffa500;
+  border-bottom: solid 5px #f58505;
   font-size: 25px;
   font-weight: bold;
 }
