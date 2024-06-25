@@ -40,6 +40,7 @@
             @click="deleteImage(item)"
           />
         </div>
+        <p class="text-center mt-2.5">{{ item.filename }}</p>
       </div>
     </div>
   </div>
