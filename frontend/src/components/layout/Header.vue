@@ -13,7 +13,18 @@
           会員登録・ログイン
         </button>
         <div @click="toggleDropdown" v-on-click-outside="onClickOutsideHandler">
+          <div
+            class="user-button"
+            v-if="imageUrl !== null && imageUrl.url !== null"
+          >
+            <img
+              :src="imageUrl.url"
+              alt="ユーザー"
+              class="user-button"
+            />
+          </div>
           <Button
+            v-else
             icon="pi pi-user"
             severity="info"
             rounded
@@ -60,6 +71,7 @@ const isLogin = ref(null);
 const userId = ref(0);
 const showDropdown = ref(false);
 const menuList = ref([]);
+const imageUrl = ref(null);
 
 onMounted(() => {
   checkLogin();
@@ -71,9 +83,11 @@ const checkLogin = async () => {
 
     isLogin.value = res.data.user !== null;
     userId.value = res.data.user.id;
+    imageUrl.value = res.data.user.image_url;
     setMenu();
   } catch (error) {
     isLogin.value = false;
+    imageUrl.value = null;
     setMenu();
   }
 };
@@ -87,7 +101,11 @@ const logout = async () => {
 
     showHomeThenRelaod();
   } catch (error) {
-    console.log({ error });
+    Cookies.remove("accessToken");
+    Cookies.remove("client");
+    Cookies.remove("uid");
+
+    showHomeThenRelaod();
   }
 };
 
@@ -186,6 +204,8 @@ header {
   padding: 0;
   border: 1px solid #ccc;
   border-radius: 50%;
+  width: 45px;
+  height: 45px;
 }
 .dropdown-menu {
   position: absolute;

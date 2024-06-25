@@ -12,7 +12,7 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
 
   def check_login
     if api_v1_user_signed_in?
-      render json: { user: current_api_v1_user.as_json(include: [:profile]) }, status: :ok
+      render json: { user: current_api_v1_user.as_json(only: %i[id name], include: [:profile], methods: :image_url) }, status: :ok
     else
       render json: { user: nil }, status: :ok
     end
