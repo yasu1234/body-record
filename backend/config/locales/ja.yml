@@ -1,0 +1,54 @@
+ja:
+  activerecord:
+    attributes:
+      record:
+        date: "記録日"
+        memo: "メモ"
+        images: "関連画像"
+        weight: "体重"
+        fat_percentage: "体脂肪率"
+      knowledge:
+        title: "タイトル"
+        content: "内容"
+        images: "関連画像"
+      comment:
+        comment: "コメント"
+      contact:
+        content: "お問合せ内容"
+      profile:
+        image: "プロフィール画像"
+        profile: "紹介文"
+        goal_weight: "目標体重"
+        goal_fat_percentage: "目標体脂肪率"
+    errors:
+      messages:
+        record_invalid: "バリデーションに失敗しました: %{errors}"
+        content_type_invalid: "はjpeg、png画像のみ有効です"
+        file_size_out_of_range: "画像サイズは %{file_size} MB以下にしてください"
+        limit_out_of_range: "画像は最大%{max}枚までしか登録できません"
+        image_metadata_missing: "有効な画像ではありません"
+      models:
+        record:
+          attributes:
+            date:
+              blank: "は必須です"
+        contact:
+          attributes:
+            content:
+              blank: "を入力してください"
+              too_short: "は%{count}文字以上で入力してください"
+              too_long: "は%{count}文字以内で入力してください"
+        knowledge:
+          attributes:
+            title:
+              blank: "を入力してください"
+              too_short: "は%{count}文字以上で入力してください"
+              too_long: "は%{count}文字以内で入力してください"
+            content:
+              too_long: "は%{count}文字以内で入力してください"
+        comment:
+          attributes:
+            comment:
+              blank: "を入力してください"
+              too_short: "は%{count}文字以上で入力してください"
+              too_long: "は%{count}文字以内で入力してください"

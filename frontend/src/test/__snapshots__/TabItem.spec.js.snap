@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TabItem.vue SnapShotテスト(activeではない) 1`] = `
+<div>
+  <button
+    class="tab-button tab"
+  >
+    Home
+  </button>
+  <!--v-if-->
+</div>
+`;
+
+exports[`TabItem.vue SnapShotテスト(activeになる) 1`] = `
+<div>
+  <button
+    class="tab-button active tab"
+  >
+    Home
+  </button>
+  <div
+    class="active-tab"
+  />
+</div>
+`;

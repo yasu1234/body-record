@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Author SnapShotテスト(サポート済み) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <div
+    class="author"
+  >
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  <div
+    class="support-container mt-2.5 ml-5 pb-5"
+  >
+    <button
+      class="support-button"
+    >
+      <img
+        alt="ユーザー"
+        class="support-image"
+        src=""
+      />
+    </button>
+    <!--v-if-->
+  </div>
+  
+</div>
+`;
+
+exports[`Author SnapShotテスト(未サポート) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <div
+    class="author"
+  >
+    <div
+      class="author-thumbnail-image"
+    >
+      <img
+        alt="ユーザー"
+        class="author-thumbnail-image"
+        src="https://example.com/author.jpg"
+      />
+    </div>
+    <p
+      class="ml-2.5"
+    >
+      Test Author
+    </p>
+  </div>
+  <div
+    class="support-container mt-2.5 ml-5 pb-5"
+  >
+    <button
+      class="support-button"
+    >
+      <img
+        alt="ユーザー"
+        class="support-image"
+        src=""
+      />
+    </button>
+    <p
+      class="ml-2.5"
+    >
+      10
+    </p>
+  </div>
+  
+</div>
+`;

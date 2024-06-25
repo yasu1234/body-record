@@ -1,14 +1,14 @@
 FROM node:18.15.0-bullseye
 
-ARG WORKDIR
+RUN apt update
 
-WORKDIR /${WORKDIR}
+WORKDIR /frontend
 
-RUN apt update \
-    && yarn install
-
-COPY . ./
 COPY package.json /frontend/package.json
 COPY yarn.lock /frontend/yarn.lock
 
-CMD ["yarn", "dev", "--host"]
+RUN yarn install
+
+COPY . .
+
+CMD /bin/bash -c "yarn dev --host"

@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DropFile SnapShotテスト初期表示 1`] = `
+<div
+  class="main"
+>
+  <div
+    class="dropzone-container"
+  >
+    <input
+      accept=".pdf,.jpg,.jpeg,.png"
+      class="hidden-input"
+      id="fileInput-0"
+      name="file"
+      type="file"
+    />
+    <label
+      class="file-label"
+      for="fileInput-0"
+    >
+      <div>
+         ファイルをドロップ、もしくは
+        <u>
+          こちらをクリックして
+        </u>
+        アップロードしてください 
+      </div>
+    </label>
+    <!--v-if-->
+  </div>
+</div>
+`;

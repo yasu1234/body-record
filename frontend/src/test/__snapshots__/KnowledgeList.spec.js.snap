@@ -1,0 +1,211 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KnowledgeList SnapShotテスト初期表示(データあり) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="3"
+  />
+  <div
+    class="knowledge-search-container"
+  >
+    <div
+      class="mt-5"
+    >
+      <input
+        id="keyword"
+        name="keywordName"
+        placeholder="キーワードで絞り込む"
+        type="text"
+      />
+    </div>
+    <div
+      class="mt-5 pr-3"
+    >
+      <input
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+        type="checkbox"
+      />
+      <label
+        class="ml-2"
+      >
+        ブックマークのみ絞り込む
+      </label>
+    </div>
+    <div
+      class="mt-5 pr-3"
+    >
+      <input
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+        type="checkbox"
+      />
+      <label
+        class="ml-2"
+      >
+        自分が作成した記事のみ表示
+      </label>
+    </div>
+    <div
+      class="text-center mt-5"
+    >
+      <search-button-stub />
+    </div>
+  </div>
+  <div
+    class="add-button-area"
+  >
+    <button
+      class="add-button p-2.5"
+    >
+       + 記事を追加する 
+    </button>
+  </div>
+  <div
+    class="py-8"
+  >
+    <div>
+      <div
+        class="select-box"
+      >
+        
+        <div
+          class="text-sm rounded-lg block p-3"
+        >
+          <radio-button-stub
+            inputid="1"
+            modelvalue="直近で作成された順"
+            pt="[object Object]"
+            value="直近で作成された順"
+          />
+          <label
+            class="ml-2"
+          >
+            直近で作成された順
+          </label>
+        </div>
+        <div
+          class="text-sm rounded-lg block p-3"
+        >
+          <radio-button-stub
+            inputid="2"
+            modelvalue="直近で作成された順"
+            pt="[object Object]"
+            value="ブックマークが多い順"
+          />
+          <label
+            class="ml-2"
+          >
+            ブックマークが多い順
+          </label>
+        </div>
+        
+      </div>
+      <p
+        class="text-center font-bold mt-8"
+      >
+        合計0件
+      </p>
+      
+      <knowledge-card-stub
+        knowledge="[object Object]"
+      />
+      <knowledge-card-stub
+        knowledge="[object Object]"
+      />
+      
+      <div
+        class="mt-12 pb-8"
+      >
+        <list-page-stub
+          modelvalue="1"
+          pagecount="2"
+        />
+      </div>
+    </div>
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  
+</div>
+`;
+
+exports[`KnowledgeList SnapShotテスト初期表示(データなし) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="3"
+  />
+  <div
+    class="knowledge-search-container"
+  >
+    <div
+      class="mt-5"
+    >
+      <input
+        id="keyword"
+        name="keywordName"
+        placeholder="キーワードで絞り込む"
+        type="text"
+      />
+    </div>
+    <div
+      class="mt-5 pr-3"
+    >
+      <input
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+        type="checkbox"
+      />
+      <label
+        class="ml-2"
+      >
+        ブックマークのみ絞り込む
+      </label>
+    </div>
+    <div
+      class="mt-5 pr-3"
+    >
+      <input
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+        type="checkbox"
+      />
+      <label
+        class="ml-2"
+      >
+        自分が作成した記事のみ表示
+      </label>
+    </div>
+    <div
+      class="text-center mt-5"
+    >
+      <search-button-stub />
+    </div>
+  </div>
+  <div
+    class="add-button-area"
+  >
+    <button
+      class="add-button p-2.5"
+    >
+       + 記事を追加する 
+    </button>
+  </div>
+  <div
+    class="py-8"
+  >
+    <!--v-if-->
+    <div>
+      <result-empty-stub
+        class="mx-5 mt-5"
+      />
+    </div>
+    <!--v-if-->
+  </div>
+  
+</div>
+`;

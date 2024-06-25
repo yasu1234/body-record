@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TabItem.vue SnapShotテスト(合計1ページ) 1`] = `
+<anonymous-stub
+  activeclass="active"
+  breakviewtext="…"
+  clickhandler="[Function]"
+  containerclass="pagination"
+  disabledclass="disabled"
+  firstbuttontext="First"
+  firstlastbutton="false"
+  hideprevnext="false"
+  initialpage="1"
+  lastbuttontext="Last"
+  marginpages="2"
+  nextclass="page-item"
+  nextlinkclass="page-link"
+  nexttext=">"
+  nolisurround="false"
+  pageclass="page-item"
+  pagecount="0"
+  pagelinkclass="page-link"
+  pagerange="3"
+  prevclass="page-item"
+  prevlinkclass="page-link"
+  prevtext="<"
+/>
+`;
+
+exports[`TabItem.vue SnapShotテスト(合計10ページ) 1`] = `
+<anonymous-stub
+  activeclass="active"
+  breakviewtext="…"
+  clickhandler="[Function]"
+  containerclass="pagination"
+  disabledclass="disabled"
+  firstbuttontext="First"
+  firstlastbutton="false"
+  hideprevnext="false"
+  initialpage="1"
+  lastbuttontext="Last"
+  marginpages="2"
+  nextclass="page-item"
+  nextlinkclass="page-link"
+  nexttext=">"
+  nolisurround="false"
+  pageclass="page-item"
+  pagecount="0"
+  pagelinkclass="page-link"
+  pagerange="3"
+  prevclass="page-item"
+  prevlinkclass="page-link"
+  prevtext="<"
+/>
+`;

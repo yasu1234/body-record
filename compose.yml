@@ -13,7 +13,7 @@ services:
       context: ./backend
       args:
         WORKDIR: $WORKDIR
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.pid && rdbg -n --open --host 0.0.0.0 --port 12345 -c -- bundle exec rails s -p 3000 -b '0.0.0.0'"
     environment:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
       DATABASE_USER_NAME: $DATABASE_USER_NAME
@@ -24,6 +24,7 @@ services:
       - "./backend:/$WORKDIR"
     ports:
       - "3000:3000"
+      - "12345:12345"
     depends_on:
       - db
   frontend:
@@ -33,8 +34,8 @@ services:
       args:
         WORKDIR: $WORKDIR
     volumes:
-      - ./frontend:/$WORKDIR:cached
-      - node_modules:/$WORKDIR/node_modules
+      - ./frontend:/frontend
+      - node_modules:/frontend/node_modules
     ports:
       - "5173:5173"
     depends_on:

@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TabItem.vue SnapShotテスト 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <div
+    class="menu-toggle"
+  >
+    
+    <span
+      class="toggle-line"
+    />
+    <span
+      class="toggle-line"
+    />
+    <span
+      class="toggle-line"
+    />
+    
+  </div>
+  <nav
+    class="sidebar"
+  >
+    <div
+      class="sidebar-header"
+    >
+      <span
+        class="close-button"
+      >
+        ×
+      </span>
+    </div>
+    
+    <div
+      class="menu"
+    >
+      <div
+        class="menu-container"
+      >
+        <div
+          class="menu-select"
+        />
+        <button
+          class="side-menu-item"
+        >
+          プロフィール変更
+        </button>
+      </div>
+    </div>
+    <div
+      class="menu"
+    >
+      <div
+        class="menu-container"
+      >
+        <div
+          class="menu-select"
+          style="display: none;"
+        />
+        <button
+          class="side-menu-item"
+        >
+          メールアドレス変更
+        </button>
+      </div>
+    </div>
+    <div
+      class="menu"
+    >
+      <div
+        class="menu-container"
+      >
+        <div
+          class="menu-select"
+          style="display: none;"
+        />
+        <button
+          class="side-menu-item"
+        >
+          パスワード変更
+        </button>
+      </div>
+    </div>
+    <div
+      class="menu"
+    >
+      <div
+        class="menu-container"
+      >
+        <div
+          class="menu-select"
+          style="display: none;"
+        />
+        <button
+          class="side-menu-item"
+        >
+          退会
+        </button>
+      </div>
+    </div>
+    
+  </nav>
+  
+</div>
+`;

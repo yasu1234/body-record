@@ -1,0 +1,472 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecordDetail SnapShotテスト初期表示(コメントあり) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="0"
+  />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="wrap"
+  >
+    <div
+      class="main ml-5"
+    >
+      <div
+        class="main_content"
+      >
+        <div
+          class="editor"
+        >
+          <p
+            class="record-title"
+          >
+            2021年-1月-1日の記録 
+          </p>
+          <p
+            class="mt-5"
+          >
+             体重：- kg 
+          </p>
+          <p
+            class="mt-2.5"
+          >
+             体脂肪率：- % 
+          </p>
+          <p
+            class="record-content"
+          >
+            Test
+          </p>
+          <div>
+            <p
+              class="mt-5"
+            >
+              関連画像
+            </p>
+            <div
+              class="thumbnail-container"
+            >
+              
+              <div
+                class="thumbnail"
+              >
+                <relation-image-stub
+                  item="[object Object]"
+                />
+              </div>
+              <div
+                class="thumbnail"
+              >
+                <relation-image-stub
+                  item="[object Object]"
+                />
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div
+          class="radius-section pt-2.5"
+        >
+          <author-stub />
+        </div>
+        <div
+          class="radius-section mb-7"
+        >
+          <div
+            class="comment-container-title-area"
+          >
+            <p
+              class="ml-5 pt-5 font-bold"
+            >
+              コメント
+            </p>
+          </div>
+          <div>
+            
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            
+            <!--v-if-->
+          </div>
+          <comment-input-stub />
+        </div>
+      </div>
+    </div>
+    <div
+      class="side"
+    >
+      <div
+        class="side-content"
+      >
+        <button
+          class="round-button"
+        >
+          <img
+            alt="応援"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="記録編集"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="削除"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+  
+</div>
+`;
+
+exports[`RecordDetail SnapShotテスト初期表示(コメントなし) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="0"
+  />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="wrap"
+  >
+    <div
+      class="main ml-5"
+    >
+      <div
+        class="main_content"
+      >
+        <div
+          class="editor"
+        >
+          <p
+            class="record-title"
+          >
+            2021年-1月-1日の記録 
+          </p>
+          <p
+            class="mt-5"
+          >
+             体重：- kg 
+          </p>
+          <p
+            class="mt-2.5"
+          >
+             体脂肪率：- % 
+          </p>
+          <p
+            class="record-content"
+          >
+            Test
+          </p>
+          <div>
+            <p
+              class="mt-5"
+            >
+              関連画像
+            </p>
+            <div
+              class="thumbnail-container"
+            >
+              
+              <div
+                class="thumbnail"
+              >
+                <relation-image-stub
+                  item="[object Object]"
+                />
+              </div>
+              <div
+                class="thumbnail"
+              >
+                <relation-image-stub
+                  item="[object Object]"
+                />
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div
+          class="radius-section pt-2.5"
+        >
+          <author-stub />
+        </div>
+        <div
+          class="radius-section mb-7"
+        >
+          <div
+            class="comment-container-title-area"
+          >
+            <p
+              class="ml-5 pt-5 font-bold"
+            >
+              コメント
+            </p>
+          </div>
+          <div>
+            
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            
+            <!--v-if-->
+          </div>
+          <comment-input-stub />
+        </div>
+      </div>
+    </div>
+    <div
+      class="side"
+    >
+      <div
+        class="side-content"
+      >
+        <button
+          class="round-button"
+        >
+          <img
+            alt="応援"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="記録編集"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="削除"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+  
+</div>
+`;
+
+exports[`RecordDetail SnapShotテスト初期表示(自分以外の記録)) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="0"
+  />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="wrap"
+  >
+    <div
+      class="main ml-5"
+    >
+      <div
+        class="main_content"
+      >
+        <div
+          class="editor"
+        >
+          <p
+            class="record-title"
+          >
+            2021年-1月-1日の記録 
+          </p>
+          <p
+            class="mt-5"
+          >
+             体重：- kg 
+          </p>
+          <p
+            class="mt-2.5"
+          >
+             体脂肪率：- % 
+          </p>
+          <p
+            class="record-content"
+          >
+            Test
+          </p>
+          <div>
+            <p
+              class="mt-5"
+            >
+              関連画像
+            </p>
+            <div
+              class="thumbnail-container"
+            >
+              
+              <div
+                class="thumbnail"
+              >
+                <relation-image-stub
+                  item="[object Object]"
+                />
+              </div>
+              <div
+                class="thumbnail"
+              >
+                <relation-image-stub
+                  item="[object Object]"
+                />
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div
+          class="radius-section pt-2.5"
+        >
+          <author-stub />
+        </div>
+        <div
+          class="radius-section mb-7"
+        >
+          <div
+            class="comment-container-title-area"
+          >
+            <p
+              class="ml-5 pt-5 font-bold"
+            >
+              コメント
+            </p>
+          </div>
+          <div>
+            
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            <div
+              class="comment"
+            >
+              <comment-stub
+                comment="[object Object]"
+                isediting="false"
+              />
+            </div>
+            
+            <!--v-if-->
+          </div>
+          <comment-input-stub />
+        </div>
+      </div>
+    </div>
+    <div
+      class="side"
+    >
+      <div
+        class="side-content"
+      >
+        <button
+          class="round-button"
+        >
+          <img
+            alt="応援"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="記録編集"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="削除"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+  
+</div>
+`;

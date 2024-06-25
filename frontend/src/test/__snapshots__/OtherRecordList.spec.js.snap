@@ -1,0 +1,169 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OtherRecordList SnapShotテスト初期表示(データあり) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="2"
+  />
+  <div
+    class="record-search-container"
+  >
+    <!--v-if-->
+    <input
+      id="keyword"
+      name="keywordName"
+      placeholder="キーワードで検索"
+      type="text"
+    />
+    <div
+      class="record-search-time-list"
+    >
+      <div
+        class="item"
+      >
+        <p
+          class="search-item-title"
+        >
+          検索開始日
+        </p>
+        <date-picker-stub
+          date=""
+          isstart="true"
+        />
+      </div>
+      <div
+        class="item"
+      >
+        <p
+          class="search-item-title"
+        >
+          検索終了日
+        </p>
+        <date-picker-stub
+          date=""
+          isstart="false"
+        />
+      </div>
+    </div>
+    <div
+      class="search-button-area"
+    >
+      <search-button-stub />
+    </div>
+  </div>
+  <div
+    class="py-8"
+  >
+    <div
+      class="mt-8"
+    >
+      <p
+        class="text-center font-bold"
+      >
+        合計0件
+      </p>
+      
+      <div
+        class="mt-5"
+      >
+        <record-card-stub
+          record="[object Object]"
+        />
+      </div>
+      <div
+        class="mt-5"
+      >
+        <record-card-stub
+          record="[object Object]"
+        />
+      </div>
+      
+      <div>
+        <list-page-stub
+          modelvalue="1"
+          pagecount="2"
+        />
+      </div>
+    </div>
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  
+</div>
+`;
+
+exports[`OtherRecordList SnapShotテスト初期表示(データなし) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="2"
+  />
+  <div
+    class="record-search-container"
+  >
+    <!--v-if-->
+    <input
+      id="keyword"
+      name="keywordName"
+      placeholder="キーワードで検索"
+      type="text"
+    />
+    <div
+      class="record-search-time-list"
+    >
+      <div
+        class="item"
+      >
+        <p
+          class="search-item-title"
+        >
+          検索開始日
+        </p>
+        <date-picker-stub
+          date=""
+          isstart="true"
+        />
+      </div>
+      <div
+        class="item"
+      >
+        <p
+          class="search-item-title"
+        >
+          検索終了日
+        </p>
+        <date-picker-stub
+          date=""
+          isstart="false"
+        />
+      </div>
+    </div>
+    <div
+      class="search-button-area"
+    >
+      <search-button-stub />
+    </div>
+  </div>
+  <div
+    class="py-8"
+  >
+    <!--v-if-->
+    <div
+      div=""
+    >
+      <result-empty-stub
+        class="mx-5"
+      />
+    </div>
+    <!--v-if-->
+  </div>
+  
+</div>
+`;

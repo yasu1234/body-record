@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SignUp SnapShotテスト初期表示 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <toast-stub
+    position="top-center"
+  />
+  <p
+    class="view-title mt-7"
+  >
+    会員登録
+  </p>
+  <div
+    class="signup-container"
+  >
+    <form
+      class="form"
+    >
+      <div
+        class="signup-item"
+      >
+        <label>
+          メールアドレス
+        </label>
+        <input
+          id="email"
+          type="email"
+        />
+        <p
+          class="validation-error-message"
+        />
+      </div>
+      <div
+        class="signup-item"
+      >
+        <label>
+          パスワード
+        </label>
+        <password-text-stub
+          password=""
+          passwordtype="1"
+        />
+        <p
+          class="validation-error-message"
+        />
+      </div>
+      <div
+        class="signup-item"
+      >
+        <label>
+          パスワード(確認)
+        </label>
+        <password-text-stub
+          password=""
+          passwordtype="2"
+        />
+        <p
+          class="validation-error-message"
+        />
+      </div>
+      <div
+        class="signup-item"
+      >
+        <label>
+          名前
+        </label>
+        <input
+          id="name"
+          type="text"
+        />
+        <p
+          class="validation-error-message"
+        />
+      </div>
+      <div
+        class="text-center mt-5"
+      >
+        <button
+          class="signup-button"
+        >
+          登録
+        </button>
+      </div>
+    </form>
+  </div>
+  
+</div>
+`;

@@ -1,0 +1,329 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditKnowledge SnapShotテスト初期表示(コメントあり) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="0"
+  />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="wrap"
+  >
+    <div
+      class="main"
+    >
+      <div
+        class="editor"
+      >
+        <div>
+          <p
+            class="create-date"
+          />
+        </div>
+        <p
+          class="knowledge-title mt-5"
+          type="text"
+        >
+          Test Knowledge
+        </p>
+        <div
+          class="break-words"
+        >
+          <p
+            class="knowledge-content"
+          >
+            <p>
+              This is a test knowledge
+            </p>
+            
+
+          </p>
+        </div>
+        <div>
+          <p
+            class="mt-5"
+          >
+            関連画像
+          </p>
+          <div
+            class="thumbnail-container"
+          >
+            
+            <div
+              class="thumbnail"
+            >
+              <relation-image-stub
+                item="[object Object]"
+              />
+            </div>
+            <div
+              class="thumbnail"
+            >
+              <relation-image-stub
+                item="[object Object]"
+              />
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <div
+        class="radius-section pt-2.5"
+      >
+        <author-stub />
+      </div>
+      <div
+        class="radius-section mb-5"
+      >
+        <div
+          class="comment-container-title-area"
+        >
+          <p
+            class="comment-container-title"
+          >
+            コメント
+          </p>
+        </div>
+        <div>
+          
+          <div
+            class="comment"
+          >
+            <comment-stub
+              comment="[object Object]"
+              isediting="false"
+            />
+          </div>
+          <div
+            class="comment"
+          >
+            <comment-stub
+              comment="[object Object]"
+              isediting="false"
+            />
+          </div>
+          
+          <!--v-if-->
+        </div>
+        <comment-input-stub />
+      </div>
+    </div>
+    <div
+      class="side"
+    >
+      <div
+        class="side-content"
+      >
+        <div
+          class="bookmark-button-container"
+        >
+          <button
+            class="round-button"
+          >
+            <img
+              alt="ブックマーク"
+              class="side-menu-image"
+              src=""
+            />
+          </button>
+          <p
+            class="text-center"
+          />
+        </div>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="編集"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="削除"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+  
+</div>
+`;
+
+exports[`EditKnowledge SnapShotテスト初期表示(コメントなし) 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <header-stub />
+  <tab-menu-stub
+    currentid="0"
+  />
+  <toast-stub
+    position="top-center"
+  />
+  <div
+    class="wrap"
+  >
+    <div
+      class="main"
+    >
+      <div
+        class="editor"
+      >
+        <div>
+          <p
+            class="create-date"
+          />
+        </div>
+        <p
+          class="knowledge-title mt-5"
+          type="text"
+        >
+          Test Knowledge
+        </p>
+        <div
+          class="break-words"
+        >
+          <p
+            class="knowledge-content"
+          >
+            <p>
+              This is a test knowledge
+            </p>
+            
+
+          </p>
+        </div>
+        <div>
+          <p
+            class="mt-5"
+          >
+            関連画像
+          </p>
+          <div
+            class="thumbnail-container"
+          >
+            
+            <div
+              class="thumbnail"
+            >
+              <relation-image-stub
+                item="[object Object]"
+              />
+            </div>
+            <div
+              class="thumbnail"
+            >
+              <relation-image-stub
+                item="[object Object]"
+              />
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <div
+        class="radius-section pt-2.5"
+      >
+        <author-stub />
+      </div>
+      <div
+        class="radius-section mb-5"
+      >
+        <div
+          class="comment-container-title-area"
+        >
+          <p
+            class="comment-container-title"
+          >
+            コメント
+          </p>
+        </div>
+        <div>
+          
+          <div
+            class="comment"
+          >
+            <comment-stub
+              comment="[object Object]"
+              isediting="false"
+            />
+          </div>
+          <div
+            class="comment"
+          >
+            <comment-stub
+              comment="[object Object]"
+              isediting="false"
+            />
+          </div>
+          
+          <!--v-if-->
+        </div>
+        <comment-input-stub />
+      </div>
+    </div>
+    <div
+      class="side"
+    >
+      <div
+        class="side-content"
+      >
+        <div
+          class="bookmark-button-container"
+        >
+          <button
+            class="round-button"
+          >
+            <img
+              alt="ブックマーク"
+              class="side-menu-image"
+              src=""
+            />
+          </button>
+          <p
+            class="text-center"
+          />
+        </div>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="編集"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+        <button
+          class="round-button"
+          style="display: none;"
+        >
+          <img
+            alt="削除"
+            class="side-menu-image"
+            src=""
+          />
+        </button>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+  
+</div>
+`;
