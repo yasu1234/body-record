@@ -70,6 +70,20 @@
 | Github Actions      | CI/CD     |
 | Terraform      | インフラをコード化    |
 
+# フォルダ構成
+
+### プロジェクトフォルダ
+
+- src/backend →　Railsプロジェクト
+- src/frontend →　Vue.jsプロジェクト
+- src/terraform →　terraformのファイル管理
+
+### Vue.jsのコンポネントフォルダ
+
+- src/componernts/atom →　最小のコンポネント（ボタンなど）
+- src/componernts/layout →　最小のコンポネントの組み合わせ
+- src/componernts/page →　画面
+
 # 機能一覧
 
 - 会員登録 / 退会
