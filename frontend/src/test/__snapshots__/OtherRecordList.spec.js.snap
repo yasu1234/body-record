@@ -7,7 +7,7 @@ exports[`OtherRecordList SnapShotテスト初期表示(データあり) 1`] = `
   
   <header-stub />
   <tab-menu-stub
-    currentid="2"
+    currentid="3"
   />
   <div
     class="record-search-container"
@@ -103,7 +103,7 @@ exports[`OtherRecordList SnapShotテスト初期表示(データなし) 1`] = `
   
   <header-stub />
   <tab-menu-stub
-    currentid="2"
+    currentid="3"
   />
   <div
     class="record-search-container"

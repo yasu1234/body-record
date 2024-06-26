@@ -92,6 +92,7 @@ exports[`EditRecord SnapShotテスト初期表示 1`] = `
               label=""
             />
           </div>
+          <!--v-if-->
         </div>
         <div
           class="thumbnail"
@@ -113,6 +114,7 @@ exports[`EditRecord SnapShotテスト初期表示 1`] = `
               label=""
             />
           </div>
+          <!--v-if-->
         </div>
         
       </div>
