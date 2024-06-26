@@ -8,6 +8,6 @@ class Comment < ApplicationRecord
   attr_accessor :comment_create_date
 
   def comment_date_format
-    self.comment_create_date = created_at&.in_time_zone('Asia/Tokyo').strftime("%Y-%m-%d %H:%M")
+    self.comment_create_date = created_at&.in_time_zone("Asia/Tokyo")&.strftime("%Y-%m-%d %H:%M")
   end
 end

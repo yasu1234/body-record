@@ -3,13 +3,14 @@ class Api::V1::ProfilesController < ApplicationController
 
   def show
     user = User.find(params[:id])
-    render json: { 
+    render json: {
       user: user.as_json(
         { only: %i[name id], methods: :image_url }
       ).merge(
         is_my_profile: user.id == current_api_v1_user.id,
         profile: user.profile
-      ) }, status: :ok
+      )
+    }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "対象のデータが見つかりません" }, status: :not_found
   end

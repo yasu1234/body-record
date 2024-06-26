@@ -33,6 +33,6 @@ class Knowledge < ApplicationRecord
   end
 
   def create_date_format
-    self.create_date_jst = created_at&.in_time_zone('Asia/Tokyo').strftime("%Y-%m-%d")
+    self.create_date_jst = created_at&.in_time_zone("Asia/Tokyo")&.strftime("%Y-%m-%d")
   end
 end

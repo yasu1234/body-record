@@ -134,6 +134,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
     context "未ログイン" do
       let!(:record) { create(:record, user:, id: 2, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
       let(:valid_params) { { record_id: record.id, comment: "TESTコメント成功" } }
+
       before do
         request.headers.merge!(common_header)
         post :update, format: :json, params: { comment: valid_params, id: record.id }
@@ -147,6 +148,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
     context "comment_idが不足" do
       let!(:record) { create(:record, user:, id: 2, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
       let(:valid_params) { { record_id: record.id, comment: "TESTコメント成功" } }
+
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
@@ -162,6 +164,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
       let!(:record) { create(:record, user:, id: 2, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
       let!(:comment1) { create(:comment, user:, comment: "メモTEST", record_id: record.id) }
       let(:valid_params) { { record_id: record.id, comment: "TESTコメント成功" } }
+
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
@@ -183,6 +186,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
     context "未ログイン" do
       let!(:record) { create(:record, user:, id: 2, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
       let!(:comment1) { create(:comment, user:, comment: "メモTEST", record_id: record.id) }
+
       before do
         request.headers.merge!(common_header)
         post :destroy, format: :json, params: { id: comment1.id }
@@ -208,6 +212,7 @@ RSpec.describe Api::V1::RecordCommentsController, type: :controller do
     context "コメント削除完了" do
       let!(:record) { create(:record, user:, id: 2, memo: "メモTEST", date: "2024-05-03T00:00:00.000Z", open_status: 1) }
       let!(:comment1) { create(:comment, user:, comment: "メモTEST", record_id: record.id) }
+
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)

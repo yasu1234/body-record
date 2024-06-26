@@ -21,12 +21,12 @@ class Api::V1::KnowledgesController < ApplicationController
     end
 
     if params[:sort_type].present? && params[:sort_type].to_i == Knowledge::SortType::BOOKMARK_COUNT
-      #ブックマークが多い順に並び替え
+      # ブックマークが多い順に並び替え
       knowledges = knowledges.left_joins(:bookmarks)
-      .group('knowledges.id')
-      .select('knowledges.*, COUNT(bookmarks.id) AS bookmark_count')
-      .order('COUNT(bookmarks.id) DESC')
-      .latest_knowledges
+                             .group("knowledges.id")
+                             .select("knowledges.*, COUNT(bookmarks.id) AS bookmark_count")
+                             .order("COUNT(bookmarks.id) DESC")
+                             .latest_knowledges
       total_count = knowledges.size.length
     else
       knowledges = knowledges.latest_knowledges
@@ -74,7 +74,7 @@ class Api::V1::KnowledgesController < ApplicationController
     render json: { knowledge: knowledge.as_json(
       include: {
         user: { only: [:name], methods: :image_url }
-      }, methods:[:image_urls, :create_date_format]
+      }, methods: %i[image_urls create_date_format]
     ).merge(
       is_bookmark: bookmark.present?,
       is_my_knowledge: knowledge.user_id == current_api_v1_user.id,

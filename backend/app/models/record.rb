@@ -45,10 +45,10 @@ class Record < ApplicationRecord
       record = records.find { |r| r.date == date }
       if is_other
         new_record = if record.nil? || record.open_status != 1
-          Record.new(date:, weight: 0, fat_percentage: 0)
-        else
-          record
-        end
+                       Record.new(date:, weight: 0, fat_percentage: 0)
+                     else
+                       record
+                     end
         records_with_empty_dates << new_record
       else
         records_with_empty_dates << (record || Record.new(date:, weight: 0, fat_percentage: 0))

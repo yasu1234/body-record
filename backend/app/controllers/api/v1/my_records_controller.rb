@@ -9,10 +9,10 @@ class Api::V1::MyRecordsController < ApplicationController
 
     records, total_pages, total_count = Record.search_and_paginate(params, base_scope)
 
-    render json: { 
+    render json: {
       records: records.as_json(methods: :formatted_date),
       total_page: total_pages,
-      total_count: total_count
+      total_count:
     }, status: :ok
   end
 
