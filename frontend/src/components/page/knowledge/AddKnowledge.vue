@@ -20,7 +20,7 @@
         rel="noopener noreferrer"
         class="info-link"
         >こちら</a
-      >をご覧ください。<br>
+      >をご覧ください。<br />
       特に複数行の改行は使うことが多いと思うので必ずご確認ください
     </div>
   </div>
@@ -69,10 +69,16 @@ const registerKnowledge = async () => {
     formData.append("knowledge[content]", knowledge.value);
 
     for (const file of files.value) {
-      formData.append("knowledge[images]", file);
+      if (file != null) {
+        formData.append("knowledge[images][]", file);
+      }
     }
 
-    const res = await axiosInstance.post("/api/v1/knowledges", formData);
+    const res = await axiosInstance.post("/api/v1/knowledges", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     toastNotifications.displayInfo("登録しました", "");
     setTimeout(async () => {
       showKnowledgeDetail(res.data.knowledge);

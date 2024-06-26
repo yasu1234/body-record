@@ -47,9 +47,9 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントあり) 1`] = `
         </div>
         <div>
           <p
-            class="mt-5"
+            class="mt-6"
           >
-            関連画像
+            関連画像(画像タップで拡大表示できます)
           </p>
           <div
             class="thumbnail-container"
@@ -211,9 +211,9 @@ exports[`EditKnowledge SnapShotテスト初期表示(コメントなし) 1`] = `
         </div>
         <div>
           <p
-            class="mt-5"
+            class="mt-6"
           >
-            関連画像
+            関連画像(画像タップで拡大表示できます)
           </p>
           <div
             class="thumbnail-container"

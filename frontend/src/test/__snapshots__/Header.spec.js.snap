@@ -15,7 +15,7 @@ exports[`Header.vue SnapShotテスト 1`] = `
       class="navigation-menus"
     >
       <button
-        class="account-introducton-button mr-7"
+        class="account-introduction-button mr-7"
         style=""
       >
          会員登録・ログイン 

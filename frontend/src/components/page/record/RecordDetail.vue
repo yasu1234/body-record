@@ -31,7 +31,7 @@
             {{ record != null && record.memo != null ? record.memo : "" }}
           </p>
           <div v-if="imageUrls !== null && imageUrls.length !== 0">
-            <p class="mt-5">関連画像</p>
+            <p class="mt-5">関連画像(画像タップで拡大表示できます)</p>
             <div class="thumbnail-container">
               <div class="thumbnail" v-for="item in imageUrls">
                 <RelationImage :item="item" />

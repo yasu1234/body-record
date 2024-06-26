@@ -21,7 +21,7 @@
           <p class="knowledge-content" v-html="renderedMarkdown" />
         </div>
         <div v-if="imageUrls.length !== 0">
-          <p class="mt-5">関連画像</p>
+          <p class="mt-6">関連画像(画像タップで拡大表示できます)</p>
           <div class="thumbnail-container">
             <div class="thumbnail" v-for="item in imageUrls">
               <RelationImage :item="item" />
