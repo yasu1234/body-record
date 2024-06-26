@@ -7,7 +7,7 @@ exports[`KnowledgeList SnapShotテスト初期表示(データあり) 1`] = `
   
   <header-stub />
   <tab-menu-stub
-    currentid="3"
+    currentid="4"
   />
   <div
     class="knowledge-search-container"
@@ -139,7 +139,7 @@ exports[`KnowledgeList SnapShotテスト初期表示(データなし) 1`] = `
   
   <header-stub />
   <tab-menu-stub
-    currentid="3"
+    currentid="4"
   />
   <div
     class="knowledge-search-container"

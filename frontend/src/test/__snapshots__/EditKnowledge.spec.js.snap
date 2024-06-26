@@ -70,6 +70,10 @@ exports[`EditKnowledge SnapShotテスト初期表示 1`] = `
             label=""
           />
         </div>
+        <p
+          class="text-center mt-2.5"
+        />
+        <!--v-if-->
       </div>
       <div
         class="thumbnail"
@@ -91,6 +95,10 @@ exports[`EditKnowledge SnapShotテスト初期表示 1`] = `
             label=""
           />
         </div>
+        <p
+          class="text-center mt-2.5"
+        />
+        <!--v-if-->
       </div>
       
     </div>

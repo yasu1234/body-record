@@ -74,7 +74,7 @@ describe('Header.vue', () => {
     mockedAxiosInstance = axiosModule.axiosInstance;
     mockedAxiosInstance.get.mockResolvedValueOnce({ data: { user: null } })
 
-    expect(wrapper.find('.account-introducton-button').exists()).toBe(true)
+    expect(wrapper.find('.account-introduction-button').exists()).toBe(true)
   })
 
   it('ログイン済みの場合には会員登録・ログインボタンが表示されない', async () => {
@@ -97,7 +97,7 @@ describe('Header.vue', () => {
     mockedAxiosInstance = axiosModule.axiosInstance;
     mockedAxiosInstance.get.mockResolvedValue({ data: { user: user } })
 
-    expect(wrapper.find('.user-button').exists()).toBe(true)
+    expect(wrapper.find('.account-introduction-button').exists()).toBe(true)
   })
 
   it('ログイン済みの場合にはドロップダウンメニューが4つ表示される', async () => {

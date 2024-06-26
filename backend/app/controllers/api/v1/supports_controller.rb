@@ -88,7 +88,7 @@ class Api::V1::SupportsController < ApplicationController
     end
 
     supporting.destroy!
-      
+
     includes_user = support_user.supporter_relationships.exists?(user_id: current_api_v1_user.id)
     supporters_count = support_user.supporters.count
     supports_count = support_user.supportings.count

@@ -48,7 +48,7 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントあり) 1`] = `
             <p
               class="mt-5"
             >
-              関連画像
+              関連画像(画像タップで拡大表示できます)
             </p>
             <div
               class="thumbnail-container"
@@ -205,7 +205,7 @@ exports[`RecordDetail SnapShotテスト初期表示(コメントなし) 1`] = `
             <p
               class="mt-5"
             >
-              関連画像
+              関連画像(画像タップで拡大表示できます)
             </p>
             <div
               class="thumbnail-container"
@@ -362,7 +362,7 @@ exports[`RecordDetail SnapShotテスト初期表示(自分以外の記録)) 1`] 
             <p
               class="mt-5"
             >
-              関連画像
+              関連画像(画像タップで拡大表示できます)
             </p>
             <div
               class="thumbnail-container"
