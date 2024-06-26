@@ -233,7 +233,7 @@ header {
   opacity: 1;
 }
 @media (max-width: 768px) {
-  .account-introducton-button {
+  .account-introduction-button {
     display: none;
   }
 }
