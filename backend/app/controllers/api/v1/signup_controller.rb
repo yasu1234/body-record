@@ -5,7 +5,7 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
 
   def update
     if current_api_v1_user.status == User::Status::GUEST_USER &&
-      (account_update_params[:email].present? || account_update_params[:password].present?)
+       (account_update_params[:email].present? || account_update_params[:password].present?)
       render json: { errors: "ゲストユーザーは変更できません" }, status: :unprocessable_entity and return
     end
 

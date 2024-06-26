@@ -4,6 +4,6 @@ class Contact < ApplicationRecord
   attr_accessor :formatted_create_date
 
   def contact_date_format
-    self.formatted_create_date = created_at&.in_time_zone('Asia/Tokyo').strftime("%Y-%m-%d")
+    self.formatted_create_date = created_at&.in_time_zone("Asia/Tokyo")&.strftime("%Y-%m-%d")
   end
 end

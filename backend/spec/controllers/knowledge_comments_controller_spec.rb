@@ -149,6 +149,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
 
     context "コメント更新完了" do
       let!(:comment1) { create(:comment, user:, comment: "メモTEST", knowledge_id: knowledge.id) }
+
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
@@ -192,6 +193,7 @@ RSpec.describe Api::V1::KnowledgeCommentsController, type: :controller do
 
     context "コメント削除完了" do
       let!(:comment1) { create(:comment, user:, comment: "メモTEST", knowledge_id: knowledge.id) }
+
       before do
         request.headers.merge!(headers)
         request.headers.merge!(common_header)
