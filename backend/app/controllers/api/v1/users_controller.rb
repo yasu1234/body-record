@@ -4,7 +4,7 @@ class Api::V1::UsersController < ApplicationController
   def index
     users = User.all
 
-    if params[:isSupportOnly].present? && params[:isSupportOnly] == "true"
+    if params[:is_support_only].present? && ActiveModel::Type::Boolean.new.cast(params[:is_support_only])
       users = current_api_v1_user.supportings
     end
 

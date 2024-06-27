@@ -3,7 +3,7 @@ class Api::V1::MyRecordsController < ApplicationController
 
   def index
     base_scope = Record.where(user_id: current_api_v1_user.id)
-    if params[:is_only_open].present? && params[:is_only_open] == "true"
+    if params[:is_only_open].present? && ActiveModel::Type::Boolean.new.cast(params[:is_only_open])
       base_scope = base_scope.where(open_status: 1)
     end
 
