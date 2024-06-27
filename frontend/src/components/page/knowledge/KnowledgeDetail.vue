@@ -517,6 +517,10 @@ const cancelKnowledgeDelete = () => {
   isShowKnowledgeDeleteConfirmDialog.value = false;
 };
 
+const cancelCommentDelete = () => {
+  isShowCommentDeleteConfirmDialog.value = false;
+};
+
 const showEdit = () => {
   router.push({ name: "EditKnowledge", params: { id: knowledgeId.value } });
 };
@@ -596,7 +600,7 @@ input[type="text"] {
   display: inline-block;
   height: 200px;
   margin-right: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 40px;
   padding-left: 20px;
 }
 .radius-section {

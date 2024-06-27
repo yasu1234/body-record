@@ -2,7 +2,7 @@
   <Header />
   <TabMenu />
   <Toast position="top-center" />
-  <div class="p-7">
+  <form class="p-7" @submit.prevent="edit">
     <FloatLabel class="mt-5">
       <InputText v-model="title" class="input-width" />
       <label>タイトル</label>
@@ -23,47 +23,52 @@
       >をご覧ください。<br />
       特に複数行の改行は使うことが多いと思うので必ずご確認ください
     </div>
-  </div>
-  <div v-if="imageUrls !== null && imageUrls.length !== 0">
-    <p class="mt-5 ml-5">登録済みの画像</p>
-    <div class="thumbnail-container">
-      <div class="thumbnail" v-for="item in imageUrls">
-        <div class="thumbnail-image">
-          <img :src="item.url" alt="" />
-        </div>
-        <div class="thumbnail-actions">
-          <Button
-            label=""
-            icon="pi pi-trash"
-            v-tooltip="{ value: '画像削除' }"
-            class="delete-button"
-            @click="showConfirmDialog"
-          />
-        </div>
-        <p class="text-center mt-2.5">{{ item.filename }}</p>
-        <div v-if="isImageDeleteConfirmDialog" class="modal-overlay">
-          <ConfirmDialog
-            :title="'画像を削除します'"
-            :message="'よろしいですか？'"
-            :positiveButtonTitle="'削除'"
-            @handle-positive="deleteImage(item)"
-            @cancel="cancelImageDelete"
-          />
+
+    <div v-if="imageUrls !== null && imageUrls.length > 0">
+      <p class="mt-5 ml-5">登録済みの画像</p>
+      <div class="thumbnail-container">
+        <div
+          class="thumbnail"
+          v-for="(item, index) in imageUrls"
+          :key="item.id"
+        >
+          <div class="thumbnail-image">
+            <img :src="item.url" alt="" />
+          </div>
+          <div class="thumbnail-actions">
+            <Button
+              label=""
+              icon="pi pi-trash"
+              v-tooltip="{ value: '画像削除' }"
+              class="delete-button"
+              @click="showConfirmDialog(index)"
+            />
+          </div>
+          <p class="text-center mt-2.5">{{ item.filename }}</p>
+          <div v-if="isImageDeleteConfirmDialog[index]" class="modal-overlay">
+            <ConfirmDialog
+              :title="'画像を削除します'"
+              :message="'よろしいですか？'"
+              :positiveButtonTitle="'削除'"
+              @handle-positive="deleteImage(item)"
+              @cancel="cancelImageDelete(index)"
+            />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="p-5">
-    <p>関連画像(5枚まで登録できます)</p>
-    <div class="file-input-container">
-      <div v-for="i in 5">
-        <DropFile @change="onFileChange" :index="i" class="mt-3" />
+    <div class="p-5">
+      <p>関連画像(5枚まで登録できます)</p>
+      <div class="file-input-container">
+        <div v-for="i in 5">
+          <DropFile @change="onFileChange" :index="i" class="mt-3" />
+        </div>
       </div>
     </div>
-  </div>
-  <div class="p-10 text-center">
-    <button class="edit-knowledge-button" @click="edit">編集する</button>
-  </div>
+    <div class="p-10 text-center">
+      <button class="edit-knowledge-button">編集する</button>
+    </div>
+  </form>
 </template>
 
 <script setup>
@@ -94,20 +99,24 @@ const knowledge = ref("");
 const files = ref([...Array(5)]);
 const imageUrls = ref([]);
 const knowledgeId = ref(null);
-const isImageDeleteConfirmDialog = ref(false);
+const isImageDeleteConfirmDialog = ref([]);
 
 onMounted(() => {
   getDetail();
 });
 
 const deleteImage = async (item) => {
-  isImageDeleteConfirmDialog.value = false;
+  const index = imageUrls.value.findIndex(image => image.id === item.id);
+  isImageDeleteConfirmDialog.value[index] = false;
   try {
-    const res = await axiosInstance.delete(`/api/v1/knowledge_images/${knowledgeId.value}`, {
-      params: {
-        image_id: item.id
-      },
-    });
+    const res = await axiosInstance.delete(
+      `/api/v1/knowledge_images/${knowledgeId.value}`,
+      {
+        params: {
+          image_id: item.id,
+        },
+      }
+    );
     imageUrls.value = res.data.image_urls;
   } catch (error) {
     if (error.response == null) {
@@ -206,13 +215,13 @@ const contentEdit = (editContent) => {
   knowledge.value = editContent;
 };
 
-const showConfirmDialog = () => {
-  isImageDeleteConfirmDialog.value = true;
-}
+const showConfirmDialog = (index) => {
+  isImageDeleteConfirmDialog.value[index] = true;
+};
 
-const cancelImageDelete = () => {
-  isImageDeleteConfirmDialog.value = false;
-}
+const cancelImageDelete = (index) => {
+  isImageDeleteConfirmDialog.value[index] = false;
+};
 
 const showKnowledgeDetail = (item) => {
   router.push({ name: "KnowledgeDetail", params: { id: item.id } });
