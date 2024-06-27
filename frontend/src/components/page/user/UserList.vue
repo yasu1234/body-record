@@ -153,7 +153,7 @@ const searchUser = async () => {
       params: {
         keyword: keyword.value,
         page: page.value,
-        isSupportOnly: isDisplayOnlySupport.value,
+        is_support_only: isDisplayOnlySupport.value,
         sort_type:
           selectCode.value === menuList.value[1].name
             ? menuList.value[1].code
