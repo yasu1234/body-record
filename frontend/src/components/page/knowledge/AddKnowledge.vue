@@ -2,7 +2,7 @@
   <Header />
   <TabMenu />
   <Toast position="top-center" />
-  <div class="p-7">
+  <form class="p-7" @submit.prevent="registerKnowledge">
     <FloatLabel class="mt-5">
       <InputText v-model="title" class="input-width" />
       <label>タイトル</label>
@@ -23,20 +23,18 @@
       >をご覧ください。<br />
       特に複数行の改行は使うことが多いと思うので必ずご確認ください
     </div>
-  </div>
-  <div class="p-5">
-    <h2>関連画像(5枚まで登録できます)</h2>
-    <div class="file-input-container">
-      <div v-for="i in 5">
-        <DropFile @change="onFileChange" :index="i" class="mt-3" />
+    <div class="p-5">
+      <h2>関連画像(5枚まで登録できます)</h2>
+      <div class="file-input-container">
+        <div v-for="i in 5">
+          <DropFile @change="onFileChange" :index="i" class="mt-3" />
+        </div>
       </div>
     </div>
-  </div>
-  <div class="p-5 text-center">
-    <button class="add-knowledge-button" @click="registerKnowledge">
-      登録する
-    </button>
-  </div>
+    <div class="p-5 text-center">
+      <button class="add-knowledge-button">登録する</button>
+    </div>
+  </form>
 </template>
 
 <script setup>

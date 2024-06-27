@@ -36,7 +36,11 @@
     <div v-if="imageUrls !== null && imageUrls.length !== 0">
       <p class="mt-5">登録済みの画像</p>
       <div class="thumbnail-container">
-        <div class="thumbnail" v-for="item in imageUrls">
+        <div
+          class="thumbnail"
+          v-for="(item, index) in imageUrls"
+          :key="item.id"
+        >
           <div class="thumbnail-image">
             <img :src="item.url" alt="" />
           </div>
@@ -45,16 +49,16 @@
               label=""
               icon="pi pi-trash"
               class="delete-button"
-              @click="showConfirmDialog"
+              @click="showConfirmDialog(index)"
             />
           </div>
-          <div v-if="isImageDeleteConfirmDialog" class="modal-overlay">
+          <div v-if="isImageDeleteConfirmDialog[index]" class="modal-overlay">
             <ConfirmDialog
               :title="'画像を削除します'"
               :message="'よろしいですか？'"
               :positiveButtonTitle="'削除'"
               @handle-positive="deleteImage(item)"
-              @cancel="cancelImageDelete"
+              @cancel="cancelImageDelete(index)"
             />
           </div>
         </div>
@@ -104,14 +108,15 @@ const files = ref([...Array(3)]);
 const imageUrls = ref([]);
 const recordId = ref(null);
 const isHidden = ref(false);
-const isImageDeleteConfirmDialog = ref(false);
+const isImageDeleteConfirmDialog = ref([]);
 
 onMounted(() => {
   getDetail();
 });
 
 const deleteImage = async (item) => {
-  isImageDeleteConfirmDialog.value = false;
+  const index = imageUrls.value.findIndex(image => image.id === item.id);
+  isImageDeleteConfirmDialog.value[index] = false;
   try {
     const res = await axiosInstance.delete(
       `/api/v1/record_images/${recordId.value}`,
@@ -222,13 +227,13 @@ const memoEdit = (editingMemo) => {
   memo.value = editingMemo;
 };
 
-const showConfirmDialog = () => {
-  isImageDeleteConfirmDialog.value = true;
-}
+const showConfirmDialog = (index) => {
+  isImageDeleteConfirmDialog.value[index] = true;
+};
 
-const cancelImageDelete = () => {
-  isImageDeleteConfirmDialog.value = false;
-}
+const cancelImageDelete = (index) => {
+  isImageDeleteConfirmDialog.value[index] = false;
+};
 
 const showRecordDetail = () => {
   router.push({ name: "RecordDetail", params: { id: recordId.value } });
