@@ -8,7 +8,7 @@ class Api::V1::SupportsController < ApplicationController
       render json: { errors: "パラメータがありません" }, status: :bad_request and return
     end
 
-    if params[:is_support] == "true"
+    if ActiveModel::Type::Boolean.new.cast(params[:is_support])
       support_list = if params[:page].present?
                        target_user.supportings.page(params[:page]).per(30)
                      else
@@ -26,7 +26,7 @@ class Api::V1::SupportsController < ApplicationController
       }, status: :ok and return
     end
 
-    if params[:is_support] == "false"
+    if !ActiveModel::Type::Boolean.new.cast(params[:is_support])
       supporter_list = if params[:page].present?
                          target_user.supporters.page(params[:page]).per(30)
                        else
