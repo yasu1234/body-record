@@ -65,7 +65,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
           request.headers.merge!(headers)
           request.headers.merge!(common_header)
           user.support!(user1)
-          get :index, format: :json, params: { isSupportOnly: true }
+          get :index, format: :json, params: { is_support_only: true }
         end
 
         it "ステータス200" do
