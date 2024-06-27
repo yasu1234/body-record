@@ -73,9 +73,9 @@ const signup = async () => {
       password_confirmation: passwordConfirm.value,
       name: name.value,
     });
-    Cookies.set("accessToken", res.headers["access-token"]);
-    Cookies.set("client", res.headers["client"]);
-    Cookies.set("uid", res.headers["uid"]);
+    Cookies.set("accessToken", res.headers["access-token"], { expires: 365 });
+    Cookies.set("client", res.headers["client"], { expires: 365 });
+    Cookies.set("uid", res.headers["uid"], { expires: 365 });
 
     router.push({ name: "Home" });
   } catch (error) {

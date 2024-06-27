@@ -1,21 +1,3 @@
-<script setup>
-import { ref, onMounted, watch } from "vue";
-
-import Image from "primevue/image";
-
-const props = defineProps(["item"]);
-
-const item = ref(null);
-
-onMounted(() => {
-  item.value = props.item;
-});
-
-watch(props, () => {
-  item.value = props.item;
-});
-</script>
-
 <template>
   <div class="" v-if="item != null">
     <Image
@@ -66,6 +48,24 @@ watch(props, () => {
   </div>
 </template>
 
+<script setup>
+import { ref, onMounted, watch } from "vue";
+
+import Image from "primevue/image";
+
+const props = defineProps(["item"]);
+
+const item = ref(null);
+
+onMounted(() => {
+  item.value = props.item;
+});
+
+watch(props, () => {
+  item.value = props.item;
+});
+</script>
+
 <style scoped>
 .thumbnail-image {
   width: 300px;
@@ -83,7 +83,7 @@ watch(props, () => {
 @media screen and (max-width: 768px) {
   .thumbnail-image {
     width: auto;
-    height: 100%;
+    height: 200px;
     margin-left: 0px;
     margin-right: 0px;
   }
