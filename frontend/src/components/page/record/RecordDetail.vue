@@ -510,7 +510,7 @@ input[type="text"] {
   display: inline-block;
   height: 200px;
   margin-right: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 40px;
   padding-left: 20px;
 }
 .round-button {
