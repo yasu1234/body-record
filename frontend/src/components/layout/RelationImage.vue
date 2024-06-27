@@ -83,7 +83,7 @@ watch(props, () => {
 @media screen and (max-width: 768px) {
   .thumbnail-image {
     width: auto;
-    height: 100%;
+    height: 200px;
     margin-left: 0px;
     margin-right: 0px;
   }
