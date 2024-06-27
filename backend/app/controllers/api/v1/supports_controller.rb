@@ -26,7 +26,7 @@ class Api::V1::SupportsController < ApplicationController
       }, status: :ok and return
     end
 
-    if !ActiveModel::Type::Boolean.new.cast(params[:is_support])
+    unless ActiveModel::Type::Boolean.new.cast(params[:is_support])
       supporter_list = if params[:page].present?
                          target_user.supporters.page(params[:page]).per(30)
                        else
