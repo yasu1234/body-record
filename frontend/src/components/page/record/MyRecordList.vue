@@ -71,7 +71,7 @@ const paramChange = () => {
     query.isOnlyOpen = isOnlyOpen.value;
   }
 
-  router.push({ path: "/", query: query });
+  router.push({ name: "MyRecordList", query: query });
 };
 
 const search = async () => {
