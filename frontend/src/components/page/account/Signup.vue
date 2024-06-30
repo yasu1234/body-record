@@ -1,7 +1,7 @@
 <template>
   <Header />
   <Toast position="top-center" />
-  <p class="title_line view-title container-width mt-7">会員登録</p>
+  <p class="title-line view-title container-width mt-7">会員登録</p>
   <div class="signup-container container-width pt-5 mt-5">
     <form class="form" @submit.prevent @keydown.enter.prevent>
       <div class="signup-item">

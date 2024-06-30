@@ -1,7 +1,7 @@
 <template>
   <Header />
   <Toast position="top-center" />
-  <h1 class="title_line view-title container-width mt-7">ログイン</h1>
+  <p class="title-line view-title container-width mt-7">ログイン</p>
   <div class="login-container container-width mt-5">
     <form class="form" @submit.prevent="handleSubmit">
       <div class="login-item">

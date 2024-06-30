@@ -2,7 +2,7 @@
   <Header />
   <TabMenu />
   <Toast position="top-center" />
-  <p class="title_line mt-5">お問合せ</p>
+  <p class="title-line mt-5">お問合せ</p>
   <div class="contact-container mt-5 pb-8">
     <form class="contact-form" @submit.prevent="contactSubmit">
       <div class="contact-item">
