@@ -1,9 +1,9 @@
 <template>
   <Header />
   <Toast position="top-center" />
-  <p class="view-title mt-7">会員登録</p>
-  <div class="signup-container">
-    <form class="form" @submit.prevent="checkValidate">
+  <p class="title-line view-title container-width mt-7">会員登録</p>
+  <div class="signup-container container-width pt-5 mt-5">
+    <form class="form" @submit.prevent @keydown.enter.prevent>
       <div class="signup-item">
         <label>メールアドレス</label>
         <input id="email" type="email" v-model="email" />
@@ -33,7 +33,7 @@
         <p class="validation-error-message">{{ nameError }}</p>
       </div>
       <div class="text-center mt-5">
-        <button class="signup-button">登録</button>
+        <button class="signup-button" @click="checkValidate">登録</button>
       </div>
     </form>
   </div>
@@ -73,9 +73,9 @@ const signup = async () => {
       password_confirmation: passwordConfirm.value,
       name: name.value,
     });
-    Cookies.set("accessToken", res.headers["access-token"], { expires: 365 });
-    Cookies.set("client", res.headers["client"], { expires: 365 });
-    Cookies.set("uid", res.headers["uid"], { expires: 365 });
+    Cookies.set("accessToken", res.headers["access-token"], { expires: 14 });
+    Cookies.set("client", res.headers["client"], { expires: 14 });
+    Cookies.set("uid", res.headers["uid"], { expires: 14 });
 
     router.push({ name: "Home" });
   } catch (error) {
@@ -136,12 +136,15 @@ const updatePassword = (inputPassword, passwordType) => {
 
 <style scoped>
 .signup-container {
-  width: 500px;
-  margin: 0 auto;
   padding: 20px;
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+.container-width {
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .signup-item {
   padding-top: 40px;
@@ -161,13 +164,16 @@ const updatePassword = (inputPassword, passwordType) => {
 
 @media screen and (max-width: 768px) {
   .signup-container {
-    width: auto;
-    margin-left: 20px;
-    margin-right: 20px;
     padding: 20px;
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 5px;
+  }
+
+  .container-width {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 }
 </style>

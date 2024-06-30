@@ -2,7 +2,7 @@
   <Header />
   <TabMenu />
   <Toast position="top-center" />
-  <p class="title_line mt-5">お問合せ一覧</p>
+  <p class="title-line mt-5">お問合せ一覧</p>
   <p class="mt-5 mx-5 text-lg">
     対応済みのお問い合わせは次の日には表示されなくなるのでご注意ください
   </p>

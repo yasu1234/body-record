@@ -36,6 +36,8 @@ class User < ActiveRecord::Base
             size: { less_than: 5.megabytes },
             allow_blank: true
 
+  scope :latest_users, -> { order(created_at: :desc) }
+
   def image_url
     return unless image.attached?
 

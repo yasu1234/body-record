@@ -11,7 +11,7 @@ exports[`Contact SnapShotテスト初期表示 1`] = `
     position="top-center"
   />
   <p
-    class="title_line mt-5"
+    class="title-line mt-5"
   >
     お問合せ
   </p>
