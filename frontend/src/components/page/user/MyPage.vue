@@ -179,7 +179,7 @@ const clickRecord = (item) => {
 };
 
 const showMoreRecords = () => {
-  router.push({ name: "Home" });
+  router.push({ name: "MyRecordList" });
 };
 
 const clickKnowledge = (item) => {

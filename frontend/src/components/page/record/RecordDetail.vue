@@ -454,7 +454,7 @@ const showEdit = () => {
 };
 
 const showMyRecordList = () => {
-  router.push({ name: "Home" });
+  router.push({ name: "MyRecordList" });
 };
 </script>
 
