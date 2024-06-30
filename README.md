@@ -84,6 +84,10 @@
 - src/componernts/layout →　最小のコンポネントの組み合わせ
 - src/componernts/page →　画面
 
+# インフラ構成図
+
+![body-record-infla-map](https://github.com/yasu1234/body-record/assets/20049397/e6554f08-6f09-4f5a-a8f0-f1ab2b903ba8)
+
 # 機能一覧
 
 - 会員登録 / 退会
@@ -105,10 +109,24 @@
 - 問い合わせ / 一覧確認 / ステータスが対応済みになったらバッチでデータ削除
 - 問い合わせが作成されたら開発者にメール送信
 
+# 主要機能(動画)
 
-# インフラ構成図
+- 記録登録
 
-![body-record-infla-map](https://github.com/yasu1234/body-record/assets/20049397/e6554f08-6f09-4f5a-a8f0-f1ab2b903ba8)
+https://github.com/yasu1234/body-record/assets/20049397/9a232c39-fae7-4a11-ac87-f6d8f7c3aa1e
+
+- 記録検索
+
+https://github.com/yasu1234/body-record/assets/20049397/73d8e47b-e7b2-4bf8-812d-01895dadff71
+
+- 記事登録
+
+https://github.com/yasu1234/body-record/assets/20049397/df684bf0-a9ac-48b4-a2e6-6a5266a6e239
+
+- ユーザー選択から他のユーザーの記録表示
+
+https://github.com/yasu1234/body-record/assets/20049397/2ff5bf3f-a32a-4e81-8072-474c992c6809
+
 
 # ER図
 
