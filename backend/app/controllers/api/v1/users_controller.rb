@@ -17,8 +17,9 @@ class Api::V1::UsersController < ApplicationController
                    .group("users.id")
                    .select("users.*, COUNT(supports.id) AS supporters_count")
                    .order("supporters_count DESC")
+                   .latest_users
             else
-              users.order(created_at: :desc)
+              users.latest_users
             end
 
     users = if params[:page].present?
