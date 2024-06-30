@@ -5,7 +5,7 @@
   <div class="setting-container">
     <SettingSideMenu :currentIndex="2" />
     <main>
-      <p class="title_line pt-10">メールアドレス変更</p>
+      <p class="title-line pt-10">メールアドレス変更</p>
       <div class="mailaddress-edit-container">
         <form class="form" @submit.prevent="checkValidate">
           <div class="pt-10">
@@ -112,6 +112,7 @@ const { value: newMailAddres, errorMessage: emailError } =
   width: 500px;
   margin: 0 auto;
   padding: 20px;
+  margin-top: 20px;
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;

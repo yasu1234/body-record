@@ -100,7 +100,7 @@ p.validation-error-message {
   z-index: 9999;
 }
 /* タイトルの装飾(1文字目を大きくして色を変える) */
-.title_line {
+.title-line {
   font-weight: bold;
   border-bottom: 2px solid #ffa500;
   padding: 0.3em;
@@ -108,7 +108,7 @@ p.validation-error-message {
   margin-left: 20px;
   margin-right: 20px;
 }
-.title_line:first-letter {
+.title-line:first-letter {
   font-size: 1.5em;
   color: #ffa500;
 }
