@@ -127,6 +127,9 @@ https://github.com/yasu1234/body-record/assets/20049397/df684bf0-a9ac-48b4-a2e6-
 
 https://github.com/yasu1234/body-record/assets/20049397/2ff5bf3f-a32a-4e81-8072-474c992c6809
 
+- マイページ
+
+https://github.com/yasu1234/body-record/assets/20049397/08058510-d5e4-4727-9dbe-75534d51fd6e
 
 # ER図
 
