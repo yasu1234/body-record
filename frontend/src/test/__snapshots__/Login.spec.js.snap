@@ -9,13 +9,13 @@ exports[`Login SnapShotテスト初期表示 1`] = `
   <toast-stub
     position="top-center"
   />
-  <h1
-    class="view-title mt-7"
+  <p
+    class="title-line view-title container-width mt-7"
   >
     ログイン
-  </h1>
+  </p>
   <div
-    class="login-container"
+    class="login-container container-width mt-5"
   >
     <form
       class="form"

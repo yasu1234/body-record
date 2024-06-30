@@ -10,12 +10,12 @@ exports[`SignUp SnapShotテスト初期表示 1`] = `
     position="top-center"
   />
   <p
-    class="view-title mt-7"
+    class="title-line view-title container-width mt-7"
   >
     会員登録
   </p>
   <div
-    class="signup-container"
+    class="signup-container container-width pt-5 mt-5"
   >
     <form
       class="form"
