@@ -1,8 +1,8 @@
 <template>
   <Header />
   <Toast position="top-center" />
-  <h1 class="view-title mt-7">ログイン</h1>
-  <div class="login-container">
+  <h1 class="title_line view-title container-width mt-7">ログイン</h1>
+  <div class="login-container container-width mt-5">
     <form class="form" @submit.prevent="handleSubmit">
       <div class="login-item">
         <label>メールアドレス</label>
@@ -110,12 +110,15 @@ const showHome = () => {
 
 <style scoped>
 .login-container {
-  width: 500px;
-  margin: 0 auto;
   padding: 20px;
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+.container-width {
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .login-item {
   padding-top: 40px;
@@ -145,6 +148,12 @@ const showHome = () => {
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 5px;
+  }
+
+  .container-width {
+    width: auto;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 }
 </style>

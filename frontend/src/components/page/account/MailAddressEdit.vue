@@ -112,6 +112,7 @@ const { value: newMailAddres, errorMessage: emailError } =
   width: 500px;
   margin: 0 auto;
   padding: 20px;
+  margin-top: 20px;
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;

@@ -38,9 +38,9 @@ const showLogin = () => {
 const guestLogin = async () => {
   try {
     const res = await axiosInstance.post("/api/v1/users/guest_sign_in");
-    Cookies.set("accessToken", res.headers["access-token"], { expires: 365 });
-    Cookies.set("client", res.headers["client"], { expires: 365 });
-    Cookies.set("uid", res.headers["uid"], { expires: 365 });
+    Cookies.set("accessToken", res.headers["access-token"], { expires: 14 });
+    Cookies.set("client", res.headers["client"], { expires: 14 });
+    Cookies.set("uid", res.headers["uid"], { expires: 14 });
 
     if (
       Cookies.get("loginRoutePath") != null &&
