@@ -3,7 +3,7 @@
   <Toast position="top-center" />
   <p class="view-title mt-7">会員登録</p>
   <div class="signup-container">
-    <form class="form" @submit.prevent="checkValidate">
+    <form class="form" @submit.prevent @keydown.enter.prevent>
       <div class="signup-item">
         <label>メールアドレス</label>
         <input id="email" type="email" v-model="email" />
@@ -33,7 +33,7 @@
         <p class="validation-error-message">{{ nameError }}</p>
       </div>
       <div class="text-center mt-5">
-        <button class="signup-button">登録</button>
+        <button class="signup-button" @click="checkValidate">登録</button>
       </div>
     </form>
   </div>
