@@ -13,6 +13,15 @@ class Api::V1::SignupController < DeviseTokenAuth::RegistrationsController
       render json: { errors: current_api_v1_user.errors.full_messages }, status: :unprocessable_entity
     end
 
+    if account_update_params[:image].present?
+      processed_image = ImageProcessing::MiniMagick
+        .source(account_update_params[:image])
+        .resize_to_limit(100, 100)
+        .call
+  
+      account_update_params[:image] = processed_image
+    end
+
     render json: { user: current_api_v1_user }, status: :ok
   end
 
